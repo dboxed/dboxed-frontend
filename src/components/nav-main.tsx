@@ -17,21 +17,34 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
+import { Link, useNavigate } from "react-router";
+
+interface Item {
+  title: string
+  url?: string
+  navigate?: string
+  icon?: LucideIcon
+  isActive?: boolean
+  items?: Item[]
+}
 
 export function NavMain({
   items,
 }: {
-  items: {
-    title: string
-    url: string
-    icon?: LucideIcon
-    isActive?: boolean
-    items?: {
-      title: string
-      url: string
-    }[]
-  }[]
+  items: Item[]
 }) {
+  const MyLink = (props: {item: Item}) => {
+    if (props.item.navigate) {
+      return <Link to={props.item.navigate}>
+        <span>{props.item.title}</span>
+      </Link>
+    } else {
+      return <a href={props.item.url}>
+        <span>{props.item.title}</span>
+      </a>
+    }
+  }
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -47,23 +60,21 @@ export function NavMain({
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton tooltip={item.title}>
                   {item.icon && <item.icon />}
-                  <span>{item.title}</span>
-                  <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                  <MyLink item={item}/>
+                  {item.items && <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />}
                 </SidebarMenuButton>
               </CollapsibleTrigger>
-              <CollapsibleContent>
+              {item.items && <CollapsibleContent>
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton asChild>
-                        <a href={subItem.url}>
-                          <span>{subItem.title}</span>
-                        </a>
+                      <SidebarMenuSubButton>
+                        <MyLink item={subItem} />
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}
                 </SidebarMenuSub>
-              </CollapsibleContent>
+              </CollapsibleContent>}
             </SidebarMenuItem>
           </Collapsible>
         ))}

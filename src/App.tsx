@@ -2,9 +2,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { LoginGate } from './components/login-gate';
 import { onSigninCallback, useIsAdmin, userManager } from './api/auth';
 import { Route, Routes } from 'react-router';
-import MainLayout from "@/layouts/main.tsx";
+import MainLayout from "@/layouts/MainLayout.tsx";
 import { AuthProvider } from "react-oidc-context";
-import { CreateWorkspacePage } from "@/pages/workspaces/Create.tsx";
+import { CreateWorkspacePage } from "@/pages/workspaces/CreateWorkspacePage.tsx";
+import { ListCloudProvidersPage } from "@/pages/cloud-providers/ListCloudProvidersPage.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,6 +38,7 @@ function AuthenticatedApp() {
       <Routes>
         <Route path="/" element={<MainLayout isAdmin={isAdminQuery.isAdmin} />}>
           <Route path="/workspaces/create" element={<CreateWorkspacePage/>}/>
+          <Route path="/cloud-providers" element={<ListCloudProvidersPage/>}/>
         </Route>
         {isAdminQuery.isAdmin && (
           <></>

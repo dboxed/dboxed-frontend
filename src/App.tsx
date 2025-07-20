@@ -7,6 +7,7 @@ import { AuthProvider } from "react-oidc-context";
 import { CreateWorkspacePage } from "@/pages/workspaces/CreateWorkspacePage.tsx";
 import { ListCloudProvidersPage } from "@/pages/cloud-providers/ListCloudProvidersPage.tsx";
 import { CreateCloudProviderPage } from "@/pages/cloud-providers/CreateCloudProviderPage.tsx";
+import { CloudProviderDetailsPage } from "@/pages/cloud-providers/CloudProviderDetailsPage.tsx";
 import type { ReactElement } from "react";
 
 const queryClient = new QueryClient({
@@ -43,6 +44,7 @@ function AuthenticatedApp() {
           <Route path="/workspaces/:workspaceId" element={<></>}/>
           <Route path="/workspaces/:workspaceId/cloud-providers" element={<WorkspacePageWrapper Page={ListCloudProvidersPage}/>}/>
           <Route path="/workspaces/:workspaceId/cloud-providers/create" element={<WorkspacePageWrapper Page={CreateCloudProviderPage} />}/>
+          <Route path="/workspaces/:workspaceId/cloud-providers/:cloudProviderId" element={<CloudProviderDetailsPageWrapper />}/>
         </Route>
         {isAdminQuery.isAdmin && (
           <></>
@@ -61,4 +63,16 @@ function WorkspacePageWrapper(props: {Page: ({workspaceId, ...props}: {workspace
 
   const x = parseInt(workspaceId)
   return <props.Page workspaceId={x}/>
+}
+
+function CloudProviderDetailsPageWrapper() {
+  const { workspaceId, cloudProviderId } = useParams();
+
+  if (!workspaceId || !cloudProviderId) {
+    return <>missing workspace id or cloud provider id</>
+  }
+
+  const workspaceIdNum = parseInt(workspaceId)
+  const cloudProviderIdNum = parseInt(cloudProviderId)
+  return <CloudProviderDetailsPage workspaceId={workspaceIdNum} cloudProviderId={cloudProviderIdNum} />
 }

@@ -72,7 +72,7 @@ const data = {
 const navMain = [
   {
     title: "Cloud Providers",
-    navigate: "/cloud-providers",
+    navigate: "/workspaces/{workspaceId}/cloud-providers",
     icon: Cloud,
   },
   {

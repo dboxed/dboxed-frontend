@@ -17,7 +17,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
-import { Link, useNavigate } from "react-router";
+import { Link, useParams } from "react-router";
 
 interface Item {
   title: string
@@ -33,9 +33,12 @@ export function NavMain({
 }: {
   items: Item[]
 }) {
+  const { workspaceId } = useParams();
+
   const MyLink = (props: {item: Item}) => {
     if (props.item.navigate) {
-      return <Link to={props.item.navigate}>
+      const l = props.item.navigate.replace('{workspaceId}', workspaceId || 'invalid')
+      return <Link to={l}>
         <span>{props.item.title}</span>
       </Link>
     } else {

@@ -28,6 +28,11 @@ export function WorkspaceSwitcher({
   const [activeWorkspace, setActiveWorkspace] = React.useState((workspaces.length && workspaces[0]) || null)
   const navigate = useNavigate()
 
+  const handleSelectWorkspace = (w: components["schemas"]["Workspace"]) => {
+    setActiveWorkspace(w)
+    navigate(`/workspaces/${w.id}`)
+  }
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -56,7 +61,7 @@ export function WorkspaceSwitcher({
             {workspaces.map((workspace, index) => (
               <DropdownMenuItem
                 key={workspace.name}
-                onClick={() => setActiveWorkspace(workspace)}
+                onSelect={() => handleSelectWorkspace(workspace)}
                 className="gap-2 p-2"
               >
                 {workspace.name}

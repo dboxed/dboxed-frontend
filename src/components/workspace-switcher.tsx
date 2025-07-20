@@ -1,4 +1,3 @@
-import * as React from "react"
 import { ChevronsUpDown, Plus } from "lucide-react"
 
 import {
@@ -17,7 +16,35 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import type { components } from "@/api/models/schema";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
+
+export function useSelectedWorkspaceId() {
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  if (!location.pathname.startsWith("/workspaces/")) {
+    return {
+      workspaceId: undefined,
+      setWorkspaceId: (id: number) => {
+        navigate(`/workspaces/${id}`)
+      },
+    }
+  }
+
+  const s = location.pathname.split("/")
+  const workspaceIdNum = parseInt(s[2])
+
+  const setWorkspaceId = (id: number) => {
+    s[2] = id + ""
+    const newLocation = s.join("/")
+    navigate(newLocation)
+  }
+
+  return {
+    workspaceId: workspaceIdNum,
+    setWorkspaceId: setWorkspaceId,
+  }
+}
 
 export function WorkspaceSwitcher({
   workspaces,
@@ -25,12 +52,13 @@ export function WorkspaceSwitcher({
   workspaces: components["schemas"]["Workspace"][]
 }) {
   const { isMobile } = useSidebar()
-  const [activeWorkspace, setActiveWorkspace] = React.useState((workspaces.length && workspaces[0]) || null)
   const navigate = useNavigate()
 
+  const { workspaceId, setWorkspaceId} = useSelectedWorkspaceId()
+  const selectedWorkspace = workspaces.find(w => w.id == workspaceId)
+
   const handleSelectWorkspace = (w: components["schemas"]["Workspace"]) => {
-    setActiveWorkspace(w)
-    navigate(`/workspaces/${w.id}`)
+    setWorkspaceId(w.id)
   }
 
   return (
@@ -43,8 +71,9 @@ export function WorkspaceSwitcher({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div className="grid flex-1 text-left text-sm leading-tight">
-                {activeWorkspace && <span className="truncate font-medium">{activeWorkspace.name}</span>}
-                {!activeWorkspace && <span className="truncate font-medium">No Workspace. Create one!</span>}
+                <span className="truncate font-medium">Workspace</span>
+                {selectedWorkspace && <span className="truncate text-xs">{selectedWorkspace.name}</span>}
+                {!selectedWorkspace && <span className="truncate text-xs">No Workspace. Create one!</span>}
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>

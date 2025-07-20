@@ -21,6 +21,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { BasePage } from "@/pages/base/BasePage.tsx"
 import { useUnboxedQueryClient } from "@/api/api.ts"
+import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 
 // Define the UpdateCloudProvider schema based on the API
 const UpdateCloudProviderSchema = z.object({
@@ -38,14 +39,14 @@ const UpdateCloudProviderSchema = z.object({
 })
 
 interface CloudProviderDetailsPageProps {
-  workspaceId: number
   cloudProviderId: number
 }
 
-export function CloudProviderDetailsPage({ workspaceId, cloudProviderId }: CloudProviderDetailsPageProps) {
+export function CloudProviderDetailsPage({ cloudProviderId }: CloudProviderDetailsPageProps) {
   const client = useUnboxedQueryClient()
   const navigate = useNavigate()
-  
+  const { workspaceId } = useSelectedWorkspaceId()
+
   // Fetch cloud provider details
   const cloudProvider = client.useQuery('get', '/v1/workspaces/{workspaceId}/cloud-providers/{id}', {
     params: {

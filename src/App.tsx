@@ -1,14 +1,17 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { LoginGate } from './components/login-gate';
 import { onSigninCallback, useIsAdmin, userManager } from './api/auth';
-import { Route, Routes, useParams } from 'react-router';
+import { Route, Routes, useLocation, useNavigate, useParams } from 'react-router';
 import MainLayout from "@/layouts/MainLayout.tsx";
 import { AuthProvider } from "react-oidc-context";
 import { CreateWorkspacePage } from "@/pages/workspaces/CreateWorkspacePage.tsx";
 import { ListCloudProvidersPage } from "@/pages/cloud-providers/ListCloudProvidersPage.tsx";
-import { CreateCloudProviderPage } from "@/pages/cloud-providers/CreateCloudProviderPage.tsx";
 import { CloudProviderDetailsPage } from "@/pages/cloud-providers/CloudProviderDetailsPage.tsx";
 import type { ReactElement } from "react";
+import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
+import { useUnboxedQueryClient } from "@/api/api.ts";
+import { Toaster } from "sonner";
+import { CreateCloudProviderPage } from "@/pages/cloud-providers/create/CreateCloudProviderPage.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,20 +35,37 @@ export default function App() {
 
 function AuthenticatedApp() {
   const isAdminQuery = useIsAdmin()
+  const { workspaceId, setWorkspaceId } = useSelectedWorkspaceId()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const client = useUnboxedQueryClient()
+  const workspaces = client.useQuery('get', '/v1/workspaces')
 
   if (isAdminQuery.isLoading) return <div>Loading user info...</div>;
   if (isAdminQuery.error) return <div className="text-red-600 p-4">Failed to load user info</div>;
 
+  if (workspaces.isLoading) return <div>Loading workspaces...</div>;
+
+  if (!workspaceId && location.pathname !== "/workspaces/create") {
+    if (!workspaces.data?.items?.length) {
+      navigate("/workspaces/create")
+    } else {
+      setWorkspaceId(workspaces.data.items[0].id)
+    }
+    return null
+  }
+
   return (
     <div className="flex h-screen">
+      <Toaster />
       <Routes>
         <Route path="/" element={<MainLayout isAdmin={isAdminQuery.isAdmin} />}>
-          <Route path="/workspaces/create" element={<CreateWorkspacePage/>}/>
           <Route path="/workspaces/:workspaceId" element={<></>}/>
-          <Route path="/workspaces/:workspaceId/cloud-providers" element={<WorkspacePageWrapper Page={ListCloudProvidersPage}/>}/>
-          <Route path="/workspaces/:workspaceId/cloud-providers/create" element={<WorkspacePageWrapper Page={CreateCloudProviderPage} />}/>
+          <Route path="/workspaces/:workspaceId/cloud-providers" element={<ListCloudProvidersPage/>}/>
           <Route path="/workspaces/:workspaceId/cloud-providers/:cloudProviderId" element={<CloudProviderDetailsPageWrapper />}/>
         </Route>
+        <Route path="/workspaces/create" element={<CreateWorkspacePage/>}/>
+        <Route path="/workspaces/:workspaceId/cloud-providers/create" element={<CreateCloudProviderPage/>}/>
         {isAdminQuery.isAdmin && (
           <></>
         )}
@@ -54,25 +74,13 @@ function AuthenticatedApp() {
   )
 }
 
-function WorkspacePageWrapper(props: {Page: ({workspaceId, ...props}: {workspaceId: number}) => ReactElement}) {
-  const { workspaceId } = useParams();
-
-  if (!workspaceId) {
-    return <>no workspace id</>
-  }
-
-  const x = parseInt(workspaceId)
-  return <props.Page workspaceId={x}/>
-}
-
 function CloudProviderDetailsPageWrapper() {
-  const { workspaceId, cloudProviderId } = useParams();
+  const { cloudProviderId } = useParams();
 
-  if (!workspaceId || !cloudProviderId) {
+  if (!cloudProviderId) {
     return <>missing workspace id or cloud provider id</>
   }
 
-  const workspaceIdNum = parseInt(workspaceId)
   const cloudProviderIdNum = parseInt(cloudProviderId)
-  return <CloudProviderDetailsPage workspaceId={workspaceIdNum} cloudProviderId={cloudProviderIdNum} />
+  return <CloudProviderDetailsPage cloudProviderId={cloudProviderIdNum} />
 }

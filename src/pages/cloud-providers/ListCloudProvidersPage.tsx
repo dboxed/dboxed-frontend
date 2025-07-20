@@ -5,10 +5,7 @@ import { Plus } from "lucide-react"
 import { useUnboxedQueryClient } from "@/api/api.ts";
 import { DataTable } from "@/components/ui/data-table"
 import type { ColumnDef } from "@tanstack/react-table"
-
-interface ListCloudProvidersPageProps {
-  workspaceId: number
-}
+import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 
 // Define the CloudProvider type based on the API schema
 interface CloudProvider {
@@ -42,14 +39,15 @@ function Badge({ children, variant = "default", className = "" }: {
   )
 }
 
-export function ListCloudProvidersPage(props: ListCloudProvidersPageProps) {
+export function ListCloudProvidersPage() {
   const client = useUnboxedQueryClient()
   const navigate = useNavigate()
+  const { workspaceId } = useSelectedWorkspaceId()
 
   const cloudProviders = client.useQuery('get', '/v1/workspaces/{workspaceId}/cloud-providers', {
     params: {
       path: {
-        workspaceId: props.workspaceId,
+        workspaceId: workspaceId,
       }
     }
   })
@@ -64,7 +62,7 @@ export function ListCloudProvidersPage(props: ListCloudProvidersPageProps) {
         const id = row.original.id
         return (
           <button
-            onClick={() => navigate(`/workspaces/${props.workspaceId}/cloud-providers/${id}`)}
+            onClick={() => navigate(`/workspaces/${workspaceId}/cloud-providers/${id}`)}
             className="font-medium text-left hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded"
           >
             {name}
@@ -134,7 +132,7 @@ export function ListCloudProvidersPage(props: ListCloudProvidersPageProps) {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate(`/workspaces/${props.workspaceId}/cloud-providers/${id}`)}
+            onClick={() => navigate(`/workspaces/${workspaceId}/cloud-providers/${id}`)}
           >
             View Details
           </Button>
@@ -148,7 +146,7 @@ export function ListCloudProvidersPage(props: ListCloudProvidersPageProps) {
       <BasePage title="Cloud Providers">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Cloud Providers</h2>
-          <Button onClick={() => navigate(`/workspaces/${props.workspaceId}/cloud-providers/create`)}>
+          <Button onClick={() => navigate(`/workspaces/${workspaceId}/cloud-providers/create`)}>
             <Plus className="mr-2 h-4 w-4" />
             Create Cloud Provider
           </Button>
@@ -163,7 +161,7 @@ export function ListCloudProvidersPage(props: ListCloudProvidersPageProps) {
       <BasePage title="Cloud Providers">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Cloud Providers</h2>
-          <Button onClick={() => navigate(`/workspaces/${props.workspaceId}/cloud-providers/create`)}>
+          <Button onClick={() => navigate(`/workspaces/${workspaceId}/cloud-providers/create`)}>
             <Plus className="mr-2 h-4 w-4" />
             Create Cloud Provider
           </Button>
@@ -179,7 +177,7 @@ export function ListCloudProvidersPage(props: ListCloudProvidersPageProps) {
     <BasePage title="Cloud Providers">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Cloud Providers</h2>
-        <Button onClick={() => navigate(`/workspaces/${props.workspaceId}/cloud-providers/create`)}>
+        <Button onClick={() => navigate(`/workspaces/${workspaceId}/cloud-providers/create`)}>
           <Plus className="mr-2 h-4 w-4" />
           Create Cloud Provider
         </Button>

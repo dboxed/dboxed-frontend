@@ -14,7 +14,6 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { Outlet } from "react-router";
-import { Toaster } from "sonner";
 
 interface MainLayoutProps {
   isAdmin?: boolean
@@ -23,7 +22,6 @@ interface MainLayoutProps {
 export default function MainLayout({ }: MainLayoutProps) {
   return (
     <SidebarProvider>
-      <Toaster />
       <AppSidebar/>
       <SidebarInset>
         <header

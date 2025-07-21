@@ -8,15 +8,13 @@ import { useEffect } from "react"
 import type { UseFormReturn, FieldValues } from "react-hook-form"
 import { Form } from "@/components/ui/form.tsx"
 import type { paths } from "@/api/models/schema";
-import { type PathsWithMethod } from "openapi-typescript-helpers";
 import { DeleteButton } from "@/components/DeleteButton";
 
 interface BaseDetailsPageProps<T extends FieldValues, U extends FieldValues> {
   title: string
   children: (data: T, form: UseFormReturn<U>) => React.ReactNode
-  resourcePath: PathsWithMethod<paths, 'get'>
-  updatePath: PathsWithMethod<paths, 'patch'>
-  deletePath?: PathsWithMethod<paths, 'delete'>
+  resourcePath: keyof paths
+  enableDelete?: boolean,
   apiParams?: Record<string, any>
   onSuccess?: (data: T) => void
   onError?: (error: any) => void
@@ -34,8 +32,7 @@ export function BaseDetailsPage<T extends FieldValues, U extends FieldValues>({
   title,
   children,
   resourcePath,
-  updatePath,
-  deletePath,
+  enableDelete,
   apiParams = {},
   onSuccess,
   onError,
@@ -56,15 +53,15 @@ export function BaseDetailsPage<T extends FieldValues, U extends FieldValues>({
   })
   
   // Fetch the resource
-  const resourceQuery = client.useQuery('get', resourcePath, {
+  const resourceQuery = client.useQuery('get', resourcePath as any, {
     params: apiParams
   })
   
   // Update mutation for PATCH
-  const updateMutation = client.useMutation('patch', updatePath)
+  const updateMutation = client.useMutation('patch', resourcePath as any)
 
   // Delete mutation for DELETE (only if deletePath is provided)
-  const deleteMutation = deletePath ? client.useMutation('delete', deletePath) : null
+  const deleteMutation = enableDelete ? client.useMutation('delete', resourcePath as any) : null
 
   // Build update defaults when resource is loaded
   useEffect(() => {
@@ -196,7 +193,7 @@ export function BaseDetailsPage<T extends FieldValues, U extends FieldValues>({
         </CardContent>
         <CardFooter className="flex justify-between space-x-2">
           <div>
-            {deletePath && (
+            {enableDelete && (
               <DeleteButton
                 onDelete={handleDelete}
                 resourceName={title.toLowerCase()}

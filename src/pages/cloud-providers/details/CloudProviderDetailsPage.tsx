@@ -36,8 +36,7 @@ export function CloudProviderDetailsPage() {
     <BaseDetailsPage<components["schemas"]["CloudProvider"], components["schemas"]["UpdateCloudProvider"]>
       title="Cloud Provider"
       resourcePath="/v1/workspaces/{workspaceId}/cloud-providers/{id}"
-      updatePath="/v1/workspaces/{workspaceId}/cloud-providers/{id}"
-      deletePath="/v1/workspaces/{workspaceId}/cloud-providers/{id}"
+      enableDelete={true}
       buildUpdateDefaults={buildUpdateDefaults}
       apiParams={{
         path: {

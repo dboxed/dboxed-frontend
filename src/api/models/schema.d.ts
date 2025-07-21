@@ -685,7 +685,10 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: number;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -714,7 +717,10 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: number;
+            };
             cookie?: never;
         };
         requestBody: {
@@ -749,6 +755,8 @@ export interface operations {
             header?: never;
             path: {
                 id: number;
+                /** @description The workspace id */
+                workspaceId: number;
             };
             cookie?: never;
         };
@@ -780,6 +788,8 @@ export interface operations {
             header?: never;
             path: {
                 id: number;
+                /** @description The workspace id */
+                workspaceId: number;
             };
             cookie?: never;
         };
@@ -811,6 +821,8 @@ export interface operations {
             header?: never;
             path: {
                 id: number;
+                /** @description The workspace id */
+                workspaceId: number;
             };
             cookie?: never;
         };

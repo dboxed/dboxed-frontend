@@ -1,6 +1,5 @@
 import * as React from "react"
-import { useLocation, useNavigate, useParams } from "react-router"
-import { Home } from "lucide-react"
+import { useLocation, useNavigate } from "react-router"
 import {
   Breadcrumb,
   BreadcrumbItem,

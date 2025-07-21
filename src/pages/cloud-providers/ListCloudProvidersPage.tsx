@@ -1,26 +1,14 @@
 import { Button } from "@/components/ui/button"
-import { BasePage } from "@/pages/base/BasePage.tsx"
 import { useNavigate } from "react-router"
-import { Plus } from "lucide-react"
-import { useUnboxedQueryClient } from "@/api/api.ts";
-import { DataTable } from "@/components/ui/data-table"
 import type { ColumnDef } from "@tanstack/react-table"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import type { components } from "@/api/models/schema";
 import { Badge } from "@/components/ui/badge.tsx";
+import { BaseListPage } from "@/pages/base";
 
 export function ListCloudProvidersPage() {
-  const client = useUnboxedQueryClient()
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
-
-  const cloudProviders = client.useQuery('get', '/v1/workspaces/{workspaceId}/cloud-providers', {
-    params: {
-      path: {
-        workspaceId: workspaceId,
-      }
-    }
-  })
 
   // Define columns for the DataTable
   const columns: ColumnDef<components["schemas"]["CloudProvider"]>[] = [
@@ -111,55 +99,20 @@ export function ListCloudProvidersPage() {
     },
   ]
 
-  if (cloudProviders.isLoading) {
-    return (
-      <BasePage title="Cloud Providers">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Cloud Providers</h2>
-          <Button onClick={() => navigate(`/workspaces/${workspaceId}/cloud-providers/create`)}>
-            <Plus className="mr-2 h-4 w-4" />
-            Create Cloud Provider
-          </Button>
-        </div>
-        <div className="text-muted-foreground">Loading cloud providers...</div>
-      </BasePage>
-    )
-  }
-
-  if (cloudProviders.error) {
-    return (
-      <BasePage title="Cloud Providers">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Cloud Providers</h2>
-          <Button onClick={() => navigate(`/workspaces/${workspaceId}/cloud-providers/create`)}>
-            <Plus className="mr-2 h-4 w-4" />
-            Create Cloud Provider
-          </Button>
-        </div>
-        <div className="text-red-600">Failed to load cloud providers</div>
-      </BasePage>
-    )
-  }
-
-  const data = cloudProviders.data?.items || []
-
   return (
-    <BasePage title="Cloud Providers">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Cloud Providers</h2>
-        <Button onClick={() => navigate(`/workspaces/${workspaceId}/cloud-providers/create`)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Create Cloud Provider
-        </Button>
-      </div>
-      
-      {data.length === 0 ? (
-        <div className="text-muted-foreground">
-          No cloud providers configured yet. Create your first cloud provider to get started.
-        </div>
-      ) : (
-        <DataTable columns={columns} data={data} />
-      )}
-    </BasePage>
+    <BaseListPage<components["schemas"]["CloudProvider"]>
+      title="Cloud Providers"
+      resourcePath="/v1/workspaces/{workspaceId}/cloud-providers"
+      createPath={`/workspaces/${workspaceId}/cloud-providers/create`}
+      columns={columns}
+      apiParams={{
+        path: {
+          workspaceId: workspaceId,
+        }
+      }}
+      emptyStateMessage="No cloud providers configured yet. Create your first cloud provider to get started."
+      searchColumn="name"
+      searchPlaceholder="Search cloud providers..."
+    />
   )
 }

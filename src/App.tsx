@@ -1,13 +1,12 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { LoginGate } from './components/login-gate';
 import { onSigninCallback, useIsAdmin, userManager } from './api/auth';
-import { Route, Routes, useLocation, useNavigate, useParams } from 'react-router';
+import { Route, Routes, useLocation, useNavigate } from 'react-router';
 import MainLayout from "@/layouts/MainLayout.tsx";
 import { AuthProvider } from "react-oidc-context";
 import { CreateWorkspacePage } from "@/pages/workspaces/CreateWorkspacePage.tsx";
 import { ListCloudProvidersPage } from "@/pages/cloud-providers/ListCloudProvidersPage.tsx";
-import { CloudProviderDetailsPage } from "@/pages/cloud-providers/CloudProviderDetailsPage.tsx";
-import type { ReactElement } from "react";
+import { CloudProviderDetailsPage } from "@/pages/cloud-providers/details/CloudProviderDetailsPage.tsx";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import { useUnboxedQueryClient } from "@/api/api.ts";
 import { Toaster } from "sonner";
@@ -62,7 +61,7 @@ function AuthenticatedApp() {
         <Route path="/" element={<MainLayout isAdmin={isAdminQuery.isAdmin} />}>
           <Route path="/workspaces/:workspaceId" element={<></>}/>
           <Route path="/workspaces/:workspaceId/cloud-providers" element={<ListCloudProvidersPage/>}/>
-          <Route path="/workspaces/:workspaceId/cloud-providers/:cloudProviderId" element={<CloudProviderDetailsPageWrapper />}/>
+          <Route path="/workspaces/:workspaceId/cloud-providers/:cloudProviderId" element={<CloudProviderDetailsPage />}/>
         </Route>
         <Route path="/workspaces/create" element={<CreateWorkspacePage/>}/>
         <Route path="/workspaces/:workspaceId/cloud-providers/create" element={<CreateCloudProviderPage/>}/>
@@ -74,13 +73,3 @@ function AuthenticatedApp() {
   )
 }
 
-function CloudProviderDetailsPageWrapper() {
-  const { cloudProviderId } = useParams();
-
-  if (!cloudProviderId) {
-    return <>missing workspace id or cloud provider id</>
-  }
-
-  const cloudProviderIdNum = parseInt(cloudProviderId)
-  return <CloudProviderDetailsPage cloudProviderId={cloudProviderIdNum} />
-}

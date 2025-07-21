@@ -24,6 +24,8 @@ export const useUnboxedFetchClient = () => {
         return createUnboxedFetchClient(auth.user?.access_token)
     }, [auth.isLoading, auth.user?.access_token])
 
+    client.GET
+
     return client
 }
 

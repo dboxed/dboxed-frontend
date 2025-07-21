@@ -174,8 +174,6 @@ export interface components {
             workspace: number;
         };
         CloudProviderAws: {
-            /** Format: int64 */
-            id: number;
             region: string;
             security_group_id: string | null;
             subnets: components["schemas"]["CloudProviderAwsSubnet"][] | null;
@@ -198,8 +196,6 @@ export interface components {
             hetzner_network_id: number | null;
             hetzner_network_name: string;
             hetzner_network_zone: string | null;
-            /** Format: int64 */
-            id: number;
             robot_subnet_cidr: string | null;
             /** Format: int64 */
             robot_vswitch_id: number | null;
@@ -399,18 +395,18 @@ export interface components {
             readonly $schema?: string;
             aws?: components["schemas"]["UpdateCloudProviderAws"];
             hetzner?: components["schemas"]["UpdateCloudProviderHetzner"];
-            ssh_key_public: string | null;
+            ssh_key_public?: string;
         };
         UpdateCloudProviderAws: {
-            aws_access_key_id: string | null;
-            aws_secret_access_key: string | null;
+            aws_access_key_id?: string;
+            aws_secret_access_key?: string;
         };
         UpdateCloudProviderHetzner: {
-            cloud_token: string | null;
-            robot_password: string | null;
-            robot_username: string | null;
+            cloud_token?: string;
+            robot_password?: string;
+            robot_username?: string;
             /** Format: int64 */
-            robot_vswitch_id: number | null;
+            robot_vswitch_id?: number;
         };
         User: {
             /**
@@ -813,7 +809,9 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                id: number;
+            };
             cookie?: never;
         };
         requestBody: {

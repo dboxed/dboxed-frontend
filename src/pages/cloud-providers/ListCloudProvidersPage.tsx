@@ -6,38 +6,8 @@ import { useUnboxedQueryClient } from "@/api/api.ts";
 import { DataTable } from "@/components/ui/data-table"
 import type { ColumnDef } from "@tanstack/react-table"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
-
-// Define the CloudProvider type based on the API schema
-interface CloudProvider {
-  id: number
-  name: string
-  type: string
-  status: string
-  created_at: string
-  ssh_key_fingerprint: string | null
-  workspace: number
-}
-
-// Simple Badge component
-function Badge({ children, variant = "default", className = "" }: { 
-  children: React.ReactNode; 
-  variant?: "default" | "secondary" | "destructive" | "outline";
-  className?: string;
-}) {
-  const baseClasses = "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
-  const variantClasses = {
-    default: "bg-primary text-primary-foreground",
-    secondary: "bg-secondary text-secondary-foreground",
-    destructive: "bg-destructive text-destructive-foreground",
-    outline: "border border-input bg-background"
-  }
-  
-  return (
-    <span className={`${baseClasses} ${variantClasses[variant]} ${className}`}>
-      {children}
-    </span>
-  )
-}
+import type { components } from "@/api/models/schema";
+import { Badge } from "@/components/ui/badge.tsx";
 
 export function ListCloudProvidersPage() {
   const client = useUnboxedQueryClient()
@@ -53,7 +23,7 @@ export function ListCloudProvidersPage() {
   })
 
   // Define columns for the DataTable
-  const columns: ColumnDef<CloudProvider>[] = [
+  const columns: ColumnDef<components["schemas"]["CloudProvider"]>[] = [
     {
       accessorKey: "name",
       header: "Name",

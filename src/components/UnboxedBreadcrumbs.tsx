@@ -145,7 +145,7 @@ export function UnboxedBreadcrumbs({ className }: UnboxedBreadcrumbsProps) {
   const breadcrumbElements: React.ReactNode[] = []
 
   breadcrumbElements.push(
-    <BreadcrumbItem key="workspace">
+    <BreadcrumbItem key="root">
       <BreadcrumbElement
         isCurrentPage={true}
       >

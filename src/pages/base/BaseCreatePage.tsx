@@ -6,11 +6,12 @@ import { toast } from "sonner"
 import { useForm } from "react-hook-form"
 import type { UseFormReturn, FieldValues } from "react-hook-form"
 import { Form } from "@/components/ui/form.tsx";
+import type { paths } from "@/api/models/schema";
 
 interface BaseCreatePageProps<T extends FieldValues = FieldValues> {
   title: string
   children: (form: UseFormReturn<T>) => React.ReactNode
-  apiRoute: string
+  apiRoute: keyof paths
   apiParams?: Record<string, any>
   onSuccess?: (data: any) => void
   onError?: (error: any) => void
@@ -47,37 +48,16 @@ export function BaseCreatePage<T extends FieldValues = FieldValues>({
   const createMutation = client.useMutation('post', apiRoute as any)
 
   const handleFormSubmit = (data: T) => {
+    let processedData = data
     if (onSubmit) {
-      const processedData = onSubmit(data)
-      if (processedData) {
-        createMutation.mutate({
-          params: apiParams,
-          body: processedData,
-        }, {
-          onSuccess: (responseData) => {
-            toast.success(`${title} created successfully!`)
-            if (onSuccess) {
-              onSuccess(responseData)
-            } else {
-              navigate(-1)
-            }
-          },
-          onError: (error) => {
-            toast.error(`Failed to create ${title.toLowerCase()}`, {
-              description: error.detail || `An error occurred while creating the ${title.toLowerCase()}.`
-            })
-            if (onError) {
-              onError(error)
-            }
-          }
-        })
-      }
-      return
+      // make a copy first
+      processedData = JSON.parse(JSON.stringify(data));
+      processedData = onSubmit(processedData)
     }
 
     createMutation.mutate({
       params: apiParams,
-      body: data,
+      body: processedData,
     }, {
       onSuccess: (responseData) => {
         toast.success(`${title} created successfully!`)
@@ -161,4 +141,4 @@ function FormSubmitButton<T extends FieldValues>({
       {isSubmitting ? "Creating..." : submitButtonText}
     </Button>
   )
-} 
+}

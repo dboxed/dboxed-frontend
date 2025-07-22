@@ -199,7 +199,7 @@ export interface paths {
         patch: operations["patch-v1-workspaces-by-workspace-id-machines-by-id"];
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/machines/{id}/token": {
+    "/v1/workspaces/{workspaceId}/machines/{id}/regenerate-token": {
         parameters: {
             query?: never;
             header?: never;
@@ -208,8 +208,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Post v1 workspaces by workspace ID machines by ID token */
-        post: operations["post-v1-workspaces-by-workspace-id-machines-by-id-token"];
+        /** Post v1 workspaces by workspace ID machines by ID regenerate token */
+        post: operations["post-v1-workspaces-by-workspace-id-machines-by-id-regenerate-token"];
         delete?: never;
         options?: never;
         head?: never;
@@ -523,7 +523,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            jwt: string;
+            token: string;
         };
         Price: {
             Currency: string;
@@ -1236,7 +1236,7 @@ export interface operations {
             };
         };
     };
-    "post-v1-workspaces-by-workspace-id-machines-by-id-token": {
+    "post-v1-workspaces-by-workspace-id-machines-by-id-regenerate-token": {
         parameters: {
             query?: never;
             header?: never;

@@ -14,7 +14,8 @@ interface BaseDetailsPageProps<T extends FieldValues, U extends FieldValues> {
   title: string
   children: (data: T, form: UseFormReturn<U>) => React.ReactNode
   resourcePath: keyof paths
-  enableDelete?: boolean,
+  enableDelete?: boolean
+  enableSave?: boolean
   apiParams?: Record<string, any>
   onSuccess?: (data: T) => void
   onError?: (error: any) => void
@@ -26,6 +27,7 @@ interface BaseDetailsPageProps<T extends FieldValues, U extends FieldValues> {
   isLoading?: boolean
   resolver?: any
   buildUpdateDefaults?: (data: T) => U
+  afterDeleteUrl?: string
 }
 
 export function BaseDetailsPage<T extends FieldValues, U extends FieldValues>({
@@ -33,6 +35,7 @@ export function BaseDetailsPage<T extends FieldValues, U extends FieldValues>({
   children,
   resourcePath,
   enableDelete,
+  enableSave = true,
   apiParams = {},
   onSuccess,
   onError,
@@ -43,7 +46,8 @@ export function BaseDetailsPage<T extends FieldValues, U extends FieldValues>({
   deleteButtonText = "Delete",
   isLoading = false,
   resolver,
-  buildUpdateDefaults
+  buildUpdateDefaults,
+  afterDeleteUrl
 }: BaseDetailsPageProps<T, U>) {
   const client = useUnboxedQueryClient()
   const navigate = useNavigate()
@@ -76,8 +80,6 @@ export function BaseDetailsPage<T extends FieldValues, U extends FieldValues>({
       toast.error("No resource data available")
       return
     }
-
-    console.log(data)
 
     updateMutation.mutate({
       params: apiParams as any,
@@ -114,6 +116,8 @@ export function BaseDetailsPage<T extends FieldValues, U extends FieldValues>({
         toast.success(`${title} deleted successfully!`)
         if (onDelete) {
           onDelete()
+        } else if (afterDeleteUrl) {
+          navigate(afterDeleteUrl)
         } else {
           navigate(-1)
         }
@@ -211,12 +215,14 @@ export function BaseDetailsPage<T extends FieldValues, U extends FieldValues>({
             >
               {cancelButtonText}
             </Button>
-            <FormSubmitButton 
-              onSubmit={handleFormSubmit}
-              isSubmitting={isSubmitting}
-              submitButtonText={submitButtonText}
-              form={form}
-            />
+            {enableSave && (
+              <FormSubmitButton 
+                onSubmit={handleFormSubmit}
+                isSubmitting={isSubmitting}
+                submitButtonText={submitButtonText}
+                form={form}
+              />
+            )}
           </div>
         </CardFooter>
       </Card>

@@ -38,6 +38,7 @@ export function CloudProviderDetailsPage() {
       resourcePath="/v1/workspaces/{workspaceId}/cloud-providers/{id}"
       enableDelete={true}
       buildUpdateDefaults={buildUpdateDefaults}
+      afterDeleteUrl={`/workspaces/${workspaceId}/cloud-providers`}
       apiParams={{
         path: {
           workspaceId: workspaceId,

@@ -12,7 +12,7 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import { useUnboxedQueryClient } from "@/api/api.ts";
 import { Toaster } from "sonner";
 import { CreateCloudProviderPage } from "@/pages/cloud-providers/create/CreateCloudProviderPage.tsx";
-import { CreateMachinePage } from "@/pages/machines";
+import { CreateMachinePage, MachineDetailsPage } from "@/pages/machines";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -65,6 +65,7 @@ function AuthenticatedApp() {
           <Route path="/workspaces/:workspaceId/cloud-providers" element={<ListCloudProvidersPage/>}/>
           <Route path="/workspaces/:workspaceId/cloud-providers/:cloudProviderId" element={<CloudProviderDetailsPage />}/>
           <Route path="/workspaces/:workspaceId/machines" element={<ListMachinesPage/>}/>
+          <Route path="/workspaces/:workspaceId/machines/:machineId" element={<MachineDetailsPage/>}/>
         </Route>
         <Route path="/workspaces/create" element={<CreateWorkspacePage/>}/>
         <Route path="/workspaces/:workspaceId/cloud-providers/create" element={<CreateCloudProviderPage/>}/>

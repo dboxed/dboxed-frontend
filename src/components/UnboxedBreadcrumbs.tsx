@@ -121,6 +121,60 @@ function CloudProviderBreadcrumb({ cloudProviderId, isCurrentPage }: CloudProvid
   )
 }
 
+interface MachinesBreadcrumbProps {
+  isCurrentPage?: boolean
+}
+
+function MachinesBreadcrumb({ isCurrentPage }: MachinesBreadcrumbProps) {
+  const navigate = useNavigate()
+  const { workspaceId } = useSelectedWorkspaceId()
+  const href = `/workspaces/${workspaceId}/machines`
+
+  return (
+    <BreadcrumbElement
+      href={href}
+      isCurrentPage={isCurrentPage}
+      onClick={() => navigate(href)}
+    >
+      <span>Machines</span>
+    </BreadcrumbElement>
+  )
+}
+
+interface MachineBreadcrumbProps {
+  machineId: number
+  isCurrentPage?: boolean
+}
+
+function MachineBreadcrumb({ machineId, isCurrentPage }: MachineBreadcrumbProps) {
+  const navigate = useNavigate()
+  const { workspaceId } = useSelectedWorkspaceId()
+  const client = useUnboxedQueryClient()
+
+  const machine = client.useQuery('get', '/v1/workspaces/{workspaceId}/machines/{id}', {
+    params: { 
+      path: { 
+        workspaceId: workspaceId!,
+        id: machineId 
+      } 
+    },
+    enabled: !!workspaceId && !!machineId
+  })
+
+  const href = `/workspaces/${workspaceId}/machines/${machineId}`
+  const label = machine.data?.name || 'Machine'
+
+  return (
+    <BreadcrumbElement
+      href={href}
+      isCurrentPage={isCurrentPage}
+      onClick={() => navigate(href)}
+    >
+      <span>{label}</span>
+    </BreadcrumbElement>
+  )
+}
+
 interface CreateBreadcrumbProps {
   isCurrentPage?: boolean
 }
@@ -175,7 +229,7 @@ export function UnboxedBreadcrumbs({ className }: UnboxedBreadcrumbsProps) {
     const isCurrentPage = pathSegments.length === currentIndex + 1
     
     breadcrumbElements.push(
-      <BreadcrumbSeparator key="sep-workspace" />,
+      <BreadcrumbSeparator key="sep-workspace-cloud-providers" />,
       <BreadcrumbItem key="cloud-providers">
         <CloudProvidersBreadcrumb isCurrentPage={isCurrentPage} />
       </BreadcrumbItem>
@@ -205,7 +259,50 @@ export function UnboxedBreadcrumbs({ className }: UnboxedBreadcrumbsProps) {
     // Handle create path
     if (pathSegments[currentIndex] === 'create') {
       breadcrumbElements.push(
-        <BreadcrumbSeparator key="sep-create" />,
+        <BreadcrumbSeparator key="sep-create-cloud-provider" />,
+        <BreadcrumbItem key="create">
+          <CreateBreadcrumb isCurrentPage={true} />
+        </BreadcrumbItem>
+      )
+    }
+  }
+
+  // Handle machines path
+  if (pathSegments[currentIndex] === 'machines') {
+    const isCurrentPage = pathSegments.length === currentIndex + 1
+    
+    breadcrumbElements.push(
+      <BreadcrumbSeparator key="sep-workspace-machines" />,
+      <BreadcrumbItem key="machines">
+        <MachinesBreadcrumb isCurrentPage={isCurrentPage} />
+      </BreadcrumbItem>
+    )
+    
+    currentIndex++
+
+    // Handle specific machine ID
+    const machineIdSegment = pathSegments[currentIndex]
+    if (machineIdSegment && machineIdSegment.match(/^\d+$/)) {
+      const machineId = parseInt(machineIdSegment)
+      const isCurrentPage = pathSegments.length === currentIndex + 1
+      
+      breadcrumbElements.push(
+        <BreadcrumbSeparator key="sep-machines" />,
+        <BreadcrumbItem key="machine">
+          <MachineBreadcrumb
+            machineId={machineId} 
+            isCurrentPage={isCurrentPage} 
+          />
+        </BreadcrumbItem>
+      )
+      
+      currentIndex++
+    }
+
+    // Handle create path
+    if (pathSegments[currentIndex] === 'create') {
+      breadcrumbElements.push(
+        <BreadcrumbSeparator key="sep-create-machine" />,
         <BreadcrumbItem key="create">
           <CreateBreadcrumb isCurrentPage={true} />
         </BreadcrumbItem>
@@ -222,7 +319,7 @@ export function UnboxedBreadcrumbs({ className }: UnboxedBreadcrumbsProps) {
           <span>Workspaces</span>
         </BreadcrumbElement>
       </BreadcrumbItem>,
-      <BreadcrumbSeparator key="sep-create" />,
+      <BreadcrumbSeparator key="sep-create-workspace" />,
       <BreadcrumbItem key="create">
         <CreateBreadcrumb isCurrentPage={true} />
       </BreadcrumbItem>

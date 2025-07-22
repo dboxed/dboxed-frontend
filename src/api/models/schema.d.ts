@@ -21,6 +21,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/box-spec": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 box spec */
+        get: operations["get-v1-box-spec"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/cloud-provider-info/aws/regions": {
         parameters: {
             query?: never;
@@ -145,6 +162,60 @@ export interface paths {
         patch: operations["patch-v1-workspaces-by-workspace-id-cloud-providers-by-id"];
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/machines": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID machines */
+        get: operations["get-v1-workspaces-by-workspace-id-machines"];
+        put?: never;
+        /** Post v1 workspaces by workspace ID machines */
+        post: operations["post-v1-workspaces-by-workspace-id-machines"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/machines/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID machines by ID */
+        get: operations["get-v1-workspaces-by-workspace-id-machines-by-id"];
+        put?: never;
+        post?: never;
+        /** Delete v1 workspaces by workspace ID machines by ID */
+        delete: operations["delete-v1-workspaces-by-workspace-id-machines-by-id"];
+        options?: never;
+        head?: never;
+        /** Patch v1 workspaces by workspace ID machines by ID */
+        patch: operations["patch-v1-workspaces-by-workspace-id-machines-by-id"];
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/machines/{id}/token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID machines by ID token */
+        post: operations["post-v1-workspaces-by-workspace-id-machines-by-id-token"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -153,6 +224,24 @@ export interface components {
             Endpoint: string;
             OptInStatus: string;
             RegionName: string;
+        };
+        BoxFile: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            spec: components["schemas"]["BoxSpec"];
+        };
+        BoxSpec: {
+            compose: string;
+            dns?: components["schemas"]["DnsSpec"];
+            fileBundles: components["schemas"]["FileBundle"][] | null;
+            hostname: string;
+            infraImage?: string;
+            networkDomain: string;
+            unboxedBinaryHash?: string;
+            unboxedBinaryUrl?: string;
         };
         CloudProvider: {
             /**
@@ -224,6 +313,28 @@ export interface components {
             robot_password?: string;
             robot_username?: string;
         };
+        CreateMachine: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            aws?: components["schemas"]["CreateMachineAws"];
+            /** Format: int64 */
+            cloud_provider?: number;
+            hetzner?: components["schemas"]["CreateMachineHetzner"];
+            name: string;
+        };
+        CreateMachineAws: {
+            instance_type: string;
+            /** Format: int64 */
+            root_volume_size?: number;
+            subnet_id: string;
+        };
+        CreateMachineHetzner: {
+            server_location: string;
+            server_type: string;
+        };
         CreateWorkspace: {
             /**
              * Format: uri
@@ -237,6 +348,11 @@ export interface components {
             Announced: string;
             /** Format: date-time */
             UnavailableAfter: string;
+        };
+        DnsLibP2PSpec: Record<string, never>;
+        DnsSpec: {
+            libp2p?: components["schemas"]["DnsLibP2PSpec"];
+            networkInterface: string;
         };
         ErrorDetail: {
             /** @description Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id' */
@@ -274,6 +390,27 @@ export interface components {
              * @default about:blank
              */
             type: string;
+        };
+        FileBundle: {
+            files: components["schemas"]["FileBundleEntry"][] | null;
+            name: string;
+            /** Format: int32 */
+            rootGid: number;
+            /** Format: int32 */
+            rootMode: number;
+            /** Format: int32 */
+            rootUid: number;
+        };
+        FileBundleEntry: {
+            data?: string;
+            /** Format: int64 */
+            gid: number;
+            /** Format: int32 */
+            mode: number;
+            path: string;
+            stringData?: string;
+            /** Format: int64 */
+            uid: number;
         };
         HetznerLocation: {
             city: string;
@@ -318,6 +455,16 @@ export interface components {
             /** Format: int64 */
             total_count: number;
         };
+        ListBodyMachine: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["Machine"][] | null;
+            /** Format: int64 */
+            total_count: number;
+        };
         ListBodyServerType: {
             /**
              * Format: uri
@@ -350,6 +497,33 @@ export interface components {
             Longitude: number;
             Name: string;
             NetworkZone: string;
+        };
+        Machine: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            box_spec: components["schemas"]["BoxSpec"];
+            /** Format: int64 */
+            cloud_provider: number | null;
+            cloud_provider_type: string | null;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: int64 */
+            id: number;
+            name: string;
+            unboxed_version: string;
+            /** Format: int64 */
+            workspace: number;
+        };
+        MachineToken: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            jwt: string;
         };
         Price: {
             Currency: string;
@@ -408,6 +582,14 @@ export interface components {
             /** Format: int64 */
             robot_vswitch_id?: number;
         };
+        UpdateMachine: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            boxSpec: components["schemas"]["BoxSpec"];
+        };
         User: {
             /**
              * Format: uri
@@ -457,6 +639,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["User"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-box-spec": {
+        parameters: {
+            query?: {
+                token?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BoxFile"];
                 };
             };
             /** @description Error */
@@ -839,6 +1052,210 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CloudProvider"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-machines": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListBodyMachine"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-machines": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateMachine"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Machine"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-machines-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Machine"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-v1-workspaces-by-workspace-id-machines-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Machine"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "patch-v1-workspaces-by-workspace-id-machines-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateMachine"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Machine"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-machines-by-id-token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MachineToken"];
                 };
             };
             /** @description Error */

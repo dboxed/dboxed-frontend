@@ -7,6 +7,7 @@ import { AuthProvider } from "react-oidc-context";
 import { CreateWorkspacePage } from "@/pages/workspaces/CreateWorkspacePage.tsx";
 import { ListCloudProvidersPage } from "@/pages/cloud-providers/ListCloudProvidersPage.tsx";
 import { CloudProviderDetailsPage } from "@/pages/cloud-providers/details/CloudProviderDetailsPage.tsx";
+import { ListMachinesPage } from "@/pages/machines/ListMachinesPage.tsx";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import { useUnboxedQueryClient } from "@/api/api.ts";
 import { Toaster } from "sonner";
@@ -62,6 +63,7 @@ function AuthenticatedApp() {
           <Route path="/workspaces/:workspaceId" element={<></>}/>
           <Route path="/workspaces/:workspaceId/cloud-providers" element={<ListCloudProvidersPage/>}/>
           <Route path="/workspaces/:workspaceId/cloud-providers/:cloudProviderId" element={<CloudProviderDetailsPage />}/>
+          <Route path="/workspaces/:workspaceId/machines" element={<ListMachinesPage/>}/>
         </Route>
         <Route path="/workspaces/create" element={<CreateWorkspacePage/>}/>
         <Route path="/workspaces/:workspaceId/cloud-providers/create" element={<CreateCloudProviderPage/>}/>

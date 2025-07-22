@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Cloud, } from "lucide-react"
+import { Cloud, Monitor } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
@@ -13,6 +13,11 @@ const navMain = [
     title: "Cloud Providers",
     navigate: "/workspaces/{workspaceId}/cloud-providers",
     icon: Cloud,
+  },
+  {
+    title: "Machines",
+    navigate: "/workspaces/{workspaceId}/machines",
+    icon: Monitor,
   },
 ]
 

@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { BaseResourceDetailsPage } from "@/pages/base/BaseResourceDetailsPage.tsx"
@@ -6,11 +7,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.t
 import { CardTitle, Card, CardHeader, CardContent } from "@/components/ui/card.tsx"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
+import { Button } from "@/components/ui/button.tsx"
+import { YamlEditDialog } from "@/components/YamlEditDialog.tsx"
 import { FileBundlesTab } from "@/pages/machines/details/boxspec/FileBundlesTab.tsx";
+import { parse, stringify } from 'yaml'
 
 export function BoxSpecEditorPage() {
   const { workspaceId } = useSelectedWorkspaceId()
   const { machineId } = useParams<{ machineId: string }>()
+  const [showYamlDialog, setShowYamlDialog] = useState(false)
 
   if (!machineId) {
     return <div>Invalid machine ID</div>
@@ -41,13 +46,44 @@ export function BoxSpecEditorPage() {
       enableSave={true}
       buildUpdateDefaults={buildUpdateDefaults}
     >
-      {(data, form) => (
-        <Tabs defaultValue="general" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="general">General</TabsTrigger>
-            <TabsTrigger value="dns">DNS</TabsTrigger>
-            <TabsTrigger value="files">File Bundles</TabsTrigger>
-          </TabsList>
+      {(data, form) => {
+        const handleYamlEdit = () => {
+          setShowYamlDialog(true)
+        }
+
+        const handleYamlSave = (yamlContent: string) => {
+          try {
+            const parsedData = parse(yamlContent)
+            form.reset({'boxSpec': parsedData})
+          } catch (error) {
+            console.error('Failed to parse YAML:', error)
+            // In a real app, you might want to show a toast notification here
+            alert('Invalid YAML format. Please check your syntax.')
+          }
+        }
+
+        const getCurrentYaml = () => {
+          const currentValues = form.getValues()
+          return stringify(currentValues.boxSpec || {}, 2)
+        }
+
+        return (
+          <div className="space-y-6">
+            <Tabs defaultValue="general" className="space-y-6">
+              <div className="flex justify-between items-center">
+                <TabsList className="grid grid-cols-3">
+                  <TabsTrigger value="general">General</TabsTrigger>
+                  <TabsTrigger value="dns">DNS</TabsTrigger>
+                  <TabsTrigger value="files">File Bundles</TabsTrigger>
+                </TabsList>
+                <Button 
+                  variant="outline" 
+                  onClick={handleYamlEdit}
+                  type="button"
+                >
+                  Edit as YAML
+                </Button>
+              </div>
 
           <TabsContent value="general" className="space-y-6">
             <Card>
@@ -135,11 +171,22 @@ export function BoxSpecEditorPage() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="files">
-            <FileBundlesTab form={form} />
-          </TabsContent>
-        </Tabs>
-      )}
+              <TabsContent value="files">
+                <FileBundlesTab form={form} />
+              </TabsContent>
+            </Tabs>
+
+            <YamlEditDialog
+              open={showYamlDialog}
+              onOpenChange={setShowYamlDialog}
+              title="Edit Box Spec as YAML"
+              initialValue={getCurrentYaml()}
+              onSave={handleYamlSave}
+              placeholder="Enter your box spec configuration in YAML format..."
+            />
+          </div>
+        )
+      }}
     </BaseResourceDetailsPage>
   )
 } 

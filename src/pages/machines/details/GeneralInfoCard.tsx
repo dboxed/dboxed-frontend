@@ -34,9 +34,11 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           
           <div>
             <label className="text-sm font-medium">Unboxed Version</label>
-            <Badge variant="outline" className="w-fit">
-              {data.unboxed_version}
-            </Badge>
+            <p className="text-sm text-muted-foreground">
+              <Badge variant="outline" className="w-fit">
+                {data.unboxed_version}
+              </Badge>
+            </p>
           </div>
           
           <div>
@@ -50,7 +52,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
             <label className="text-sm font-medium">Cloud Provider Type</label>
             <p className="text-sm text-muted-foreground">
               {data.cloud_provider_type ? (
-                <Badge variant="secondary" className="capitalize">
+                <Badge variant="outline" className="w-fit">
                   {data.cloud_provider_type}
                 </Badge>
               ) : (

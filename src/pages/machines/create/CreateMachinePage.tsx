@@ -24,6 +24,20 @@ export function CreateMachinePage() {
     return cloudProviders.data?.items?.find(x => x.id == id)
   }
 
+  const handleSubmit = (data: components["schemas"]["CreateMachine"]) => {
+    const cp = getCloudProvider(data.cloud_provider!)
+    if (!cp) {
+      return data
+    }
+
+    if (cp.type == 'aws') {
+      data.hetzner = undefined
+    } else if (cp.type == 'hetzner') {
+      data.aws = undefined
+    }
+    return data
+  }
+
   return (
     <BaseCreatePage<components["schemas"]["CreateMachine"]>
       title="Create Machine"
@@ -33,6 +47,7 @@ export function CreateMachinePage() {
           workspaceId: workspaceId,
         }
       }}
+      onSubmit={handleSubmit}
     >
       {(form) => {
         const cloudProviderId = form.watch("cloud_provider")

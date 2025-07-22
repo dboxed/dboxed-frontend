@@ -1,10 +1,12 @@
-import { BaseDetailsPage } from "@/pages/base/BaseDetailsPage.tsx"
+import { BaseResourceDetailsPage } from "@/pages/base/BaseResourceDetailsPage.tsx"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs.tsx"
-import { useParams } from "react-router"
+import { useParams, Link } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard"
 import { CloudProviderInfoCard } from "./CloudProviderInfoCard"
 import { MachineConnectCard } from "./MachineConnectCard.tsx"
+import { Button } from "@/components/ui/button"
+import { Edit } from "lucide-react"
 import type { components } from "@/api/models/schema"
 
 export function MachineDetailsPage() {
@@ -15,19 +17,39 @@ export function MachineDetailsPage() {
     return <div>Invalid machine ID</div>
   }
 
+  const buildUpdateDefaults = (data: components["schemas"]["Machine"]): components["schemas"]["UpdateMachine"] => {
+    return {
+      boxSpec: data.box_spec
+    }
+  }
+
   return (
-    <BaseDetailsPage<components["schemas"]["Machine"], components["schemas"]["UpdateMachine"]>
-      title="Machine Details"
+    <BaseResourceDetailsPage<components["schemas"]["Machine"], components["schemas"]["UpdateMachine"]>
+      title={data => {
+        if (!data) {
+          return "Machine"
+        }
+        return `Machine ${data.name}`
+      }}
       resourcePath="/v1/workspaces/{workspaceId}/machines/{id}"
       enableSave={false}
       enableDelete={true}
       afterDeleteUrl={`/workspaces/${workspaceId}/machines`}
+      buildUpdateDefaults={buildUpdateDefaults}
       apiParams={{
         path: {
           workspaceId: workspaceId,
           id: machineId,
         }
       }}
+      customButtons={(data, form) => (
+        <Button variant="outline" asChild>
+          <Link to={`/workspaces/${workspaceId}/machines/${machineId}/box-spec`}>
+            <Edit className="h-4 w-4 mr-2" />
+            Edit Box Spec
+          </Link>
+        </Button>
+      )}
     >
       {(data, form) => (
         <Tabs defaultValue="general" className="space-y-6">
@@ -54,6 +76,6 @@ export function MachineDetailsPage() {
           </TabsContent>
         </Tabs>
       )}
-    </BaseDetailsPage>
+    </BaseResourceDetailsPage>
   )
 } 

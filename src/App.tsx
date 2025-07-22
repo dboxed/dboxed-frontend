@@ -13,6 +13,7 @@ import { useUnboxedQueryClient } from "@/api/api.ts";
 import { Toaster } from "sonner";
 import { CreateCloudProviderPage } from "@/pages/cloud-providers/create/CreateCloudProviderPage.tsx";
 import { CreateMachinePage, MachineDetailsPage } from "@/pages/machines";
+import { BoxSpecEditorPage } from "@/pages/machines/details/boxspec/BoxSpecEditorPage.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -66,6 +67,7 @@ function AuthenticatedApp() {
           <Route path="/workspaces/:workspaceId/cloud-providers/:cloudProviderId" element={<CloudProviderDetailsPage />}/>
           <Route path="/workspaces/:workspaceId/machines" element={<ListMachinesPage/>}/>
           <Route path="/workspaces/:workspaceId/machines/:machineId" element={<MachineDetailsPage/>}/>
+          <Route path="/workspaces/:workspaceId/machines/:machineId/box-spec" element={<BoxSpecEditorPage/>}/>
         </Route>
         <Route path="/workspaces/create" element={<CreateWorkspacePage/>}/>
         <Route path="/workspaces/:workspaceId/cloud-providers/create" element={<CreateCloudProviderPage/>}/>

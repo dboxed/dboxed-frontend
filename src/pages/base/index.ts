@@ -1,4 +1,5 @@
 export { BasePage } from './BasePage'
 export { BaseCreatePage } from './BaseCreatePage'
 export { BaseDetailsPage } from './BaseDetailsPage' 
+export { BaseResourceDetailsPage } from './BaseResourceDetailsPage'
 export { BaseListPage } from './BaseListPage' 

@@ -18,7 +18,6 @@ export function MachineConnectCard({ machineId, workspaceId }: MachineTokenCardP
   const tokenMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/machines/{id}/regenerate-token')
 
   const handleGenerateToken = (e: SyntheticEvent) => {
-    e.preventDefault()
     tokenMutation.mutate({
       params: {
         path: {
@@ -40,7 +39,6 @@ export function MachineConnectCard({ machineId, workspaceId }: MachineTokenCardP
   }
 
   const handleCopyToken = async (e: SyntheticEvent) => {
-    e.preventDefault()
     if (!token) return
     
     try {
@@ -69,6 +67,7 @@ export function MachineConnectCard({ machineId, workspaceId }: MachineTokenCardP
               onClick={handleGenerateToken}
               disabled={tokenMutation.isPending}
               variant="outline"
+              type={"button"}
             >
               {tokenMutation.isPending ? (
                 <>
@@ -98,6 +97,7 @@ export function MachineConnectCard({ machineId, workspaceId }: MachineTokenCardP
                 variant="outline"
                 size="sm"
                 onClick={handleCopyToken}
+                type={"button"}
               >
                 <Copy className="h-4 w-4" />
               </Button>

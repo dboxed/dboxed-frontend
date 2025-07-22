@@ -3,7 +3,7 @@ import { BasePage } from "./BasePage"
 import { useNavigate } from "react-router"
 import { Plus } from "lucide-react"
 import { useUnboxedQueryClient } from "@/api/api"
-import { DataTable } from "@/components/ui/data-table"
+import { DataTable } from "@/components/data-table.tsx"
 import type { ColumnDef } from "@tanstack/react-table"
 import type { paths } from "@/api/models/schema"
 

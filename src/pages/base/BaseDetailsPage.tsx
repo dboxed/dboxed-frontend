@@ -1,152 +1,98 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { useUnboxedQueryClient } from "@/api/api"
 import { useNavigate } from "react-router"
 import { toast } from "sonner"
 import { useForm } from "react-hook-form"
 import { useEffect } from "react"
 import type { UseFormReturn, FieldValues } from "react-hook-form"
 import { Form } from "@/components/ui/form.tsx"
-import type { paths } from "@/api/models/schema";
-import { DeleteButton } from "@/components/DeleteButton";
+import { DeleteButton } from "@/components/DeleteButton"
 
-interface BaseDetailsPageProps<T extends FieldValues, U extends FieldValues> {
-  title: string
+export interface BaseDetailsPagePropsBase<T extends FieldValues, U extends FieldValues> {
   children: (data: T, form: UseFormReturn<U>) => React.ReactNode
-  resourcePath: keyof paths
   enableDelete?: boolean
   enableSave?: boolean
-  apiParams?: Record<string, any>
-  onSuccess?: (data: T) => void
-  onError?: (error: any) => void
-  onDelete?: () => void
-  onDeleteError?: (error: any) => void
   submitButtonText?: string
   cancelButtonText?: string
   deleteButtonText?: string
-  isLoading?: boolean
-  resolver?: any
   buildUpdateDefaults?: (data: T) => U
-  afterDeleteUrl?: string
+  resolver?: any
+  customButtons?: (data: T, form: UseFormReturn<U>) => React.ReactNode
 }
 
-export function BaseDetailsPage<T extends FieldValues, U extends FieldValues>({
-  title,
-  children,
-  resourcePath,
-  enableDelete,
-  enableSave = true,
-  apiParams = {},
-  onSuccess,
-  onError,
-  onDelete,
-  onDeleteError,
-  submitButtonText = "Save",
-  cancelButtonText = "Cancel",
-  deleteButtonText = "Delete",
-  isLoading = false,
-  resolver,
-  buildUpdateDefaults,
-  afterDeleteUrl
-}: BaseDetailsPageProps<T, U>) {
-  const client = useUnboxedQueryClient()
+interface BaseDetailsPageProps<T extends FieldValues, U extends FieldValues> extends BaseDetailsPagePropsBase<T, U> {
+  title: string
+  resourceData?: T
+  onUpdate?: (data: U) => Promise<void>
+  onDelete?: () => Promise<void>
+  afterDeleteUrl?: string
+  isLoading?: boolean
+  isUpdating?: boolean
+  isDeleting?: boolean
+  error?: any
+}
+
+export function BaseDetailsPage<T extends FieldValues, U extends FieldValues>(props: BaseDetailsPageProps<T, U>) {
+  const submitButtonText = props.submitButtonText || "Save"
+  const cancelButtonText = props.cancelButtonText || "Cancel"
+
   const navigate = useNavigate()
 
   const form = useForm<U>({
-    resolver
+    resolver: props.resolver
   })
-  
-  // Fetch the resource
-  const resourceQuery = client.useQuery('get', resourcePath as any, {
-    params: apiParams
-  })
-  
-  // Update mutation for PATCH
-  const updateMutation = client.useMutation('patch', resourcePath as any)
 
-  // Delete mutation for DELETE (only if deletePath is provided)
-  const deleteMutation = enableDelete ? client.useMutation('delete', resourcePath as any) : null
-
-  // Build update defaults when resource is loaded
+  // Build update defaults when resource data changes
   useEffect(() => {
-    if (resourceQuery.data && buildUpdateDefaults) {
-      const defaults = buildUpdateDefaults(resourceQuery.data as unknown as T)
+    if (props.resourceData && props.buildUpdateDefaults) {
+      const defaults = props.buildUpdateDefaults(props.resourceData)
       form.reset(defaults)
     }
-  }, [resourceQuery.data, buildUpdateDefaults, form])
+  }, [props.resourceData, props.buildUpdateDefaults, form])
 
-  const handleFormSubmit = (data: U) => {
-    if (!resourceQuery.data) {
-      toast.error("No resource data available")
-      return
-    }
-
-    updateMutation.mutate({
-      params: apiParams as any,
-      body: data as any,
-    }, {
-      onSuccess: (responseData) => {
-        toast.success(`${title} updated successfully!`)
-        if (onSuccess) {
-          onSuccess(responseData as any)
-        } else {
-          navigate(-1)
-        }
-      },
-      onError: (error) => {
-        toast.error(`Failed to update ${title.toLowerCase()}`, {
-          description: error.detail || `An error occurred while updating the ${title.toLowerCase()}.`
+  const handleFormSubmit = async (data: U) => {
+    if (props.onUpdate) {
+      try {
+        await props.onUpdate(data)
+        toast.success(`${props.title} updated successfully!`)
+      } catch (error: any) {
+        toast.error(`Failed to update ${props.title.toLowerCase()}`, {
+          description: error.detail || `An error occurred while updating the ${props.title.toLowerCase()}.`
         })
-        if (onError) {
-          onError(error)
-        }
+        return
       }
-    })
+    }
+    navigate(-1)
   }
-
-  const handleDelete = () => {
-    if (!deleteMutation) {
-      return
-    }
-
-    deleteMutation.mutate({
-      params: apiParams as any,
-    }, {
-      onSuccess: () => {
-        toast.success(`${title} deleted successfully!`)
-        if (onDelete) {
-          onDelete()
-        } else if (afterDeleteUrl) {
-          navigate(afterDeleteUrl)
-        } else {
-          navigate(-1)
-        }
-      },
-      onError: (error) => {
-        toast.error(`Failed to delete ${title.toLowerCase()}`, {
-          description: error.detail || `An error occurred while deleting the ${title.toLowerCase()}.`
+  const handleDelete = async () => {
+    if (props.onDelete) {
+      try {
+        await props.onDelete()
+        toast.success(`${props.title} deleted successfully!`)
+      } catch (error: any) {
+        toast.error(`Failed to delete ${props.title.toLowerCase()}`, {
+          description: error.detail || `An error occurred while deleting the ${props.title.toLowerCase()}.`
         })
-        if (onDeleteError) {
-          onDeleteError(error)
-        }
+        return
       }
-    })
+    }
+    if (props.afterDeleteUrl) {
+      navigate(props.afterDeleteUrl)
+    }
   }
 
   const handleCancel = () => {
     navigate(-1)
   }
 
-  const isSubmitting = updateMutation.isPending || (deleteMutation?.isPending ?? false) || isLoading
-  const isLoadingResource = resourceQuery.isLoading
+  const isSubmitting = !!(props.isUpdating || props.isDeleting || props.isLoading)
 
-  // Show loading state while fetching resource
-  if (isLoadingResource) {
+  if (props.isLoading || !props.resourceData) {
     return (
       <div className="min-h-screen flex items-start justify-center p-4 w-full overflow-y-auto">
         <Card className="w-full max-w-2xl my-8">
           <CardHeader>
-            <CardTitle>{title}</CardTitle>
+            <CardTitle>{props.title}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-muted-foreground">Loading resource...</div>
@@ -156,17 +102,16 @@ export function BaseDetailsPage<T extends FieldValues, U extends FieldValues>({
     )
   }
 
-  // Show error state if resource fetch failed
-  if (resourceQuery.error) {
+  if (props.error) {
     return (
       <div className="min-h-screen flex items-start justify-center p-4 w-full overflow-y-auto">
         <Card className="w-full max-w-2xl my-8">
           <CardHeader>
-            <CardTitle>{title}</CardTitle>
+            <CardTitle>{props.title}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-red-600">
-              Failed to load resource: {resourceQuery.error.detail || "An error occurred while loading the resource."}
+              Failed to load resource: {props.error.detail || "An error occurred while loading the resource."}
             </div>
           </CardContent>
           <CardFooter className="flex justify-end space-x-2">
@@ -186,28 +131,33 @@ export function BaseDetailsPage<T extends FieldValues, U extends FieldValues>({
     <div className="min-h-screen flex items-start justify-center p-4 w-full overflow-y-auto">
       <Card className="w-full max-w-2xl my-8">
         <CardHeader>
-          <CardTitle>{title}</CardTitle>
+          <CardTitle>{props.title}</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form className="space-y-6">
-              {children(resourceQuery.data as any, form)}
+              {props.children(props.resourceData, form)}
             </form>
           </Form>
         </CardContent>
         <CardFooter className="flex justify-between space-x-2">
-          <div>
-            {enableDelete && (
+          <div className="flex items-center space-x-2">
+            {props.enableDelete && (
               <DeleteButton
                 onDelete={handleDelete}
-                resourceName={title.toLowerCase()}
+                resourceName={props.title}
                 disabled={isSubmitting}
-                isLoading={deleteMutation?.isPending ?? false}
-                buttonText={deleteButtonText}
+                isLoading={props.isDeleting}
+                buttonText={props.deleteButtonText}
               />
             )}
           </div>
           <div className="flex space-x-2">
+            {props.customButtons && (
+              <>
+                {props.customButtons(props.resourceData, form)}
+              </>
+            )}
             <Button
               variant="outline"
               onClick={handleCancel}
@@ -215,8 +165,8 @@ export function BaseDetailsPage<T extends FieldValues, U extends FieldValues>({
             >
               {cancelButtonText}
             </Button>
-            {enableSave && (
-              <FormSubmitButton 
+            {props.enableSave && (
+              <FormSubmitButton
                 onSubmit={handleFormSubmit}
                 isSubmitting={isSubmitting}
                 submitButtonText={submitButtonText}
@@ -230,13 +180,14 @@ export function BaseDetailsPage<T extends FieldValues, U extends FieldValues>({
   )
 }
 
+
 // Helper component to handle form submission
-function FormSubmitButton<T extends FieldValues>({ 
-  onSubmit, 
-  isSubmitting, 
-  submitButtonText,
-  form
-}: { 
+function FormSubmitButton<T extends FieldValues>({
+                                                   onSubmit,
+                                                   isSubmitting,
+                                                   submitButtonText,
+                                                   form
+                                                 }: {
   onSubmit: (data: T) => void
   isSubmitting: boolean
   submitButtonText: string

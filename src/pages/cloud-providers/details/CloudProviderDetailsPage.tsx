@@ -1,4 +1,4 @@
-import { BaseDetailsPage } from "@/pages/base/BaseDetailsPage.tsx"
+import { BaseResourceDetailsPage } from "@/pages/base/BaseResourceDetailsPage.tsx"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
@@ -33,10 +33,11 @@ export function CloudProviderDetailsPage() {
   }
 
   return (
-    <BaseDetailsPage<components["schemas"]["CloudProvider"], components["schemas"]["UpdateCloudProvider"]>
+    <BaseResourceDetailsPage<components["schemas"]["CloudProvider"], components["schemas"]["UpdateCloudProvider"]>
       title="Cloud Provider"
       resourcePath="/v1/workspaces/{workspaceId}/cloud-providers/{id}"
       enableDelete={true}
+      enableSave={true}
       buildUpdateDefaults={buildUpdateDefaults}
       afterDeleteUrl={`/workspaces/${workspaceId}/cloud-providers`}
       apiParams={{
@@ -122,6 +123,6 @@ export function CloudProviderDetailsPage() {
           </TabsContent>
         </Tabs>
       )}
-    </BaseDetailsPage>
+    </BaseResourceDetailsPage>
   )
 } 

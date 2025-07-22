@@ -237,9 +237,7 @@ export interface components {
             compose: string;
             dns?: components["schemas"]["DnsSpec"];
             fileBundles: components["schemas"]["FileBundle"][] | null;
-            hostname: string;
             infraImage?: string;
-            networkDomain: string;
             unboxedBinaryHash?: string;
             unboxedBinaryUrl?: string;
         };
@@ -351,7 +349,9 @@ export interface components {
         };
         DnsLibP2PSpec: Record<string, never>;
         DnsSpec: {
+            hostname: string;
             libp2p?: components["schemas"]["DnsLibP2PSpec"];
+            networkDomain: string;
             networkInterface: string;
         };
         ErrorDetail: {

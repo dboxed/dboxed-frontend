@@ -2,7 +2,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge.tsx"
 import { useUnboxedQueryClient } from "@/api/api"
 import { Cloud, Server } from "lucide-react"
-import type { components } from "@/api/models/schema"
 
 interface CloudProviderInfoCardProps {
   cloudProviderId: number | null

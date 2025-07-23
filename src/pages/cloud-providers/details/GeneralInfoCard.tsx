@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
+import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import type { components } from "@/api/models/schema"
 
 interface GeneralInfoCardProps {
@@ -18,35 +19,39 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium">ID</label>
-            <p className="text-sm text-muted-foreground">{data.id}</p>
-          </div>
-          
-          <div>
             <label className="text-sm font-medium">Name</label>
             <p className="text-sm text-muted-foreground">{data.name}</p>
           </div>
           
           <div>
             <label className="text-sm font-medium">Type</label>
-            <Badge variant="outline" className="w-fit">
-              {data.type}
-            </Badge>
+            <p className="text-sm text-muted-foreground">
+              <Badge variant="outline" className="w-fit">
+                {data.type}
+              </Badge>
+            </p>
           </div>
           
           <div>
             <label className="text-sm font-medium">Status</label>
-            <Badge 
-              variant={data.status === "active" ? "default" : "secondary"}
-              className="w-fit"
-            >
-              {data.status}
-            </Badge>
+            <p className="text-sm text-muted-foreground">
+              <Badge variant="outline" className="w-fit">
+                {data.status}
+              </Badge>
+            </p>
           </div>
           
           <div>
-            <label className="text-sm font-medium">Workspace ID</label>
-            <p className="text-sm text-muted-foreground">{data.workspace}</p>
+            <label className="text-sm font-medium">Workspace</label>
+            <p className="text-sm text-muted-foreground">
+              <ReferenceLabel
+                resourceId={data.workspace}
+                resourcePath="/v1/workspaces/{workspaceId}"
+                pathParams={{ workspaceId: data.workspace }}
+                detailsUrl={`/workspaces/${data.workspace}`}
+                fallbackLabel="Workspace"
+              />
+            </p>
           </div>
           
           <div>
@@ -60,7 +65,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
         <div>
           <label className="text-sm font-medium">SSH Key Fingerprint</label>
           <p className="text-sm text-muted-foreground">
-            {data.ssh_key_fingerprint || "Not set"}
+            {data.ssh_key_fingerprint || "N/A"}
           </p>
         </div>
       </CardContent>

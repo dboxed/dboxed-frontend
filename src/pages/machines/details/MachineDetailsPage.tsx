@@ -42,22 +42,22 @@ export function MachineDetailsPage() {
           id: machineId,
         }
       }}
-      customButtons={(data, form) => (
-        <Button variant="outline" asChild>
-          <Link to={`/workspaces/${workspaceId}/machines/${machineId}/box-spec`}>
-            <Edit className="h-4 w-4 mr-2" />
-            Edit Box Spec
-          </Link>
-        </Button>
-      )}
     >
       {(data, form) => (
         <Tabs defaultValue="general" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="general">General Information</TabsTrigger>
-            <TabsTrigger value="cloud-provider">Cloud Provider</TabsTrigger>
-            <TabsTrigger value="connect">Connect Machine</TabsTrigger>
-          </TabsList>
+          <div className="flex justify-between items-center">
+            <TabsList className="grid grid-cols-3">
+              <TabsTrigger value="general">General Information</TabsTrigger>
+              <TabsTrigger value="cloud-provider">Cloud Provider</TabsTrigger>
+              <TabsTrigger value="connect">Connect Machine</TabsTrigger>
+            </TabsList>
+            <Button variant="outline" asChild>
+              <Link to={`/workspaces/${workspaceId}/machines/${machineId}/box-spec`}>
+                <Edit className="h-4 w-4 mr-2" />
+                Edit Box Spec
+              </Link>
+            </Button>
+          </div>
 
           <TabsContent value="general">
             <GeneralInfoCard data={data} />

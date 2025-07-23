@@ -64,7 +64,7 @@ export function BoxSpecEditorPage() {
 
         const getCurrentYaml = () => {
           const currentValues = form.getValues()
-          return stringify(currentValues.boxSpec || {}, 2)
+          return stringify(currentValues.boxSpec || {})
         }
 
         return (

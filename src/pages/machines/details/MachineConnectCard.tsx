@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { useUnboxedQueryClient } from "@/api/api"
-import { type SyntheticEvent, useState } from "react"
+import { useState } from "react"
 import { toast } from "sonner"
 import { Copy, Key, RefreshCw } from "lucide-react"
 
@@ -17,7 +17,7 @@ export function MachineConnectCard({ machineId, workspaceId }: MachineTokenCardP
 
   const tokenMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/machines/{id}/regenerate-token')
 
-  const handleGenerateToken = (e: SyntheticEvent) => {
+  const handleGenerateToken = () => {
     tokenMutation.mutate({
       params: {
         path: {
@@ -38,7 +38,7 @@ export function MachineConnectCard({ machineId, workspaceId }: MachineTokenCardP
     })
   }
 
-  const handleCopyToken = async (e: SyntheticEvent) => {
+  const handleCopyToken = async () => {
     if (!token) return
     
     try {

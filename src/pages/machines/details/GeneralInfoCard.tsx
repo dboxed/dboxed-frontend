@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
+import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import type { components } from "@/api/models/schema"
 
 interface GeneralInfoCardProps {
@@ -18,18 +19,21 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium">Machine ID</label>
-            <p className="text-sm text-muted-foreground">{data.id}</p>
-          </div>
-          
-          <div>
             <label className="text-sm font-medium">Name</label>
             <p className="text-sm text-muted-foreground">{data.name}</p>
           </div>
           
           <div>
-            <label className="text-sm font-medium">Workspace ID</label>
-            <p className="text-sm text-muted-foreground">{data.workspace}</p>
+            <label className="text-sm font-medium">Workspace</label>
+            <p className="text-sm text-muted-foreground">
+              <ReferenceLabel
+                resourceId={data.workspace}
+                resourcePath="/v1/workspaces/{workspaceId}"
+                pathParams={{ workspaceId: data.workspace }}
+                detailsUrl={`/workspaces/${data.workspace}`}
+                fallbackLabel="Workspace"
+              />
+            </p>
           </div>
           
           <div>
@@ -42,9 +46,18 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           </div>
           
           <div>
-            <label className="text-sm font-medium">Cloud Provider ID</label>
+            <label className="text-sm font-medium">Cloud Provider</label>
             <p className="text-sm text-muted-foreground">
-              {data.cloud_provider || "Not assigned"}
+              <ReferenceLabel
+                resourceId={data.cloud_provider}
+                resourcePath="/v1/workspaces/{workspaceId}/cloud-providers/{id}"
+                pathParams={{ 
+                  workspaceId: data.workspace, 
+                  id: data.cloud_provider 
+                }}
+                detailsUrl={`/workspaces/${data.workspace}/cloud-providers/${data.cloud_provider}`}
+                fallbackLabel="Provider"
+              />
             </p>
           </div>
           
@@ -56,7 +69,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
                   {data.cloud_provider_type}
                 </Badge>
               ) : (
-                "Not assigned"
+                "N/A"
               )}
             </p>
           </div>

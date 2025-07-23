@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
 import { useUnboxedQueryClient } from "@/api/api"
-import { Cloud, Server } from "lucide-react"
+import { Link } from "react-router"
 
 interface CloudProviderInfoCardProps {
   cloudProviderId: number | null
@@ -31,7 +31,6 @@ export function CloudProviderInfoCard({
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <Cloud className="h-5 w-5" />
             <span>Cloud Provider</span>
           </CardTitle>
           <CardDescription>
@@ -40,7 +39,7 @@ export function CloudProviderInfoCard({
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            No cloud provider assigned to this machine.
+            N/A
           </p>
         </CardContent>
       </Card>
@@ -52,7 +51,6 @@ export function CloudProviderInfoCard({
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <Cloud className="h-5 w-5" />
             <span>Cloud Provider</span>
           </CardTitle>
         </CardHeader>
@@ -68,7 +66,6 @@ export function CloudProviderInfoCard({
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <Cloud className="h-5 w-5" />
             <span>Cloud Provider</span>
           </CardTitle>
         </CardHeader>
@@ -87,11 +84,6 @@ export function CloudProviderInfoCard({
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
-          {cloudProviderType === "aws" ? (
-            <Cloud className="h-5 w-5" />
-          ) : (
-            <Server className="h-5 w-5" />
-          )}
           <span>Cloud Provider</span>
         </CardTitle>
         <CardDescription>
@@ -102,24 +94,32 @@ export function CloudProviderInfoCard({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="text-sm font-medium">Name</label>
-            <p className="text-sm text-muted-foreground">{cloudProvider.name}</p>
+            <p className="text-sm text-muted-foreground">
+              <Link 
+                to={`/workspaces/${workspaceId}/cloud-providers/${cloudProviderId}`}
+                className="text-blue-600 hover:text-blue-800 underline"
+              >
+                {cloudProvider.name}
+              </Link>
+            </p>
           </div>
           
           <div>
             <label className="text-sm font-medium">Type</label>
-            <Badge variant="secondary" className="capitalize w-fit">
-              {cloudProvider.type}
-            </Badge>
+            <p className="text-sm text-muted-foreground">
+              <Badge variant="outline" className="w-fit">
+                {cloudProvider.type}
+              </Badge>
+            </p>
           </div>
           
           <div>
             <label className="text-sm font-medium">Status</label>
-            <Badge 
-              variant={cloudProvider.status === "active" ? "default" : "secondary"}
-              className="w-fit capitalize"
-            >
-              {cloudProvider.status}
-            </Badge>
+            <p className="text-sm text-muted-foreground">
+              <Badge variant="outline" className="w-fit">
+                {cloudProvider.status}
+              </Badge>
+            </p>
           </div>
           
           <div>
@@ -138,10 +138,6 @@ export function CloudProviderInfoCard({
               <div>
                 <label className="text-xs text-muted-foreground">Region</label>
                 <p className="text-sm">{cloudProvider.aws.region}</p>
-              </div>
-              <div>
-                <label className="text-xs text-muted-foreground">VPC ID</label>
-                <p className="text-sm">{cloudProvider.aws.vpc_id || "Not set"}</p>
               </div>
             </div>
           </div>

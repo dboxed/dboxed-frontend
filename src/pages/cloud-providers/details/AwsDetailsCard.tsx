@@ -35,24 +35,24 @@ export function AwsDetailsCard({ awsData, form }: AwsDetailsCardProps) {
             
             <div>
               <label className="text-sm font-medium">VPC ID</label>
-              <p className="text-sm text-muted-foreground">{awsData.vpc_id || "Not set"}</p>
+              <p className="text-sm text-muted-foreground">{awsData.vpc_id || "N/A"}</p>
             </div>
             
             <div>
               <label className="text-sm font-medium">Security Group ID</label>
-              <p className="text-sm text-muted-foreground">{awsData.security_group_id || "Not set"}</p>
+              <p className="text-sm text-muted-foreground">{awsData.security_group_id || "N/A"}</p>
             </div>
           </div>
 
           <div className="space-y-4">
             <div>
               <label className="text-sm font-medium">VPC Name</label>
-              <p className="text-sm text-muted-foreground">{awsData.vpc_name || "Not set"}</p>
+              <p className="text-sm text-muted-foreground">{awsData.vpc_name || "N/A"}</p>
             </div>
             
             <div>
               <label className="text-sm font-medium">VPC CIDR</label>
-              <p className="text-sm text-muted-foreground">{awsData.vpc_cidr || "Not set"}</p>
+              <p className="text-sm text-muted-foreground">{awsData.vpc_cidr || "N/A"}</p>
             </div>
           </div>
         </div>
@@ -128,7 +128,7 @@ export function AwsSubnetsCard({ subnets }: AwsSubnetsCardProps) {
                   <strong>Subnet ID:</strong> {subnet.subnet_id}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  <strong>Name:</strong> {subnet.subnet_name || "Not set"}
+                  <strong>Name:</strong> {subnet.subnet_name || "N/A"}
                 </p>
                 <p className="text-sm text-muted-foreground">
                   <strong>CIDR:</strong> {subnet.cidr}

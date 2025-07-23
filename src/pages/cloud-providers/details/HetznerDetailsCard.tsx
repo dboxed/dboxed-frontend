@@ -26,7 +26,7 @@ export function HetznerDetailsCard({ hetznerData, form }: HetznerDetailsCardProp
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium">Hetzner Network ID</label>
-              <p className="text-sm text-muted-foreground">{hetznerData.hetzner_network_id || "Not set"}</p>
+              <p className="text-sm text-muted-foreground">{hetznerData.hetzner_network_id || "N/A"}</p>
             </div>
             
             <div>
@@ -36,22 +36,22 @@ export function HetznerDetailsCard({ hetznerData, form }: HetznerDetailsCardProp
             
             <div>
               <label className="text-sm font-medium">Network Zone</label>
-              <p className="text-sm text-muted-foreground">{hetznerData.hetzner_network_zone || "Not set"}</p>
+              <p className="text-sm text-muted-foreground">{hetznerData.hetzner_network_zone || "N/A"}</p>
             </div>
             
             <div>
               <label className="text-sm font-medium">Hetzner Network CIDR</label>
-              <p className="text-sm text-muted-foreground">{hetznerData.hetzner_network_cidr || "Not set"}</p>
+              <p className="text-sm text-muted-foreground">{hetznerData.hetzner_network_cidr || "N/A"}</p>
             </div>
             
             <div>
               <label className="text-sm font-medium">Cloud Subnet CIDR</label>
-              <p className="text-sm text-muted-foreground">{hetznerData.cloud_subnet_cidr || "Not set"}</p>
+              <p className="text-sm text-muted-foreground">{hetznerData.cloud_subnet_cidr || "N/A"}</p>
             </div>
             
             <div>
               <label className="text-sm font-medium">Robot Subnet CIDR</label>
-              <p className="text-sm text-muted-foreground">{hetznerData.robot_subnet_cidr || "Not set"}</p>
+              <p className="text-sm text-muted-foreground">{hetznerData.robot_subnet_cidr || "N/A"}</p>
             </div>
           </div>
           

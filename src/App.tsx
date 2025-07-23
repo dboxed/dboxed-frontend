@@ -14,6 +14,7 @@ import { Toaster } from "sonner";
 import { CreateCloudProviderPage } from "@/pages/cloud-providers/create/CreateCloudProviderPage.tsx";
 import { CreateMachinePage, MachineDetailsPage } from "@/pages/machines";
 import { BoxSpecEditorPage } from "@/pages/machines/details/boxspec/BoxSpecEditorPage.tsx";
+import { WorkspaceDashboardPage } from "@/pages/workspaces/WorkspaceDashboardPage.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -62,7 +63,7 @@ function AuthenticatedApp() {
       <Toaster />
       <Routes>
         <Route path="/" element={<MainLayout isAdmin={isAdminQuery.isAdmin} />}>
-          <Route path="/workspaces/:workspaceId" element={<></>}/>
+          <Route path="/workspaces/:workspaceId" element={<WorkspaceDashboardPage/>}/>
           <Route path="/workspaces/:workspaceId/cloud-providers" element={<ListCloudProvidersPage/>}/>
           <Route path="/workspaces/:workspaceId/cloud-providers/:cloudProviderId" element={<CloudProviderDetailsPage />}/>
           <Route path="/workspaces/:workspaceId/machines" element={<ListMachinesPage/>}/>

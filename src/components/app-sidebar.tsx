@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Cloud, Monitor } from "lucide-react"
+import { Cloud, Monitor, LayoutDashboard } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
@@ -9,6 +9,11 @@ import { useCurrentUser } from "@/api/auth.ts";
 import { useUnboxedQueryClient } from "@/api/api.ts";
 
 const navMain = [
+  {
+    title: "Dashboard",
+    navigate: "/workspaces/{workspaceId}",
+    icon: LayoutDashboard,
+  },
   {
     title: "Cloud Providers",
     navigate: "/workspaces/{workspaceId}/cloud-providers",

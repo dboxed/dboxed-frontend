@@ -396,8 +396,7 @@ export interface components {
             name: string;
             /** Format: int32 */
             rootGid: number;
-            /** Format: int32 */
-            rootMode: number;
+            rootMode: string;
             /** Format: int32 */
             rootUid: number;
         };
@@ -405,8 +404,7 @@ export interface components {
             data?: string;
             /** Format: int64 */
             gid: number;
-            /** Format: int32 */
-            mode: number;
+            mode: string;
             path: string;
             stringData?: string;
             /** Format: int64 */

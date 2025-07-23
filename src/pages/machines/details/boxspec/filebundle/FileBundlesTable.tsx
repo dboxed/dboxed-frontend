@@ -29,7 +29,7 @@ export function FileBundlesTable({ bundles, onChange }: FileBundlesTableProps) {
       files: [],
       rootUid: 0,
       rootGid: 0,
-      rootMode: 0o755
+      rootMode: "755",
     }
     const updatedBundles = [...bundles, newBundle]
     onChange(updatedBundles)
@@ -56,7 +56,6 @@ export function FileBundlesTable({ bundles, onChange }: FileBundlesTableProps) {
   }
 
   const handleEditSave = (newBundle: FileBundle) => {
-    console.log(newBundle)
     if (!editingBundle) return
 
     const bundleIndex = bundles.findIndex(b => b.name === editingBundle.name)
@@ -159,16 +158,13 @@ export function FileBundlesTable({ bundles, onChange }: FileBundlesTableProps) {
       cell: ({ row, table }) => {
         const rowIndex = table.getCoreRowModel().rows.indexOf(row)
         const currentValue = bundles[rowIndex]?.rootMode ?? row.getValue("rootMode")
-        const octalValue = currentValue.toString(8)
-        
+
         return (
           <Input
             type="text"
-            value={octalValue}
+            value={currentValue}
             onChange={(e) => {
-              const octalInput = e.target.value.replace(/[^0-7]/g, '') // Only allow octal digits
-              const decimalValue = parseInt(octalInput, 8) || 0
-              updateBundle(rowIndex, "rootMode", decimalValue)
+              updateBundle(rowIndex, "rootMode", e.target.value)
             }}
             className="w-24 h-8 font-mono"
             placeholder="755"

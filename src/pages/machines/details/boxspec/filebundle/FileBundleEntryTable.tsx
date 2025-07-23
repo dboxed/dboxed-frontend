@@ -42,7 +42,7 @@ export function FileBundleEntryTable({ entries, onUpdate }: FileBundleEntryTable
       path: filePath.trim(),
       uid: 0,
       gid: 0,
-      mode: 0o644,
+      mode: "644",
       stringData: ""
     }
     const updatedEntries = [...entries, newEntry]
@@ -142,16 +142,13 @@ export function FileBundleEntryTable({ entries, onUpdate }: FileBundleEntryTable
       cell: ({ row, table }) => {
         const rowIndex = table.getCoreRowModel().rows.indexOf(row)
         const currentValue = entries[rowIndex]?.mode ?? row.getValue("mode")
-        const octalValue = currentValue.toString(8)
-        
+
         return (
           <Input
             type="text"
-            value={octalValue}
+            value={currentValue}
             onChange={(e) => {
-              const octalInput = e.target.value.replace(/[^0-7]/g, '') // Only allow octal digits
-              const decimalValue = parseInt(octalInput, 8) || 0
-              updateEntry(rowIndex, "mode", decimalValue)
+              updateEntry(rowIndex, "mode", e.target.value)
             }}
             className="w-24 h-8 font-mono"
             placeholder="644"

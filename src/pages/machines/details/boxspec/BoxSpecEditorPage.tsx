@@ -8,7 +8,7 @@ import { CardTitle, Card, CardHeader, CardContent } from "@/components/ui/card.t
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Button } from "@/components/ui/button.tsx"
-import { YamlEditDialog } from "@/components/YamlEditDialog.tsx"
+import { EditorDialog } from "@/components/EditorDialog.tsx"
 import { FileBundlesTab } from "@/pages/machines/details/boxspec/FileBundlesTab.tsx";
 import { parse, stringify } from 'yaml'
 
@@ -176,13 +176,12 @@ export function BoxSpecEditorPage() {
               </TabsContent>
             </Tabs>
 
-            <YamlEditDialog
+            <EditorDialog
               open={showYamlDialog}
               onOpenChange={setShowYamlDialog}
               title="Edit Box Spec as YAML"
               initialValue={getCurrentYaml()}
               onSave={handleYamlSave}
-              placeholder="Enter your box spec configuration in YAML format..."
             />
           </div>
         )

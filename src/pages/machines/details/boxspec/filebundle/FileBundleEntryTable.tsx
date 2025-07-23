@@ -4,9 +4,9 @@ import { DataTable } from "@/components/data-table.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { SimpleInputDialog } from "@/components/SimpleInputDialog.tsx"
-import { FileDialog } from "./FileDialog.tsx"
 import { Edit, Trash } from "lucide-react"
 import type { components } from "@/api/models/schema"
+import { EditorDialog } from "@/components/EditorDialog.tsx";
 
 type FileBundleEntry = components["schemas"]["FileBundleEntry"]
 
@@ -54,13 +54,13 @@ export function FileBundleEntryTable({ entries, onUpdate }: FileBundleEntryTable
     onUpdate(updatedEntries)
   }
 
-  const handleEditSave = (editedEntry: FileBundleEntry) => {
+  const handleEditSave = (newContent: string) => {
     if (!editingEntry) return
     
     const entryIndex = entries.findIndex(e => e === editingEntry)
     if (entryIndex !== -1) {
       const updatedEntries = [...entries]
-      updatedEntries[entryIndex] = editedEntry
+      updatedEntries[entryIndex].stringData = newContent
       onUpdate(updatedEntries)
     }
     setEditingEntry(null)
@@ -211,10 +211,11 @@ export function FileBundleEntryTable({ entries, onUpdate }: FileBundleEntryTable
       />
       
       {editingEntry && (
-        <FileDialog
+        <EditorDialog
+          title={`${editingEntry.path} content`}
           open={showEditDialog}
           onOpenChange={handleEditDialogClose}
-          initialFile={editingEntry}
+          initialValue={editingEntry.stringData}
           onSave={handleEditSave}
         />
       )}

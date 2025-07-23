@@ -104,6 +104,7 @@ function CloudProviderBreadcrumb({ cloudProviderId, isCurrentPage }: CloudProvid
         id: cloudProviderId 
       } 
     },
+  }, {
     enabled: !!workspaceId && !!cloudProviderId
   })
 
@@ -158,6 +159,7 @@ function MachineBreadcrumb({ machineId, isCurrentPage }: MachineBreadcrumbProps)
         id: machineId 
       } 
     },
+  }, {
     enabled: !!workspaceId && !!machineId
   })
 

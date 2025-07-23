@@ -38,7 +38,6 @@ export function BaseResourceDetailsPage<T extends FieldValues, U extends FieldVa
       toast.error("No resource data available")
       return
     }
-    console.log("asd")
 
     await new Promise((resolve, reject) => {
       updateMutation.mutate({

@@ -44,8 +44,6 @@ export function CreateCloudProviderPage() {
   const { workspaceId } = useSelectedWorkspaceId()
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data)
-
     const submitData: components["schemas"]["CreateCloudProvider"] = {
       name: data.name,
       type: data.type,

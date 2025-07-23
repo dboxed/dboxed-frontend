@@ -37,7 +37,6 @@ export function NavMain({
   const { workspaceId } = useParams();
 
   const handleSelect = (item: Item) => {
-    console.log("s")
     if (item.navigate) {
       const l = item.navigate.replace('{workspaceId}', workspaceId || 'invalid')
       navigate(l)

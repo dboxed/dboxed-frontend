@@ -46,7 +46,6 @@ export function BaseDetailsPage<T extends FieldValues, U extends FieldValues>(pr
   useEffect(() => {
     if (props.resourceData && props.buildUpdateDefaults) {
       const defaults = props.buildUpdateDefaults(props.resourceData)
-      console.log("reset2", defaults)
       form.reset(defaults)
     }
   }, [props.resourceData])
@@ -127,8 +126,6 @@ export function BaseDetailsPage<T extends FieldValues, U extends FieldValues>(pr
       </div>
     )
   }
-
-  console.log("form", form)
 
   return (
     <div className="min-h-screen flex items-start justify-center p-4 w-full overflow-y-auto">

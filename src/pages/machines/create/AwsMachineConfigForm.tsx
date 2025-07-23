@@ -22,10 +22,11 @@ export function AwsMachineConfigForm({ form }: AwsMachineConfigFormProps) {
   const cloudProviderQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/cloud-providers/{id}', {
     params: {
       path: {
-        workspaceId: workspaceId,
+        workspaceId: workspaceId!,
         id: cloudProviderId,
       }
     },
+  }, {
     enabled: !!cloudProviderId
   })
 

@@ -23,6 +23,7 @@ export function CloudProviderInfoCard({
         id: cloudProviderId!,
       }
     },
+  }, {
     enabled: !!cloudProviderId
   })
 

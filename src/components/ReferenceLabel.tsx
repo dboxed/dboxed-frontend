@@ -1,11 +1,12 @@
 import { Link } from "react-router"
 import { useUnboxedQueryClient } from "@/api/api.ts"
+import type { paths } from "@/api/models/schema";
 
 interface ReferenceLabelProps {
   /** The ID of the resource to fetch and display */
   resourceId: number | null
   /** The API path to fetch the resource (e.g., "/v1/workspaces/{workspaceId}") */
-  resourcePath: string
+  resourcePath: keyof paths
   /** Parameters to substitute in the resource path */
   pathParams: Record<string, any>
   /** URL to navigate to when the link is clicked */
@@ -43,6 +44,7 @@ export function ReferenceLabel({
     params: {
       path: pathParams
     },
+  }, {
     enabled: !!resourceId
   })
 

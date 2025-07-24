@@ -1,5 +1,6 @@
 import { BaseCreatePage } from "@/pages/base/BaseCreatePage.tsx"
 import { CloudProviderSelector } from "./CloudProviderSelector.tsx"
+import { NetworkSelector } from "./NetworkSelector.tsx"
 import { AwsMachineConfigForm } from "./AwsMachineConfigForm.tsx"
 import { HetznerMachineConfigForm } from "./HetznerMachineConfigForm.tsx"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
@@ -68,6 +69,7 @@ export function CreateMachinePage() {
           />
           
           <CloudProviderSelector form={form} />
+          <NetworkSelector form={form} />
           
           {cloudProvider?.type === "aws" && (
             <AwsMachineConfigForm form={form} />

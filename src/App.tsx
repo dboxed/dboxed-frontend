@@ -15,6 +15,7 @@ import { CreateCloudProviderPage } from "@/pages/cloud-providers/create/CreateCl
 import { CreateMachinePage, MachineDetailsPage } from "@/pages/machines";
 import { BoxSpecEditorPage } from "@/pages/machines/details/boxspec/BoxSpecEditorPage.tsx";
 import { WorkspaceDashboardPage } from "@/pages/workspaces/WorkspaceDashboardPage.tsx";
+import { ListNetworksPage, CreateNetworkPage, NetworkDetailsPage } from "@/pages/networks";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -69,10 +70,13 @@ function AuthenticatedApp() {
           <Route path="/workspaces/:workspaceId/machines" element={<ListMachinesPage/>}/>
           <Route path="/workspaces/:workspaceId/machines/:machineId" element={<MachineDetailsPage/>}/>
           <Route path="/workspaces/:workspaceId/machines/:machineId/box-spec" element={<BoxSpecEditorPage/>}/>
+          <Route path="/workspaces/:workspaceId/networks" element={<ListNetworksPage/>}/>
+          <Route path="/workspaces/:workspaceId/networks/:networkId" element={<NetworkDetailsPage/>}/>
         </Route>
         <Route path="/workspaces/create" element={<CreateWorkspacePage/>}/>
         <Route path="/workspaces/:workspaceId/cloud-providers/create" element={<CreateCloudProviderPage/>}/>
         <Route path="/workspaces/:workspaceId/machines/create" element={<CreateMachinePage/>}/>
+        <Route path="/workspaces/:workspaceId/networks/create" element={<CreateNetworkPage/>}/>
         {isAdminQuery.isAdmin && (
           <></>
         )}

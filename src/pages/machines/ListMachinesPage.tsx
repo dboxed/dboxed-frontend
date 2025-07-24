@@ -60,6 +60,36 @@ export function ListMachinesPage() {
       },
     },
     {
+      accessorKey: "network",
+      header: "Network",
+      cell: ({ row }) => {
+        const networkId = row.getValue("network") as number | null
+        const networkType = row.original.network_type
+        const workspaceId = row.original.workspace
+
+        return (
+          <div className="flex items-center gap-2">
+            <ReferenceLabel
+              resourceId={networkId}
+              resourcePath="/v1/workspaces/{workspaceId}/networks/{id}"
+              pathParams={{
+                workspaceId: workspaceId,
+                id: networkId
+              }}
+              detailsUrl={`/workspaces/${workspaceId}/networks/${networkId}`}
+              fallbackLabel="Network"
+              className="text-blue-600 hover:text-blue-800 underline text-sm"
+            />
+            {networkType && (
+              <Badge variant="outline" className="text-xs">
+                {networkType}
+              </Badge>
+            )}
+          </div>
+        )
+      },
+    },
+    {
       accessorKey: "unboxed_version",
       header: "Version",
       cell: ({ row }) => {

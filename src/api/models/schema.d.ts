@@ -216,6 +216,43 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/networks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID networks */
+        get: operations["get-v1-workspaces-by-workspace-id-networks"];
+        put?: never;
+        /** Post v1 workspaces by workspace ID networks */
+        post: operations["post-v1-workspaces-by-workspace-id-networks"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/networks/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID networks by ID */
+        get: operations["get-v1-workspaces-by-workspace-id-networks-by-id"];
+        put?: never;
+        post?: never;
+        /** Delete v1 workspaces by workspace ID networks by ID */
+        delete: operations["delete-v1-workspaces-by-workspace-id-networks-by-id"];
+        options?: never;
+        head?: never;
+        /** Patch v1 workspaces by workspace ID networks by ID */
+        patch: operations["patch-v1-workspaces-by-workspace-id-networks-by-id"];
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -234,8 +271,8 @@ export interface components {
             spec: components["schemas"]["BoxSpec"];
         };
         BoxSpec: {
-            compose: string;
-            dns?: components["schemas"]["DnsSpec"];
+            composeProjects: string[] | null;
+            dns: components["schemas"]["DnsSpec"];
             fileBundles: components["schemas"]["FileBundle"][] | null;
             infraImage?: string;
             unboxedBinaryHash?: string;
@@ -322,6 +359,8 @@ export interface components {
             cloud_provider?: number;
             hetzner?: components["schemas"]["CreateMachineHetzner"];
             name: string;
+            /** Format: int64 */
+            network?: number;
         };
         CreateMachineAws: {
             instance_type: string;
@@ -332,6 +371,21 @@ export interface components {
         CreateMachineHetzner: {
             server_location: string;
             server_type: string;
+        };
+        CreateNetwork: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            name: string;
+            netbird?: components["schemas"]["CreateNetworkNetbird"];
+            type: string;
+        };
+        CreateNetworkNetbird: {
+            apiAccessToken?: string;
+            apiUrl?: string;
+            netbirdVersion: string;
         };
         CreateWorkspace: {
             /**
@@ -407,6 +461,7 @@ export interface components {
             mode: string;
             path: string;
             stringData?: string;
+            type?: string;
             /** Format: int64 */
             uid: number;
         };
@@ -463,6 +518,16 @@ export interface components {
             /** Format: int64 */
             total_count: number;
         };
+        ListBodyNetwork: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["Network"][] | null;
+            /** Format: int64 */
+            total_count: number;
+        };
         ListBodyServerType: {
             /**
              * Format: uri
@@ -511,6 +576,9 @@ export interface components {
             /** Format: int64 */
             id: number;
             name: string;
+            /** Format: int64 */
+            network: number | null;
+            network_type: string | null;
             unboxed_version: string;
             /** Format: int64 */
             workspace: number;
@@ -522,6 +590,27 @@ export interface components {
              */
             readonly $schema?: string;
             token: string;
+        };
+        Network: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: int64 */
+            id: number;
+            name: string;
+            netbird: components["schemas"]["NetworkNetbird"];
+            status: string;
+            type: string;
+            /** Format: int64 */
+            workspace: number;
+        };
+        NetworkNetbird: {
+            apiUrl: string;
+            netbirdVersion: string;
         };
         Price: {
             Currency: string;
@@ -587,6 +676,18 @@ export interface components {
              */
             readonly $schema?: string;
             boxSpec: components["schemas"]["BoxSpec"];
+        };
+        UpdateNetwork: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            netbird?: components["schemas"]["UpdateNetworkNetbird"];
+        };
+        UpdateNetworkNetbird: {
+            apiAccessToken?: string;
+            netbirdVersion: string | null;
         };
         User: {
             /**
@@ -1254,6 +1355,177 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MachineToken"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-networks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListBodyNetwork"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-networks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateNetwork"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Network"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-networks-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Network"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-v1-workspaces-by-workspace-id-networks-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Network"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "patch-v1-workspaces-by-workspace-id-networks-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateNetwork"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Network"];
                 };
             };
             /** @description Error */

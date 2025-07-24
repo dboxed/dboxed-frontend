@@ -73,6 +73,22 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
               )}
             </p>
           </div>
+          
+          <div>
+            <label className="text-sm font-medium">Network</label>
+            <p className="text-sm text-muted-foreground">
+              <ReferenceLabel
+                resourceId={data.network}
+                resourcePath="/v1/workspaces/{workspaceId}/networks/{id}"
+                pathParams={{
+                  workspaceId: data.workspace,
+                  id: data.network
+                }}
+                detailsUrl={`/workspaces/${data.workspace}/networks/${data.network}`}
+                fallbackLabel="Network"
+              />
+            </p>
+          </div>
         </div>
         
         <div>

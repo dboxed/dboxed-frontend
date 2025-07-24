@@ -5,6 +5,7 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import type { components } from "@/api/models/schema";
 import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
+import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 
 export function ListMachinesPage() {
   const navigate = useNavigate()
@@ -29,21 +30,32 @@ export function ListMachinesPage() {
       },
     },
     {
-      accessorKey: "cloud_provider_type",
-      header: "Provider Type",
+      accessorKey: "cloud_provider",
+      header: "Cloud Provider",
       cell: ({ row }) => {
-        const type = row.getValue("cloud_provider_type") as string | null
-        if (!type) {
-          return (
-            <Badge variant="outline">
-              None
-            </Badge>
-          )
-        }
+        const cloudProviderId = row.getValue("cloud_provider") as number | null
+        const workspaceId = row.original.workspace
+        const providerType = row.original.cloud_provider_type
+        
         return (
-          <Badge variant="secondary" className="capitalize">
-            {type}
-          </Badge>
+          <div className="flex items-center gap-2">
+            <ReferenceLabel
+              resourceId={cloudProviderId}
+              resourcePath="/v1/workspaces/{workspaceId}/cloud-providers/{id}"
+              pathParams={{ 
+                workspaceId: workspaceId, 
+                id: cloudProviderId 
+              }}
+              detailsUrl={`/workspaces/${workspaceId}/cloud-providers/${cloudProviderId}`}
+              fallbackLabel="Provider"
+              className="text-blue-600 hover:text-blue-800 underline text-sm"
+            />
+            {providerType && (
+              <Badge variant="outline" className="text-xs">
+                {providerType}
+              </Badge>
+            )}
+          </div>
         )
       },
     },

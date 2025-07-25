@@ -48,6 +48,12 @@ export function CreateMachinePage() {
           workspaceId: workspaceId,
         }
       }}
+      defaultValues={{
+        hetzner: {
+          server_location: "fsn1",
+          server_type: "cpx11"
+        }
+      }}
       onSubmit={handleSubmit}
     >
       {(form) => {

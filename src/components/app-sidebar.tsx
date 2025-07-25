@@ -15,8 +15,8 @@ const navMain = [
     icon: LayoutDashboard,
   },
   {
-    title: "Cloud Providers",
-    navigate: "/workspaces/{workspaceId}/cloud-providers",
+    title: "Machine Providers",
+    navigate: "/workspaces/{workspaceId}/machine-providers",
     icon: Cloud,
   },
   {

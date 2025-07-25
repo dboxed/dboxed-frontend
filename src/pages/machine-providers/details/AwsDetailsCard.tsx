@@ -5,12 +5,12 @@ import type { UseFormReturn } from "react-hook-form"
 import type { components } from "@/api/models/schema"
 
 interface AwsDetailsCardProps {
-  awsData: components["schemas"]["CloudProviderAws"]
+  awsData: components["schemas"]["MachineProviderAws"]
   form: UseFormReturn<any>
 }
 
 interface AwsSubnetsCardProps {
-  subnets: components["schemas"]["CloudProviderAws"]["subnets"]
+  subnets: components["schemas"]["MachineProviderAws"]["subnets"]
 }
 
 export function AwsDetailsCard({ awsData, form }: AwsDetailsCardProps) {
@@ -21,7 +21,7 @@ export function AwsDetailsCard({ awsData, form }: AwsDetailsCardProps) {
           <span>AWS Configuration</span>
         </CardTitle>
         <CardDescription>
-          AWS cloud provider configuration details.
+          AWS machine provider configuration details.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -57,7 +57,7 @@ export function AwsDetailsCard({ awsData, form }: AwsDetailsCardProps) {
           </div>
         </div>
 
-        {/* Editable fields for UpdateCloudProvider */}
+        {/* Editable fields for UpdateMachineProvider */}
         <div className="space-y-4 pt-4 border-t">
           <FormField
             control={form.control}
@@ -114,7 +114,7 @@ export function AwsSubnetsCard({ subnets }: AwsSubnetsCardProps) {
       <CardHeader>
         <CardTitle>Subnets</CardTitle>
         <CardDescription>
-          AWS VPC subnets associated with this cloud provider.
+          AWS VPC subnets associated with this machine provider.
         </CardDescription>
       </CardHeader>
       <CardContent>

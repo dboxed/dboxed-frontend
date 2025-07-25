@@ -4,7 +4,7 @@ import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import type { components } from "@/api/models/schema"
 
 interface GeneralInfoCardProps {
-  data: components["schemas"]["CloudProvider"]
+  data: components["schemas"]["MachineProvider"]
 }
 
 export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
@@ -13,7 +13,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
       <CardHeader>
         <CardTitle>General Information</CardTitle>
         <CardDescription>
-          Basic cloud provider details and status.
+          Basic machine provider details and status.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">

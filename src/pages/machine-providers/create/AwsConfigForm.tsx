@@ -14,7 +14,7 @@ export function AwsConfigForm({ form }: AwsConfigFormProps) {
   const client = useUnboxedQueryClient()
   
   // Fetch AWS regions
-  const awsRegions = client.useQuery('get', '/v1/cloud-provider-info/aws/regions')
+  const awsRegions = client.useQuery('get', '/v1/machine-provider-info/aws/regions')
 
   return (
     <Card>

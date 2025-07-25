@@ -1,6 +1,6 @@
 export { MachineDetailsPage } from './MachineDetailsPage'
 export { GeneralInfoCard } from './GeneralInfoCard'
-export { CloudProviderInfoCard } from './CloudProviderInfoCard'
+export { MachineProviderInfoCard } from './MachineProviderInfoCard'
 export { MachineConnectCard } from './MachineConnectCard.tsx'
 export { BoxSpecEditorPage } from './boxspec/BoxSpecEditorPage.tsx'
 export { FileBundleEntryTable } from './boxspec/filebundle/FileBundleEntryTable.tsx'

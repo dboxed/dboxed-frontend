@@ -7,13 +7,13 @@ import { useUnboxedQueryClient } from "@/api/api"
 import { Cloud, Plus, ArrowRight } from "lucide-react"
 import type { components } from "@/api/models/schema"
 
-export function CloudProvidersOverview() {
+export function MachineProvidersOverview() {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useUnboxedQueryClient()
 
-  // Fetch cloud providers
-  const cloudProvidersQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/cloud-providers', {
+  // Fetch machine providers
+  const machineProvidersQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/machine-providers', {
     params: {
       path: {
         workspaceId: workspaceId!,
@@ -21,10 +21,10 @@ export function CloudProvidersOverview() {
     }
   })
 
-  const cloudProviders = cloudProvidersQuery.data?.items || []
+  const machineProviders = machineProvidersQuery.data?.items || []
 
   // Get recent items (last 3)
-  const recentCloudProviders = cloudProviders
+  const recentMachineProviders = machineProviders
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 3)
 
@@ -33,9 +33,9 @@ export function CloudProvidersOverview() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Cloud className="h-5 w-5" />
-          Cloud Providers
+          Machine Providers
           <Badge variant="secondary" className="ml-auto">
-            {cloudProviders.length}
+            {machineProviders.length}
           </Badge>
         </CardTitle>
         <CardDescription>
@@ -43,23 +43,23 @@ export function CloudProvidersOverview() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {cloudProvidersQuery.isLoading && (
-          <div className="text-sm text-muted-foreground">Loading cloud providers...</div>
+        {machineProvidersQuery.isLoading && (
+          <div className="text-sm text-muted-foreground">Loading machine providers...</div>
         )}
 
-        {cloudProvidersQuery.error && (
-          <div className="text-sm text-red-600">Failed to load cloud providers</div>
+        {machineProvidersQuery.error && (
+          <div className="text-sm text-red-600">Failed to load machine providers</div>
         )}
 
-        {!cloudProvidersQuery.isLoading && !cloudProvidersQuery.error && (
+        {!machineProvidersQuery.isLoading && !machineProvidersQuery.error && (
           <>
-            {cloudProviders.length === 0 ? (
+            {machineProviders.length === 0 ? (
               <div className="text-center py-6">
                 <div className="text-sm text-muted-foreground mb-4">
-                  No cloud providers configured yet
+                  No machine providers configured yet
                 </div>
                 <Button 
-                  onClick={() => navigate(`/workspaces/${workspaceId}/cloud-providers/create`)}
+                  onClick={() => navigate(`/workspaces/${workspaceId}/machine-providers/create`)}
                   size="sm"
                 >
                   <Plus className="h-4 w-4 mr-2" />
@@ -70,11 +70,11 @@ export function CloudProvidersOverview() {
               <>
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Recent Providers</div>
-                  {recentCloudProviders.map((provider: components["schemas"]["CloudProvider"]) => (
+                  {recentMachineProviders.map((provider: components["schemas"]["MachineProvider"]) => (
                     <div
                       key={provider.id}
                       className="flex items-center justify-between p-2 border rounded-md hover:bg-accent cursor-pointer"
-                      onClick={() => navigate(`/workspaces/${workspaceId}/cloud-providers/${provider.id}`)}
+                      onClick={() => navigate(`/workspaces/${workspaceId}/machine-providers/${provider.id}`)}
                     >
                       <div className="flex items-center gap-2">
                         <div className="text-sm font-medium">{provider.name}</div>
@@ -96,7 +96,7 @@ export function CloudProvidersOverview() {
                   <Button 
                     variant="outline" 
                     size="sm"
-                    onClick={() => navigate(`/workspaces/${workspaceId}/cloud-providers`)}
+                    onClick={() => navigate(`/workspaces/${workspaceId}/machine-providers`)}
                     className="flex-1"
                   >
                     View All
@@ -104,7 +104,7 @@ export function CloudProvidersOverview() {
                   </Button>
                   <Button 
                     size="sm"
-                    onClick={() => navigate(`/workspaces/${workspaceId}/cloud-providers/create`)}
+                    onClick={() => navigate(`/workspaces/${workspaceId}/machine-providers/create`)}
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Add New

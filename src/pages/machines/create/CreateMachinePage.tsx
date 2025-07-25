@@ -1,5 +1,5 @@
 import { BaseCreatePage } from "@/pages/base/BaseCreatePage.tsx"
-import { CloudProviderSelector } from "./CloudProviderSelector.tsx"
+import { MachineProviderSelector } from "./MachineProviderSelector.tsx"
 import { NetworkSelector } from "./NetworkSelector.tsx"
 import { AwsMachineConfigForm } from "./AwsMachineConfigForm.tsx"
 import { HetznerMachineConfigForm } from "./HetznerMachineConfigForm.tsx"
@@ -13,7 +13,7 @@ export function CreateMachinePage() {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useUnboxedQueryClient()
 
-  const cloudProviders = client.useQuery('get', "/v1/workspaces/{workspaceId}/cloud-providers", {
+  const machineProviders = client.useQuery('get', "/v1/workspaces/{workspaceId}/machine-providers", {
     params: {
       path: {
         workspaceId: workspaceId!,
@@ -21,19 +21,19 @@ export function CreateMachinePage() {
     }
   })
 
-  const getCloudProvider = (id: number) => {
-    return cloudProviders.data?.items?.find(x => x.id == id)
+  const getMachineProvider = (id: number) => {
+    return machineProviders.data?.items?.find(x => x.id == id)
   }
 
   const handleSubmit = (data: components["schemas"]["CreateMachine"]) => {
-    const cp = getCloudProvider(data.cloud_provider!)
-    if (!cp) {
+    const mp = getMachineProvider(data.machine_provider!)
+    if (!mp) {
       return data
     }
 
-    if (cp.type == 'aws') {
+    if (mp.type == 'aws') {
       data.hetzner = undefined
-    } else if (cp.type == 'hetzner') {
+    } else if (mp.type == 'hetzner') {
       data.aws = undefined
     }
     return data
@@ -51,8 +51,8 @@ export function CreateMachinePage() {
       onSubmit={handleSubmit}
     >
       {(form) => {
-        const cloudProviderId = form.watch("cloud_provider")
-        const cloudProvider = cloudProviderId ? getCloudProvider(cloudProviderId) : undefined
+        const machineProviderId = form.watch("machine_provider")
+        const machineProvider = machineProviderId ? getMachineProvider(machineProviderId) : undefined
         return <div className="space-y-6">
           <FormField
             control={form.control}
@@ -68,14 +68,14 @@ export function CreateMachinePage() {
             )}
           />
           
-          <CloudProviderSelector form={form} />
+          <MachineProviderSelector form={form} />
           <NetworkSelector form={form} />
           
-          {cloudProvider?.type === "aws" && (
+          {machineProvider?.type === "aws" && (
             <AwsMachineConfigForm form={form} />
           )}
           
-          {cloudProvider?.type === "hetzner" && (
+          {machineProvider?.type === "hetzner" && (
             <HetznerMachineConfigForm form={form} />
           )}
         </div>

@@ -5,7 +5,7 @@ import type { UseFormReturn } from "react-hook-form"
 import type { components } from "@/api/models/schema"
 
 interface HetznerDetailsCardProps {
-  hetznerData: components["schemas"]["CloudProviderHetzner"]
+  hetznerData: components["schemas"]["MachineProviderHetzner"]
   form: UseFormReturn<any>
 }
 
@@ -17,7 +17,7 @@ export function HetznerDetailsCard({ hetznerData, form }: HetznerDetailsCardProp
           <span>Hetzner Configuration</span>
         </CardTitle>
         <CardDescription>
-          Hetzner Cloud provider configuration details.
+          Hetzner Machine provider configuration details.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">

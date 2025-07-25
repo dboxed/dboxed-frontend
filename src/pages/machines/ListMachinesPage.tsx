@@ -30,23 +30,23 @@ export function ListMachinesPage() {
       },
     },
     {
-      accessorKey: "cloud_provider",
-      header: "Cloud Provider",
+      accessorKey: "machine_provider",
+      header: "Machine Provider",
       cell: ({ row }) => {
-        const cloudProviderId = row.getValue("cloud_provider") as number | null
+        const machineProviderId = row.getValue("machine_provider") as number | null
         const workspaceId = row.original.workspace
-        const providerType = row.original.cloud_provider_type
+        const providerType = row.original.machine_provider_type
         
         return (
           <div className="flex items-center gap-2">
             <ReferenceLabel
-              resourceId={cloudProviderId}
-              resourcePath="/v1/workspaces/{workspaceId}/cloud-providers/{id}"
+              resourceId={machineProviderId}
+              resourcePath="/v1/workspaces/{workspaceId}/machine-providers/{id}"
               pathParams={{ 
                 workspaceId: workspaceId, 
-                id: cloudProviderId 
+                id: machineProviderId
               }}
-              detailsUrl={`/workspaces/${workspaceId}/cloud-providers/${cloudProviderId}`}
+              detailsUrl={`/workspaces/${workspaceId}/machine-providers/${machineProviderId}`}
               fallbackLabel="Provider"
               className="text-blue-600 hover:text-blue-800 underline text-sm"
             />

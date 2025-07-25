@@ -46,7 +46,7 @@ export function BoxSpecEditorPage() {
       enableSave={true}
       buildUpdateDefaults={buildUpdateDefaults}
     >
-      {(data, form) => {
+      {(_, form) => {
         const handleYamlEdit = () => {
           setShowYamlDialog(true)
         }

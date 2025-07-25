@@ -16,22 +16,22 @@ export function AwsMachineConfigForm({ form }: AwsMachineConfigFormProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useUnboxedQueryClient()
   
-  const cloudProviderId = form.watch("cloud_provider")
+  const machineProviderId = form.watch("machine_provider")
   
-  // Fetch the selected cloud provider details to get subnets
-  const cloudProviderQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/cloud-providers/{id}', {
+  // Fetch the selected machine provider details to get subnets
+  const machineProviderQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/machine-providers/{id}', {
     params: {
       path: {
         workspaceId: workspaceId!,
-        id: cloudProviderId,
+        id: machineProviderId,
       }
     },
   }, {
-    enabled: !!cloudProviderId
+    enabled: !!machineProviderId
   })
 
-  const cloudProvider = cloudProviderQuery.data
-  const subnets = cloudProvider?.aws?.subnets || []
+  const machineProvider = machineProviderQuery.data
+  const subnets = machineProvider?.aws?.subnets || []
 
   // Common AWS instance types
   const instanceTypes = [
@@ -99,7 +99,7 @@ export function AwsMachineConfigForm({ form }: AwsMachineConfigFormProps) {
                       <SelectValue placeholder="Select a subnet" />
                     </SelectTrigger>
                     <SelectContent>
-                      {subnets.map((subnet: components["schemas"]["CloudProviderAwsSubnet"]) => (
+                      {subnets.map((subnet: components["schemas"]["MachineProviderAwsSubnet"]) => (
                         <SelectItem key={subnet.subnet_id} value={subnet.subnet_id}>
                           <div className="flex flex-col">
                             <span>{subnet.subnet_name || subnet.subnet_id}</span>
@@ -113,7 +113,7 @@ export function AwsMachineConfigForm({ form }: AwsMachineConfigFormProps) {
                   </Select>
                 ) : (
                   <div className="text-sm text-muted-foreground">
-                    {cloudProviderQuery.isLoading ? "Loading subnets..." : "No subnets available"}
+                    {machineProviderQuery.isLoading ? "Loading subnets..." : "No subnets available"}
                   </div>
                 )}
               </FormControl>

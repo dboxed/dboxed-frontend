@@ -10,16 +10,16 @@ import { AwsDetailsCard, AwsSubnetsCard } from "./AwsDetailsCard.tsx"
 import { HetznerDetailsCard } from "./HetznerDetailsCard.tsx"
 import type { components } from "@/api/models/schema";
 
-export function CloudProviderDetailsPage() {
+export function MachineProviderDetailsPage() {
   const { workspaceId } = useSelectedWorkspaceId()
-  const { cloudProviderId } = useParams<{ cloudProviderId: string }>()
+  const { machineProviderId } = useParams<{ machineProviderId: string }>()
 
-  if (!cloudProviderId) {
-    return <div>Invalid cloud provider ID</div>
+  if (!machineProviderId) {
+    return <div>Invalid machine provider ID</div>
   }
 
-  const buildUpdateDefaults = (data: components["schemas"]["CloudProvider"]): components["schemas"]["UpdateCloudProvider"] => {
-    const defaults: components["schemas"]["UpdateCloudProvider"] = {
+  const buildUpdateDefaults = (data: components["schemas"]["MachineProvider"]): components["schemas"]["UpdateMachineProvider"] => {
+    const defaults: components["schemas"]["UpdateMachineProvider"] = {
     }
 
     // Add Hetzner-specific defaults if Hetzner data exists
@@ -33,17 +33,17 @@ export function CloudProviderDetailsPage() {
   }
 
   return (
-    <BaseResourceDetailsPage<components["schemas"]["CloudProvider"], components["schemas"]["UpdateCloudProvider"]>
-      title="Cloud Provider"
-      resourcePath="/v1/workspaces/{workspaceId}/cloud-providers/{id}"
+    <BaseResourceDetailsPage<components["schemas"]["MachineProvider"], components["schemas"]["UpdateMachineProvider"]>
+      title="Machine Provider"
+      resourcePath="/v1/workspaces/{workspaceId}/machine-providers/{id}"
       enableDelete={true}
       enableSave={true}
       buildUpdateDefaults={buildUpdateDefaults}
-      afterDeleteUrl={`/workspaces/${workspaceId}/cloud-providers`}
+      afterDeleteUrl={`/workspaces/${workspaceId}/machine-providers`}
       apiParams={{
         path: {
           workspaceId: workspaceId,
-          id: cloudProviderId,
+          id: machineProviderId,
         }
       }}
     >
@@ -68,7 +68,7 @@ export function CloudProviderDetailsPage() {
               <CardHeader>
                 <CardTitle>SSH Configuration</CardTitle>
                 <CardDescription>
-                  SSH key configuration for the cloud provider.
+                  SSH key configuration for the machine provider.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -115,7 +115,7 @@ export function CloudProviderDetailsPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    This cloud provider does not have provider-specific configuration.
+                    This machine provider does not have provider-specific configuration.
                   </p>
                 </CardContent>
               </Card>

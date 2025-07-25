@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { BaseCreatePage } from "@/pages/base/BaseCreatePage.tsx"
-import { CloudProviderTypeSelector, AwsConfigForm, HetznerConfigForm, SshKeyForm } from "@/pages/cloud-providers/create/index.ts"
+import { MachineProviderTypeSelector, AwsConfigForm, HetznerConfigForm, SshKeyForm } from "@/pages/machine-providers/create/index.ts"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
@@ -12,7 +12,7 @@ const FormSchema = z.object({
     message: "Name must be at least 1 character.",
   }),
   type: z.enum(["aws", "hetzner"]).refine((val) => val !== undefined, {
-    message: "Please select a cloud provider type.",
+    message: "Please select a machine provider type.",
   }),
   ssh_key_public: z.string().optional(),
   aws: z.object({
@@ -36,15 +36,15 @@ const FormSchema = z.object({
   }
   return true
 }, {
-  message: "Please configure the selected cloud provider type.",
+  message: "Please configure the selected machine provider type.",
   path: ["type"]
 })
 
-export function CreateCloudProviderPage() {
+export function CreateMachineProviderPage() {
   const { workspaceId } = useSelectedWorkspaceId()
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    const submitData: components["schemas"]["CreateCloudProvider"] = {
+    const submitData: components["schemas"]["CreateMachineProvider"] = {
       name: data.name,
       type: data.type,
     }
@@ -66,8 +66,8 @@ export function CreateCloudProviderPage() {
 
   return (
     <BaseCreatePage
-      title="Create Cloud Provider"
-      apiRoute="/v1/workspaces/{workspaceId}/cloud-providers"
+      title="Create Machine Provider"
+      apiRoute="/v1/workspaces/{workspaceId}/machine-providers"
       apiParams={{
         path: {
           workspaceId: workspaceId,
@@ -90,14 +90,14 @@ export function CreateCloudProviderPage() {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter cloud provider name" {...field} />
+                  <Input placeholder="Enter machine provider name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
           
-          <CloudProviderTypeSelector form={form} />
+          <MachineProviderTypeSelector form={form} />
           <SshKeyForm form={form} />
           
           {form.watch("type") === "aws" && (

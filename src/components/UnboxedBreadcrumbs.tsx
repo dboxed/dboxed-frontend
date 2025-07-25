@@ -67,14 +67,14 @@ function WorkspaceBreadcrumb({ isCurrentPage }: WorkspaceBreadcrumbProps) {
   )
 }
 
-interface CloudProvidersBreadcrumbProps {
+interface MachineProvidersBreadcrumbProps {
   isCurrentPage?: boolean
 }
 
-function CloudProvidersBreadcrumb({ isCurrentPage }: CloudProvidersBreadcrumbProps) {
+function MachineProvidersBreadcrumb({ isCurrentPage }: MachineProvidersBreadcrumbProps) {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
-  const href = `/workspaces/${workspaceId}/cloud-providers`
+  const href = `/workspaces/${workspaceId}/machine-providers`
 
   return (
     <BreadcrumbElement
@@ -82,34 +82,34 @@ function CloudProvidersBreadcrumb({ isCurrentPage }: CloudProvidersBreadcrumbPro
       isCurrentPage={isCurrentPage}
       onClick={() => navigate(href)}
     >
-      <span>Cloud Providers</span>
+      <span>Machine Providers</span>
     </BreadcrumbElement>
   )
 }
 
-interface CloudProviderBreadcrumbProps {
-  cloudProviderId: number
+interface MachineProviderBreadcrumbProps {
+  machineProviderId: number
   isCurrentPage?: boolean
 }
 
-function CloudProviderBreadcrumb({ cloudProviderId, isCurrentPage }: CloudProviderBreadcrumbProps) {
+function MachineProviderBreadcrumb({ machineProviderId, isCurrentPage }: MachineProviderBreadcrumbProps) {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useUnboxedQueryClient()
 
-  const cloudProvider = client.useQuery('get', '/v1/workspaces/{workspaceId}/cloud-providers/{id}', {
+  const machineProvider = client.useQuery('get', '/v1/workspaces/{workspaceId}/machine-providers/{id}', {
     params: {
       path: {
         workspaceId: workspaceId!,
-        id: cloudProviderId
+        id: machineProviderId
       }
     },
   }, {
-    enabled: !!workspaceId && !!cloudProviderId
+    enabled: !!workspaceId && !!machineProviderId
   })
 
-  const href = `/workspaces/${workspaceId}/cloud-providers/${cloudProviderId}`
-  const label = cloudProvider.data?.name || 'Cloud Provider'
+  const href = `/workspaces/${workspaceId}/machine-providers/${machineProviderId}`
+  const label = machineProvider.data?.name || 'Machine Provider'
 
   return (
     <BreadcrumbElement
@@ -273,30 +273,30 @@ export function UnboxedBreadcrumbs({ className }: UnboxedBreadcrumbsProps) {
     currentIndex = 2 // Skip 'workspaces' and workspace ID
   }
 
-  // Handle cloud-providers path
-  if (pathSegments[currentIndex] === 'cloud-providers') {
+  // Handle machine-providers path
+  if (pathSegments[currentIndex] === 'machine-providers') {
     const isCurrentPage = pathSegments.length === currentIndex + 1
 
     breadcrumbElements.push(
-      <BreadcrumbSeparator key="sep-workspace-cloud-providers"/>,
-      <BreadcrumbItem key="cloud-providers">
-        <CloudProvidersBreadcrumb isCurrentPage={isCurrentPage}/>
+      <BreadcrumbSeparator key="sep-workspace-machine-providers"/>,
+      <BreadcrumbItem key="machine-providers">
+        <MachineProvidersBreadcrumb isCurrentPage={isCurrentPage}/>
       </BreadcrumbItem>
     )
 
     currentIndex++
 
-    // Handle specific cloud provider ID
-    const cloudProviderIdSegment = pathSegments[currentIndex]
-    if (cloudProviderIdSegment && cloudProviderIdSegment.match(/^\d+$/)) {
-      const cloudProviderId = parseInt(cloudProviderIdSegment)
+    // Handle specific machine provider ID
+    const machineProviderIdSegment = pathSegments[currentIndex]
+    if (machineProviderIdSegment && machineProviderIdSegment.match(/^\d+$/)) {
+      const machineProviderId = parseInt(machineProviderIdSegment)
       const isCurrentPage = pathSegments.length === currentIndex + 1
 
       breadcrumbElements.push(
-        <BreadcrumbSeparator key="sep-cloud-providers"/>,
-        <BreadcrumbItem key="cloud-provider">
-          <CloudProviderBreadcrumb
-            cloudProviderId={cloudProviderId}
+        <BreadcrumbSeparator key="sep-machine-providers"/>,
+        <BreadcrumbItem key="machine-provider">
+          <MachineProviderBreadcrumb
+            machineProviderId={machineProviderId}
             isCurrentPage={isCurrentPage}
           />
         </BreadcrumbItem>
@@ -308,7 +308,7 @@ export function UnboxedBreadcrumbs({ className }: UnboxedBreadcrumbsProps) {
     // Handle create path
     if (pathSegments[currentIndex] === 'create') {
       breadcrumbElements.push(
-        <BreadcrumbSeparator key="sep-create-cloud-provider"/>,
+        <BreadcrumbSeparator key="sep-create-machine-provider"/>,
         <BreadcrumbItem key="create">
           <CreateBreadcrumb isCurrentPage={true}/>
         </BreadcrumbItem>

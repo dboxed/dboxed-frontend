@@ -5,13 +5,13 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router';
 import MainLayout from "@/layouts/MainLayout.tsx";
 import { AuthProvider } from "react-oidc-context";
 import { CreateWorkspacePage } from "@/pages/workspaces/CreateWorkspacePage.tsx";
-import { ListCloudProvidersPage } from "@/pages/cloud-providers/ListCloudProvidersPage.tsx";
-import { CloudProviderDetailsPage } from "@/pages/cloud-providers/details/CloudProviderDetailsPage.tsx";
+import { ListMachineProvidersPage } from "@/pages/machine-providers/ListMachineProvidersPage.tsx";
+import { MachineProviderDetailsPage } from "@/pages/machine-providers/details/MachineProviderDetailsPage.tsx";
 import { ListMachinesPage } from "@/pages/machines/ListMachinesPage.tsx";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import { useUnboxedQueryClient } from "@/api/api.ts";
 import { Toaster } from "sonner";
-import { CreateCloudProviderPage } from "@/pages/cloud-providers/create/CreateCloudProviderPage.tsx";
+import { CreateMachineProviderPage } from "@/pages/machine-providers/create/CreateMachineProviderPage.tsx";
 import { CreateMachinePage, MachineDetailsPage } from "@/pages/machines";
 import { BoxSpecEditorPage } from "@/pages/machines/details/boxspec/BoxSpecEditorPage.tsx";
 import { WorkspaceDashboardPage } from "@/pages/workspaces/WorkspaceDashboardPage.tsx";
@@ -65,8 +65,8 @@ function AuthenticatedApp() {
       <Routes>
         <Route path="/" element={<MainLayout isAdmin={isAdminQuery.isAdmin} />}>
           <Route path="/workspaces/:workspaceId" element={<WorkspaceDashboardPage/>}/>
-          <Route path="/workspaces/:workspaceId/cloud-providers" element={<ListCloudProvidersPage/>}/>
-          <Route path="/workspaces/:workspaceId/cloud-providers/:cloudProviderId" element={<CloudProviderDetailsPage />}/>
+          <Route path="/workspaces/:workspaceId/machine-providers" element={<ListMachineProvidersPage/>}/>
+          <Route path="/workspaces/:workspaceId/machine-providers/:machineProviderId" element={<MachineProviderDetailsPage />}/>
           <Route path="/workspaces/:workspaceId/machines" element={<ListMachinesPage/>}/>
           <Route path="/workspaces/:workspaceId/machines/:machineId" element={<MachineDetailsPage/>}/>
           <Route path="/workspaces/:workspaceId/machines/:machineId/box-spec" element={<BoxSpecEditorPage/>}/>
@@ -74,7 +74,7 @@ function AuthenticatedApp() {
           <Route path="/workspaces/:workspaceId/networks/:networkId" element={<NetworkDetailsPage/>}/>
         </Route>
         <Route path="/workspaces/create" element={<CreateWorkspacePage/>}/>
-        <Route path="/workspaces/:workspaceId/cloud-providers/create" element={<CreateCloudProviderPage/>}/>
+        <Route path="/workspaces/:workspaceId/machine-providers/create" element={<CreateMachineProviderPage/>}/>
         <Route path="/workspaces/:workspaceId/machines/create" element={<CreateMachinePage/>}/>
         <Route path="/workspaces/:workspaceId/networks/create" element={<CreateNetworkPage/>}/>
         {isAdminQuery.isAdmin && (

@@ -46,27 +46,27 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           </div>
           
           <div>
-            <label className="text-sm font-medium">Cloud Provider</label>
+            <label className="text-sm font-medium">Machine Provider</label>
             <p className="text-sm text-muted-foreground">
               <ReferenceLabel
-                resourceId={data.cloud_provider}
-                resourcePath="/v1/workspaces/{workspaceId}/cloud-providers/{id}"
+                resourceId={data.machine_provider}
+                resourcePath="/v1/workspaces/{workspaceId}/machine-providers/{id}"
                 pathParams={{ 
                   workspaceId: data.workspace, 
-                  id: data.cloud_provider 
+                  id: data.machine_provider
                 }}
-                detailsUrl={`/workspaces/${data.workspace}/cloud-providers/${data.cloud_provider}`}
+                detailsUrl={`/workspaces/${data.workspace}/machine-providers/${data.machine_provider}`}
                 fallbackLabel="Provider"
               />
             </p>
           </div>
           
           <div>
-            <label className="text-sm font-medium">Cloud Provider Type</label>
+            <label className="text-sm font-medium">Machine Provider Type</label>
             <p className="text-sm text-muted-foreground">
-              {data.cloud_provider_type ? (
+              {data.machine_provider_type ? (
                 <Badge variant="outline" className="w-fit">
-                  {data.cloud_provider_type}
+                  {data.machine_provider_type}
                 </Badge>
               ) : (
                 "N/A"

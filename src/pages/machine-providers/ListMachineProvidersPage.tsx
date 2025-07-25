@@ -6,12 +6,12 @@ import type { components } from "@/api/models/schema";
 import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
 
-export function ListCloudProvidersPage() {
+export function ListMachineProvidersPage() {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
 
   // Define columns for the DataTable
-  const columns: ColumnDef<components["schemas"]["CloudProvider"]>[] = [
+  const columns: ColumnDef<components["schemas"]["MachineProvider"]>[] = [
     {
       accessorKey: "name",
       header: "Name",
@@ -20,7 +20,7 @@ export function ListCloudProvidersPage() {
         const id = row.original.id
         return (
           <button
-            onClick={() => navigate(`/workspaces/${workspaceId}/cloud-providers/${id}`)}
+            onClick={() => navigate(`/workspaces/${workspaceId}/machine-providers/${id}`)}
             className="font-medium text-left hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded"
           >
             {name}
@@ -90,7 +90,7 @@ export function ListCloudProvidersPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate(`/workspaces/${workspaceId}/cloud-providers/${id}`)}
+            onClick={() => navigate(`/workspaces/${workspaceId}/machine-providers/${id}`)}
           >
             View Details
           </Button>
@@ -100,19 +100,19 @@ export function ListCloudProvidersPage() {
   ]
 
   return (
-    <BaseListPage<components["schemas"]["CloudProvider"]>
-      title="Cloud Providers"
-      resourcePath="/v1/workspaces/{workspaceId}/cloud-providers"
-      createPath={`/workspaces/${workspaceId}/cloud-providers/create`}
+    <BaseListPage<components["schemas"]["MachineProvider"]>
+      title="Machine Providers"
+      resourcePath="/v1/workspaces/{workspaceId}/machine-providers"
+      createPath={`/workspaces/${workspaceId}/machine-providers/create`}
       columns={columns}
       apiParams={{
         path: {
           workspaceId: workspaceId,
         }
       }}
-      emptyStateMessage="No cloud providers configured yet. Create your first cloud provider to get started."
+      emptyStateMessage="No machine providers configured yet. Create your first machine provider to get started."
       searchColumn="name"
-      searchPlaceholder="Search cloud providers..."
+      searchPlaceholder="Search machine providers..."
     />
   )
 }

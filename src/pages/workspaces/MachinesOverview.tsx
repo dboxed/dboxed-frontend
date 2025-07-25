@@ -12,8 +12,8 @@ export function MachinesOverview() {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useUnboxedQueryClient()
 
-  // Fetch cloud providers (needed for machine creation validation)
-  const cloudProvidersQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/cloud-providers', {
+  // Fetch machine providers (needed for machine creation validation)
+  const machineProvidersQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/machine-providers', {
     params: {
       path: {
         workspaceId: workspaceId!,
@@ -30,7 +30,7 @@ export function MachinesOverview() {
     }
   })
 
-  const cloudProviders = cloudProvidersQuery.data?.items || []
+  const machineProviders = machineProvidersQuery.data?.items || []
   const machines = machinesQuery.data?.items || []
 
   // Get recent items (last 3)
@@ -71,14 +71,14 @@ export function MachinesOverview() {
                 <Button 
                   onClick={() => navigate(`/workspaces/${workspaceId}/machines/create`)}
                   size="sm"
-                  disabled={cloudProviders.length === 0}
+                  disabled={machineProviders.length === 0}
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Create First Machine
                 </Button>
-                {cloudProviders.length === 0 && (
+                {machineProviders.length === 0 && (
                   <div className="text-xs text-muted-foreground mt-2">
-                    Create a cloud provider first
+                    Create a machine provider first
                   </div>
                 )}
               </div>
@@ -94,9 +94,9 @@ export function MachinesOverview() {
                     >
                       <div className="flex items-center gap-2">
                         <div className="text-sm font-medium">{machine.name}</div>
-                        {machine.cloud_provider_type && (
+                        {machine.machine_provider_type && (
                           <Badge variant="outline" className="text-xs">
-                            {machine.cloud_provider_type}
+                            {machine.machine_provider_type}
                           </Badge>
                         )}
                       </div>
@@ -120,7 +120,7 @@ export function MachinesOverview() {
                   <Button 
                     size="sm"
                     onClick={() => navigate(`/workspaces/${workspaceId}/machines/create`)}
-                    disabled={cloudProviders.length === 0}
+                    disabled={machineProviders.length === 0}
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Add New

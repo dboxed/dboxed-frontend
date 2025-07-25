@@ -6,15 +6,15 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useUnboxedQueryClient } from "@/api/api"
 import type { components } from "@/api/models/schema"
 
-interface CloudProviderSelectorProps {
+interface MachineProviderSelectorProps {
   form: UseFormReturn<components["schemas"]["CreateMachine"]>
 }
 
-export function CloudProviderSelector({ form }: CloudProviderSelectorProps) {
+export function MachineProviderSelector({ form }: MachineProviderSelectorProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useUnboxedQueryClient()
 
-  const cloudProvidersQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/cloud-providers', {
+  const machineProvidersQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/machine-providers', {
     params: {
       path: {
         workspaceId: workspaceId!,
@@ -22,33 +22,33 @@ export function CloudProviderSelector({ form }: CloudProviderSelectorProps) {
     }
   })
 
-  const cloudProviders = cloudProvidersQuery.data?.items || []
+  const machineProviders = machineProvidersQuery.data?.items || []
 
-  const handleCloudProviderChange = (cloudProviderId: string) => {
-    const selectedProvider = cloudProviders.find((cp: components["schemas"]["CloudProvider"]) => 
-      cp.id.toString() === cloudProviderId
+  const handleMachineProviderChange = (machineProviderId: string) => {
+    const selectedProvider = machineProviders.find((mp: components["schemas"]["MachineProvider"]) =>
+      mp.id.toString() === machineProviderId
     )
     
     if (selectedProvider) {
-      form.setValue('cloud_provider', selectedProvider.id)
+      form.setValue('machine_provider', selectedProvider.id)
     }
   }
 
-  if (cloudProvidersQuery.isLoading) {
+  if (machineProvidersQuery.isLoading) {
     return (
       <FormItem>
-        <FormLabel>Cloud Provider</FormLabel>
-        <div className="text-sm text-muted-foreground">Loading cloud providers...</div>
+        <FormLabel>Machine Provider</FormLabel>
+        <div className="text-sm text-muted-foreground">Loading machine providers...</div>
       </FormItem>
     )
   }
 
-  if (cloudProviders.length === 0) {
+  if (machineProviders.length === 0) {
     return (
       <FormItem>
-        <FormLabel>Cloud Provider</FormLabel>
+        <FormLabel>Machine Provider</FormLabel>
         <div className="text-sm text-muted-foreground">
-          No cloud providers found. Please create a cloud provider first.
+          No machine providers found. Please create a machine provider first.
         </div>
       </FormItem>
     )
@@ -57,17 +57,17 @@ export function CloudProviderSelector({ form }: CloudProviderSelectorProps) {
   return (
     <FormField
       control={form.control}
-      name="cloud_provider"
+      name="machine_provider"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Cloud Provider</FormLabel>
+          <FormLabel>Machine Provider</FormLabel>
           <FormControl>
-            <Select onValueChange={handleCloudProviderChange} defaultValue={field.value?.toString()}>
+            <Select onValueChange={handleMachineProviderChange} defaultValue={field.value?.toString()}>
               <SelectTrigger>
-                <SelectValue placeholder="Select a cloud provider" />
+                <SelectValue placeholder="Select a machine provider" />
               </SelectTrigger>
               <SelectContent>
-                {cloudProviders.map((provider: components["schemas"]["CloudProvider"]) => (
+                {machineProviders.map((provider: components["schemas"]["MachineProvider"]) => (
                   <SelectItem key={provider.id} value={provider.id.toString()}>
                     <div className="flex items-center space-x-2">
                       {provider.type === "aws" ? (

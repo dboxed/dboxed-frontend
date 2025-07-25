@@ -3,22 +3,22 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
 import { Cloud, Server } from "lucide-react"
 
-interface CloudProviderTypeSelectorProps {
+interface MachineProviderTypeSelectorProps {
   form: UseFormReturn<any>
 }
 
-export function CloudProviderTypeSelector({ form }: CloudProviderTypeSelectorProps) {
+export function MachineProviderTypeSelector({ form }: MachineProviderTypeSelectorProps) {
   return (
     <FormField
       control={form.control}
       name="type"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Cloud Provider Type</FormLabel>
+          <FormLabel>Machine Provider Type</FormLabel>
           <FormControl>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <SelectTrigger>
-                <SelectValue placeholder="Select a cloud provider type" />
+                <SelectValue placeholder="Select a machine provider type" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="aws">

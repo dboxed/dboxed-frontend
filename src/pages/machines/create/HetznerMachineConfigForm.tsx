@@ -14,10 +14,10 @@ export function HetznerMachineConfigForm({ form }: HetznerMachineConfigFormProps
   const client = useUnboxedQueryClient()
   
   // Fetch Hetzner locations
-  const locationsQuery = client.useQuery('get', '/v1/cloud-provider-info/hetzner/locations')
+  const locationsQuery = client.useQuery('get', '/v1/machine-provider-info/hetzner/locations')
   
   // Fetch Hetzner server types
-  const serverTypesQuery = client.useQuery('get', '/v1/cloud-provider-info/hetzner/server-types')
+  const serverTypesQuery = client.useQuery('get', '/v1/machine-provider-info/hetzner/server-types')
 
   const locations = locationsQuery.data?.items || []
   const serverTypes = serverTypesQuery.data?.items || []

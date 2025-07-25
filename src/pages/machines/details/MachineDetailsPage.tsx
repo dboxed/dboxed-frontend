@@ -3,7 +3,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs.t
 import { useParams, Link } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard"
-import { CloudProviderInfoCard } from "./CloudProviderInfoCard"
+import { MachineProviderInfoCard } from "./MachineProviderInfoCard"
 import { MachineConnectCard } from "./MachineConnectCard.tsx"
 import { Button } from "@/components/ui/button"
 import { Edit } from "lucide-react"
@@ -43,12 +43,12 @@ export function MachineDetailsPage() {
         }
       }}
     >
-      {(data, form) => (
+      {(data) => (
         <Tabs defaultValue="general" className="space-y-6">
           <div className="flex justify-between items-center">
             <TabsList className="grid grid-cols-3">
               <TabsTrigger value="general">General Information</TabsTrigger>
-              <TabsTrigger value="cloud-provider">Cloud Provider</TabsTrigger>
+              <TabsTrigger value="machine-provider">Machine Provider</TabsTrigger>
               <TabsTrigger value="connect">Connect Machine</TabsTrigger>
             </TabsList>
             <Button variant="outline" asChild>
@@ -63,10 +63,10 @@ export function MachineDetailsPage() {
             <GeneralInfoCard data={data} />
           </TabsContent>
 
-          <TabsContent value="cloud-provider">
-            <CloudProviderInfoCard 
-              cloudProviderId={data.cloud_provider} 
-              cloudProviderType={data.cloud_provider_type}
+          <TabsContent value="machine-provider">
+            <MachineProviderInfoCard
+              machineProviderId={data.machine_provider}
+              machineProviderType={data.machine_provider_type}
               workspaceId={data.workspace}
             />
           </TabsContent>

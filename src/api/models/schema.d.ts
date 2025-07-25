@@ -38,15 +38,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/cloud-provider-info/aws/regions": {
+    "/v1/machine-provider-info/aws/regions": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get v1 cloud provider info aws regions */
-        get: operations["get-v1-cloud-provider-info-aws-regions"];
+        /** Get v1 machine provider info aws regions */
+        get: operations["get-v1-machine-provider-info-aws-regions"];
         put?: never;
         post?: never;
         delete?: never;
@@ -55,15 +55,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/cloud-provider-info/hetzner/locations": {
+    "/v1/machine-provider-info/hetzner/locations": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get v1 cloud provider info hetzner locations */
-        get: operations["get-v1-cloud-provider-info-hetzner-locations"];
+        /** Get v1 machine provider info hetzner locations */
+        get: operations["get-v1-machine-provider-info-hetzner-locations"];
         put?: never;
         post?: never;
         delete?: never;
@@ -72,15 +72,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/cloud-provider-info/hetzner/server-types": {
+    "/v1/machine-provider-info/hetzner/server-types": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get v1 cloud provider info hetzner server types */
-        get: operations["get-v1-cloud-provider-info-hetzner-server-types"];
+        /** Get v1 machine provider info hetzner server types */
+        get: operations["get-v1-machine-provider-info-hetzner-server-types"];
         put?: never;
         post?: never;
         delete?: never;
@@ -125,41 +125,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/cloud-providers": {
+    "/v1/workspaces/{workspaceId}/machine-providers": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get v1 workspaces by workspace ID cloud providers */
-        get: operations["get-v1-workspaces-by-workspace-id-cloud-providers"];
+        /** Get v1 workspaces by workspace ID machine providers */
+        get: operations["get-v1-workspaces-by-workspace-id-machine-providers"];
         put?: never;
-        /** Post v1 workspaces by workspace ID cloud providers */
-        post: operations["post-v1-workspaces-by-workspace-id-cloud-providers"];
+        /** Post v1 workspaces by workspace ID machine providers */
+        post: operations["post-v1-workspaces-by-workspace-id-machine-providers"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/cloud-providers/{id}": {
+    "/v1/workspaces/{workspaceId}/machine-providers/{id}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get v1 workspaces by workspace ID cloud providers by ID */
-        get: operations["get-v1-workspaces-by-workspace-id-cloud-providers-by-id"];
+        /** Get v1 workspaces by workspace ID machine providers by ID */
+        get: operations["get-v1-workspaces-by-workspace-id-machine-providers-by-id"];
         put?: never;
         post?: never;
-        /** Delete v1 workspaces by workspace ID cloud providers by ID */
-        delete: operations["delete-v1-workspaces-by-workspace-id-cloud-providers-by-id"];
+        /** Delete v1 workspaces by workspace ID machine providers by ID */
+        delete: operations["delete-v1-workspaces-by-workspace-id-machine-providers-by-id"];
         options?: never;
         head?: never;
-        /** Patch v1 workspaces by workspace ID cloud providers by ID */
-        patch: operations["patch-v1-workspaces-by-workspace-id-cloud-providers-by-id"];
+        /** Patch v1 workspaces by workspace ID machine providers by ID */
+        patch: operations["patch-v1-workspaces-by-workspace-id-machine-providers-by-id"];
         trace?: never;
     };
     "/v1/workspaces/{workspaceId}/machines": {
@@ -278,76 +278,6 @@ export interface components {
             unboxedBinaryHash?: string;
             unboxedBinaryUrl?: string;
         };
-        CloudProvider: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            aws?: components["schemas"]["CloudProviderAws"];
-            /** Format: date-time */
-            created_at: string;
-            hetzner?: components["schemas"]["CloudProviderHetzner"];
-            /** Format: int64 */
-            id: number;
-            name: string;
-            ssh_key_fingerprint: string | null;
-            status: string;
-            type: string;
-            /** Format: int64 */
-            workspace: number;
-        };
-        CloudProviderAws: {
-            region: string;
-            security_group_id: string | null;
-            subnets: components["schemas"]["CloudProviderAwsSubnet"][] | null;
-            vpc_cidr: string | null;
-            vpc_id: string | null;
-            vpc_name: string | null;
-        };
-        CloudProviderAwsSubnet: {
-            availability_zone: string;
-            cidr: string;
-            /** Format: int64 */
-            cloud_provider: number;
-            subnet_id: string;
-            subnet_name: string | null;
-        };
-        CloudProviderHetzner: {
-            cloud_subnet_cidr: string | null;
-            hetzner_network_cidr: string | null;
-            /** Format: int64 */
-            hetzner_network_id: number | null;
-            hetzner_network_name: string;
-            hetzner_network_zone: string | null;
-            robot_subnet_cidr: string | null;
-            /** Format: int64 */
-            robot_vswitch_id: number | null;
-        };
-        CreateCloudProvider: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            aws?: components["schemas"]["CreateCloudProviderAws"];
-            hetzner?: components["schemas"]["CreateCloudProviderHetzner"];
-            name: string;
-            ssh_key_public?: string;
-            type: string;
-        };
-        CreateCloudProviderAws: {
-            aws_access_key_id: string;
-            aws_secret_access_key: string;
-            region: string;
-            vpc_id: string;
-        };
-        CreateCloudProviderHetzner: {
-            cloud_token: string;
-            hetzner_network_name: string;
-            robot_password?: string;
-            robot_username?: string;
-        };
         CreateMachine: {
             /**
              * Format: uri
@@ -355,9 +285,9 @@ export interface components {
              */
             readonly $schema?: string;
             aws?: components["schemas"]["CreateMachineAws"];
-            /** Format: int64 */
-            cloud_provider?: number;
             hetzner?: components["schemas"]["CreateMachineHetzner"];
+            /** Format: int64 */
+            machine_provider?: number;
             name: string;
             /** Format: int64 */
             network?: number;
@@ -371,6 +301,30 @@ export interface components {
         CreateMachineHetzner: {
             server_location: string;
             server_type: string;
+        };
+        CreateMachineProvider: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            aws?: components["schemas"]["CreateMachineProviderAws"];
+            hetzner?: components["schemas"]["CreateMachineProviderHetzner"];
+            name: string;
+            ssh_key_public?: string;
+            type: string;
+        };
+        CreateMachineProviderAws: {
+            aws_access_key_id: string;
+            aws_secret_access_key: string;
+            region: string;
+            vpc_id: string;
+        };
+        CreateMachineProviderHetzner: {
+            cloud_token: string;
+            hetzner_network_name: string;
+            robot_password?: string;
+            robot_username?: string;
         };
         CreateNetwork: {
             /**
@@ -488,16 +442,6 @@ export interface components {
             /** Format: int64 */
             total_count: number;
         };
-        ListBodyCloudProvider: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            items: components["schemas"]["CloudProvider"][] | null;
-            /** Format: int64 */
-            total_count: number;
-        };
         ListBodyHetznerLocation: {
             /**
              * Format: uri
@@ -515,6 +459,16 @@ export interface components {
              */
             readonly $schema?: string;
             items: components["schemas"]["Machine"][] | null;
+            /** Format: int64 */
+            total_count: number;
+        };
+        ListBodyMachineProvider: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["MachineProvider"][] | null;
             /** Format: int64 */
             total_count: number;
         };
@@ -568,13 +522,13 @@ export interface components {
              */
             readonly $schema?: string;
             box_spec: components["schemas"]["BoxSpec"];
-            /** Format: int64 */
-            cloud_provider: number | null;
-            cloud_provider_type: string | null;
             /** Format: date-time */
             created_at: string;
             /** Format: int64 */
             id: number;
+            /** Format: int64 */
+            machine_provider: number | null;
+            machine_provider_type: string | null;
             name: string;
             /** Format: int64 */
             network: number | null;
@@ -582,6 +536,52 @@ export interface components {
             unboxed_version: string;
             /** Format: int64 */
             workspace: number;
+        };
+        MachineProvider: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            aws?: components["schemas"]["MachineProviderAws"];
+            /** Format: date-time */
+            created_at: string;
+            hetzner?: components["schemas"]["MachineProviderHetzner"];
+            /** Format: int64 */
+            id: number;
+            name: string;
+            ssh_key_fingerprint: string | null;
+            status: string;
+            type: string;
+            /** Format: int64 */
+            workspace: number;
+        };
+        MachineProviderAws: {
+            region: string;
+            security_group_id: string | null;
+            subnets: components["schemas"]["MachineProviderAwsSubnet"][] | null;
+            vpc_cidr: string | null;
+            vpc_id: string | null;
+            vpc_name: string | null;
+        };
+        MachineProviderAwsSubnet: {
+            availability_zone: string;
+            cidr: string;
+            /** Format: int64 */
+            machine_provider: number;
+            subnet_id: string;
+            subnet_name: string | null;
+        };
+        MachineProviderHetzner: {
+            cloud_subnet_cidr: string | null;
+            hetzner_network_cidr: string | null;
+            /** Format: int64 */
+            hetzner_network_id: number | null;
+            hetzner_network_name: string;
+            hetzner_network_zone: string | null;
+            robot_subnet_cidr: string | null;
+            /** Format: int64 */
+            robot_vswitch_id: number | null;
         };
         MachineToken: {
             /**
@@ -648,27 +648,6 @@ export interface components {
             Monthly: components["schemas"]["Price"];
             PerTBTraffic: components["schemas"]["Price"];
         };
-        UpdateCloudProvider: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            aws?: components["schemas"]["UpdateCloudProviderAws"];
-            hetzner?: components["schemas"]["UpdateCloudProviderHetzner"];
-            ssh_key_public?: string;
-        };
-        UpdateCloudProviderAws: {
-            aws_access_key_id?: string;
-            aws_secret_access_key?: string;
-        };
-        UpdateCloudProviderHetzner: {
-            cloud_token?: string;
-            robot_password?: string;
-            robot_username?: string;
-            /** Format: int64 */
-            robot_vswitch_id?: number;
-        };
         UpdateMachine: {
             /**
              * Format: uri
@@ -676,6 +655,27 @@ export interface components {
              */
             readonly $schema?: string;
             boxSpec: components["schemas"]["BoxSpec"];
+        };
+        UpdateMachineProvider: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            aws?: components["schemas"]["UpdateMachineProviderAws"];
+            hetzner?: components["schemas"]["UpdateMachineProviderHetzner"];
+            ssh_key_public?: string;
+        };
+        UpdateMachineProviderAws: {
+            aws_access_key_id?: string;
+            aws_secret_access_key?: string;
+        };
+        UpdateMachineProviderHetzner: {
+            cloud_token?: string;
+            robot_password?: string;
+            robot_username?: string;
+            /** Format: int64 */
+            robot_vswitch_id?: number;
         };
         UpdateNetwork: {
             /**
@@ -782,7 +782,7 @@ export interface operations {
             };
         };
     };
-    "get-v1-cloud-provider-info-aws-regions": {
+    "get-v1-machine-provider-info-aws-regions": {
         parameters: {
             query?: never;
             header?: never;
@@ -811,7 +811,7 @@ export interface operations {
             };
         };
     };
-    "get-v1-cloud-provider-info-hetzner-locations": {
+    "get-v1-machine-provider-info-hetzner-locations": {
         parameters: {
             query?: never;
             header?: never;
@@ -840,7 +840,7 @@ export interface operations {
             };
         };
     };
-    "get-v1-cloud-provider-info-hetzner-server-types": {
+    "get-v1-machine-provider-info-hetzner-server-types": {
         parameters: {
             query?: never;
             header?: never;
@@ -993,7 +993,7 @@ export interface operations {
             };
         };
     };
-    "get-v1-workspaces-by-workspace-id-cloud-providers": {
+    "get-v1-workspaces-by-workspace-id-machine-providers": {
         parameters: {
             query?: never;
             header?: never;
@@ -1011,7 +1011,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ListBodyCloudProvider"];
+                    "application/json": components["schemas"]["ListBodyMachineProvider"];
                 };
             };
             /** @description Error */
@@ -1025,7 +1025,7 @@ export interface operations {
             };
         };
     };
-    "post-v1-workspaces-by-workspace-id-cloud-providers": {
+    "post-v1-workspaces-by-workspace-id-machine-providers": {
         parameters: {
             query?: never;
             header?: never;
@@ -1037,7 +1037,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateCloudProvider"];
+                "application/json": components["schemas"]["CreateMachineProvider"];
             };
         };
         responses: {
@@ -1047,7 +1047,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CloudProvider"];
+                    "application/json": components["schemas"]["MachineProvider"];
                 };
             };
             /** @description Error */
@@ -1061,7 +1061,7 @@ export interface operations {
             };
         };
     };
-    "get-v1-workspaces-by-workspace-id-cloud-providers-by-id": {
+    "get-v1-workspaces-by-workspace-id-machine-providers-by-id": {
         parameters: {
             query?: never;
             header?: never;
@@ -1080,7 +1080,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CloudProvider"];
+                    "application/json": components["schemas"]["MachineProvider"];
                 };
             };
             /** @description Error */
@@ -1094,7 +1094,7 @@ export interface operations {
             };
         };
     };
-    "delete-v1-workspaces-by-workspace-id-cloud-providers-by-id": {
+    "delete-v1-workspaces-by-workspace-id-machine-providers-by-id": {
         parameters: {
             query?: never;
             header?: never;
@@ -1113,7 +1113,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CloudProvider"];
+                    "application/json": components["schemas"]["MachineProvider"];
                 };
             };
             /** @description Error */
@@ -1127,7 +1127,7 @@ export interface operations {
             };
         };
     };
-    "patch-v1-workspaces-by-workspace-id-cloud-providers-by-id": {
+    "patch-v1-workspaces-by-workspace-id-machine-providers-by-id": {
         parameters: {
             query?: never;
             header?: never;
@@ -1140,7 +1140,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateCloudProvider"];
+                "application/json": components["schemas"]["UpdateMachineProvider"];
             };
         };
         responses: {
@@ -1150,7 +1150,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CloudProvider"];
+                    "application/json": components["schemas"]["MachineProvider"];
                 };
             };
             /** @description Error */

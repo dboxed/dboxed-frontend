@@ -1,5 +1,5 @@
 export { CreateMachinePage } from './CreateMachinePage.tsx'
-export { CloudProviderSelector } from './CloudProviderSelector.tsx'
+export { MachineProviderSelector } from './MachineProviderSelector.tsx'
 export { NetworkSelector } from './NetworkSelector.tsx'
 export { AwsMachineConfigForm } from './AwsMachineConfigForm.tsx'
 export { HetznerMachineConfigForm } from './HetznerMachineConfigForm.tsx' 

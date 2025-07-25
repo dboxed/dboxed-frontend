@@ -5,7 +5,7 @@ interface BasePageProps {
   children: React.ReactNode;
 }
 
-export const BasePage: React.FC<BasePageProps> = ({ title, children }) => {
+export const BasePage: React.FC<BasePageProps> = ({ children }) => {
   return <Card>
     <CardContent>
       {children}

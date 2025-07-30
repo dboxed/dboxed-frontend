@@ -125,6 +125,60 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/boxes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID boxes */
+        get: operations["get-v1-workspaces-by-workspace-id-boxes"];
+        put?: never;
+        /** Post v1 workspaces by workspace ID boxes */
+        post: operations["post-v1-workspaces-by-workspace-id-boxes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/boxes/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID boxes by ID */
+        get: operations["get-v1-workspaces-by-workspace-id-boxes-by-id"];
+        put?: never;
+        post?: never;
+        /** Delete v1 workspaces by workspace ID boxes by ID */
+        delete: operations["delete-v1-workspaces-by-workspace-id-boxes-by-id"];
+        options?: never;
+        head?: never;
+        /** Patch v1 workspaces by workspace ID boxes by ID */
+        patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id"];
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/boxes/{id}/regenerate-token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID boxes by ID regenerate token */
+        post: operations["post-v1-workspaces-by-workspace-id-boxes-by-id-regenerate-token"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/machine-providers": {
         parameters: {
             query?: never;
@@ -199,23 +253,6 @@ export interface paths {
         patch: operations["patch-v1-workspaces-by-workspace-id-machines-by-id"];
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/machines/{id}/regenerate-token": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Post v1 workspaces by workspace ID machines by ID regenerate token */
-        post: operations["post-v1-workspaces-by-workspace-id-machines-by-id-regenerate-token"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/v1/workspaces/{workspaceId}/networks": {
         parameters: {
             query?: never;
@@ -262,6 +299,25 @@ export interface components {
             OptInStatus: string;
             RegionName: string;
         };
+        Box: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            box_spec: components["schemas"]["BoxSpec"];
+            /** Format: date-time */
+            created_at: string;
+            /** Format: int64 */
+            id: number;
+            name: string;
+            /** Format: int64 */
+            network: number | null;
+            network_type: string | null;
+            unboxed_version: string;
+            /** Format: int64 */
+            workspace: number;
+        };
         BoxFile: {
             /**
              * Format: uri
@@ -275,8 +331,27 @@ export interface components {
             dns: components["schemas"]["DnsSpec"];
             fileBundles: components["schemas"]["FileBundle"][] | null;
             infraImage?: string;
+            logs?: components["schemas"]["LogsSpec"];
             unboxedBinaryHash?: string;
             unboxedBinaryUrl?: string;
+        };
+        BoxToken: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            token: string;
+        };
+        CreateBox: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            name: string;
+            /** Format: int64 */
+            network?: number;
         };
         CreateMachine: {
             /**
@@ -285,12 +360,12 @@ export interface components {
              */
             readonly $schema?: string;
             aws?: components["schemas"]["CreateMachineAws"];
+            /** Format: int64 */
+            box: number;
             hetzner?: components["schemas"]["CreateMachineHetzner"];
             /** Format: int64 */
             machine_provider?: number;
             name: string;
-            /** Format: int64 */
-            network?: number;
         };
         CreateMachineAws: {
             instance_type: string;
@@ -442,6 +517,16 @@ export interface components {
             /** Format: int64 */
             total_count: number;
         };
+        ListBodyBox: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["Box"][] | null;
+            /** Format: int64 */
+            total_count: number;
+        };
         ListBodyHetznerLocation: {
             /**
              * Format: uri
@@ -515,13 +600,22 @@ export interface components {
             Name: string;
             NetworkZone: string;
         };
+        LogsNatsSpec: {
+            creds: string;
+            streamId: string;
+            url: string;
+        };
+        LogsSpec: {
+            nats?: components["schemas"]["LogsNatsSpec"];
+        };
         Machine: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            box_spec: components["schemas"]["BoxSpec"];
+            /** Format: int64 */
+            box: number;
             /** Format: date-time */
             created_at: string;
             /** Format: int64 */
@@ -530,10 +624,6 @@ export interface components {
             machine_provider: number | null;
             machine_provider_type: string | null;
             name: string;
-            /** Format: int64 */
-            network: number | null;
-            network_type: string | null;
-            unboxed_version: string;
             /** Format: int64 */
             workspace: number;
         };
@@ -582,14 +672,6 @@ export interface components {
             robot_subnet_cidr: string | null;
             /** Format: int64 */
             robot_vswitch_id: number | null;
-        };
-        MachineToken: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            token: string;
         };
         Network: {
             /**
@@ -648,13 +730,20 @@ export interface components {
             Monthly: components["schemas"]["Price"];
             PerTBTraffic: components["schemas"]["Price"];
         };
-        UpdateMachine: {
+        UpdateBox: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             boxSpec: components["schemas"]["BoxSpec"];
+        };
+        UpdateMachine: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
         };
         UpdateMachineProvider: {
             /**
@@ -980,6 +1069,210 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Workspace"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-boxes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListBodyBox"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-boxes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateBox"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Box"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-boxes-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Box"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-v1-workspaces-by-workspace-id-boxes-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Box"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "patch-v1-workspaces-by-workspace-id-boxes-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateBox"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Box"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-boxes-by-id-regenerate-token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BoxToken"];
                 };
             };
             /** @description Error */
@@ -1322,39 +1615,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Machine"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "post-v1-workspaces-by-workspace-id-machines-by-id-regenerate-token": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-                /** @description The workspace id */
-                workspaceId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MachineToken"];
                 };
             };
             /** @description Error */

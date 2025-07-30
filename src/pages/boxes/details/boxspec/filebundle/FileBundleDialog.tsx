@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Button } from "@/components/ui/button.tsx"
 import { Card, CardContent } from "@/components/ui/card.tsx"
 import type { components } from "@/api/models/schema"
-import { FileBundleEntryTable } from "@/pages/machines/details";
+import { FileBundleEntryTable } from "@/pages/boxes/details";
 
 type FileBundle = components["schemas"]["FileBundle"]
 type FileBundleEntry = components["schemas"]["FileBundleEntry"]

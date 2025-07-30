@@ -236,6 +236,61 @@ function NetworkBreadcrumb({ networkId, isCurrentPage }: NetworkBreadcrumbProps)
   )
 }
 
+interface BoxesBreadcrumbProps {
+  isCurrentPage?: boolean
+}
+
+function BoxesBreadcrumb({ isCurrentPage }: BoxesBreadcrumbProps) {
+  const navigate = useNavigate()
+  const { workspaceId } = useSelectedWorkspaceId()
+  const href = `/workspaces/${workspaceId}/boxes`
+
+  return (
+    <BreadcrumbElement
+      href={href}
+      isCurrentPage={isCurrentPage}
+      onClick={() => navigate(href)}
+    >
+      <span>Boxes</span>
+    </BreadcrumbElement>
+  )
+}
+
+interface BoxBreadcrumbProps {
+  boxId: number
+  isCurrentPage?: boolean
+}
+
+function BoxBreadcrumb({ boxId, isCurrentPage }: BoxBreadcrumbProps) {
+  const navigate = useNavigate()
+  const { workspaceId } = useSelectedWorkspaceId()
+  const client = useUnboxedQueryClient()
+
+  const box = client.useQuery('get', '/v1/workspaces/{workspaceId}/boxes/{id}', {
+    params: {
+      path: {
+        workspaceId: workspaceId!,
+        id: boxId
+      }
+    },
+  }, {
+    enabled: !!workspaceId && !!boxId
+  })
+
+  const href = `/workspaces/${workspaceId}/boxes/${boxId}`
+  const label = box.data?.name || 'Box'
+
+  return (
+    <BreadcrumbElement
+      href={href}
+      isCurrentPage={isCurrentPage}
+      onClick={() => navigate(href)}
+    >
+      <span>{label}</span>
+    </BreadcrumbElement>
+  )
+}
+
 interface UnboxedBreadcrumbsProps {
   className?: string
 }
@@ -346,16 +401,6 @@ export function UnboxedBreadcrumbs({ className }: UnboxedBreadcrumbsProps) {
       )
 
       currentIndex++
-
-      // Handle box-spec path after machine ID
-      if (pathSegments[currentIndex] === 'box-spec') {
-        breadcrumbElements.push(
-          <BreadcrumbSeparator key="sep-box-spec"/>,
-          <BreadcrumbItem key="box-spec">
-            <BoxSpecBreadcrumb isCurrentPage={true}/>
-          </BreadcrumbItem>
-        )
-      }
     }
 
     // Handle create path
@@ -407,6 +452,59 @@ export function UnboxedBreadcrumbs({ className }: UnboxedBreadcrumbsProps) {
     if (pathSegments[currentIndex] === 'create') {
       breadcrumbElements.push(
         <BreadcrumbSeparator key="sep-create-network"/>,
+        <BreadcrumbItem key="create">
+          <CreateBreadcrumb isCurrentPage={true}/>
+        </BreadcrumbItem>
+      )
+    }
+  }
+
+  // Handle boxes path
+  if (pathSegments[currentIndex] === 'boxes') {
+    const isCurrentPage = pathSegments.length === currentIndex + 1
+
+    breadcrumbElements.push(
+      <BreadcrumbSeparator key="sep-workspace-boxes"/>,
+      <BreadcrumbItem key="boxes">
+        <BoxesBreadcrumb isCurrentPage={isCurrentPage}/>
+      </BreadcrumbItem>
+    )
+
+    currentIndex++
+
+    // Handle specific box ID
+    const boxIdSegment = pathSegments[currentIndex]
+    if (boxIdSegment && boxIdSegment.match(/^\d+$/)) {
+      const boxId = parseInt(boxIdSegment)
+      const isCurrentPage = pathSegments.length === currentIndex + 1
+
+      breadcrumbElements.push(
+        <BreadcrumbSeparator key="sep-boxes"/>,
+        <BreadcrumbItem key="box">
+          <BoxBreadcrumb
+            boxId={boxId}
+            isCurrentPage={isCurrentPage}
+          />
+        </BreadcrumbItem>
+      )
+
+      currentIndex++
+
+      // Handle box-spec path after box ID
+      if (pathSegments[currentIndex] === 'box-spec') {
+        breadcrumbElements.push(
+          <BreadcrumbSeparator key="sep-box-spec-boxes"/>,
+          <BreadcrumbItem key="box-spec">
+            <BoxSpecBreadcrumb isCurrentPage={true}/>
+          </BreadcrumbItem>
+        )
+      }
+    }
+
+    // Handle create path
+    if (pathSegments[currentIndex] === 'create') {
+      breadcrumbElements.push(
+        <BreadcrumbSeparator key="sep-create-box"/>,
         <BreadcrumbItem key="create">
           <CreateBreadcrumb isCurrentPage={true}/>
         </BreadcrumbItem>

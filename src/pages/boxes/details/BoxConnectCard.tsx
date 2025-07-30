@@ -6,32 +6,32 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { Copy, Key, RefreshCw } from "lucide-react"
 
-interface MachineTokenCardProps {
-  machineId: number
+interface BoxTokenCardProps {
+  boxId: number
   workspaceId: number
 }
 
-export function MachineConnectCard({ machineId, workspaceId }: MachineTokenCardProps) {
+export function BoxConnectCard({ boxId, workspaceId }: BoxTokenCardProps) {
   const client = useUnboxedQueryClient()
   const [token, setToken] = useState<string>("")
 
-  const tokenMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/machines/{id}/regenerate-token')
+  const tokenMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/regenerate-token')
 
   const handleGenerateToken = () => {
     tokenMutation.mutate({
       params: {
         path: {
           workspaceId: workspaceId,
-          id: machineId,
+          id: boxId,
         }
       }
     }, {
       onSuccess: (responseData) => {
         setToken(responseData.token)
-        toast.success("Machine token generated successfully!")
+        toast.success("Box token generated successfully!")
       },
       onError: (error) => {
-        toast.error("Failed to generate machine token", {
+        toast.error("Failed to generate box token", {
           description: error.detail || "An error occurred while generating the token."
         })
       }

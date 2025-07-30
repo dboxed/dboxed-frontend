@@ -13,9 +13,10 @@ import { useUnboxedQueryClient } from "@/api/api.ts";
 import { Toaster } from "sonner";
 import { CreateMachineProviderPage } from "@/pages/machine-providers/create/CreateMachineProviderPage.tsx";
 import { CreateMachinePage, MachineDetailsPage } from "@/pages/machines";
-import { BoxSpecEditorPage } from "@/pages/machines/details/boxspec/BoxSpecEditorPage.tsx";
 import { WorkspaceDashboardPage } from "@/pages/workspaces/WorkspaceDashboardPage.tsx";
 import { ListNetworksPage, CreateNetworkPage, NetworkDetailsPage } from "@/pages/networks";
+import { BoxDetailsPage, BoxSpecEditorPage } from "@/pages/boxes/details";
+import { CreateBoxPage, ListBoxesPage } from "@/pages/boxes";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -67,14 +68,17 @@ function AuthenticatedApp() {
           <Route path="/workspaces/:workspaceId" element={<WorkspaceDashboardPage/>}/>
           <Route path="/workspaces/:workspaceId/machine-providers" element={<ListMachineProvidersPage/>}/>
           <Route path="/workspaces/:workspaceId/machine-providers/:machineProviderId" element={<MachineProviderDetailsPage />}/>
+          <Route path="/workspaces/:workspaceId/boxes" element={<ListBoxesPage/>}/>
+          <Route path="/workspaces/:workspaceId/boxes/:boxId" element={<BoxDetailsPage/>}/>
+          <Route path="/workspaces/:workspaceId/boxes/:boxId/box-spec" element={<BoxSpecEditorPage/>}/>
           <Route path="/workspaces/:workspaceId/machines" element={<ListMachinesPage/>}/>
           <Route path="/workspaces/:workspaceId/machines/:machineId" element={<MachineDetailsPage/>}/>
-          <Route path="/workspaces/:workspaceId/machines/:machineId/box-spec" element={<BoxSpecEditorPage/>}/>
           <Route path="/workspaces/:workspaceId/networks" element={<ListNetworksPage/>}/>
           <Route path="/workspaces/:workspaceId/networks/:networkId" element={<NetworkDetailsPage/>}/>
         </Route>
         <Route path="/workspaces/create" element={<CreateWorkspacePage/>}/>
         <Route path="/workspaces/:workspaceId/machine-providers/create" element={<CreateMachineProviderPage/>}/>
+        <Route path="/workspaces/:workspaceId/boxes/create" element={<CreateBoxPage/>}/>
         <Route path="/workspaces/:workspaceId/machines/create" element={<CreateMachinePage/>}/>
         <Route path="/workspaces/:workspaceId/networks/create" element={<CreateNetworkPage/>}/>
         {isAdminQuery.isAdmin && (

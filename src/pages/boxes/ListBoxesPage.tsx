@@ -7,12 +7,12 @@ import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 
-export function ListMachinesPage() {
+export function ListBoxesPage() {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
 
   // Define columns for the DataTable
-  const columns: ColumnDef<components["schemas"]["Machine"]>[] = [
+  const columns: ColumnDef<components["schemas"]["Box"]>[] = [
     {
       accessorKey: "name",
       header: "Name",
@@ -21,7 +21,7 @@ export function ListMachinesPage() {
         const id = row.original.id
         return (
           <button
-            onClick={() => navigate(`/workspaces/${workspaceId}/machines/${id}`)}
+            onClick={() => navigate(`/workspaces/${workspaceId}/boxes/${id}`)}
             className="font-medium text-left hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded"
           >
             {name}
@@ -30,29 +30,29 @@ export function ListMachinesPage() {
       },
     },
     {
-      accessorKey: "machine_provider",
-      header: "Machine Provider",
+      accessorKey: "network",
+      header: "Network",
       cell: ({ row }) => {
-        const machineProviderId = row.getValue("machine_provider") as number | null
+        const networkId = row.getValue("network") as number | null
+        const networkType = row.original.network_type
         const workspaceId = row.original.workspace
-        const providerType = row.original.machine_provider_type
-        
+
         return (
           <div className="flex items-center gap-2">
             <ReferenceLabel
-              resourceId={machineProviderId}
-              resourcePath="/v1/workspaces/{workspaceId}/machine-providers/{id}"
-              pathParams={{ 
-                workspaceId: workspaceId, 
-                id: machineProviderId
+              resourceId={networkId}
+              resourcePath="/v1/workspaces/{workspaceId}/networks/{id}"
+              pathParams={{
+                workspaceId: workspaceId,
+                id: networkId
               }}
-              detailsUrl={`/workspaces/${workspaceId}/machine-providers/${machineProviderId}`}
-              fallbackLabel="Provider"
+              detailsUrl={`/workspaces/${workspaceId}/networks/${networkId}`}
+              fallbackLabel="Network"
               className="text-blue-600 hover:text-blue-800 underline text-sm"
             />
-            {providerType && (
+            {networkType && (
               <Badge variant="outline" className="text-xs">
-                {providerType}
+                {networkType}
               </Badge>
             )}
           </div>
@@ -97,7 +97,7 @@ export function ListMachinesPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate(`/workspaces/${workspaceId}/machines/${id}`)}
+            onClick={() => navigate(`/workspaces/${workspaceId}/boxes/${id}`)}
           >
             View Details
           </Button>
@@ -107,19 +107,19 @@ export function ListMachinesPage() {
   ]
 
   return (
-    <BaseListPage<components["schemas"]["Machine"]>
-      title="Machines"
-      resourcePath="/v1/workspaces/{workspaceId}/machines"
-      createPath={`/workspaces/${workspaceId}/machines/create`}
+    <BaseListPage<components["schemas"]["Box"]>
+      title="Boxes"
+      resourcePath="/v1/workspaces/{workspaceId}/boxes"
+      createPath={`/workspaces/${workspaceId}/boxes/create`}
       columns={columns}
       apiParams={{
         path: {
           workspaceId: workspaceId,
         }
       }}
-      emptyStateMessage="No machines created yet. Create your first machine to get started."
+      emptyStateMessage="No boxes created yet. Create your first box to get started."
       searchColumn="name"
-      searchPlaceholder="Search machines..."
+      searchPlaceholder="Search boxes..."
     />
   )
 } 

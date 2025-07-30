@@ -9,37 +9,37 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { EditorDialog } from "@/components/EditorDialog.tsx"
-import { FileBundlesTab } from "@/pages/machines/details/boxspec/FileBundlesTab.tsx";
+import { FileBundlesTab } from "@/pages/boxes/details/boxspec/FileBundlesTab.tsx";
 import { parse, stringify } from 'yaml'
 
 export function BoxSpecEditorPage() {
   const { workspaceId } = useSelectedWorkspaceId()
-  const { machineId } = useParams<{ machineId: string }>()
+  const { boxId } = useParams<{ boxId: string }>()
   const [showYamlDialog, setShowYamlDialog] = useState(false)
 
-  if (!machineId) {
-    return <div>Invalid machine ID</div>
+  if (!boxId) {
+    return <div>Invalid box ID</div>
   }
 
-  const buildUpdateDefaults = (machine: components["schemas"]["Machine"]) => {
+  const buildUpdateDefaults = (box: components["schemas"]["Box"]) => {
     return {
-      boxSpec: machine.box_spec
-    } as components["schemas"]["UpdateMachine"]
+      boxSpec: box.box_spec
+    } as components["schemas"]["UpdateBox"]
   }
 
   return (
-    <BaseResourceDetailsPage<components["schemas"]["Machine"], components["schemas"]["UpdateMachine"]>
+    <BaseResourceDetailsPage<components["schemas"]["Box"], components["schemas"]["UpdateBox"]>
       title={data => {
         if (!data) {
           return "Box Spec"
         }
         return `Box Spec for ${data.name}`
       }}
-      resourcePath="/v1/workspaces/{workspaceId}/machines/{id}"
+      resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
       apiParams={{
         path: {
           workspaceId: workspaceId,
-          id: parseInt(machineId),
+          id: parseInt(boxId),
         }
       }}
       enableDelete={false}

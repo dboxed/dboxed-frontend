@@ -7,7 +7,7 @@ import { useUnboxedQueryClient } from "@/api/api"
 import type { components } from "@/api/models/schema"
 
 interface NetworkSelectorProps {
-  form: UseFormReturn<components["schemas"]["CreateMachine"]>
+  form: UseFormReturn<components["schemas"]["CreateBox"]>
 }
 
 export function NetworkSelector({ form }: NetworkSelectorProps) {

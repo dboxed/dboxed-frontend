@@ -4,7 +4,7 @@ import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import type { components } from "@/api/models/schema"
 
 interface GeneralInfoCardProps {
-  data: components["schemas"]["Machine"]
+  data: components["schemas"]["Box"]
 }
 
 export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
@@ -13,7 +13,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
       <CardHeader>
         <CardTitle>General Information</CardTitle>
         <CardDescription>
-          Basic machine details and configuration.
+          Basic box details and configuration.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -37,31 +37,27 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           </div>
           
           <div>
-            <label className="text-sm font-medium">Machine Provider</label>
+            <label className="text-sm font-medium">Unboxed Version</label>
             <p className="text-sm text-muted-foreground">
-              <ReferenceLabel
-                resourceId={data.machine_provider}
-                resourcePath="/v1/workspaces/{workspaceId}/machine-providers/{id}"
-                pathParams={{ 
-                  workspaceId: data.workspace, 
-                  id: data.machine_provider
-                }}
-                detailsUrl={`/workspaces/${data.workspace}/machine-providers/${data.machine_provider}`}
-                fallbackLabel="Provider"
-              />
+              <Badge variant="outline" className="w-fit">
+                {data.unboxed_version}
+              </Badge>
             </p>
           </div>
           
           <div>
-            <label className="text-sm font-medium">Machine Provider Type</label>
+            <label className="text-sm font-medium">Network</label>
             <p className="text-sm text-muted-foreground">
-              {data.machine_provider_type ? (
-                <Badge variant="outline" className="w-fit">
-                  {data.machine_provider_type}
-                </Badge>
-              ) : (
-                "N/A"
-              )}
+              <ReferenceLabel
+                resourceId={data.network}
+                resourcePath="/v1/workspaces/{workspaceId}/networks/{id}"
+                pathParams={{
+                  workspaceId: data.workspace,
+                  id: data.network
+                }}
+                detailsUrl={`/workspaces/${data.workspace}/networks/${data.network}`}
+                fallbackLabel="Network"
+              />
             </p>
           </div>
         </div>

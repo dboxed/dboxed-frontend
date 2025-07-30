@@ -1,10 +1,10 @@
 import { Card, CardContent } from "@/components/ui/card.tsx"
 import { type UseFormReturn } from "react-hook-form"
 import type { components } from "@/api/models/schema"
-import { FileBundlesTable } from "@/pages/machines/details";
+import { FileBundlesTable } from "@/pages/boxes/details";
 
 interface FileBundlesEditorProps {
-  form: UseFormReturn<components["schemas"]["UpdateMachine"]>
+  form: UseFormReturn<components["schemas"]["UpdateBox"]>
 }
 
 type FileBundle = components["schemas"]["FileBundle"]

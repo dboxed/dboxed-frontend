@@ -60,6 +60,26 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
               />
             </p>
           </div>
+
+          <div>
+            <label className="text-sm font-medium">Machine</label>
+            <p className="text-sm text-muted-foreground">
+              {data.machine ? (
+                <ReferenceLabel
+                  resourceId={data.machine}
+                  resourcePath="/v1/workspaces/{workspaceId}/machines/{id}"
+                  pathParams={{
+                    workspaceId: data.workspace,
+                    id: data.machine
+                  }}
+                  detailsUrl={`/workspaces/${data.workspace}/machines/${data.machine}`}
+                  fallbackLabel="Machine"
+                />
+              ) : (
+                <span className="text-muted-foreground">No machine assigned</span>
+              )}
+            </p>
+          </div>
         </div>
         
         <div>

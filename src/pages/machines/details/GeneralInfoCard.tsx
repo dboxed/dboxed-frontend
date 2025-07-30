@@ -22,6 +22,22 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
             <label className="text-sm font-medium">Name</label>
             <p className="text-sm text-muted-foreground">{data.name}</p>
           </div>
+
+          <div>
+            <label className="text-sm font-medium">Box</label>
+            <p className="text-sm text-muted-foreground">
+              <ReferenceLabel
+                resourceId={data.box}
+                resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
+                pathParams={{
+                  workspaceId: data.workspace,
+                  id: data.box
+                }}
+                detailsUrl={`/workspaces/${data.workspace}/boxes/${data.box}`}
+                fallbackLabel="Box"
+              />
+            </p>
+          </div>
           
           <div>
             <label className="text-sm font-medium">Workspace</label>

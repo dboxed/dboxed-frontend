@@ -30,6 +30,28 @@ export function ListMachinesPage() {
       },
     },
     {
+      accessorKey: "box",
+      header: "Box",
+      cell: ({ row }) => {
+        const boxId = row.getValue("box") as number
+        const workspaceId = row.original.workspace
+
+        return (
+          <ReferenceLabel
+            resourceId={boxId}
+            resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
+            pathParams={{
+              workspaceId: workspaceId,
+              id: boxId
+            }}
+            detailsUrl={`/workspaces/${workspaceId}/boxes/${boxId}`}
+            fallbackLabel="Box"
+            className="text-blue-600 hover:text-blue-800 underline text-sm"
+          />
+        )
+      },
+    },
+    {
       accessorKey: "machine_provider",
       header: "Machine Provider",
       cell: ({ row }) => {
@@ -55,18 +77,6 @@ export function ListMachinesPage() {
                 {providerType}
               </Badge>
             )}
-          </div>
-        )
-      },
-    },
-    {
-      accessorKey: "unboxed_version",
-      header: "Version",
-      cell: ({ row }) => {
-        const version = row.getValue("unboxed_version") as string
-        return (
-          <div className="text-sm text-muted-foreground font-mono">
-            {version}
           </div>
         )
       },

@@ -60,6 +60,36 @@ export function ListBoxesPage() {
       },
     },
     {
+      accessorKey: "machine",
+      header: "Machine",
+      cell: ({ row }) => {
+        const machineId = row.getValue("machine") as number | null
+        const workspaceId = row.original.workspace
+
+        if (!machineId) {
+          return (
+            <div className="text-sm text-muted-foreground">
+              N/A
+            </div>
+          )
+        }
+
+        return (
+          <ReferenceLabel
+            resourceId={machineId}
+            resourcePath="/v1/workspaces/{workspaceId}/machines/{id}"
+            pathParams={{
+              workspaceId: workspaceId,
+              id: machineId
+            }}
+            detailsUrl={`/workspaces/${workspaceId}/machines/${machineId}`}
+            fallbackLabel="Machine"
+            className="text-blue-600 hover:text-blue-800 underline text-sm"
+          />
+        )
+      },
+    },
+    {
       accessorKey: "unboxed_version",
       header: "Version",
       cell: ({ row }) => {

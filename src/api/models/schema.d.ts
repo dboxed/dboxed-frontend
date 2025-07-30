@@ -310,6 +310,8 @@ export interface components {
             created_at: string;
             /** Format: int64 */
             id: number;
+            /** Format: int64 */
+            machine: number | null;
             name: string;
             /** Format: int64 */
             network: number | null;

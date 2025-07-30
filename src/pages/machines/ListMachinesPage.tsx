@@ -55,7 +55,7 @@ export function ListMachinesPage() {
       accessorKey: "machine_provider",
       header: "Machine Provider",
       cell: ({ row }) => {
-        const machineProviderId = row.getValue("machine_provider") as number | null
+        const machineProviderId = row.getValue("machine_provider") as number
         const workspaceId = row.original.workspace
         const providerType = row.original.machine_provider_type
         
@@ -72,11 +72,9 @@ export function ListMachinesPage() {
               fallbackLabel="Provider"
               className="text-blue-600 hover:text-blue-800 underline text-sm"
             />
-            {providerType && (
-              <Badge variant="outline" className="text-xs">
-                {providerType}
-              </Badge>
-            )}
+            <Badge variant="outline" className="text-xs">
+              {providerType}
+            </Badge>
           </div>
         )
       },

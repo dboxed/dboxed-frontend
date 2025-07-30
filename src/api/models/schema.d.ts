@@ -366,7 +366,7 @@ export interface components {
             box: number;
             hetzner?: components["schemas"]["CreateMachineHetzner"];
             /** Format: int64 */
-            machine_provider?: number;
+            machine_provider: number;
             name: string;
         };
         CreateMachineAws: {
@@ -623,8 +623,8 @@ export interface components {
             /** Format: int64 */
             id: number;
             /** Format: int64 */
-            machine_provider: number | null;
-            machine_provider_type: string | null;
+            machine_provider: number;
+            machine_provider_type: string;
             name: string;
             /** Format: int64 */
             workspace: number;

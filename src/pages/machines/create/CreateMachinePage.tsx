@@ -26,7 +26,7 @@ export function CreateMachinePage() {
   }
 
   const handleSubmit = (data: components["schemas"]["CreateMachine"]) => {
-    const mp = getMachineProvider(data.machine_provider!)
+    const mp = getMachineProvider(data.machine_provider)
     if (!mp) {
       return data
     }

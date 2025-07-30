@@ -58,6 +58,7 @@ export function MachineProviderSelector({ form }: MachineProviderSelectorProps) 
     <FormField
       control={form.control}
       name="machine_provider"
+      rules={{ required: "Machine provider is required" }}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Machine Provider</FormLabel>

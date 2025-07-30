@@ -71,13 +71,9 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           <div>
             <label className="text-sm font-medium">Machine Provider Type</label>
             <p className="text-sm text-muted-foreground">
-              {data.machine_provider_type ? (
-                <Badge variant="outline" className="w-fit">
-                  {data.machine_provider_type}
-                </Badge>
-              ) : (
-                "N/A"
-              )}
+              <Badge variant="outline" className="w-fit">
+                {data.machine_provider_type}
+              </Badge>
             </p>
           </div>
         </div>

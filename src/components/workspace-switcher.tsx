@@ -24,7 +24,7 @@ export function useSelectedWorkspaceId() {
 
   if (!location.pathname.startsWith("/workspaces/")) {
     return {
-      workspaceId: undefined,
+      workspaceId: null,
       setWorkspaceId: (id: number) => {
         navigate(`/workspaces/${id}`)
       },
@@ -32,7 +32,7 @@ export function useSelectedWorkspaceId() {
   }
 
   const s = location.pathname.split("/")
-  const workspaceIdNum = parseInt(s[2])
+  const workspaceIdNum = parseInt(s[2]) || null
 
   const setWorkspaceId = (id: number) => {
     s[2] = id + ""

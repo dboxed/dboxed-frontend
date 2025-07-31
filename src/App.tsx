@@ -51,13 +51,21 @@ function AuthenticatedApp() {
 
   if (workspaces.isLoading) return <div>Loading workspaces...</div>;
 
-  if (!workspaceId && location.pathname !== "/workspaces/create") {
-    if (!workspaces.data?.items?.length) {
-      navigate("/workspaces/create")
-    } else {
-      setWorkspaceId(workspaces.data.items[0].id)
+  if (location.pathname !== "/workspaces/create") {
+    let needNewWorkspaceId = false
+    if (!workspaceId) {
+      needNewWorkspaceId = true
+    } else if (!workspaces.isRefetching && !workspaces.data?.items?.find(x => x.id == workspaceId)) {
+      needNewWorkspaceId = true
     }
-    return null
+    if (needNewWorkspaceId) {
+      if (!workspaces.data?.items?.length) {
+        navigate("/workspaces/create")
+      } else {
+        setWorkspaceId(workspaces.data.items[0].id)
+      }
+      return null
+    }
   }
 
   return (

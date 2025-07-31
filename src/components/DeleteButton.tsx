@@ -1,16 +1,5 @@
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+import { ConfirmationDialog } from "@/components/ConfirmationDialog"
 
 interface DeleteButtonProps {
   onDelete: () => void
@@ -29,18 +18,11 @@ export function DeleteButton({
   buttonText = "Delete",
   className
 }: DeleteButtonProps) {
-  const [open, setOpen] = useState(false)
-
-  const handleConfirm = () => {
-    onDelete()
-    setOpen(false)
-  }
-
   const isDisabled = disabled || isLoading
 
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger asChild>
+    <ConfirmationDialog
+      trigger={
         <Button
           variant="destructive"
           disabled={isDisabled}
@@ -48,25 +30,12 @@ export function DeleteButton({
         >
           {isLoading ? "Deleting..." : buttonText}
         </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the{" "}
-            <strong>{resourceName}</strong>.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={handleConfirm}
-            className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
-          >
-            Delete
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+      }
+      title="Are you sure?"
+      description={`This action cannot be undone. This will permanently delete the ${resourceName}.`}
+      confirmText="Delete"
+      onConfirm={onDelete}
+      destructive
+    />
   )
 } 

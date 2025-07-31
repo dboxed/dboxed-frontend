@@ -1,8 +1,8 @@
-import createFetchClient, { type HeadersOptions } from "openapi-fetch";
+import createFetchClient from "openapi-fetch";
 import createClient from "openapi-react-query";
 import type { paths } from "./models/schema";
 import { useAuth } from "react-oidc-context";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { type EventSourceMessage, fetchEventSource } from "@microsoft/fetch-event-source";
 import { envVars } from "@/env.ts";
 
@@ -27,8 +27,6 @@ export const useUnboxedFetchClient = () => {
     const client = useMemo(() => {
         return createUnboxedFetchClient(auth.user?.access_token)
     }, [auth.isLoading, auth.user?.access_token])
-
-    client.GET
 
     return client
 }

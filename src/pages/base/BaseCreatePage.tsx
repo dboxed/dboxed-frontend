@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form"
 import type { UseFormReturn, FieldValues } from "react-hook-form"
 import { Form } from "@/components/ui/form.tsx";
 import type { paths } from "@/api/models/schema";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface BaseCreatePageProps<T extends FieldValues = FieldValues> {
   title: string
@@ -39,6 +40,7 @@ export function BaseCreatePage<T extends FieldValues = FieldValues>({
 }: BaseCreatePageProps<T>) {
   const client = useUnboxedQueryClient()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   
   const form = useForm<T>({
     defaultValues: defaultValues as any,
@@ -60,6 +62,7 @@ export function BaseCreatePage<T extends FieldValues = FieldValues>({
       body: processedData,
     }, {
       onSuccess: (responseData) => {
+        queryClient.invalidateQueries()
         toast.success(`${title} created successfully!`)
         if (onSuccess) {
           onSuccess(responseData)
@@ -92,7 +95,7 @@ export function BaseCreatePage<T extends FieldValues = FieldValues>({
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form className="space-y-6">
+            <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
               {children(form)}
             </form>
           </Form>

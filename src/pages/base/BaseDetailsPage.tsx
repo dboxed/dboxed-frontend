@@ -129,7 +129,7 @@ export function BaseDetailsPage<T extends FieldValues, U extends FieldValues>(pr
 
   return (
     <div className="min-h-screen flex items-start justify-center p-4 w-full overflow-y-auto">
-      <Card className="w-full max-w-2xl my-8">
+      <Card className="w-full max-w-7xl my-8">
         <CardHeader>
           <CardTitle>{props.title}</CardTitle>
         </CardHeader>

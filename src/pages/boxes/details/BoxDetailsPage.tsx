@@ -4,6 +4,7 @@ import { useParams, Link } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard"
 import { BoxConnectCard } from "./BoxConnectCard.tsx"
+import { LogsPage } from "./logs/LogsPage.tsx"
 import { Button } from "@/components/ui/button"
 import { Edit } from "lucide-react"
 import type { components } from "@/api/models/schema"
@@ -45,9 +46,10 @@ export function BoxDetailsPage() {
       {(data) => (
         <Tabs defaultValue="general" className="space-y-6">
           <div className="flex justify-between items-center">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="general">General Information</TabsTrigger>
               <TabsTrigger value="connect">Connect Box</TabsTrigger>
+              <TabsTrigger value="logs">Logs</TabsTrigger>
             </TabsList>
             <Button variant="outline" asChild>
               <Link to={`/workspaces/${workspaceId}/boxes/${boxId}/box-spec`}>
@@ -63,6 +65,10 @@ export function BoxDetailsPage() {
 
           <TabsContent value="connect">
             <BoxConnectCard boxId={data.id} workspaceId={data.workspace} />
+          </TabsContent>
+
+          <TabsContent value="logs">
+            <LogsPage boxId={data.id} />
           </TabsContent>
         </Tabs>
       )}

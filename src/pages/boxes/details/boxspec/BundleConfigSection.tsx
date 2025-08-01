@@ -3,17 +3,29 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input.tsx"
 import { type UseFormReturn } from "react-hook-form"
 import type { components } from "@/api/models/schema"
+import { DeleteButton } from "@/components/DeleteButton.tsx"
 
 interface BundleConfigSectionProps {
   form: UseFormReturn<components["schemas"]["UpdateBox"]>
   bundleIndex: number
+  onDeleteBundle: () => void
 }
 
-export function BundleConfigSection({ form, bundleIndex }: BundleConfigSectionProps) {
+export function BundleConfigSection({ form, bundleIndex, onDeleteBundle }: BundleConfigSectionProps) {
+  const bundleName = form.watch(`boxSpec.fileBundles.${bundleIndex}.name`) || "Unnamed Bundle"
+
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle>Bundle Configuration</CardTitle>
+        <div className="flex justify-between items-center">
+          <CardTitle>Bundle Configuration</CardTitle>
+          <DeleteButton
+            onDelete={onDeleteBundle}
+            confirmationTitle="Delete Bundle"
+            confirmationDescription={`Are you sure you want to delete "${bundleName}"? This action cannot be undone and will remove all files in this bundle.`}
+            size="sm"
+          />
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <FormField

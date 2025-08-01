@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react"
-import { Card, CardContent } from "@/components/ui/card.tsx"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Editor } from "@monaco-editor/react"
 import { Input } from "@/components/ui/input.tsx"
 import { Label } from "@/components/ui/label.tsx"
 import { Separator } from "@/components/ui/separator.tsx"
 import { type UseFormReturn } from "react-hook-form"
 import type { components } from "@/api/models/schema"
+import { DeleteButton } from "@/components/DeleteButton.tsx"
 
 interface FileContentEditorProps {
   form: UseFormReturn<components["schemas"]["UpdateBox"]>
   bundleIndex: number
   fileIndex: number
+  onDeleteFile?: () => void
 }
 
-export function FileContentEditor({ form, bundleIndex, fileIndex }: FileContentEditorProps) {
+export function FileContentEditor({ form, bundleIndex, fileIndex, onDeleteFile }: FileContentEditorProps) {
   const fileBundles = form.watch("boxSpec.fileBundles") || []
   const bundle = fileBundles[bundleIndex]
   const file = bundle?.files?.[fileIndex]
@@ -147,8 +149,37 @@ export function FileContentEditor({ form, bundleIndex, fileIndex }: FileContentE
     }
   }
 
+  const handleDeleteFile = () => {
+    const updatedBundles = [...fileBundles]
+    const updatedFiles = [...(updatedBundles[bundleIndex].files || [])]
+    updatedFiles.splice(fileIndex, 1)
+    
+    updatedBundles[bundleIndex] = {
+      ...updatedBundles[bundleIndex],
+      files: updatedFiles
+    }
+    
+    form.setValue("boxSpec.fileBundles", updatedBundles)
+    
+    // Call the parent's navigation handler if provided
+    if (onDeleteFile) {
+      onDeleteFile()
+    }
+  }
+
   return (
     <Card className="h-full flex flex-col">
+      <CardHeader>
+        <div className="flex justify-between items-center">
+          <CardTitle className="text-lg">File Properties</CardTitle>
+          <DeleteButton
+            onDelete={handleDeleteFile}
+            confirmationTitle="Delete File"
+            confirmationDescription={`Are you sure you want to delete "${file?.path || 'this file'}"? This action cannot be undone.`}
+            size="sm"
+          />
+        </div>
+      </CardHeader>
       <CardContent className="flex-1 flex flex-col space-y-4">
         {/* File Properties Form */}
         <div className="grid grid-cols-1 gap-4">

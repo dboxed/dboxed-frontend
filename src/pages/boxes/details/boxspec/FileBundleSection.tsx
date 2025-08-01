@@ -75,13 +75,25 @@ export function FileBundleSection({ form, bundleIndex }: FileBundleMenuProps) {
     setActiveSection(`file-${newFileIndex}`)
   }
 
+  const handleDeleteBundle = () => {
+    const updatedBundles = [...fileBundles]
+    updatedBundles.splice(bundleIndex, 1)
+    form.setValue("boxSpec.fileBundles", updatedBundles)
+  }
+
+  const handleDeleteFile = () => {
+    // Navigate back to bundle config after file deletion
+    setActiveSection("config")
+    setSelectedFileIndex(null)
+  }
+
   const renderContent = () => {
     if (activeSection === "config") {
-      return <BundleConfigSection form={form} bundleIndex={bundleIndex} />
+      return <BundleConfigSection form={form} bundleIndex={bundleIndex} onDeleteBundle={handleDeleteBundle} />
     }
 
     if (activeSection.startsWith("file-") && selectedFileIndex !== null) {
-      return <FileContentEditor form={form} bundleIndex={bundleIndex} fileIndex={selectedFileIndex} />
+      return <FileContentEditor form={form} bundleIndex={bundleIndex} fileIndex={selectedFileIndex} onDeleteFile={handleDeleteFile} />
     }
 
     return null

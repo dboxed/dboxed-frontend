@@ -3,11 +3,14 @@ import { ConfirmationDialog } from "@/components/ConfirmationDialog"
 
 interface DeleteButtonProps {
   onDelete: () => void
-  resourceName: string
+  resourceName?: string
   disabled?: boolean
   isLoading?: boolean
   buttonText?: string
   className?: string
+  confirmationTitle?: string
+  confirmationDescription?: string
+  size?: "default" | "sm" | "lg" | "icon"
 }
 
 export function DeleteButton({
@@ -16,9 +19,17 @@ export function DeleteButton({
   disabled = false,
   isLoading = false,
   buttonText = "Delete",
-  className
+  className,
+  confirmationTitle,
+  confirmationDescription,
+  size = "default"
 }: DeleteButtonProps) {
   const isDisabled = disabled || isLoading
+
+  // Use custom confirmation text or fall back to defaults
+  const title = confirmationTitle || "Are you sure?"
+  const description = confirmationDescription || 
+    (resourceName ? `This action cannot be undone. This will permanently delete the ${resourceName}.` : "This action cannot be undone.")
 
   return (
     <ConfirmationDialog
@@ -27,12 +38,13 @@ export function DeleteButton({
           variant="destructive"
           disabled={isDisabled}
           className={className}
+          size={size}
         >
           {isLoading ? "Deleting..." : buttonText}
         </Button>
       }
-      title="Are you sure?"
-      description={`This action cannot be undone. This will permanently delete the ${resourceName}.`}
+      title={title}
+      description={description}
       confirmText="Delete"
       onConfirm={onDelete}
       destructive

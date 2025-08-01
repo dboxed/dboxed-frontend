@@ -11,14 +11,8 @@ interface LogsPageProps {
   boxId: number
 }
 
-function getLogFileType(logFile: components["schemas"]["LogMetadata"]): 'unboxed' | 'docker-container' | 'unknown' {
-  if (logFile.metadata?.type === 'unboxed') {
-    return 'unboxed'
-  }
-  if (logFile.metadata?.type === 'docker-container') {
-    return 'docker-container'
-  }
-  return 'unknown'
+function getLogFileType(logFile: components["schemas"]["LogMetadata"]) {
+  return logFile.metadata?.type
 }
 
 function getLogFileDisplayName(logFile: components["schemas"]["LogMetadata"]): string {
@@ -102,17 +96,11 @@ export function LogsPage({ boxId }: LogsPageProps) {
           )}
 
           <div className="col-span-3">
-            {selectedLogFile && workspaceId ? (
-              <LogFileViewer
-                workspaceId={workspaceId}
-                boxId={boxId}
-                logFileName={selectedLogFile}
-              />
-            ) : (
-              <div className="flex items-center justify-center h-64 text-muted-foreground border rounded-md">
-                Select a log file to view
-              </div>
-            )}
+            <LogFileViewer
+              workspaceId={workspaceId}
+              boxId={boxId}
+              logFileName={selectedLogFile}
+            />
           </div>
         </div>
       </CardContent>

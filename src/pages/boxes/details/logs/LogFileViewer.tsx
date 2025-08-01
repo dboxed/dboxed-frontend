@@ -7,7 +7,7 @@ import { useUnboxedApiEventSource } from "@/api/api.ts";
 interface LogFileViewerProps {
   workspaceId: number
   boxId: number
-  logFileName: string
+  logFileName: string | null
 }
 
 export function LogFileViewer({ workspaceId, boxId, logFileName }: LogFileViewerProps) {
@@ -25,10 +25,19 @@ export function LogFileViewer({ workspaceId, boxId, logFileName }: LogFileViewer
   }, [logFileName])
 
   const url = new URL(`/v1/workspaces/${workspaceId}/boxes/${boxId}/logs/stream`, envVars.VITE_API_URL)
-  url.searchParams.set('file', logFileName)
+  if (logFileName) {
+    url.searchParams.set('file', logFileName)
+  }
+
+  // when the url changes, clear the logs (the stream is going to be restarted)
+  useEffect(() => {
+    setLogData("Loading...")
+  }, [url.toString()]);
 
   useUnboxedApiEventSource(url.toString(), {
+    enabled: !!logFileName,
     onopen: () => {
+      // clear it before the first line gets received
       setLogData("")
     },
     onmessage: e => {

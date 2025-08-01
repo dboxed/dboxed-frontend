@@ -46,23 +46,28 @@ interface EventSourceOptions {
     onerror?: (err: any) => void
     onmessage?: (e: EventSourceMessage) => void
     onclose?: () => void;
+    enabled?: boolean
 }
 
 export const useUnboxedApiEventSource = (url: string, opts: EventSourceOptions) => {
+    const enabled = typeof opts.enabled === "boolean" ? opts.enabled : true
+
     const auth = useAuth()
     useEffect(() => {
         const ctrl = new AbortController();
 
+        if (!enabled) {
+            return
+        }
+
         fetchEventSource(url, {
             headers: buildAuthHeaders(auth.user?.access_token),
             onopen: async (res) => {
-                console.log("onopen", res)
                 if (opts.onopen) {
                     opts.onopen(res)
                 }
             },
             onerror: (err) => {
-                console.log("onerror", err)
                 if (opts.onerror) {
                     opts.onerror(err)
                 }
@@ -81,7 +86,7 @@ export const useUnboxedApiEventSource = (url: string, opts: EventSourceOptions) 
         })
 
         return () => ctrl.abort()
-    }, [url]);
+    }, [url, enabled]);
 
     return null
 }

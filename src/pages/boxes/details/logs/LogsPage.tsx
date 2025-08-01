@@ -40,7 +40,7 @@ function getLogFileIcon(type: 'unboxed' | 'docker-container' | 'unknown') {
 export function LogsPage({ boxId }: LogsPageProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useUnboxedQueryClient()
-  const [selectedLogFile, setSelectedLogFile] = useState<string>("")
+  const [selectedLogFile, setSelectedLogFile] = useState<string | null>(null)
 
   // Fetch available log files
   const logFiles = client.useQuery('get', "/v1/workspaces/{workspaceId}/boxes/{id}/logs", {
@@ -56,6 +56,10 @@ export function LogsPage({ boxId }: LogsPageProps) {
 
   const handleLogFileChange = (value: string) => {
     setSelectedLogFile(value)
+  }
+
+  if (!workspaceId) {
+    return <>no workspace</>
   }
 
   return (

@@ -647,6 +647,7 @@ export interface components {
         };
         LogMetadata: {
             fileName: string;
+            format: string;
             metadata?: {
                 [key: string]: unknown;
             };
@@ -654,13 +655,13 @@ export interface components {
         LogsBatch: {
             lines: components["schemas"]["LogsLine"][] | null;
             /** Format: int64 */
-            seq: number;
+            seq?: number;
         };
         LogsError: {
             message: string;
         };
         LogsLine: {
-            log: string;
+            line: string;
             /** Format: date-time */
             time: string;
         };

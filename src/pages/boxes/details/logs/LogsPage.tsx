@@ -11,27 +11,22 @@ interface LogsPageProps {
   boxId: number
 }
 
-function getLogFileType(logFile: components["schemas"]["LogMetadata"]) {
-  return logFile.metadata?.type
-}
-
 function getLogFileDisplayName(logFile: components["schemas"]["LogMetadata"]): string {
-  const type = getLogFileType(logFile)
-  
-  if (type === 'docker-container' && logFile.metadata?.container?.Name) {
-    return logFile.metadata.container.Name as string
+
+  const containerInfo = logFile.metadata?.container as any
+  if (logFile.format === "docker-logs" && containerInfo?.Name) {
+    return containerInfo.Name as string
   }
   
   return logFile.fileName
 }
 
-function getLogFileIcon(type: 'unboxed' | 'docker-container' | 'unknown') {
-  switch (type) {
-    case 'unboxed':
+function getLogFileIcon(logFile: components["schemas"]["LogMetadata"]) {
+  switch (logFile.format) {
+    case 'slog-json':
       return <Box className="h-4 w-4" />
-    case 'docker-container':
+    case 'docker-logs':
       return <Container className="h-4 w-4" />
-    case 'unknown':
     default:
       return null
   }
@@ -70,9 +65,8 @@ export function LogsPage({ boxId }: LogsPageProps) {
             <Table className="">
               <TableBody>
                 {logFiles.data.items.map((logFile: components["schemas"]["LogMetadata"]) => {
-                  const type = getLogFileType(logFile)
                   const displayName = getLogFileDisplayName(logFile)
-                  const icon = getLogFileIcon(type)
+                  const icon = getLogFileIcon(logFile)
                   
                   return (
                     <TableRow

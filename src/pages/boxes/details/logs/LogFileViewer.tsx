@@ -10,9 +10,12 @@ interface LogFileViewerProps {
   logFileName: string | null
 }
 
+const isoPattern = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.)(\d+)Z$/;
+
 export function LogFileViewer({ workspaceId, boxId, logFileName }: LogFileViewerProps) {
   const [logData, setLogData] = useState<string>("")
   const eventSourceRef = useRef<EventSource | null>(null)
+  const [metadataHolder] = useState<(components["schemas"]["LogMetadata"] | null)[]>([null])
 
   // Close EventSource on unmount or when log file changes
   useEffect(() => {
@@ -31,8 +34,51 @@ export function LogFileViewer({ workspaceId, boxId, logFileName }: LogFileViewer
 
   // when the url changes, clear the logs (the stream is going to be restarted)
   useEffect(() => {
-    setLogData("Loading...")
+    if (logFileName) {
+      setLogData("Loading...")
+    } else {
+      setLogData("Please select a log file")
+    }
   }, [url.toString()]);
+
+  const formatTime = (time: string) => {
+    const m = isoPattern.exec(time)
+    if (!m) {
+      return time
+    }
+    try {
+      let nano = m[2]
+      while (nano.length < 9) nano = "0" + nano;
+      return `${m[1]}${nano}Z`
+    } catch {
+      return time
+    }
+  }
+
+  const formatLine = (metadata: components["schemas"]["LogMetadata"] | null, line: components["schemas"]["LogsLine"]) => {
+    try {
+      switch (metadata?.format) {
+        case 'slog-json': {
+          const parsed = JSON.parse(line.line)
+          const keys = Object.keys(parsed).filter(x => x != "time")
+          let ret = formatTime(parsed.time)
+          keys.forEach((k) => {
+            const v = parsed[k]
+            ret += ` ${k}=${JSON.stringify(v)}`
+          })
+          return ret
+        }
+        case 'docker-logs': {
+          const parsed = JSON.parse(line.line)
+          return `${formatTime(parsed.time)} ${parsed.stream} ${parsed.log.trimEnd()}`
+        }
+        default:
+          return `${formatTime(line.time)} ${line.line}`
+      }
+    } catch {
+      return `${formatTime(line.time)} ${line.line}`
+    }
+  }
 
   useUnboxedApiEventSource(url.toString(), {
     enabled: !!logFileName,
@@ -45,11 +91,11 @@ export function LogFileViewer({ workspaceId, boxId, logFileName }: LogFileViewer
         const data = JSON.parse(e.data)
 
         if (e.event == 'metadata') {
-          console.log("metadata", data)
+          metadataHolder[0] = data
         } else if (e.event === 'logs' && data.lines) {
           // Handle log batch
           const logLines = data.lines.map((line: components["schemas"]["LogsLine"]) =>
-            `${line.time} ${line.log}`
+            formatLine(metadataHolder[0], line)
           ).join('\n')
 
           setLogData(prev => prev + logLines + '\n')

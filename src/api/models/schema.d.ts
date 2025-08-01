@@ -362,9 +362,9 @@ export interface components {
             spec: components["schemas"]["BoxSpec"];
         };
         BoxSpec: {
-            composeProjects: string[] | null;
+            composeProjects?: string[] | null;
             dns: components["schemas"]["DnsSpec"];
-            fileBundles: components["schemas"]["FileBundle"][] | null;
+            fileBundles?: components["schemas"]["FileBundle"][] | null;
             infraImage?: string;
             logs?: components["schemas"]["LogsSpec"];
             unboxedBinaryHash?: string;

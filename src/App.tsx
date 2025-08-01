@@ -15,7 +15,7 @@ import { CreateMachineProviderPage } from "@/pages/machine-providers/create/Crea
 import { CreateMachinePage, MachineDetailsPage } from "@/pages/machines";
 import { WorkspaceDashboardPage } from "@/pages/workspaces/WorkspaceDashboardPage.tsx";
 import { ListNetworksPage, CreateNetworkPage, NetworkDetailsPage } from "@/pages/networks";
-import { BoxDetailsPage, BoxSpecEditorPage } from "@/pages/boxes/details";
+import { BoxDetailsPage } from "@/pages/boxes/details";
 import { CreateBoxPage, ListBoxesPage } from "@/pages/boxes";
 
 const queryClient = new QueryClient({
@@ -78,7 +78,6 @@ function AuthenticatedApp() {
           <Route path="/workspaces/:workspaceId/machine-providers/:machineProviderId" element={<MachineProviderDetailsPage />}/>
           <Route path="/workspaces/:workspaceId/boxes" element={<ListBoxesPage/>}/>
           <Route path="/workspaces/:workspaceId/boxes/:boxId" element={<BoxDetailsPage/>}/>
-          <Route path="/workspaces/:workspaceId/boxes/:boxId/box-spec" element={<BoxSpecEditorPage/>}/>
           <Route path="/workspaces/:workspaceId/machines" element={<ListMachinesPage/>}/>
           <Route path="/workspaces/:workspaceId/machines/:machineId" element={<MachineDetailsPage/>}/>
           <Route path="/workspaces/:workspaceId/networks" element={<ListNetworksPage/>}/>

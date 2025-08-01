@@ -177,17 +177,6 @@ function MachineBreadcrumb({ machineId, isCurrentPage }: MachineBreadcrumbProps)
   )
 }
 
-interface BoxSpecBreadcrumbProps {
-  isCurrentPage?: boolean
-}
-
-function BoxSpecBreadcrumb({ isCurrentPage }: BoxSpecBreadcrumbProps) {
-  return (
-    <BreadcrumbElement isCurrentPage={isCurrentPage}>
-      <span>Box Spec</span>
-    </BreadcrumbElement>
-  )
-}
 
 interface CreateBreadcrumbProps {
   isCurrentPage?: boolean
@@ -489,16 +478,6 @@ export function UnboxedBreadcrumbs({ className }: UnboxedBreadcrumbsProps) {
       )
 
       currentIndex++
-
-      // Handle box-spec path after box ID
-      if (pathSegments[currentIndex] === 'box-spec') {
-        breadcrumbElements.push(
-          <BreadcrumbSeparator key="sep-box-spec-boxes"/>,
-          <BreadcrumbItem key="box-spec">
-            <BoxSpecBreadcrumb isCurrentPage={true}/>
-          </BreadcrumbItem>
-        )
-      }
     }
 
     // Handle create path

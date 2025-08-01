@@ -5,6 +5,7 @@ import { useUnboxedQueryClient } from "@/api/api"
 import { useState } from "react"
 import { toast } from "sonner"
 import { Copy, Key, RefreshCw } from "lucide-react"
+import { envVars } from "@/env.ts"
 
 interface BoxTokenCardProps {
   boxId: number
@@ -14,8 +15,9 @@ interface BoxTokenCardProps {
 export function BoxConnectCard({ boxId, workspaceId }: BoxTokenCardProps) {
   const client = useUnboxedQueryClient()
   const [token, setToken] = useState<string>("")
+  const [specUrl, setSpecUrl] = useState<string>("")
 
-  const tokenMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/regenerate-token')
+  const tokenMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/generate-token')
 
   const handleGenerateToken = () => {
     tokenMutation.mutate({
@@ -27,8 +29,15 @@ export function BoxConnectCard({ boxId, workspaceId }: BoxTokenCardProps) {
       }
     }, {
       onSuccess: (responseData) => {
-        setToken(responseData.token)
-        toast.success("Box token generated successfully!")
+        const generatedToken = responseData.token
+        setToken(generatedToken)
+        
+        // Construct the spec URL with the token as a query parameter
+        const baseUrl = envVars.VITE_API_URL.replace(/\/+$/, '') // Remove trailing slashes
+        const url = `${baseUrl}/v1/box-spec?token=${encodeURIComponent(generatedToken)}`
+        setSpecUrl(url)
+        
+        toast.success("Box spec URL generated successfully!")
       },
       onError: (error) => {
         toast.error("Failed to generate box token", {
@@ -38,14 +47,14 @@ export function BoxConnectCard({ boxId, workspaceId }: BoxTokenCardProps) {
     })
   }
 
-  const handleCopyToken = async () => {
-    if (!token) return
+  const handleCopyUrl = async () => {
+    if (!specUrl) return
     
     try {
-      await navigator.clipboard.writeText(token)
-      toast.success("Token copied to clipboard!")
+      await navigator.clipboard.writeText(specUrl)
+      toast.success("Spec URL copied to clipboard!")
     } catch (err) {
-      toast.error("Failed to copy token to clipboard")
+      toast.error("Failed to copy URL to clipboard")
     }
   }
 
@@ -83,27 +92,27 @@ export function BoxConnectCard({ boxId, workspaceId }: BoxTokenCardProps) {
           </div>
         </div>
 
-        {token && (
+        {specUrl && (
           <div className="space-y-2">
-            <label className="text-sm font-medium">Generated Token</label>
+            <label className="text-sm font-medium">Generated Spec URL</label>
             <div className="flex space-x-2">
               <Input
-                value={token}
+                value={specUrl}
                 readOnly
                 className="font-mono text-xs"
-                placeholder="Token will appear here..."
+                placeholder="URL will appear here..."
               />
               <Button
                 variant="outline"
                 size="sm"
-                onClick={handleCopyToken}
+                onClick={handleCopyUrl}
                 type={"button"}
               >
                 <Copy className="h-4 w-4" />
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">
-              ⚠️ This token will only be shown once. Copy it now and store it securely.
+              ⚠️ This URL contains a token that will only be shown once. Copy it now and store it securely.
             </p>
           </div>
         )}

@@ -162,6 +162,23 @@ export interface paths {
         patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id"];
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/boxes/{id}/generate-token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID boxes by ID generate token */
+        post: operations["post-v1-workspaces-by-workspace-id-boxes-by-id-generate-token"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/boxes/{id}/logs": {
         parameters: {
             query?: never;
@@ -189,23 +206,6 @@ export interface paths {
         get: operations["logs-stream"];
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/workspaces/{workspaceId}/boxes/{id}/regenerate-token": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Post v1 workspaces by workspace ID boxes by ID regenerate token */
-        post: operations["post-v1-workspaces-by-workspace-id-boxes-by-id-regenerate-token"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1320,6 +1320,39 @@ export interface operations {
             };
         };
     };
+    "post-v1-workspaces-by-workspace-id-boxes-by-id-generate-token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BoxToken"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-v1-workspaces-by-workspace-id-boxes-by-id-logs": {
         parameters: {
             query?: never;
@@ -1409,39 +1442,6 @@ export interface operations {
                         /** @description The retry time in milliseconds. */
                         retry?: number;
                     })[];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "post-v1-workspaces-by-workspace-id-boxes-by-id-regenerate-token": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-                /** @description The workspace id */
-                workspaceId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BoxToken"];
                 };
             };
             /** @description Error */

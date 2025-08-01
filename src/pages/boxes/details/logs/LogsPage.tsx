@@ -69,7 +69,7 @@ export function LogsPage({ boxId }: LogsPageProps) {
       <CardContent>
         <div className="grid grid-cols-4 gap-4 h-full">
           {logFiles.data?.items && logFiles.data.items.length > 0 ? (
-            <Table className="h-full">
+            <Table className="">
               <TableBody>
                 {logFiles.data.items.map((logFile: components["schemas"]["LogMetadata"]) => {
                   const type = getLogFileType(logFile)
@@ -84,7 +84,9 @@ export function LogsPage({ boxId }: LogsPageProps) {
                     >
                       <TableCell className="text-sm w-full" title={displayName}>
                         <div className="flex items-center gap-2">
-                          {icon}
+                          <div className="flex-shrink-0 w-4 flex items-center justify-center">
+                            {icon}
+                          </div>
                           <span className="truncate">{displayName}</span>
                         </div>
                       </TableCell>

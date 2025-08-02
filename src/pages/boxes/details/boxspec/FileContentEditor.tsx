@@ -12,7 +12,7 @@ interface FileContentEditorProps {
   form: UseFormReturn<components["schemas"]["UpdateBox"]>
   bundleIndex: number
   fileIndex: number
-  onDeleteFile?: () => void
+  onDeleteFile: (index: number) => void
 }
 
 export function FileContentEditor({ form, bundleIndex, fileIndex, onDeleteFile }: FileContentEditorProps) {
@@ -150,21 +150,7 @@ export function FileContentEditor({ form, bundleIndex, fileIndex, onDeleteFile }
   }
 
   const handleDeleteFile = () => {
-    const updatedBundles = [...fileBundles]
-    const updatedFiles = [...(updatedBundles[bundleIndex].files || [])]
-    updatedFiles.splice(fileIndex, 1)
-    
-    updatedBundles[bundleIndex] = {
-      ...updatedBundles[bundleIndex],
-      files: updatedFiles
-    }
-    
-    form.setValue("boxSpec.fileBundles", updatedBundles)
-    
-    // Call the parent's navigation handler if provided
-    if (onDeleteFile) {
-      onDeleteFile()
-    }
+    onDeleteFile(fileIndex)
   }
 
   return (
@@ -176,7 +162,10 @@ export function FileContentEditor({ form, bundleIndex, fileIndex, onDeleteFile }
             onDelete={handleDeleteFile}
             confirmationTitle="Delete File"
             confirmationDescription={`Are you sure you want to delete "${file?.path || 'this file'}"? This action cannot be undone.`}
+            buttonText=""
             size="sm"
+            variant="ghost"
+            className="text-destructive hover:text-destructive hover:bg-destructive/10 p-2 h-8 w-8"
           />
         </div>
       </CardHeader>

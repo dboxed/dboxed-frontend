@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog"
+import { Trash2 } from "lucide-react"
 
 interface DeleteButtonProps {
   onDelete: () => void
@@ -11,6 +12,7 @@ interface DeleteButtonProps {
   confirmationTitle?: string
   confirmationDescription?: string
   size?: "default" | "sm" | "lg" | "icon"
+  variant?: "destructive" | "ghost" | "outline"
 }
 
 export function DeleteButton({
@@ -22,7 +24,8 @@ export function DeleteButton({
   className,
   confirmationTitle,
   confirmationDescription,
-  size = "default"
+  size = "default",
+  variant = "destructive"
 }: DeleteButtonProps) {
   const isDisabled = disabled || isLoading
 
@@ -35,12 +38,12 @@ export function DeleteButton({
     <ConfirmationDialog
       trigger={
         <Button
-          variant="destructive"
+          variant={variant}
           disabled={isDisabled}
           className={className}
           size={size}
         >
-          {isLoading ? "Deleting..." : buttonText}
+          {isLoading ? "Deleting..." : (buttonText || <Trash2 className="h-4 w-4" />)}
         </Button>
       }
       title={title}

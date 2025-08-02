@@ -8,24 +8,23 @@ import { MenuItem } from "./MenuItem.tsx"
 import { Menu } from "./Menu.tsx"
 import { MenuSection } from "./MenuSection.tsx"
 import { ScrollableMenuList } from "./ScrollableMenuList.tsx"
+import { DeleteButton } from "@/components/DeleteButton.tsx"
 
-interface FileBundleMenuProps {
-  form: UseFormReturn<components["schemas"]["UpdateBox"]>
-  bundleIndex: number
+interface BundleSectionProps {
+  form: UseFormReturn<components["schemas"]["UpdateBox"]>,
+  bundleIndex: number,
+  onDeleteBundle: (index: number) => void
 }
 
 type FileBundleEntry = components["schemas"]["FileBundleEntry"]
 
-export function FileBundleSection({ form, bundleIndex }: FileBundleMenuProps) {
-  const [activeSection, setActiveSection] = useState<string>("config")
+export function BundleSection({ form, bundleIndex, onDeleteBundle }: BundleSectionProps) {
   const [selectedFileIndex, setSelectedFileIndex] = useState<number | null>(null)
 
-  const fileBundles = form.watch("boxSpec.fileBundles") || []
-  const bundle = fileBundles[bundleIndex]
+  const bundle = form.watch(`boxSpec.fileBundles.${bundleIndex}`)
 
   // Reset to config section when bundle changes
   useEffect(() => {
-    setActiveSection("config")
     setSelectedFileIndex(null)
   }, [bundleIndex])
 
@@ -44,9 +43,12 @@ export function FileBundleSection({ form, bundleIndex }: FileBundleMenuProps) {
     )
   }
 
+  const handleConfigClick = () => {
+    setSelectedFileIndex(null)
+  }
+
   const handleFileClick = (fileIndex: number) => {
     setSelectedFileIndex(fileIndex)
-    setActiveSection(`file-${fileIndex}`)
   }
 
   const handleAddFile = () => {
@@ -57,46 +59,36 @@ export function FileBundleSection({ form, bundleIndex }: FileBundleMenuProps) {
       uid: 0,
       gid: 0,
     }
-    
-    const updatedBundles = [...fileBundles]
-    const updatedFiles = [...(updatedBundles[bundleIndex].files || [])]
+
+    const updatedFiles = [...(bundle.files || [])]
     updatedFiles.push(newFile)
-    
-    updatedBundles[bundleIndex] = {
-      ...updatedBundles[bundleIndex],
-      files: updatedFiles
-    }
-    
-    form.setValue("boxSpec.fileBundles", updatedBundles)
-    
+    form.setValue(`boxSpec.fileBundles.${bundleIndex}.files`, updatedFiles)
+
     // Navigate to the newly created file
     const newFileIndex = updatedFiles.length - 1
     setSelectedFileIndex(newFileIndex)
-    setActiveSection(`file-${newFileIndex}`)
   }
 
-  const handleDeleteBundle = () => {
-    const updatedBundles = [...fileBundles]
-    updatedBundles.splice(bundleIndex, 1)
-    form.setValue("boxSpec.fileBundles", updatedBundles)
-  }
+  const handleDeleteFile = (index: number) => {
+    const updatedFiles = [...(bundle.files || [])]
+    updatedFiles.splice(index, 1)
 
-  const handleDeleteFile = () => {
-    // Navigate back to bundle config after file deletion
-    setActiveSection("config")
-    setSelectedFileIndex(null)
+    form.setValue(`boxSpec.fileBundles.${bundleIndex}.files`, updatedFiles)
+
+    if (updatedFiles.length === 0) {
+      setSelectedFileIndex(null)
+    } else if (index >= updatedFiles.length) {
+      setSelectedFileIndex(updatedFiles.length - 1)
+    }
   }
 
   const renderContent = () => {
-    if (activeSection === "config") {
-      return <BundleConfigSection form={form} bundleIndex={bundleIndex} onDeleteBundle={handleDeleteBundle} />
+    if (selectedFileIndex !== null) {
+      return <FileContentEditor form={form} bundleIndex={bundleIndex} fileIndex={selectedFileIndex}
+                                onDeleteFile={handleDeleteFile}/>
+    } else {
+      return <BundleConfigSection form={form} bundleIndex={bundleIndex} />
     }
-
-    if (activeSection.startsWith("file-") && selectedFileIndex !== null) {
-      return <FileContentEditor form={form} bundleIndex={bundleIndex} fileIndex={selectedFileIndex} onDeleteFile={handleDeleteFile} />
-    }
-
-    return null
   }
 
   return (
@@ -104,12 +96,24 @@ export function FileBundleSection({ form, bundleIndex }: FileBundleMenuProps) {
       {/* Left Sidebar Menu */}
       <Menu>
         <MenuSection>
-          <MenuItem
-            onClick={() => setActiveSection("config")}
-            isActive={activeSection === "config"}
-          >
-            Bundle Config
-          </MenuItem>
+          <div className="flex items-center justify-between gap-2">
+            <MenuItem
+              onClick={handleConfigClick}
+              isActive={selectedFileIndex === null}
+              className="flex-1"
+            >
+              Bundle Config
+            </MenuItem>
+            <DeleteButton
+              onDelete={() => onDeleteBundle(bundleIndex)}
+              confirmationTitle="Delete Bundle"
+              confirmationDescription={`Are you sure you want to delete "${bundle.name || 'this bundle'}"? This action cannot be undone and will remove all files in this bundle.`}
+              buttonText=""
+              size="sm"
+              variant="ghost"
+              className="text-destructive hover:text-destructive hover:bg-destructive/10 p-2 h-8 w-8"
+            />
+          </div>
         </MenuSection>
 
         <MenuSection showSeparator>
@@ -117,11 +121,11 @@ export function FileBundleSection({ form, bundleIndex }: FileBundleMenuProps) {
             onClick={handleAddFile}
             className="flex items-center gap-2"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="h-4 w-4"/>
             Add File
           </MenuItem>
 
-          <ScrollableMenuList 
+          <ScrollableMenuList
             isEmpty={!bundle.files || bundle.files.length === 0}
             emptyMessage="No files in bundle"
           >
@@ -129,10 +133,10 @@ export function FileBundleSection({ form, bundleIndex }: FileBundleMenuProps) {
               <MenuItem
                 key={fileIndex}
                 onClick={() => handleFileClick(fileIndex)}
-                isActive={activeSection === `file-${fileIndex}`}
+                isActive={selectedFileIndex === fileIndex}
                 className="flex items-center gap-2"
               >
-                <File className="h-4 w-4 flex-shrink-0" />
+                <File className="h-4 w-4 flex-shrink-0"/>
                 <span className="truncate" title={file.path}>
                   {file.path.split('/').pop() || file.path}
                 </span>

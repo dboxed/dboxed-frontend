@@ -14,7 +14,6 @@ interface BoxTokenCardProps {
 
 export function BoxConnectCard({ boxId, workspaceId }: BoxTokenCardProps) {
   const client = useUnboxedQueryClient()
-  const [token, setToken] = useState<string>("")
   const [specUrl, setSpecUrl] = useState<string>("")
 
   const tokenMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/generate-token')
@@ -30,8 +29,7 @@ export function BoxConnectCard({ boxId, workspaceId }: BoxTokenCardProps) {
     }, {
       onSuccess: (responseData) => {
         const generatedToken = responseData.token
-        setToken(generatedToken)
-        
+
         // Construct the spec URL with the token as a query parameter
         const baseUrl = envVars.VITE_API_URL.replace(/\/+$/, '') // Remove trailing slashes
         const url = `${baseUrl}/v1/box-spec?token=${encodeURIComponent(generatedToken)}`

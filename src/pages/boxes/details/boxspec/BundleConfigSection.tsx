@@ -3,33 +3,22 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input.tsx"
 import { type UseFormReturn } from "react-hook-form"
 import type { components } from "@/api/models/schema"
-import { DeleteButton } from "@/components/DeleteButton.tsx"
 
 interface BundleConfigSectionProps {
   form: UseFormReturn<components["schemas"]["UpdateBox"]>
   bundleIndex: number
-  onDeleteBundle: () => void
 }
 
-export function BundleConfigSection({ form, bundleIndex, onDeleteBundle }: BundleConfigSectionProps) {
-  const bundleName = form.watch(`boxSpec.fileBundles.${bundleIndex}.name`) || "Unnamed Bundle"
-
+export function BundleConfigSection({ form, bundleIndex }: BundleConfigSectionProps) {
   return (
     <Card className="h-full">
       <CardHeader>
-        <div className="flex justify-between items-center">
-          <CardTitle>Bundle Configuration</CardTitle>
-          <DeleteButton
-            onDelete={onDeleteBundle}
-            confirmationTitle="Delete Bundle"
-            confirmationDescription={`Are you sure you want to delete "${bundleName}"? This action cannot be undone and will remove all files in this bundle.`}
-            size="sm"
-          />
-        </div>
+        <CardTitle>Bundle Configuration</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <FormField
           control={form.control}
+          key={`boxSpec.fileBundles.${bundleIndex}.name`}
           name={`boxSpec.fileBundles.${bundleIndex}.name`}
           render={({ field }) => (
             <FormItem>
@@ -48,6 +37,7 @@ export function BundleConfigSection({ form, bundleIndex, onDeleteBundle }: Bundl
         
         <FormField
           control={form.control}
+          key={`boxSpec.fileBundles.${bundleIndex}.rootUid`}
           name={`boxSpec.fileBundles.${bundleIndex}.rootUid`}
           render={({ field }) => (
             <FormItem>
@@ -68,6 +58,7 @@ export function BundleConfigSection({ form, bundleIndex, onDeleteBundle }: Bundl
         
         <FormField
           control={form.control}
+          key={`boxSpec.fileBundles.${bundleIndex}.rootGid`}
           name={`boxSpec.fileBundles.${bundleIndex}.rootGid`}
           render={({ field }) => (
             <FormItem>
@@ -88,6 +79,7 @@ export function BundleConfigSection({ form, bundleIndex, onDeleteBundle }: Bundl
         
         <FormField
           control={form.control}
+          key={`boxSpec.fileBundles.${bundleIndex}.rootMode`}
           name={`boxSpec.fileBundles.${bundleIndex}.rootMode`}
           render={({ field }) => (
             <FormItem>

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { BasePage } from "./BasePage"
 import { useNavigate } from "react-router"
 import { Plus } from "lucide-react"
-import { useUnboxedQueryClient } from "@/api/api"
+import { useDboxedQueryClient } from "@/api/api"
 import { DataTable } from "@/components/data-table.tsx"
 import type { ColumnDef } from "@tanstack/react-table"
 import type { paths } from "@/api/models/schema"
@@ -42,7 +42,7 @@ export function BaseListPage<TData = any>({
   searchColumn,
   searchPlaceholder
 }: BaseListPageProps<TData>) {
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
   const navigate = useNavigate()
 
   const query = client.useQuery('get', resourcePath as any, {

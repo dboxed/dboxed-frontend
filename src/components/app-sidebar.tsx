@@ -6,7 +6,7 @@ import { NavUser } from "@/components/nav-user"
 import { WorkspaceSwitcher } from "@/components/workspace-switcher.tsx"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail, } from "@/components/ui/sidebar"
 import { useCurrentUser } from "@/api/auth.ts";
-import { useUnboxedQueryClient } from "@/api/api.ts";
+import { useDboxedQueryClient } from "@/api/api.ts";
 
 const navMain = [
   {
@@ -37,7 +37,7 @@ const navMain = [
 ]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
   const user = useCurrentUser()
   const workspaces = client.useQuery('get', '/v1/workspaces')
 

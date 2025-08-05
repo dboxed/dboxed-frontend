@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { useUnboxedQueryClient } from "@/api/api"
+import { useDboxedQueryClient } from "@/api/api"
 import { useNavigate } from "react-router"
 import { toast } from "sonner"
 import { useForm } from "react-hook-form"
@@ -38,7 +38,7 @@ export function BaseCreatePage<T extends FieldValues = FieldValues>({
   defaultValues,
   resolver
 }: BaseCreatePageProps<T>) {
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   

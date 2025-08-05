@@ -3,14 +3,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { useNavigate } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher"
-import { useUnboxedQueryClient } from "@/api/api"
+import { useDboxedQueryClient } from "@/api/api"
 import { Network, Plus, ArrowRight } from "lucide-react"
 import type { components } from "@/api/models/schema"
 
 export function NetworksOverview() {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
 
   // Fetch networks
   const networksQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/networks', {

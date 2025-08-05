@@ -25,7 +25,6 @@ export function MachineProviderDetailsPage() {
     // Add Hetzner-specific defaults if Hetzner data exists
     if (data.hetzner) {
       defaults.hetzner = {
-        robot_vswitch_id: data.hetzner.robot_vswitch_id || undefined,
       }
     }
 

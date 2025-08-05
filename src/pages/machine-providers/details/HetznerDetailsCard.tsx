@@ -54,30 +54,6 @@ export function HetznerDetailsCard({ hetznerData, form }: HetznerDetailsCardProp
               <p className="text-sm text-muted-foreground">{hetznerData.robot_subnet_cidr || "N/A"}</p>
             </div>
           </div>
-          
-          {/* Move editable Robot VSwitch ID here */}
-          <FormField
-            control={form.control}
-            name="hetzner.robot_vswitch_id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Robot VSwitch ID</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="12345"
-                    type="number"
-                    {...field}
-                    value={field.value || ""}
-                    onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : null)}
-                  />
-                </FormControl>
-                <FormDescription>
-                  Optional robot vSwitch ID for network configuration.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </div>
 
         <div className="space-y-4 pt-4 border-t">

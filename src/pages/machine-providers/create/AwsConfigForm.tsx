@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input.tsx"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
 import { Cloud } from "lucide-react"
-import { useUnboxedQueryClient } from "@/api/api.ts"
+import { useDboxedQueryClient } from "@/api/api.ts"
 import type { UseFormReturn } from "react-hook-form";
 
 interface AwsConfigFormProps {
@@ -11,7 +11,7 @@ interface AwsConfigFormProps {
 }
 
 export function AwsConfigForm({ form }: AwsConfigFormProps) {
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
   
   // Fetch AWS regions
   const awsRegions = client.useQuery('get', '/v1/machine-provider-info/aws/regions')

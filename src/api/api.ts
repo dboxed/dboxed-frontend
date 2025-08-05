@@ -14,25 +14,25 @@ const buildAuthHeaders = (token?: string) => {
     return headers
 }
 
-const createUnboxedFetchClient = (token?: string) => {
+const createDboxedFetchClient = (token?: string) => {
     return createFetchClient<paths>({
         baseUrl: envVars.VITE_API_URL,
         headers: buildAuthHeaders(token),
     })
 }
 
-export const useUnboxedFetchClient = () => {
+export const useDboxedFetchClient = () => {
     const auth = useAuth()
 
     const client = useMemo(() => {
-        return createUnboxedFetchClient(auth.user?.access_token)
+        return createDboxedFetchClient(auth.user?.access_token)
     }, [auth.isLoading, auth.user?.access_token])
 
     return client
 }
 
-export const useUnboxedQueryClient = () => {
-    const fetchClient = useUnboxedFetchClient()
+export const useDboxedQueryClient = () => {
+    const fetchClient = useDboxedFetchClient()
 
     const queryClient = useMemo(() => {
         return createClient(fetchClient);
@@ -49,7 +49,7 @@ interface EventSourceOptions {
     enabled?: boolean
 }
 
-export const useUnboxedApiEventSource = (url: string, opts: EventSourceOptions) => {
+export const useDboxedApiEventSource = (url: string, opts: EventSourceOptions) => {
     const enabled = typeof opts.enabled === "boolean" ? opts.enabled : true
 
     const auth = useAuth()

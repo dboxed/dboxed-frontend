@@ -45,7 +45,7 @@ export function NavMain({
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Unboxed</SidebarGroupLabel>
+      <SidebarGroupLabel>Dboxed</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible

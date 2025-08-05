@@ -9,7 +9,7 @@ import { ListMachineProvidersPage } from "@/pages/machine-providers/ListMachineP
 import { MachineProviderDetailsPage } from "@/pages/machine-providers/details/MachineProviderDetailsPage.tsx";
 import { ListMachinesPage } from "@/pages/machines/ListMachinesPage.tsx";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
-import { useUnboxedQueryClient } from "@/api/api.ts";
+import { useDboxedQueryClient } from "@/api/api.ts";
 import { Toaster } from "sonner";
 import { CreateMachineProviderPage } from "@/pages/machine-providers/create/CreateMachineProviderPage.tsx";
 import { CreateMachinePage, MachineDetailsPage } from "@/pages/machines";
@@ -43,7 +43,7 @@ function AuthenticatedApp() {
   const { workspaceId, setWorkspaceId } = useSelectedWorkspaceId()
   const location = useLocation()
   const navigate = useNavigate()
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
   const workspaces = client.useQuery('get', '/v1/workspaces')
 
   if (isAdminQuery.isLoading) return <div>Loading user info...</div>;

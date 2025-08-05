@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useUnboxedQueryClient } from "@/api/api.ts"
+import { useDboxedQueryClient } from "@/api/api.ts"
 import { Card, CardContent } from "@/components/ui/card.tsx"
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table.tsx"
 import { Box, Container } from "lucide-react"
@@ -34,7 +34,7 @@ function getLogFileIcon(logFile: components["schemas"]["LogMetadata"]) {
 
 export function LogsPage({ boxId }: LogsPageProps) {
   const { workspaceId } = useSelectedWorkspaceId()
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
   const [selectedLogFile, setSelectedLogFile] = useState<string | null>(null)
 
   // Fetch available log files

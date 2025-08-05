@@ -341,6 +341,7 @@ export interface components {
             box_spec: components["schemas"]["BoxSpec"];
             /** Format: date-time */
             created_at: string;
+            dboxed_version: string;
             /** Format: int64 */
             id: number;
             /** Format: int64 */
@@ -349,7 +350,6 @@ export interface components {
             /** Format: int64 */
             network: number | null;
             network_type: string | null;
-            unboxed_version: string;
             /** Format: int64 */
             workspace: number;
         };
@@ -363,12 +363,12 @@ export interface components {
         };
         BoxSpec: {
             composeProjects?: string[] | null;
+            dboxedBinaryHash?: string;
+            dboxedBinaryUrl?: string;
             dns: components["schemas"]["DnsSpec"];
             fileBundles?: components["schemas"]["FileBundle"][] | null;
             infraImage?: string;
             logs?: components["schemas"]["LogsSpec"];
-            unboxedBinaryHash?: string;
-            unboxedBinaryUrl?: string;
         };
         BoxToken: {
             /**

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher"
-import { useUnboxedQueryClient } from "@/api/api"
+import { useDboxedQueryClient } from "@/api/api"
 import { BasePage } from "@/pages/base/BasePage"
 import { MachineProvidersOverview } from "./MachineProvidersOverview"
 import { MachinesOverview } from "./MachinesOverview"
@@ -11,7 +11,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export function WorkspaceDashboardPage() {
   const { workspaceId } = useSelectedWorkspaceId()
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { Input } from "@/components/ui/input.tsx"
-import { useUnboxedQueryClient } from "@/api/api"
+import { useDboxedQueryClient } from "@/api/api"
 import { useState } from "react"
 import { toast } from "sonner"
 import { Copy, Key, RefreshCw } from "lucide-react"
@@ -13,7 +13,7 @@ interface BoxTokenCardProps {
 }
 
 export function BoxConnectCard({ boxId, workspaceId }: BoxTokenCardProps) {
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
   const [specUrl, setSpecUrl] = useState<string>("")
 
   const tokenMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/generate-token')
@@ -64,7 +64,7 @@ export function BoxConnectCard({ boxId, workspaceId }: BoxTokenCardProps) {
           <span>Generate Spec Url</span>
         </CardTitle>
         <CardDescription>
-          Generate a Spec Url that can be used with the unboxed CLI.
+          Generate a Spec Url that can be used with the dboxed CLI.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">

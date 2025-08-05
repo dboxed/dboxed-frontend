@@ -3,7 +3,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Server } from "lucide-react"
 import type { UseFormReturn } from "react-hook-form"
-import { useUnboxedQueryClient } from "@/api/api"
+import { useDboxedQueryClient } from "@/api/api"
 import type { components } from "@/api/models/schema"
 
 interface HetznerMachineConfigFormProps {
@@ -11,7 +11,7 @@ interface HetznerMachineConfigFormProps {
 }
 
 export function HetznerMachineConfigForm({ form }: HetznerMachineConfigFormProps) {
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
   
   // Fetch Hetzner locations
   const locationsQuery = client.useQuery('get', '/v1/machine-provider-info/hetzner/locations')

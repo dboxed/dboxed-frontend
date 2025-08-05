@@ -1,5 +1,5 @@
 import { UserManager, WebStorageStateStore } from 'oidc-client-ts';
-import { useUnboxedQueryClient } from "./api.ts";
+import { useDboxedQueryClient } from "./api.ts";
 import type { components } from "./models/schema";
 import { envVars } from "@/env.ts";
 
@@ -17,7 +17,7 @@ export const onSigninCallback = () => {
 };
 
 export const useCurrentUser = () => {
-  const client = useUnboxedQueryClient();
+  const client = useDboxedQueryClient();
 
   const userQuery = client.useQuery('get', '/v1/auth/me', {});
   return {
@@ -32,7 +32,7 @@ export const useIsAdmin = () => {
   const userQuery = useCurrentUser()
 
   const isAdmin = !!userQuery.user && Object.values(userQuery.user?.resource_access || {}).some(
-    access => Array.isArray(access.roles) && access.roles.includes('unboxed-admin')
+    access => Array.isArray(access.roles) && access.roles.includes('dboxed-admin')
   );
 
   return {

@@ -1,5 +1,5 @@
 import { Link } from "react-router"
-import { useUnboxedQueryClient } from "@/api/api.ts"
+import { useDboxedQueryClient } from "@/api/api.ts"
 import type { paths } from "@/api/models/schema";
 
 interface ReferenceLabelProps {
@@ -38,7 +38,7 @@ export function ReferenceLabel({
   fallbackLabel = "Unknown",
   className = "text-blue-600 hover:text-blue-800 underline"
 }: ReferenceLabelProps) {
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
 
   const resourceQuery = client.useQuery('get', resourcePath as any, {
     params: {

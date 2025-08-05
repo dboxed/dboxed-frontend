@@ -37,10 +37,10 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           </div>
           
           <div>
-            <label className="text-sm font-medium">Unboxed Version</label>
+            <label className="text-sm font-medium">Dboxed Version</label>
             <p className="text-sm text-muted-foreground">
               <Badge variant="outline" className="w-fit">
-                {data.unboxed_version}
+                {data.dboxed_version}
               </Badge>
             </p>
           </div>

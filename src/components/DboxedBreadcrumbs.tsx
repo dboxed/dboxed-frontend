@@ -8,7 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { useUnboxedQueryClient } from "@/api/api"
+import { useDboxedQueryClient } from "@/api/api"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher"
 
 interface BreadcrumbElementProps {
@@ -46,7 +46,7 @@ interface WorkspaceBreadcrumbProps {
 
 function WorkspaceBreadcrumb({ isCurrentPage }: WorkspaceBreadcrumbProps) {
   const navigate = useNavigate()
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
   const { workspaceId } = useSelectedWorkspaceId()
 
   const workspace = client.useQuery('get', '/v1/workspaces/{workspaceId}', {
@@ -95,7 +95,7 @@ interface MachineProviderBreadcrumbProps {
 function MachineProviderBreadcrumb({ machineProviderId, isCurrentPage }: MachineProviderBreadcrumbProps) {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
 
   const machineProvider = client.useQuery('get', '/v1/workspaces/{workspaceId}/machine-providers/{id}', {
     params: {
@@ -150,7 +150,7 @@ interface MachineBreadcrumbProps {
 function MachineBreadcrumb({ machineId, isCurrentPage }: MachineBreadcrumbProps) {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
 
   const machine = client.useQuery('get', '/v1/workspaces/{workspaceId}/machines/{id}', {
     params: {
@@ -197,7 +197,7 @@ interface NetworkBreadcrumbProps {
 
 function NetworkBreadcrumb({ networkId, isCurrentPage }: NetworkBreadcrumbProps) {
   const navigate = useNavigate()
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
   const { workspaceId } = useSelectedWorkspaceId()
 
   const network = client.useQuery('get', '/v1/workspaces/{workspaceId}/networks/{id}', {
@@ -253,7 +253,7 @@ interface BoxBreadcrumbProps {
 function BoxBreadcrumb({ boxId, isCurrentPage }: BoxBreadcrumbProps) {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
 
   const box = client.useQuery('get', '/v1/workspaces/{workspaceId}/boxes/{id}', {
     params: {
@@ -280,11 +280,11 @@ function BoxBreadcrumb({ boxId, isCurrentPage }: BoxBreadcrumbProps) {
   )
 }
 
-interface UnboxedBreadcrumbsProps {
+interface DboxedBreadcrumbsProps {
   className?: string
 }
 
-export function UnboxedBreadcrumbs({ className }: UnboxedBreadcrumbsProps) {
+export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
   const location = useLocation()
 
   // Parse the current path to determine what breadcrumbs to show

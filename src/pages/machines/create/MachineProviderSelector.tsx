@@ -3,7 +3,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Cloud, Server } from "lucide-react"
 import type { UseFormReturn } from "react-hook-form"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useUnboxedQueryClient } from "@/api/api"
+import { useDboxedQueryClient } from "@/api/api"
 import type { components } from "@/api/models/schema"
 
 interface MachineProviderSelectorProps {
@@ -12,7 +12,7 @@ interface MachineProviderSelectorProps {
 
 export function MachineProviderSelector({ form }: MachineProviderSelectorProps) {
   const { workspaceId } = useSelectedWorkspaceId()
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
 
   const machineProvidersQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/machine-providers', {
     params: {

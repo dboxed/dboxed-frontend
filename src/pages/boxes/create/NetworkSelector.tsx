@@ -3,7 +3,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Network } from "lucide-react"
 import type { UseFormReturn } from "react-hook-form"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useUnboxedQueryClient } from "@/api/api"
+import { useDboxedQueryClient } from "@/api/api"
 import type { components } from "@/api/models/schema"
 
 interface NetworkSelectorProps {
@@ -12,7 +12,7 @@ interface NetworkSelectorProps {
 
 export function NetworkSelector({ form }: NetworkSelectorProps) {
   const { workspaceId } = useSelectedWorkspaceId()
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
 
   const networksQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/networks', {
     params: {

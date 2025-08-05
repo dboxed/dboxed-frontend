@@ -7,11 +7,11 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/schema"
-import { useUnboxedQueryClient } from "@/api/api.ts";
+import { useDboxedQueryClient } from "@/api/api.ts";
 
 export function CreateMachinePage() {
   const { workspaceId } = useSelectedWorkspaceId()
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
 
   const machineProviders = client.useQuery('get', "/v1/workspaces/{workspaceId}/machine-providers", {
     params: {

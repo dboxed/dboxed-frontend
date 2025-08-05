@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Cloud } from "lucide-react"
 import type { UseFormReturn } from "react-hook-form"
-import { useUnboxedQueryClient } from "@/api/api"
+import { useDboxedQueryClient } from "@/api/api"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/schema"
 
@@ -14,7 +14,7 @@ interface AwsMachineConfigFormProps {
 
 export function AwsMachineConfigForm({ form }: AwsMachineConfigFormProps) {
   const { workspaceId } = useSelectedWorkspaceId()
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
   
   const machineProviderId = form.watch("machine_provider")
   

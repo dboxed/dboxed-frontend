@@ -3,7 +3,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Package } from "lucide-react"
 import type { UseFormReturn } from "react-hook-form"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useUnboxedQueryClient } from "@/api/api"
+import { useDboxedQueryClient } from "@/api/api"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import type { components } from "@/api/models/schema"
 import { useMemo } from "react"
@@ -14,7 +14,7 @@ interface BoxSelectorProps {
 
 export function BoxSelector({ form }: BoxSelectorProps) {
   const { workspaceId } = useSelectedWorkspaceId()
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
 
   const boxesQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/boxes', {
     params: {

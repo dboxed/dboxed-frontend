@@ -1,5 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar"
-import { UnboxedBreadcrumbs } from "@/components/UnboxedBreadcrumbs"
+import { DboxedBreadcrumbs } from "@/components/DboxedBreadcrumbs"
 import { Separator } from "@/components/ui/separator"
 import {
   SidebarInset,
@@ -25,7 +25,7 @@ export default function MainLayout({ }: MainLayoutProps) {
               orientation="vertical"
               className="mr-2 data-[orientation=vertical]:h-4"
             />
-            <UnboxedBreadcrumbs />
+            <DboxedBreadcrumbs />
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">

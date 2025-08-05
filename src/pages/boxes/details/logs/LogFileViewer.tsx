@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react"
 import type { components } from "@/api/models/schema"
 import { LazyLog } from "@melloware/react-logviewer"
 import { envVars } from "@/env.ts";
-import { useUnboxedApiEventSource } from "@/api/api.ts";
+import { useDboxedApiEventSource } from "@/api/api.ts";
 
 interface LogFileViewerProps {
   workspaceId: number
@@ -80,7 +80,7 @@ export function LogFileViewer({ workspaceId, boxId, logFileName }: LogFileViewer
     }
   }
 
-  useUnboxedApiEventSource(url.toString(), {
+  useDboxedApiEventSource(url.toString(), {
     enabled: !!logFileName,
     onopen: () => {
       // clear it before the first line gets received

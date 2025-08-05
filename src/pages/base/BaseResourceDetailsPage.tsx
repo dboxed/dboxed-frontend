@@ -1,4 +1,4 @@
-import { useUnboxedQueryClient } from "@/api/api"
+import { useDboxedQueryClient } from "@/api/api"
 import { toast } from "sonner"
 import type { FieldValues } from "react-hook-form"
 import type { paths } from "@/api/models/schema"
@@ -13,7 +13,7 @@ interface BaseResourceDetailsPageProps<T extends FieldValues, U extends FieldVal
 }
 
 export function BaseResourceDetailsPage<T extends FieldValues, U extends FieldValues>(props: BaseResourceDetailsPageProps<T, U>) {
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
 
   // Fetch the resource
   const resourceQuery = client.useQuery('get', props.resourcePath as any, {

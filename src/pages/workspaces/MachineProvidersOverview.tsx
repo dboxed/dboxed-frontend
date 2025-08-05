@@ -3,14 +3,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { useNavigate } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher"
-import { useUnboxedQueryClient } from "@/api/api"
+import { useDboxedQueryClient } from "@/api/api"
 import { Cloud, Plus, ArrowRight } from "lucide-react"
 import type { components } from "@/api/models/schema"
 
 export function MachineProvidersOverview() {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
 
   // Fetch machine providers
   const machineProvidersQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/machine-providers', {

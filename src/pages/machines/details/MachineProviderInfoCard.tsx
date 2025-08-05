@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
-import { useUnboxedQueryClient } from "@/api/api"
+import { useDboxedQueryClient } from "@/api/api"
 import { Link } from "react-router"
 
 interface MachineProviderInfoCardProps {
@@ -14,7 +14,7 @@ export function MachineProviderInfoCard({
   machineProviderType,
   workspaceId 
 }: MachineProviderInfoCardProps) {
-  const client = useUnboxedQueryClient()
+  const client = useDboxedQueryClient()
 
   const machineProviderQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/machine-providers/{id}', {
     params: {

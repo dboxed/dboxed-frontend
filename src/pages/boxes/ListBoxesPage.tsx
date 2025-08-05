@@ -90,10 +90,10 @@ export function ListBoxesPage() {
       },
     },
     {
-      accessorKey: "unboxed_version",
+      accessorKey: "dboxed_version",
       header: "Version",
       cell: ({ row }) => {
-        const version = row.getValue("unboxed_version") as string
+        const version = row.getValue("dboxed_version") as string
         return (
           <div className="text-sm text-muted-foreground font-mono">
             {version}

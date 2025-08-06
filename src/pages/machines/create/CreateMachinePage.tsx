@@ -49,6 +49,10 @@ export function CreateMachinePage() {
         }
       }}
       defaultValues={{
+        aws: {
+          instance_type: "t3.micro",
+          root_volume_size: 20
+        },
         hetzner: {
           server_location: "fsn1",
           server_type: "cpx11"

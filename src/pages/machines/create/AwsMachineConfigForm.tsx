@@ -7,6 +7,7 @@ import type { UseFormReturn } from "react-hook-form"
 import { useDboxedQueryClient } from "@/api/api"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/schema"
+import { useEffect } from "react"
 
 interface AwsMachineConfigFormProps {
   form: UseFormReturn<any>
@@ -32,6 +33,13 @@ export function AwsMachineConfigForm({ form }: AwsMachineConfigFormProps) {
 
   const machineProvider = machineProviderQuery.data
   const subnets = machineProvider?.aws?.subnets || []
+
+  // Set first subnet as default when subnets are loaded
+  useEffect(() => {
+    if (subnets.length > 0 && !form.getValues("aws.subnet_id")) {
+      form.setValue("aws.subnet_id", subnets[0].subnet_id)
+    }
+  }, [subnets, form])
 
   // Common AWS instance types
   const instanceTypes = [

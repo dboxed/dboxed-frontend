@@ -830,8 +830,6 @@ export interface components {
             cloud_token?: string;
             robot_password?: string;
             robot_username?: string;
-            /** Format: int64 */
-            robot_vswitch_id?: number;
         };
         UpdateNetwork: {
             /**

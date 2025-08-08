@@ -100,9 +100,6 @@ export function MachinesOverview() {
                           </Badge>
                         )}
                       </div>
-                      <div className="text-xs text-muted-foreground font-mono">
-                        {machine.dboxed_version}
-                      </div>
                     </div>
                   ))}
                 </div>

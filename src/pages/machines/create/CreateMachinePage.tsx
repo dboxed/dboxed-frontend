@@ -51,7 +51,8 @@ export function CreateMachinePage() {
       defaultValues={{
         aws: {
           instance_type: "t3.micro",
-          root_volume_size: 20
+          root_volume_size: 20,
+          subnet_id: "",
         },
         hetzner: {
           server_location: "fsn1",

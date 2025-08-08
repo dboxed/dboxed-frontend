@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { BaseCreatePage } from "@/pages/base/BaseCreatePage.tsx"
-import { NetworkTypeSelector, NetbirdConfigForm } from "@/pages/networks/create/index.ts"
+import { NetbirdConfigForm, NetworkTypeSelector } from "@/pages/networks/create/index.ts"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";

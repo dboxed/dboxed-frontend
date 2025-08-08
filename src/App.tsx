@@ -14,7 +14,7 @@ import { Toaster } from "sonner";
 import { CreateMachineProviderPage } from "@/pages/machine-providers/create/CreateMachineProviderPage.tsx";
 import { CreateMachinePage, MachineDetailsPage } from "@/pages/machines";
 import { WorkspaceDashboardPage } from "@/pages/workspaces/WorkspaceDashboardPage.tsx";
-import { ListNetworksPage, CreateNetworkPage, NetworkDetailsPage } from "@/pages/networks";
+import { CreateNetworkPage, ListNetworksPage, NetworkDetailsPage } from "@/pages/networks";
 import { BoxDetailsPage } from "@/pages/boxes/details";
 import { CreateBoxPage, ListBoxesPage } from "@/pages/boxes";
 

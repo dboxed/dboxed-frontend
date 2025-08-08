@@ -1,5 +1,5 @@
 import { BaseResourceDetailsPage } from "@/pages/base/BaseResourceDetailsPage.tsx"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs.tsx"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"

@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Cloud, Monitor, LayoutDashboard, Network, Box } from "lucide-react"
+import { Box, Cloud, LayoutDashboard, Monitor, Network } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"

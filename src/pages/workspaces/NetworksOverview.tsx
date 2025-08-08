@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { useNavigate } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher"
 import { useDboxedQueryClient } from "@/api/api"
-import { Network, Plus, ArrowRight } from "lucide-react"
+import { ArrowRight, Network, Plus } from "lucide-react"
 import type { components } from "@/api/models/schema"
 
 export function NetworksOverview() {

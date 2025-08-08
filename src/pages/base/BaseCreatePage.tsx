@@ -3,8 +3,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { useDboxedQueryClient } from "@/api/api"
 import { useNavigate } from "react-router"
 import { toast } from "sonner"
+import type { FieldValues, UseFormReturn } from "react-hook-form"
 import { useForm } from "react-hook-form"
-import type { UseFormReturn, FieldValues } from "react-hook-form"
 import { Form } from "@/components/ui/form.tsx";
 import type { paths } from "@/api/models/schema";
 import { useQueryClient } from "@tanstack/react-query";

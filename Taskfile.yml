@@ -1,0 +1,17 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  build:
+    cmds:
+      - rm -rf dist
+      - npm run build
+
+  docker-push:
+    vars:
+      TAG: latest
+      REPO: ghcr.io/dboxed/dboxed-frontend
+    cmds:
+      - docker buildx create --name container --driver=docker-container || true
+      - docker buildx build --tag {{ .REPO }}:{{ .TAG }} --platform linux/amd64,linux/arm64 --builder container --push --progress=plain .

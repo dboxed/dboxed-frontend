@@ -11,4 +11,15 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (/env.ts/.test(id)) {
+            return 'env'
+          }
+        },
+      },
+    }
+  },
 })

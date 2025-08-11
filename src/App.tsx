@@ -18,6 +18,7 @@ import { CreateNetworkPage, ListNetworksPage, NetworkDetailsPage } from "@/pages
 import { BoxDetailsPage } from "@/pages/boxes/details";
 import { CreateBoxPage, ListBoxesPage } from "@/pages/boxes";
 import { AdminWorkspacesListPage } from "@/pages/workspaces/AdminWorkspacesListPage.tsx";
+import { AdminListUsersPage } from "@/pages/admin/AdminListUsersPage.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -84,7 +85,10 @@ function AuthenticatedApp() {
           <Route path="/workspaces/:workspaceId/networks" element={<ListNetworksPage/>}/>
           <Route path="/workspaces/:workspaceId/networks/:networkId" element={<NetworkDetailsPage/>}/>
           {isAdminQuery.isAdmin && (
-            <Route path="/admin/workspaces" element={<AdminWorkspacesListPage/>}/>
+            <>
+              <Route path="/admin/workspaces" element={<AdminWorkspacesListPage/>}/>
+              <Route path="/admin/users" element={<AdminListUsersPage/>}/>
+            </>
           )}
         </Route>
         <Route path="/workspaces/create" element={<CreateWorkspacePage/>}/>

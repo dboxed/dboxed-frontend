@@ -106,6 +106,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 users */
+        get: operations["get-v1-users"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/users/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 users by ID */
+        get: operations["get-v1-users-by-id"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/workspaces": {
         parameters: {
             query?: never;
@@ -647,6 +681,16 @@ export interface components {
             /** Format: int64 */
             total_count: number;
         };
+        ListBodyUser: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["User"][] | null;
+            /** Format: int64 */
+            total_count: number;
+        };
         ListBodyWorkspace: {
             /**
              * Format: uri
@@ -874,7 +918,7 @@ export interface components {
             avatar: string;
             email: string;
             id: string;
-            isAdmin: boolean;
+            isAdmin?: boolean;
             name: string;
         };
         Workspace: {
@@ -891,7 +935,7 @@ export interface components {
             name: string;
         };
         WorkspaceAccess: {
-            userID: string;
+            user: components["schemas"]["User"];
         };
     };
     responses: never;
@@ -1065,6 +1109,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ListBodyServerType"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListBodyUser"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-users-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["User"];
                 };
             };
             /** @description Error */

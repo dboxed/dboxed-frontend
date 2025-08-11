@@ -1,4 +1,4 @@
-import { Box, Cloud, LayoutDashboard, Monitor, Network } from "lucide-react"
+import { Box, Cloud, LayoutDashboard, Monitor, Network, Users } from "lucide-react"
 
 import { NavItems } from "@/components/nav-items.tsx"
 import { NavUser } from "@/components/nav-user"
@@ -40,6 +40,11 @@ const navAdmin = [
     title: "All Workspaces",
     navigate: "/admin/workspaces",
     icon: LayoutDashboard,
+  },
+  {
+    title: "Users",
+    navigate: "/admin/users",
+    icon: Users,
   },
 ]
 

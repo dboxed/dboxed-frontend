@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useNavigate } from "react-router"
 import type { ColumnDef } from "@tanstack/react-table"
 import type { components } from "@/api/models/schema";
@@ -34,24 +35,36 @@ export function AdminWorkspacesListPage() {
         const userCount = access?.length || 0
         
         return (
-          <div className="flex flex-wrap gap-1">
-            {userCount > 0 ? (
-              <>
-                {access!.slice(0, 3).map((userAccess, index) => (
-                  <Badge key={index} variant="secondary" className="text-xs">
-                    {userAccess.userID}
-                  </Badge>
-                ))}
-                {userCount > 3 && (
-                  <Badge variant="outline" className="text-xs">
-                    +{userCount - 3} more
-                  </Badge>
-                )}
-              </>
-            ) : (
-              <span className="text-sm text-muted-foreground">No users</span>
-            )}
-          </div>
+          <TooltipProvider>
+            <div className="flex flex-wrap gap-1">
+              {userCount > 0 ? (
+                <>
+                  {access!.slice(0, 3).map((userAccess, index) => (
+                    <Tooltip key={index}>
+                      <TooltipTrigger asChild>
+                        <Badge variant="secondary" className="text-xs cursor-help">
+                          {userAccess.user.name}
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <div className="text-xs">
+                          <div className="font-medium">{userAccess.user.email}</div>
+                          <div className="text-muted-foreground">ID: {userAccess.user.id}</div>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  ))}
+                  {userCount > 3 && (
+                    <Badge variant="outline" className="text-xs">
+                      +{userCount - 3} more
+                    </Badge>
+                  )}
+                </>
+              ) : (
+                <span className="text-sm text-muted-foreground">No users</span>
+              )}
+            </div>
+          </TooltipProvider>
         )
       },
     },

@@ -57,7 +57,7 @@ export function AdminListUsersPage() {
   return (
     <BaseListPage<components["schemas"]["User"]>
       title="Users"
-      resourcePath="/v1/users"
+      resourcePath="/v1/admin/users"
       columns={columns}
       emptyStateMessage="No users found"
       searchColumn="name"

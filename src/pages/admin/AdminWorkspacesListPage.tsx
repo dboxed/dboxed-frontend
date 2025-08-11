@@ -106,7 +106,7 @@ export function AdminWorkspacesListPage() {
   return (
     <BaseListPage<components["schemas"]["Workspace"]>
       title="Workspaces"
-      resourcePath="/v1/workspaces"
+      resourcePath="/v1/admin/workspaces"
       columns={columns}
       emptyStateMessage="No workspaces found"
       searchColumn="name"

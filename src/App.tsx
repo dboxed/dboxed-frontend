@@ -57,7 +57,7 @@ function AuthenticatedApp() {
     let needNewWorkspaceId = false
     if (!workspaceId) {
       needNewWorkspaceId = true
-    } else if (!workspaces.isRefetching && !workspaces.data?.items?.find(x => x.id == workspaceId)) {
+    } else if (!isAdminQuery.isAdmin && !workspaces.isRefetching && !workspaces.data?.items?.find(x => x.id == workspaceId)) {
       needNewWorkspaceId = true
     }
     if (needNewWorkspaceId) {

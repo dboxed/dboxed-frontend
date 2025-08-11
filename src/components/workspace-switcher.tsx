@@ -67,7 +67,7 @@ export function WorkspaceSwitcher({
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">Workspace</span>
                 {selectedWorkspace && <span className="truncate text-xs">{selectedWorkspace.name}</span>}
-                {!selectedWorkspace && <span className="truncate text-xs">No Workspace. Create one!</span>}
+                {!selectedWorkspace && <span className="truncate text-xs">Selected workspace not found!</span>}
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
@@ -81,7 +81,7 @@ export function WorkspaceSwitcher({
             <DropdownMenuLabel className="text-muted-foreground text-xs">
               Workspaces
             </DropdownMenuLabel>
-            {workspaces.map((workspace, index) => (
+            {workspaces.map((workspace) => (
               <DropdownMenuItem
                 key={workspace.name}
                 onSelect={() => handleSelectWorkspace(workspace)}

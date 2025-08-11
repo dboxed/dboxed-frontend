@@ -4,6 +4,23 @@
  */
 
 export interface paths {
+    "/healthz": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get healthz */
+        get: operations["get-healthz"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/auth/me": {
         parameters: {
             query?: never;
@@ -529,6 +546,14 @@ export interface components {
             /** Format: int64 */
             uid: number;
         };
+        Healthz: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            Ok: boolean;
+        };
         HetznerLocation: {
             city: string;
             country: string;
@@ -767,9 +792,6 @@ export interface components {
             Net: string;
             VATRate: string;
         };
-        ResourceAccess: {
-            roles: string[] | null;
-        };
         ServerType: {
             Architecture: string;
             CPUType: string;
@@ -851,11 +873,9 @@ export interface components {
             readonly $schema?: string;
             avatar: string;
             email: string;
+            id: string;
+            isAdmin: boolean;
             name: string;
-            resource_access: {
-                [key: string]: components["schemas"]["ResourceAccess"];
-            };
-            sub: string;
         };
         Workspace: {
             /**
@@ -863,9 +883,15 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            access: components["schemas"]["WorkspaceAccess"][] | null;
+            /** Format: date-time */
+            created_at: string;
             /** Format: int64 */
             id: number;
             name: string;
+        };
+        WorkspaceAccess: {
+            userID: string;
         };
     };
     responses: never;
@@ -876,6 +902,35 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    "get-healthz": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Healthz"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-v1-auth-me": {
         parameters: {
             query?: never;

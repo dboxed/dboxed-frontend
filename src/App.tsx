@@ -13,10 +13,11 @@ import { useDboxedQueryClient } from "@/api/api.ts";
 import { Toaster } from "sonner";
 import { CreateMachineProviderPage } from "@/pages/machine-providers/create/CreateMachineProviderPage.tsx";
 import { CreateMachinePage, MachineDetailsPage } from "@/pages/machines";
-import { WorkspaceDashboardPage } from "@/pages/workspaces/WorkspaceDashboardPage.tsx";
+import { WorkspaceDashboardPage } from "@/pages/dashboard/WorkspaceDashboardPage.tsx";
 import { CreateNetworkPage, ListNetworksPage, NetworkDetailsPage } from "@/pages/networks";
 import { BoxDetailsPage } from "@/pages/boxes/details";
 import { CreateBoxPage, ListBoxesPage } from "@/pages/boxes";
+import { AdminWorkspacesListPage } from "@/pages/workspaces/AdminWorkspacesListPage.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -51,7 +52,7 @@ function AuthenticatedApp() {
 
   if (workspaces.isLoading) return <div>Loading workspaces...</div>;
 
-  if (location.pathname !== "/workspaces/create") {
+  if (location.pathname !== "/workspaces/create" && !location.pathname.startsWith("/admin/")) {
     let needNewWorkspaceId = false
     if (!workspaceId) {
       needNewWorkspaceId = true
@@ -82,15 +83,15 @@ function AuthenticatedApp() {
           <Route path="/workspaces/:workspaceId/machines/:machineId" element={<MachineDetailsPage/>}/>
           <Route path="/workspaces/:workspaceId/networks" element={<ListNetworksPage/>}/>
           <Route path="/workspaces/:workspaceId/networks/:networkId" element={<NetworkDetailsPage/>}/>
+          {isAdminQuery.isAdmin && (
+            <Route path="/admin/workspaces" element={<AdminWorkspacesListPage/>}/>
+          )}
         </Route>
         <Route path="/workspaces/create" element={<CreateWorkspacePage/>}/>
         <Route path="/workspaces/:workspaceId/machine-providers/create" element={<CreateMachineProviderPage/>}/>
         <Route path="/workspaces/:workspaceId/boxes/create" element={<CreateBoxPage/>}/>
         <Route path="/workspaces/:workspaceId/machines/create" element={<CreateMachinePage/>}/>
         <Route path="/workspaces/:workspaceId/networks/create" element={<CreateNetworkPage/>}/>
-        {isAdminQuery.isAdmin && (
-          <></>
-        )}
       </Routes>
     </div>
   )

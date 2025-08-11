@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router"
-import { useSelectedWorkspaceId } from "@/components/workspace-switcher"
-import { useDboxedQueryClient } from "@/api/api"
-import { BasePage } from "@/pages/base/BasePage"
-import { MachineProvidersOverview } from "./MachineProvidersOverview"
-import { MachinesOverview } from "./MachinesOverview"
-import { NetworksOverview } from "./NetworksOverview"
-import { BoxesOverview } from "./BoxesOverview"
-import { DeleteButton } from "@/components/DeleteButton"
+import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
+import { useDboxedQueryClient } from "@/api/api.ts"
+import { BasePage } from "@/pages/base/BasePage.tsx"
+import { MachineProvidersOverview } from "./MachineProvidersOverview.tsx"
+import { MachinesOverview } from "./MachinesOverview.tsx"
+import { NetworksOverview } from "./NetworksOverview.tsx"
+import { BoxesOverview } from "./BoxesOverview.tsx"
+import { DeleteButton } from "@/components/DeleteButton.tsx"
 import { useQueryClient } from "@tanstack/react-query";
 
 export function WorkspaceDashboardPage() {

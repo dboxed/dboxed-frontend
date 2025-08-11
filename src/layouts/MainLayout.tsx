@@ -8,10 +8,10 @@ interface MainLayoutProps {
   isAdmin?: boolean
 }
 
-export default function MainLayout({ }: MainLayoutProps) {
+export default function MainLayout({ isAdmin }: MainLayoutProps) {
   return (
     <SidebarProvider>
-      <AppSidebar/>
+      <AppSidebar isAdmin = {isAdmin} />
       <SidebarInset>
         <header
           className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">

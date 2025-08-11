@@ -1,7 +1,6 @@
-import * as React from "react"
 import { Box, Cloud, LayoutDashboard, Monitor, Network } from "lucide-react"
 
-import { NavMain } from "@/components/nav-main"
+import { NavItems } from "@/components/nav-items.tsx"
 import { NavUser } from "@/components/nav-user"
 import { WorkspaceSwitcher } from "@/components/workspace-switcher.tsx"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail, } from "@/components/ui/sidebar"
@@ -36,23 +35,38 @@ const navMain = [
   },
 ]
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+const navAdmin = [
+  {
+    title: "All Workspaces",
+    navigate: "/admin/workspaces",
+    icon: LayoutDashboard,
+  },
+]
+
+interface AppSidebarProps {
+  isAdmin?: boolean | undefined
+}
+
+export function AppSidebar({ isAdmin }: AppSidebarProps) {
   const client = useDboxedQueryClient()
   const user = useCurrentUser()
   const workspaces = client.useQuery('get', '/v1/workspaces')
 
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon">
       <SidebarHeader>
-        <WorkspaceSwitcher workspaces={workspaces.data?.items || []} />
+        <WorkspaceSwitcher workspaces={workspaces.data?.items || []}/>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={navMain} />
+        <NavItems title={"DBoxed"} items={navMain}/>
       </SidebarContent>
+      {isAdmin && <SidebarContent>
+        <NavItems title={"Admin"} items={navAdmin}/>
+      </SidebarContent>}
       <SidebarFooter>
-        <NavUser user={user.user} />
+        <NavUser user={user.user}/>
       </SidebarFooter>
-      <SidebarRail />
+      <SidebarRail/>
     </Sidebar>
   )
 }

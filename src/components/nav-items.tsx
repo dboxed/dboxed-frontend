@@ -24,9 +24,11 @@ interface Item {
   items?: Item[]
 }
 
-export function NavMain({
+export function NavItems({
+  title,
   items,
 }: {
+  title: string,
   items: Item[]
 }) {
   const navigate = useNavigate()
@@ -41,7 +43,7 @@ export function NavMain({
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Dboxed</SidebarGroupLabel>
+      <SidebarGroupLabel>{title}</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible

@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router"
-import { useSelectedWorkspaceId } from "@/components/workspace-switcher"
-import { useDboxedQueryClient } from "@/api/api"
+import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
+import { useDboxedQueryClient } from "@/api/api.ts"
 import { Package } from "lucide-react"
 import type { components } from "@/api/models/schema"
-import { WorkspaceOverviewCard } from "@/pages/workspaces/WorkspaceOverviewCard.tsx"
+import { WorkspaceOverviewCard } from "@/pages/dashboard/WorkspaceOverviewCard.tsx"
 
 export function BoxesOverview() {
   const navigate = useNavigate()

@@ -31,12 +31,8 @@ export const useCurrentUser = () => {
 export const useIsAdmin = () => {
   const userQuery = useCurrentUser()
 
-  const isAdmin = !!userQuery.user && Object.values(userQuery.user?.resource_access || {}).some(
-    access => Array.isArray(access.roles) && access.roles.includes('dboxed-admin')
-  );
-
   return {
-    isAdmin: isAdmin,
+    isAdmin: !!userQuery.user?.isAdmin,
     isLoading: userQuery.isLoading,
     isError: userQuery.isError,
     error: userQuery.error,

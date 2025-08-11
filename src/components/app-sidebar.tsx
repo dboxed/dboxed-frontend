@@ -53,14 +53,12 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ isAdmin }: AppSidebarProps) {
-  const client = useDboxedQueryClient()
   const user = useCurrentUser()
-  const workspaces = client.useQuery('get', '/v1/workspaces')
 
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <WorkspaceSwitcher workspaces={workspaces.data?.items || []}/>
+        <WorkspaceSwitcher/>
       </SidebarHeader>
       <SidebarContent>
         <NavItems title={"DBoxed"} items={navMain}/>

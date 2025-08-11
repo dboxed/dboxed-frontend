@@ -11,6 +11,8 @@ import {
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar, } from "@/components/ui/sidebar"
 import type { components } from "@/api/models/schema";
 import { useLocation, useNavigate } from "react-router";
+import { useDboxedQueryClient } from "@/api/api.ts";
+import { useCurrentUser, useIsAdmin } from "@/api/auth.ts";
 
 export function useSelectedWorkspaceId() {
   const location = useLocation()
@@ -41,15 +43,26 @@ export function useSelectedWorkspaceId() {
 }
 
 export function WorkspaceSwitcher({
-  workspaces,
 }: {
-  workspaces: components["schemas"]["Workspace"][]
 }) {
-  const { isMobile } = useSidebar()
   const navigate = useNavigate()
+  const client = useDboxedQueryClient()
+  const isAdminQuery = useIsAdmin()
+
+  const { isMobile } = useSidebar()
+
+  const curUserWorkspaces = client.useQuery('get', '/v1/workspaces')
+  const adminWorkspaces = client.useQuery('get', '/v1/admin/workspaces', {}, {
+    enabled: isAdminQuery.isAdmin
+  })
 
   const { workspaceId, setWorkspaceId} = useSelectedWorkspaceId()
-  const selectedWorkspace = workspaces.find(w => w.id == workspaceId)
+  const knownWorkspaces = adminWorkspaces.data?.items || curUserWorkspaces.data?.items || []
+  const selectedWorkspace = knownWorkspaces.find(w => w.id == workspaceId)
+  
+  // Check if selected workspace is in user's accessible workspaces (not admin view)
+  const isWorkspaceAccessible = curUserWorkspaces.data?.items?.find(w => w.id == workspaceId)
+  const isWorkspaceNotAccessible = workspaceId && !isWorkspaceAccessible
 
   const handleSelectWorkspace = (w: components["schemas"]["Workspace"]) => {
     setWorkspaceId(w.id)
@@ -62,7 +75,9 @@ export function WorkspaceSwitcher({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className={`data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground ${
+                isWorkspaceNotAccessible ? 'text-red-600 hover:text-red-700' : ''
+              }`}
             >
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">Workspace</span>
@@ -81,7 +96,7 @@ export function WorkspaceSwitcher({
             <DropdownMenuLabel className="text-muted-foreground text-xs">
               Workspaces
             </DropdownMenuLabel>
-            {workspaces.map((workspace) => (
+            {curUserWorkspaces.data?.items?.map((workspace) => (
               <DropdownMenuItem
                 key={workspace.name}
                 onSelect={() => handleSelectWorkspace(workspace)}

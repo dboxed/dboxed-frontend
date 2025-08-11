@@ -1,11 +1,9 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { useNavigate } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher"
 import { useDboxedQueryClient } from "@/api/api"
-import { ArrowRight, Monitor, Plus } from "lucide-react"
+import { Monitor } from "lucide-react"
 import type { components } from "@/api/models/schema"
+import { WorkspaceOverviewCard } from "@/pages/workspaces/WorkspaceOverviewCard.tsx"
 
 export function MachinesOverview() {
   const navigate = useNavigate()
@@ -38,96 +36,36 @@ export function MachinesOverview() {
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 3)
 
+  const items = recentMachines.map((machine: components["schemas"]["Machine"]) => ({
+    id: machine.id,
+    name: machine.name,
+    onClick: () => navigate(`/workspaces/${workspaceId}/machines/${machine.id}`),
+    badges: machine.machine_provider_type ? [{ text: machine.machine_provider_type }] : undefined,
+  }))
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Monitor className="h-5 w-5" />
-          Machines
-          <Badge variant="secondary" className="ml-auto">
-            {machines.length}
-          </Badge>
-        </CardTitle>
-        <CardDescription>
-          Your deployed and configured machines
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {machinesQuery.isLoading && (
-          <div className="text-sm text-muted-foreground">Loading machines...</div>
-        )}
-
-        {machinesQuery.error && (
-          <div className="text-sm text-red-600">Failed to load machines</div>
-        )}
-
-        {!machinesQuery.isLoading && !machinesQuery.error && (
-          <>
-            {machines.length === 0 ? (
-              <div className="text-center py-6">
-                <div className="text-sm text-muted-foreground mb-4">
-                  No machines created yet
-                </div>
-                <Button 
-                  onClick={() => navigate(`/workspaces/${workspaceId}/machines/create`)}
-                  size="sm"
-                  disabled={machineProviders.length === 0}
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create First Machine
-                </Button>
-                {machineProviders.length === 0 && (
-                  <div className="text-xs text-muted-foreground mt-2">
-                    Create a machine provider first
-                  </div>
-                )}
-              </div>
-            ) : (
-              <>
-                <div className="space-y-2">
-                  <div className="text-sm font-medium">Recent Machines</div>
-                  {recentMachines.map((machine: components["schemas"]["Machine"]) => (
-                    <div
-                      key={machine.id}
-                      className="flex items-center justify-between p-2 border rounded-md hover:bg-accent cursor-pointer"
-                      onClick={() => navigate(`/workspaces/${workspaceId}/machines/${machine.id}`)}
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className="text-sm font-medium">{machine.name}</div>
-                        {machine.machine_provider_type && (
-                          <Badge variant="outline" className="text-xs">
-                            {machine.machine_provider_type}
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex gap-2 pt-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => navigate(`/workspaces/${workspaceId}/machines`)}
-                    className="flex-1"
-                  >
-                    View All
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
-                  <Button 
-                    size="sm"
-                    onClick={() => navigate(`/workspaces/${workspaceId}/machines/create`)}
-                    disabled={machineProviders.length === 0}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add New
-                  </Button>
-                </div>
-              </>
-            )}
-          </>
-        )}
-      </CardContent>
-    </Card>
+    <WorkspaceOverviewCard
+      icon={<Monitor className="h-5 w-5" />}
+      title="Machines"
+      description="Your deployed and configured machines"
+      count={machines.length}
+      isLoading={machinesQuery.isLoading}
+      error={!!machinesQuery.error}
+      items={items}
+      emptyState={{
+        message: "No machines created yet",
+        createButtonText: "Create First Machine",
+        onCreateClick: () => navigate(`/workspaces/${workspaceId}/machines/create`),
+        isCreateDisabled: machineProviders.length === 0,
+        createDisabledMessage: "Create a machine provider first",
+      }}
+      actions={{
+        viewAllText: "View All",
+        onViewAllClick: () => navigate(`/workspaces/${workspaceId}/machines`),
+        addNewText: "Add New",
+        onAddNewClick: () => navigate(`/workspaces/${workspaceId}/machines/create`),
+        isAddNewDisabled: machineProviders.length === 0,
+      }}
+    />
   )
 } 

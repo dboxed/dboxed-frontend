@@ -1,11 +1,9 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { useNavigate } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher"
 import { useDboxedQueryClient } from "@/api/api"
-import { ArrowRight, Network, Plus } from "lucide-react"
+import { Network } from "lucide-react"
 import type { components } from "@/api/models/schema"
+import { WorkspaceOverviewCard } from "@/pages/workspaces/WorkspaceOverviewCard.tsx"
 
 export function NetworksOverview() {
   const navigate = useNavigate()
@@ -28,7 +26,7 @@ export function NetworksOverview() {
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 3)
 
-  const getStatusVariant = (status: string) => {
+  const getStatusVariant = (status: string): "default" | "secondary" | "outline" | "destructive" => {
     switch (status.toLowerCase()) {
       case 'active':
         return 'default'
@@ -41,93 +39,34 @@ export function NetworksOverview() {
     }
   }
 
+  const items = recentNetworks.map((network: components["schemas"]["Network"]) => ({
+    id: network.id,
+    name: network.name,
+    onClick: () => navigate(`/workspaces/${workspaceId}/networks/${network.id}`),
+    badges: [{ text: network.type }],
+    statusBadge: { text: network.status, variant: getStatusVariant(network.status) },
+  }))
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Network className="h-5 w-5" />
-          Networks
-          <Badge variant="secondary" className="ml-auto">
-            {networks.length}
-          </Badge>
-        </CardTitle>
-        <CardDescription>
-          Manage your network configurations
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {networksQuery.isLoading && (
-          <div className="text-sm text-muted-foreground">Loading networks...</div>
-        )}
-
-        {networksQuery.error && (
-          <div className="text-sm text-red-600">Failed to load networks</div>
-        )}
-
-        {!networksQuery.isLoading && !networksQuery.error && (
-          <>
-            {networks.length === 0 ? (
-              <div className="text-center py-6">
-                <div className="text-sm text-muted-foreground mb-4">
-                  No networks configured yet
-                </div>
-                <Button 
-                  onClick={() => navigate(`/workspaces/${workspaceId}/networks/create`)}
-                  size="sm"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create First Network
-                </Button>
-              </div>
-            ) : (
-              <>
-                <div className="space-y-2">
-                  <div className="text-sm font-medium">Recent Networks</div>
-                  {recentNetworks.map((network: components["schemas"]["Network"]) => (
-                    <div
-                      key={network.id}
-                      className="flex items-center justify-between p-2 border rounded-md hover:bg-accent cursor-pointer"
-                      onClick={() => navigate(`/workspaces/${workspaceId}/networks/${network.id}`)}
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className="text-sm font-medium">{network.name}</div>
-                        <Badge variant="outline" className="text-xs capitalize">
-                          {network.type}
-                        </Badge>
-                      </div>
-                      <Badge 
-                        variant={getStatusVariant(network.status)}
-                        className="text-xs capitalize"
-                      >
-                        {network.status}
-                      </Badge>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex gap-2 pt-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => navigate(`/workspaces/${workspaceId}/networks`)}
-                    className="flex-1"
-                  >
-                    View All
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
-                  <Button 
-                    size="sm"
-                    onClick={() => navigate(`/workspaces/${workspaceId}/networks/create`)}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add New
-                  </Button>
-                </div>
-              </>
-            )}
-          </>
-        )}
-      </CardContent>
-    </Card>
+    <WorkspaceOverviewCard
+      icon={<Network className="h-5 w-5" />}
+      title="Networks"
+      description="Manage your network configurations"
+      count={networks.length}
+      isLoading={networksQuery.isLoading}
+      error={!!networksQuery.error}
+      items={items}
+      emptyState={{
+        message: "No networks configured yet",
+        createButtonText: "Create First Network",
+        onCreateClick: () => navigate(`/workspaces/${workspaceId}/networks/create`),
+      }}
+      actions={{
+        viewAllText: "View All",
+        onViewAllClick: () => navigate(`/workspaces/${workspaceId}/networks`),
+        addNewText: "Add New",
+        onAddNewClick: () => navigate(`/workspaces/${workspaceId}/networks/create`),
+      }}
+    />
   )
 } 

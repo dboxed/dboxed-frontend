@@ -1,11 +1,9 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { useNavigate } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher"
 import { useDboxedQueryClient } from "@/api/api"
-import { ArrowRight, Cloud, Plus } from "lucide-react"
+import { Cloud } from "lucide-react"
 import type { components } from "@/api/models/schema"
+import { WorkspaceOverviewCard } from "@/pages/workspaces/WorkspaceOverviewCard.tsx"
 
 export function MachineProvidersOverview() {
   const navigate = useNavigate()
@@ -28,93 +26,37 @@ export function MachineProvidersOverview() {
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 3)
 
+  const items = recentMachineProviders.map((provider: components["schemas"]["MachineProvider"]) => ({
+    id: provider.id,
+    name: provider.name,
+    onClick: () => navigate(`/workspaces/${workspaceId}/machine-providers/${provider.id}`),
+    badges: [{ text: provider.type }],
+    statusBadge: { 
+      text: provider.status, 
+      variant: provider.status === 'active' ? 'default' as const : 'secondary' as const
+    },
+  }))
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Cloud className="h-5 w-5" />
-          Machine Providers
-          <Badge variant="secondary" className="ml-auto">
-            {machineProviders.length}
-          </Badge>
-        </CardTitle>
-        <CardDescription>
-          Manage your cloud infrastructure providers
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {machineProvidersQuery.isLoading && (
-          <div className="text-sm text-muted-foreground">Loading machine providers...</div>
-        )}
-
-        {machineProvidersQuery.error && (
-          <div className="text-sm text-red-600">Failed to load machine providers</div>
-        )}
-
-        {!machineProvidersQuery.isLoading && !machineProvidersQuery.error && (
-          <>
-            {machineProviders.length === 0 ? (
-              <div className="text-center py-6">
-                <div className="text-sm text-muted-foreground mb-4">
-                  No machine providers configured yet
-                </div>
-                <Button 
-                  onClick={() => navigate(`/workspaces/${workspaceId}/machine-providers/create`)}
-                  size="sm"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create First Provider
-                </Button>
-              </div>
-            ) : (
-              <>
-                <div className="space-y-2">
-                  <div className="text-sm font-medium">Recent Providers</div>
-                  {recentMachineProviders.map((provider: components["schemas"]["MachineProvider"]) => (
-                    <div
-                      key={provider.id}
-                      className="flex items-center justify-between p-2 border rounded-md hover:bg-accent cursor-pointer"
-                      onClick={() => navigate(`/workspaces/${workspaceId}/machine-providers/${provider.id}`)}
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className="text-sm font-medium">{provider.name}</div>
-                        <Badge variant="outline" className="text-xs">
-                          {provider.type}
-                        </Badge>
-                      </div>
-                      <Badge 
-                        variant={provider.status === 'active' ? 'default' : 'secondary'}
-                        className="text-xs"
-                      >
-                        {provider.status}
-                      </Badge>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex gap-2 pt-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => navigate(`/workspaces/${workspaceId}/machine-providers`)}
-                    className="flex-1"
-                  >
-                    View All
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
-                  <Button 
-                    size="sm"
-                    onClick={() => navigate(`/workspaces/${workspaceId}/machine-providers/create`)}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add New
-                  </Button>
-                </div>
-              </>
-            )}
-          </>
-        )}
-      </CardContent>
-    </Card>
+    <WorkspaceOverviewCard
+      icon={<Cloud className="h-5 w-5" />}
+      title="Machine Providers"
+      description="Manage your cloud infrastructure providers"
+      count={machineProviders.length}
+      isLoading={machineProvidersQuery.isLoading}
+      error={!!machineProvidersQuery.error}
+      items={items}
+      emptyState={{
+        message: "No machine providers configured yet",
+        createButtonText: "Create First Provider",
+        onCreateClick: () => navigate(`/workspaces/${workspaceId}/machine-providers/create`),
+      }}
+      actions={{
+        viewAllText: "View All",
+        onViewAllClick: () => navigate(`/workspaces/${workspaceId}/machine-providers`),
+        addNewText: "Add New",
+        onAddNewClick: () => navigate(`/workspaces/${workspaceId}/machine-providers/create`),
+      }}
+    />
   )
 } 

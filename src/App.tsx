@@ -17,7 +17,7 @@ import { WorkspaceDashboardPage } from "@/pages/dashboard/WorkspaceDashboardPage
 import { CreateNetworkPage, ListNetworksPage, NetworkDetailsPage } from "@/pages/networks";
 import { BoxDetailsPage } from "@/pages/boxes/details";
 import { CreateBoxPage, ListBoxesPage } from "@/pages/boxes";
-import { AdminWorkspacesListPage } from "@/pages/workspaces/AdminWorkspacesListPage.tsx";
+import { AdminWorkspacesListPage } from "@/pages/admin/AdminWorkspacesListPage.tsx";
 import { AdminListUsersPage } from "@/pages/admin/AdminListUsersPage.tsx";
 
 const queryClient = new QueryClient({

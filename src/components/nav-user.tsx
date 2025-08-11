@@ -1,6 +1,5 @@
 import { ChevronsUpDown, LogOut, User, } from "lucide-react"
 
-import { Avatar, AvatarFallback, AvatarImage, } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar, } from "@/components/ui/sidebar"
+import { UserAvatar } from "@/components/UserAvatar"
 import type { components } from "@/api/models/schema";
 import { useAuth } from "react-oidc-context";
 
@@ -22,25 +22,6 @@ export function NavUser({
   const { isMobile } = useSidebar()
   const auth = useAuth()
 
-  let initials = ""
-  if (user) {
-    const s = user.name.split(" ")
-    if (s.length >= 1) {
-      initials += s[0][0]
-    }
-    if (s.length >= 2) {
-      initials += s[s.length - 1][0]
-    }
-    initials = initials.toUpperCase()
-  }
-
-  const MyAvatar = () => (
-    <Avatar className="h-8 w-8 rounded-lg">
-      <AvatarImage src={user?.avatar} alt={user?.name} />
-      <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
-    </Avatar>
-  )
-
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -50,7 +31,7 @@ export function NavUser({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <MyAvatar/>
+              {user && <UserAvatar user={user} className="rounded-lg" />}
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user?.name}</span>
                 <span className="truncate text-xs">{user?.email}</span>
@@ -66,7 +47,7 @@ export function NavUser({
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <MyAvatar/>
+                {user && <UserAvatar user={user} className="rounded-lg" />}
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user?.name}</span>
                   <span className="truncate text-xs">{user?.email}</span>

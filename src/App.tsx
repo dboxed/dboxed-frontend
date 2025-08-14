@@ -19,6 +19,7 @@ import { BoxDetailsPage } from "@/pages/boxes/details";
 import { CreateBoxPage, ListBoxesPage } from "@/pages/boxes";
 import { AdminWorkspacesListPage } from "@/pages/admin/AdminWorkspacesListPage.tsx";
 import { AdminListUsersPage } from "@/pages/admin/AdminListUsersPage.tsx";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,9 +33,11 @@ export default function App() {
   return (
     <AuthProvider userManager={userManager} onSigninCallback={onSigninCallback}>
       <QueryClientProvider client={queryClient}>
-        <LoginGate>
-          <AuthenticatedApp/>
-        </LoginGate>
+        <ThemeProvider defaultTheme="system" storageKey="dboxed-frontend-theme">
+          <LoginGate>
+            <AuthenticatedApp/>
+          </LoginGate>
+        </ThemeProvider>
       </QueryClientProvider>
     </AuthProvider>
   )

@@ -406,6 +406,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            boxUrl: string;
             box_spec: components["schemas"]["BoxSpec"];
             /** Format: date-time */
             created_at: string;
@@ -418,6 +419,7 @@ export interface components {
             /** Format: int64 */
             network: number | null;
             network_type: string | null;
+            uuid: string;
             /** Format: int64 */
             workspace: number;
         };
@@ -435,8 +437,8 @@ export interface components {
             dboxedBinaryUrl?: string;
             dns: components["schemas"]["DnsSpec"];
             fileBundles?: components["schemas"]["FileBundle"][] | null;
-            infraImage?: string;
             logs?: components["schemas"]["LogsSpec"];
+            uuid: string;
         };
         BoxToken: {
             /**
@@ -533,12 +535,9 @@ export interface components {
             /** Format: date-time */
             UnavailableAfter: string;
         };
-        DnsLibP2PSpec: Record<string, never>;
         DnsSpec: {
             hostname: string;
-            libp2p?: components["schemas"]["DnsLibP2PSpec"];
             networkDomain: string;
-            networkInterface: string;
         };
         ErrorDetail: {
             /** @description Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id' */
@@ -755,11 +754,9 @@ export interface components {
             logId: string;
             logStream: string;
             metadataKVStore: string;
-            nkeySeed: string;
-            url: string;
         };
         LogsSpec: {
-            nats?: components["schemas"]["LogsNatsSpec"];
+            nats: components["schemas"]["LogsNatsSpec"];
         };
         Machine: {
             /**
@@ -1338,7 +1335,9 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Workspace"];
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
             /** @description Error */
@@ -1472,7 +1471,9 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Box"];
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
             /** @description Error */
@@ -1778,7 +1779,9 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MachineProvider"];
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
             /** @description Error */
@@ -1949,7 +1952,9 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Machine"];
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
             /** @description Error */
@@ -2120,7 +2125,9 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Network"];
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
             /** @description Error */

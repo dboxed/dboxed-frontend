@@ -51,7 +51,7 @@ export function BoxSpecConfigSection({ form, onEditYaml }: BoxSpecConfigSectionP
         {/* DNS Configuration */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">DNS</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="boxSpec.dns.hostname"
@@ -78,23 +78,6 @@ export function BoxSpecConfigSection({ form, onEditYaml }: BoxSpecConfigSectionP
                     <Input
                       placeholder="Enter network domain"
                       {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="boxSpec.dns.networkInterface"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Network Interface</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter network interface (e.g., eth0)"
-                      {...field}
-                      value={field.value || ""}
                     />
                   </FormControl>
                   <FormMessage />

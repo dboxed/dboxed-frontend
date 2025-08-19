@@ -127,13 +127,17 @@ services:
         const nameY = parse(m[0])
         name = nameY.name as string
       }
-    } catch {}
+    } catch {
+      // Ignore YAML parsing errors for project name extraction
+    }
 
     try {
       // this might fail
       const y = parse(project)
       serviceCount = (Object.keys(y.services || {})).length
-    } catch {}
+    } catch {
+      // Ignore YAML parsing errors for service count
+    }
 
     return {
       name: name,

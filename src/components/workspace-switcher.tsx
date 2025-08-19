@@ -12,7 +12,7 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar, } from "@/
 import type { components } from "@/api/models/schema";
 import { useLocation, useNavigate } from "react-router";
 import { useDboxedQueryClient } from "@/api/api.ts";
-import { useCurrentUser, useIsAdmin } from "@/api/auth.ts";
+import { useIsAdmin } from "@/api/auth.ts";
 
 export function useSelectedWorkspaceId() {
   const location = useLocation()
@@ -42,9 +42,7 @@ export function useSelectedWorkspaceId() {
   }
 }
 
-export function WorkspaceSwitcher({
-}: {
-}) {
+export function WorkspaceSwitcher() {
   const navigate = useNavigate()
   const client = useDboxedQueryClient()
   const isAdminQuery = useIsAdmin()

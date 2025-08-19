@@ -61,37 +61,39 @@ export function LogsPage({ boxId }: LogsPageProps) {
     <Card>
       <CardContent>
         <div className="grid grid-cols-4 gap-4 h-full">
-          {logFiles.data?.items && logFiles.data.items.length > 0 ? (
-            <Table className="">
-              <TableBody>
-                {logFiles.data.items.map((logFile: components["schemas"]["LogMetadata"]) => {
-                  const displayName = getLogFileDisplayName(logFile)
-                  const icon = getLogFileIcon(logFile)
-                  
-                  return (
-                    <TableRow
-                      key={logFile.fileName}
-                      onClick={() => handleLogFileChange(logFile.fileName)}
-                      className={`cursor-pointer ${selectedLogFile === logFile.fileName ? 'bg-primary/10' : ''}`}
-                    >
-                      <TableCell className="text-sm w-full" title={displayName}>
-                        <div className="flex items-center gap-2">
-                          <div className="flex-shrink-0 w-4 flex items-center justify-center">
-                            {icon}
+          <div className="max-h-96 overflow-y-auto">
+            {logFiles.data?.items && logFiles.data.items.length > 0 ? (
+              <Table className="">
+                <TableBody>
+                  {logFiles.data.items.map((logFile: components["schemas"]["LogMetadata"]) => {
+                    const displayName = getLogFileDisplayName(logFile)
+                    const icon = getLogFileIcon(logFile)
+                    
+                    return (
+                      <TableRow
+                        key={logFile.fileName}
+                        onClick={() => handleLogFileChange(logFile.fileName)}
+                        className={`cursor-pointer ${selectedLogFile === logFile.fileName ? 'bg-primary/10' : ''}`}
+                      >
+                        <TableCell className="text-sm w-full" title={displayName}>
+                          <div className="flex items-center gap-2">
+                            <div className="flex-shrink-0 w-4 flex items-center justify-center">
+                              {icon}
+                            </div>
+                            <span className="truncate">{displayName}</span>
                           </div>
-                          <span className="truncate">{displayName}</span>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  )
-                })}
-              </TableBody>
-            </Table>
-          ) : (
-            <div className="flex items-center justify-center h-64 text-muted-foreground">
-              No log files yet
-            </div>
-          )}
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
+                </TableBody>
+              </Table>
+            ) : (
+              <div className="flex items-center justify-center h-64 text-muted-foreground">
+                No log files yet
+              </div>
+            )}
+          </div>
 
           <div className="col-span-3">
             <LogFileViewer

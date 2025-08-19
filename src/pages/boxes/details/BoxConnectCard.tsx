@@ -5,14 +5,14 @@ import { useDboxedQueryClient } from "@/api/api"
 import { useState } from "react"
 import { toast } from "sonner"
 import { Copy, Key, RefreshCw } from "lucide-react"
-import { envVars } from "@/env.ts"
 
 interface BoxTokenCardProps {
   boxId: number
   workspaceId: number
+  boxUrl: string
 }
 
-export function BoxConnectCard({ boxId, workspaceId }: BoxTokenCardProps) {
+export function BoxConnectCard({ boxId, workspaceId, boxUrl }: BoxTokenCardProps) {
   const client = useDboxedQueryClient()
   const [specUrl, setSpecUrl] = useState<string>("")
 
@@ -30,10 +30,10 @@ export function BoxConnectCard({ boxId, workspaceId }: BoxTokenCardProps) {
       onSuccess: (responseData) => {
         const generatedToken = responseData.token
 
-        // Construct the spec URL with the token as a query parameter
-        const baseUrl = envVars.VITE_API_URL.replace(/\/+$/, '') // Remove trailing slashes
-        const url = `${baseUrl}/v1/box-spec?token=${encodeURIComponent(generatedToken)}`
-        setSpecUrl(url)
+        // Parse the box URL and add the token to existing query parameters
+        const url = new URL(boxUrl)
+        url.searchParams.set('token', generatedToken)
+        setSpecUrl(url.toString())
         
         toast.success("Box spec URL generated successfully!")
       },
@@ -51,7 +51,7 @@ export function BoxConnectCard({ boxId, workspaceId }: BoxTokenCardProps) {
     try {
       await navigator.clipboard.writeText(specUrl)
       toast.success("Spec URL copied to clipboard!")
-    } catch (err) {
+    } catch {
       toast.error("Failed to copy URL to clipboard")
     }
   }

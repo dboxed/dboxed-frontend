@@ -5,7 +5,6 @@ import { NavUser } from "@/components/nav-user"
 import { WorkspaceSwitcher } from "@/components/workspace-switcher.tsx"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail, } from "@/components/ui/sidebar"
 import { useCurrentUser } from "@/api/auth.ts";
-import { useDboxedQueryClient } from "@/api/api.ts";
 
 const navMain = [
   {

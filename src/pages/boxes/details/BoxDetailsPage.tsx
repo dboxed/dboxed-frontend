@@ -56,7 +56,7 @@ export function BoxDetailsPage() {
           </TabsContent>
 
           <TabsContent value="connect">
-            <BoxConnectCard boxId={data.id} workspaceId={data.workspace} />
+            <BoxConnectCard boxId={data.id} workspaceId={data.workspace} boxUrl={data.boxUrl} />
           </TabsContent>
 
           <TabsContent value="logs">

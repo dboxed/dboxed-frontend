@@ -14,7 +14,7 @@ export function MachineDetailsPage() {
     return <div>Invalid machine ID</div>
   }
 
-  const buildUpdateDefaults = (_: components["schemas"]["Machine"]): components["schemas"]["UpdateMachine"] => {
+  const buildUpdateDefaults = (): components["schemas"]["UpdateMachine"] => {
     return {
 
     }

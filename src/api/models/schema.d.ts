@@ -436,9 +436,9 @@ export interface components {
             dboxedBinaryHash?: string;
             dboxedBinaryUrl?: string;
             dns: components["schemas"]["DnsSpec"];
-            fileBundles?: components["schemas"]["FileBundle"][] | null;
             logs?: components["schemas"]["LogsSpec"];
             uuid: string;
+            volumes?: components["schemas"]["BoxVolumeSpec"][] | null;
         };
         BoxToken: {
             /**
@@ -447,6 +447,15 @@ export interface components {
              */
             readonly $schema?: string;
             token: string;
+        };
+        BoxVolumeSpec: {
+            fileBundle?: components["schemas"]["FileBundle"];
+            name: string;
+            /** Format: int32 */
+            rootGid: number;
+            rootMode: string;
+            /** Format: int32 */
+            rootUid: number;
         };
         CreateBox: {
             /**
@@ -578,12 +587,6 @@ export interface components {
         };
         FileBundle: {
             files: components["schemas"]["FileBundleEntry"][] | null;
-            name: string;
-            /** Format: int32 */
-            rootGid: number;
-            rootMode: string;
-            /** Format: int32 */
-            rootUid: number;
         };
         FileBundleEntry: {
             data?: string;

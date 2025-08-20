@@ -4,28 +4,28 @@ import { Input } from "@/components/ui/input.tsx"
 import { type UseFormReturn } from "react-hook-form"
 import type { components } from "@/api/models/schema"
 
-interface BundleConfigSectionProps {
+interface VolumeConfigSectionProps {
   form: UseFormReturn<components["schemas"]["UpdateBox"]>
-  bundleIndex: number
+  volumeIndex: number
 }
 
-export function BundleConfigSection({ form, bundleIndex }: BundleConfigSectionProps) {
+export function VolumeConfigSection({ form, volumeIndex }: VolumeConfigSectionProps) {
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle>Bundle Configuration</CardTitle>
+        <CardTitle>Volume Configuration</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <FormField
           control={form.control}
-          key={`boxSpec.fileBundles.${bundleIndex}.name`}
-          name={`boxSpec.fileBundles.${bundleIndex}.name`}
+          key={`boxSpec.volumes.${volumeIndex}.name`}
+          name={`boxSpec.volumes.${volumeIndex}.name`}
           render={({ field }) => (
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Bundle name"
+                  placeholder="Volume name"
                   {...field}
                   value={field.value || ""}
                 />
@@ -37,8 +37,8 @@ export function BundleConfigSection({ form, bundleIndex }: BundleConfigSectionPr
         
         <FormField
           control={form.control}
-          key={`boxSpec.fileBundles.${bundleIndex}.rootUid`}
-          name={`boxSpec.fileBundles.${bundleIndex}.rootUid`}
+          key={`boxSpec.volumes.${volumeIndex}.rootUid`}
+          name={`boxSpec.volumes.${volumeIndex}.rootUid`}
           render={({ field }) => (
             <FormItem>
               <FormLabel>Root UID</FormLabel>
@@ -58,8 +58,8 @@ export function BundleConfigSection({ form, bundleIndex }: BundleConfigSectionPr
         
         <FormField
           control={form.control}
-          key={`boxSpec.fileBundles.${bundleIndex}.rootGid`}
-          name={`boxSpec.fileBundles.${bundleIndex}.rootGid`}
+          key={`boxSpec.volumes.${volumeIndex}.rootGid`}
+          name={`boxSpec.volumes.${volumeIndex}.rootGid`}
           render={({ field }) => (
             <FormItem>
               <FormLabel>Root GID</FormLabel>
@@ -79,8 +79,8 @@ export function BundleConfigSection({ form, bundleIndex }: BundleConfigSectionPr
         
         <FormField
           control={form.control}
-          key={`boxSpec.fileBundles.${bundleIndex}.rootMode`}
-          name={`boxSpec.fileBundles.${bundleIndex}.rootMode`}
+          key={`boxSpec.volumes.${volumeIndex}.rootMode`}
+          name={`boxSpec.volumes.${volumeIndex}.rootMode`}
           render={({ field }) => (
             <FormItem>
               <FormLabel>Root Mode</FormLabel>

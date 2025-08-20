@@ -10,15 +10,15 @@ import { DeleteButton } from "@/components/DeleteButton.tsx"
 
 interface FileContentEditorProps {
   form: UseFormReturn<components["schemas"]["UpdateBox"]>
-  bundleIndex: number
+  volumeIndex: number
   fileIndex: number
   onDeleteFile: (index: number) => void
 }
 
-export function FileContentEditor({ form, bundleIndex, fileIndex, onDeleteFile }: FileContentEditorProps) {
-  const fileBundles = form.watch("boxSpec.fileBundles") || []
-  const bundle = fileBundles[bundleIndex]
-  const file = bundle?.files?.[fileIndex]
+export function FileContentEditor({ form, volumeIndex, fileIndex, onDeleteFile }: FileContentEditorProps) {
+  const volumes = form.watch("boxSpec.volumes") || []
+  const volume = volumes[volumeIndex]
+  const file = volume?.fileBundle?.files?.[fileIndex]
 
   const [content, setContent] = useState<string>("")
   const [filePath, setFilePath] = useState<string>("")
@@ -59,20 +59,23 @@ export function FileContentEditor({ form, bundleIndex, fileIndex, onDeleteFile }
   }
 
   const updateFileProperty = (property: string, value: string | number) => {
-    const updatedBundles = [...fileBundles]
-    const updatedFiles = [...(updatedBundles[bundleIndex].files || [])]
+    const updatedVolumes = [...volumes]
+    const updatedFiles = [...(updatedVolumes[volumeIndex].fileBundle?.files || [])]
     
     updatedFiles[fileIndex] = {
       ...updatedFiles[fileIndex],
       [property]: value
     }
     
-    updatedBundles[bundleIndex] = {
-      ...updatedBundles[bundleIndex],
-      files: updatedFiles
+    updatedVolumes[volumeIndex] = {
+      ...updatedVolumes[volumeIndex],
+      fileBundle: {
+        ...updatedVolumes[volumeIndex].fileBundle,
+        files: updatedFiles
+      }
     }
     
-    form.setValue("boxSpec.fileBundles", updatedBundles)
+    form.setValue("boxSpec.volumes", updatedVolumes)
   }
 
   const handleContentChange = (value: string | undefined) => {

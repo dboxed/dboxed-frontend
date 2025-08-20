@@ -5,7 +5,7 @@ import { type UseFormReturn } from "react-hook-form"
 import type { components } from "@/api/models/schema"
 import { parse, stringify } from 'yaml'
 import { BoxSpecConfigSection } from "./BoxSpecConfigSection.tsx"
-import { BundleSection } from "./BundleSection.tsx"
+import { VolumeSection } from "./VolumeSection.tsx"
 import { ComposeProjectEditor } from "./ComposeProjectEditor.tsx"
 import { MenuItem } from "./MenuItem.tsx"
 import { Menu } from "./Menu.tsx"
@@ -16,14 +16,14 @@ interface BoxSpecTabProps {
   form: UseFormReturn<components["schemas"]["UpdateBox"]>
 }
 
-type FileBundle = components["schemas"]["FileBundle"]
+type BoxVolumeSpec = components["schemas"]["BoxVolumeSpec"]
 
 export function BoxSpecTab({ form }: BoxSpecTabProps) {
   const [showYamlDialog, setShowYamlDialog] = useState(false)
-  const [selectedBundleIndex, setSelectedBundleIndex] = useState<number | null>(null)
+  const [selectedVolumeIndex, setSelectedVolumeIndex] = useState<number | null>(null)
   const [selectedComposeProjectIndex, setSelectedComposeProjectIndex] = useState<number | null>(null)
 
-  const fileBundles = form.watch("boxSpec.fileBundles") || []
+  const volumes = form.watch("boxSpec.volumes") || []
   const composeProjects = form.watch("boxSpec.composeProjects") || []
 
   const handleYamlEdit = () => {
@@ -46,37 +46,39 @@ export function BoxSpecTab({ form }: BoxSpecTabProps) {
   }
 
   const handleBoxSpecConfigClick = () => {
-    setSelectedBundleIndex(null)
+    setSelectedVolumeIndex(null)
     setSelectedComposeProjectIndex(null)
   }
 
-  const handleAddBundle = () => {
-    const newBundle: FileBundle = {
-      name: `bundle-${fileBundles.length + 1}`,
-      files: [],
+  const handleAddVolume = () => {
+    const newVolume: BoxVolumeSpec = {
+      name: `volume-${volumes.length + 1}`,
+      fileBundle: {
+        files: []
+      },
       rootUid: 0,
       rootGid: 0,
       rootMode: "0755"
     }
-    const updatedBundles = [...fileBundles, newBundle]
-    form.setValue("boxSpec.fileBundles", updatedBundles)
-    setSelectedBundleIndex(updatedBundles.length - 1)
+    const updatedVolumes = [...volumes, newVolume]
+    form.setValue("boxSpec.volumes", updatedVolumes)
+    setSelectedVolumeIndex(updatedVolumes.length - 1)
   }
 
-  const handleBundleClick = (index: number) => {
-    setSelectedBundleIndex(index)
+  const handleVolumeClick = (index: number) => {
+    setSelectedVolumeIndex(index)
     setSelectedComposeProjectIndex(null)
   }
 
-  const handleDeleteBundle = (index: number) => {
-    const updatedBundles = [...fileBundles]
-    updatedBundles.splice(index, 1)
-    form.setValue("boxSpec.fileBundles", updatedBundles)
+  const handleDeleteVolume = (index: number) => {
+    const updatedVolumes = [...volumes]
+    updatedVolumes.splice(index, 1)
+    form.setValue("boxSpec.volumes", updatedVolumes)
 
-    if (updatedBundles.length === 0) {
-      setSelectedBundleIndex(null)
-    } else if (index >= updatedBundles.length) {
-      setSelectedBundleIndex(updatedBundles.length - 1)
+    if (updatedVolumes.length === 0) {
+      setSelectedVolumeIndex(null)
+    } else if (index >= updatedVolumes.length) {
+      setSelectedVolumeIndex(updatedVolumes.length - 1)
     }
   }
 
@@ -95,12 +97,12 @@ services:
     const updatedProjects = [...composeProjects, newProject]
     form.setValue("boxSpec.composeProjects", updatedProjects)
     setSelectedComposeProjectIndex(updatedProjects.length - 1)
-    setSelectedBundleIndex(null)
+    setSelectedVolumeIndex(null)
   }
 
   const handleComposeProjectClick = (index: number) => {
     setSelectedComposeProjectIndex(index)
-    setSelectedBundleIndex(null)
+    setSelectedVolumeIndex(null)
   }
 
   const handleDeleteComposeProject = (index: number) => {
@@ -150,8 +152,8 @@ services:
   }, [composeProjects])
 
   const renderContent = () => {
-    if (selectedBundleIndex !== null) {
-      return <BundleSection form={form} bundleIndex={selectedBundleIndex} onDeleteBundle={handleDeleteBundle}/>
+    if (selectedVolumeIndex !== null) {
+      return <VolumeSection form={form} volumeIndex={selectedVolumeIndex} onDeleteVolume={handleDeleteVolume}/>
     } else if (selectedComposeProjectIndex !== null) {
       return <ComposeProjectEditor form={form} projectIndex={selectedComposeProjectIndex} projectName={composeProjectInfos[selectedComposeProjectIndex].name} onDeleteProject={handleDeleteComposeProject} />
     } else {
@@ -166,7 +168,7 @@ services:
         <MenuSection >
           <MenuItem
             onClick={handleBoxSpecConfigClick}
-            isActive={selectedBundleIndex === null && selectedComposeProjectIndex === null}
+            isActive={selectedVolumeIndex === null && selectedComposeProjectIndex === null}
           >
             Box Spec
           </MenuItem>
@@ -174,28 +176,28 @@ services:
 
         <MenuSection showSeparator>
           <MenuItem
-            onClick={handleAddBundle}
+            onClick={handleAddVolume}
             className="flex items-center gap-2"
           >
             <Plus className="h-4 w-4" />
-            Add Bundle
+            Add Volume
           </MenuItem>
 
           <ScrollableMenuList
-            isEmpty={fileBundles.length === 0}
-            emptyMessage="No bundles"
+            isEmpty={volumes.length === 0}
+            emptyMessage="No volumes"
             maxHeight="max-h-40"
           >
-            {fileBundles.map((bundle, index) => (
+            {volumes.map((volume, index) => (
               <MenuItem
                 key={index}
-                onClick={() => handleBundleClick(index)}
-                isActive={selectedBundleIndex === index}
+                onClick={() => handleVolumeClick(index)}
+                isActive={selectedVolumeIndex === index}
               >
                 <div className="flex justify-between items-center">
-                  <span>{bundle.name}</span>
+                  <span>{volume.name}</span>
                   <span className="text-xs opacity-70">
-                    {bundle.files?.length || 0} files
+                    {volume.fileBundle?.files?.length || 0} files
                   </span>
                 </div>
               </MenuItem>

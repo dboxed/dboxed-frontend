@@ -27,23 +27,6 @@ export function BoxSpecConfigSection({ form, onEditYaml }: BoxSpecConfigSectionP
               Edit as YAML
             </Button>
           </div>
-          <FormField
-            control={form.control}
-            name="boxSpec.infraImage"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Infrastructure Image</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter infrastructure image URL"
-                    {...field}
-                    value={field.value || ""}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </div>
 
         <Separator />

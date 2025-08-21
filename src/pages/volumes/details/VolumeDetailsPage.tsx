@@ -1,5 +1,6 @@
 import { BaseResourceDetailsPage } from "@/pages/base/BaseResourceDetailsPage.tsx"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx"
 import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard.tsx"
@@ -34,23 +35,32 @@ export function VolumeDetailsPage() {
       }}
     >
       {(data, _form) => (
-        <div className="space-y-6">
-          <GeneralInfoCard data={data} />
-          
-          <Card>
-            <CardHeader>
-              <CardTitle>Volume Usage</CardTitle>
-              <CardDescription>
-                Information about how this volume is being used.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Volume usage and attachment information will be displayed here when available.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+        <Tabs defaultValue="general" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="general">General Information</TabsTrigger>
+            <TabsTrigger value="usage">Volume Usage</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="general">
+            <GeneralInfoCard data={data} />
+          </TabsContent>
+
+          <TabsContent value="usage">
+            <Card>
+              <CardHeader>
+                <CardTitle>Volume Usage</CardTitle>
+                <CardDescription>
+                  Information about how this volume is being used.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  Volume usage and attachment information will be displayed here when available.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       )}
     </BaseResourceDetailsPage>
   )

@@ -51,7 +51,7 @@ export function VolumeProviderDetailsPage() {
         <Tabs defaultValue="general" className="space-y-6">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="general">General Information</TabsTrigger>
-            <TabsTrigger value="provider">
+            <TabsTrigger value="configuration">
               {data.type === 'restic' ? 'Restic Configuration' : 'Provider Configuration'}
             </TabsTrigger>
           </TabsList>
@@ -60,7 +60,7 @@ export function VolumeProviderDetailsPage() {
             <GeneralInfoCard data={data} />
           </TabsContent>
 
-          <TabsContent value="provider">
+          <TabsContent value="configuration">
             {data.restic && (
               <ResticDetailsCard resticData={data.restic} form={form} />
             )}

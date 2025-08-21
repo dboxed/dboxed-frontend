@@ -20,9 +20,11 @@ export function ResticDetailsCard({ resticData, form }: ResticDetailsCardProps) 
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-3 items-center gap-4">
-          <span className="text-sm font-medium">Repository</span>
-          <span className="col-span-2 text-sm font-mono break-all">{resticData.repository}</span>
+        <div>
+          <label className="text-sm font-medium">Repository</label>
+          <p className="text-sm text-muted-foreground font-mono break-all">
+            {resticData.repository}
+          </p>
         </div>
         
         <FormField

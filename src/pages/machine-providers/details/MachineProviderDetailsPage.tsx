@@ -48,9 +48,8 @@ export function MachineProviderDetailsPage() {
     >
       {(data, form) => (
         <Tabs defaultValue="general" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="general">General Information</TabsTrigger>
-            <TabsTrigger value="ssh">SSH Configuration</TabsTrigger>
             <TabsTrigger value="provider">
               {data.type === 'aws' ? 'AWS Configuration' : 
                data.type === 'hetzner' ? 'Hetzner Configuration' : 
@@ -59,37 +58,37 @@ export function MachineProviderDetailsPage() {
           </TabsList>
 
           <TabsContent value="general">
-            <GeneralInfoCard data={data} />
-          </TabsContent>
-
-          <TabsContent value="ssh">
-            <Card>
-              <CardHeader>
-                <CardTitle>SSH Configuration</CardTitle>
-                <CardDescription>
-                  SSH key configuration for the machine provider.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <FormField
-                  control={form.control}
-                  name="ssh_key_public"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>SSH Public Key</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="Enter SSH public key" 
-                          {...field} 
-                          value={field.value || ""}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
+            <div className="space-y-6">
+              <GeneralInfoCard data={data} />
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle>SSH Configuration</CardTitle>
+                  <CardDescription>
+                    SSH key configuration for the machine provider.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <FormField
+                    control={form.control}
+                    name="ssh_key_public"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>SSH Public Key</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Enter SSH public key" 
+                            {...field} 
+                            value={field.value || ""}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           <TabsContent value="provider">

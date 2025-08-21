@@ -42,12 +42,10 @@ export function MachineDetailsPage() {
     >
       {(data) => (
         <Tabs defaultValue="general" className="space-y-6">
-          <div className="flex justify-between items-center">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="general">General Information</TabsTrigger>
-              <TabsTrigger value="machine-provider">Machine Provider</TabsTrigger>
-            </TabsList>
-          </div>
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="general">General Information</TabsTrigger>
+            <TabsTrigger value="machine-provider">Machine Provider</TabsTrigger>
+          </TabsList>
 
           <TabsContent value="general">
             <GeneralInfoCard data={data} />

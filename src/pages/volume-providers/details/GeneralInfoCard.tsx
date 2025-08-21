@@ -30,30 +30,30 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-4">
-          <div className="grid grid-cols-3 items-center gap-4">
-            <span className="text-sm font-medium">Name</span>
-            <span className="col-span-2">{data.name}</span>
+        <div className="grid grid-cols-2 gap-6">
+          <div>
+            <label className="text-sm font-medium">Name</label>
+            <p className="text-sm text-muted-foreground">{data.name}</p>
           </div>
-          <div className="grid grid-cols-3 items-center gap-4">
-            <span className="text-sm font-medium">Type</span>
-            <span className="col-span-2">
+          <div>
+            <label className="text-sm font-medium">Type</label>
+            <div className="mt-1">
               <Badge variant="secondary" className="capitalize">
                 {data.type}
               </Badge>
-            </span>
+            </div>
           </div>
-          <div className="grid grid-cols-3 items-center gap-4">
-            <span className="text-sm font-medium">Status</span>
-            <span className="col-span-2">
+          <div>
+            <label className="text-sm font-medium">Status</label>
+            <div className="mt-1">
               <Badge variant={getStatusVariant(data.status)} className="capitalize">
                 {data.status}
               </Badge>
-            </span>
+            </div>
           </div>
-          <div className="grid grid-cols-3 items-center gap-4">
-            <span className="text-sm font-medium">Workspace</span>
-            <span className="col-span-2">
+          <div>
+            <label className="text-sm font-medium">Workspace</label>
+            <div className="mt-1">
               <ReferenceLabel
                 resourceId={data.workspace}
                 resourcePath="/v1/workspaces/{workspaceId}"
@@ -64,13 +64,13 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
                 fallbackLabel="Workspace"
                 className="text-blue-600 hover:text-blue-800 underline"
               />
-            </span>
+            </div>
           </div>
-          <div className="grid grid-cols-3 items-center gap-4">
-            <span className="text-sm font-medium">Created</span>
-            <span className="col-span-2 text-sm text-muted-foreground">
+          <div>
+            <label className="text-sm font-medium">Created</label>
+            <p className="text-sm text-muted-foreground">
               {new Date(data.created_at).toLocaleString()}
-            </span>
+            </p>
           </div>
         </div>
       </CardContent>

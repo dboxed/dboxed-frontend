@@ -1,4 +1,4 @@
-import { Box, Cloud, LayoutDashboard, Monitor, Network, Users, HardDrive, Database } from "lucide-react"
+import { Box, LayoutDashboard, Monitor, Network, Users, HardDrive } from "lucide-react"
 
 import { NavItems } from "@/components/nav-items.tsx"
 import { NavUser } from "@/components/nav-user"
@@ -11,16 +11,6 @@ const navMain = [
     title: "Dashboard",
     navigate: "/workspaces/{workspaceId}",
     icon: LayoutDashboard,
-  },
-  {
-    title: "Machine Providers",
-    navigate: "/workspaces/{workspaceId}/machine-providers",
-    icon: Cloud,
-  },
-  {
-    title: "Volume Providers",
-    navigate: "/workspaces/{workspaceId}/volume-providers",
-    icon: Database,
   },
   {
     title: "Networks",

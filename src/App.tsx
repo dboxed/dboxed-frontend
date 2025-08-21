@@ -5,20 +5,17 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router';
 import MainLayout from "@/layouts/MainLayout.tsx";
 import { AuthProvider } from "react-oidc-context";
 import { CreateWorkspacePage } from "@/pages/workspaces/CreateWorkspacePage.tsx";
-import { ListMachineProvidersPage } from "@/pages/machine-providers/ListMachineProvidersPage.tsx";
-import { MachineProviderDetailsPage } from "@/pages/machine-providers/details/MachineProviderDetailsPage.tsx";
-import { ListMachinesPage } from "@/pages/machines/ListMachinesPage.tsx";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import { useDboxedQueryClient } from "@/api/api.ts";
 import { Toaster } from "sonner";
-import { CreateMachineProviderPage } from "@/pages/machine-providers/create/CreateMachineProviderPage.tsx";
-import { CreateMachinePage, MachineDetailsPage } from "@/pages/machines";
+import { CreateMachineProviderPage, MachineProviderDetailsPage } from "@/pages/machine-providers";
+import { CreateMachinePage, MachineDetailsPage, MachinesPage } from "@/pages/machines";
 import { WorkspaceDashboardPage } from "@/pages/dashboard/WorkspaceDashboardPage.tsx";
 import { CreateNetworkPage, ListNetworksPage, NetworkDetailsPage } from "@/pages/networks";
 import { BoxDetailsPage } from "@/pages/boxes/details";
 import { CreateBoxPage, ListBoxesPage } from "@/pages/boxes";
-import { CreateVolumeProviderPage, ListVolumeProvidersPage, VolumeProviderDetailsPage } from "@/pages/volume-providers";
-import { CreateVolumePage, ListVolumesPage, VolumeDetailsPage } from "@/pages/volumes";
+import { CreateVolumeProviderPage, VolumeProviderDetailsPage } from "@/pages/volume-providers";
+import { CreateVolumePage, VolumeDetailsPage, VolumesPage } from "@/pages/volumes";
 import { AdminWorkspacesListPage } from "@/pages/admin/AdminWorkspacesListPage.tsx";
 import { AdminListUsersPage } from "@/pages/admin/AdminListUsersPage.tsx";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -81,16 +78,16 @@ function AuthenticatedApp() {
       <Routes>
         <Route path="/" element={<MainLayout isAdmin={isAdminQuery.isAdmin} />}>
           <Route path="/workspaces/:workspaceId" element={<WorkspaceDashboardPage/>}/>
-          <Route path="/workspaces/:workspaceId/machine-providers" element={<ListMachineProvidersPage/>}/>
+          <Route path="/workspaces/:workspaceId/machines" element={<MachinesPage/>}/>
+          <Route path="/workspaces/:workspaceId/machine-providers" element={<MachinesPage/>}/>
           <Route path="/workspaces/:workspaceId/machine-providers/:machineProviderId" element={<MachineProviderDetailsPage />}/>
-          <Route path="/workspaces/:workspaceId/volume-providers" element={<ListVolumeProvidersPage/>}/>
+          <Route path="/workspaces/:workspaceId/machines/:machineId" element={<MachineDetailsPage/>}/>
+          <Route path="/workspaces/:workspaceId/volumes" element={<VolumesPage/>}/>
+          <Route path="/workspaces/:workspaceId/volume-providers" element={<VolumesPage/>}/>
           <Route path="/workspaces/:workspaceId/volume-providers/:volumeProviderId" element={<VolumeProviderDetailsPage />}/>
-          <Route path="/workspaces/:workspaceId/volumes" element={<ListVolumesPage/>}/>
           <Route path="/workspaces/:workspaceId/volumes/:volumeId" element={<VolumeDetailsPage />}/>
           <Route path="/workspaces/:workspaceId/boxes" element={<ListBoxesPage/>}/>
           <Route path="/workspaces/:workspaceId/boxes/:boxId" element={<BoxDetailsPage/>}/>
-          <Route path="/workspaces/:workspaceId/machines" element={<ListMachinesPage/>}/>
-          <Route path="/workspaces/:workspaceId/machines/:machineId" element={<MachineDetailsPage/>}/>
           <Route path="/workspaces/:workspaceId/networks" element={<ListNetworksPage/>}/>
           <Route path="/workspaces/:workspaceId/networks/:networkId" element={<NetworkDetailsPage/>}/>
           {isAdminQuery.isAdmin && (

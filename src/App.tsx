@@ -17,6 +17,8 @@ import { WorkspaceDashboardPage } from "@/pages/dashboard/WorkspaceDashboardPage
 import { CreateNetworkPage, ListNetworksPage, NetworkDetailsPage } from "@/pages/networks";
 import { BoxDetailsPage } from "@/pages/boxes/details";
 import { CreateBoxPage, ListBoxesPage } from "@/pages/boxes";
+import { CreateVolumeProviderPage, ListVolumeProvidersPage, VolumeProviderDetailsPage } from "@/pages/volume-providers";
+import { CreateVolumePage, ListVolumesPage, VolumeDetailsPage } from "@/pages/volumes";
 import { AdminWorkspacesListPage } from "@/pages/admin/AdminWorkspacesListPage.tsx";
 import { AdminListUsersPage } from "@/pages/admin/AdminListUsersPage.tsx";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -81,6 +83,10 @@ function AuthenticatedApp() {
           <Route path="/workspaces/:workspaceId" element={<WorkspaceDashboardPage/>}/>
           <Route path="/workspaces/:workspaceId/machine-providers" element={<ListMachineProvidersPage/>}/>
           <Route path="/workspaces/:workspaceId/machine-providers/:machineProviderId" element={<MachineProviderDetailsPage />}/>
+          <Route path="/workspaces/:workspaceId/volume-providers" element={<ListVolumeProvidersPage/>}/>
+          <Route path="/workspaces/:workspaceId/volume-providers/:volumeProviderId" element={<VolumeProviderDetailsPage />}/>
+          <Route path="/workspaces/:workspaceId/volumes" element={<ListVolumesPage/>}/>
+          <Route path="/workspaces/:workspaceId/volumes/:volumeId" element={<VolumeDetailsPage />}/>
           <Route path="/workspaces/:workspaceId/boxes" element={<ListBoxesPage/>}/>
           <Route path="/workspaces/:workspaceId/boxes/:boxId" element={<BoxDetailsPage/>}/>
           <Route path="/workspaces/:workspaceId/machines" element={<ListMachinesPage/>}/>
@@ -96,6 +102,8 @@ function AuthenticatedApp() {
         </Route>
         <Route path="/workspaces/create" element={<CreateWorkspacePage/>}/>
         <Route path="/workspaces/:workspaceId/machine-providers/create" element={<CreateMachineProviderPage/>}/>
+        <Route path="/workspaces/:workspaceId/volume-providers/create" element={<CreateVolumeProviderPage/>}/>
+        <Route path="/workspaces/:workspaceId/volumes/create" element={<CreateVolumePage/>}/>
         <Route path="/workspaces/:workspaceId/boxes/create" element={<CreateBoxPage/>}/>
         <Route path="/workspaces/:workspaceId/machines/create" element={<CreateMachinePage/>}/>
         <Route path="/workspaces/:workspaceId/networks/create" element={<CreateNetworkPage/>}/>

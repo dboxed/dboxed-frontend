@@ -6,6 +6,8 @@ import { MachineProvidersOverview } from "./MachineProvidersOverview.tsx"
 import { MachinesOverview } from "./MachinesOverview.tsx"
 import { NetworksOverview } from "./NetworksOverview.tsx"
 import { BoxesOverview } from "./BoxesOverview.tsx"
+import { VolumeProvidersOverview } from "./VolumeProvidersOverview.tsx"
+import { VolumesOverview } from "./VolumesOverview.tsx"
 import { DeleteButton } from "@/components/DeleteButton.tsx"
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -62,9 +64,11 @@ export function WorkspaceDashboardPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           <MachineProvidersOverview />
+          <VolumeProvidersOverview />
           <NetworksOverview />
           <BoxesOverview />
           <MachinesOverview />
+          <VolumesOverview />
         </div>
       </div>
     </BasePage>

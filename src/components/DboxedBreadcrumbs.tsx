@@ -280,6 +280,116 @@ function BoxBreadcrumb({ boxId, isCurrentPage }: BoxBreadcrumbProps) {
   )
 }
 
+interface VolumeProvidersBreadcrumbProps {
+  isCurrentPage?: boolean
+}
+
+function VolumeProvidersBreadcrumb({ isCurrentPage }: VolumeProvidersBreadcrumbProps) {
+  const navigate = useNavigate()
+  const { workspaceId } = useSelectedWorkspaceId()
+  const href = `/workspaces/${workspaceId}/volume-providers`
+
+  return (
+    <BreadcrumbElement
+      href={href}
+      isCurrentPage={isCurrentPage}
+      onClick={() => navigate(href)}
+    >
+      <span>Volume Providers</span>
+    </BreadcrumbElement>
+  )
+}
+
+interface VolumeProviderBreadcrumbProps {
+  volumeProviderId: number
+  isCurrentPage?: boolean
+}
+
+function VolumeProviderBreadcrumb({ volumeProviderId, isCurrentPage }: VolumeProviderBreadcrumbProps) {
+  const navigate = useNavigate()
+  const { workspaceId } = useSelectedWorkspaceId()
+  const client = useDboxedQueryClient()
+
+  const volumeProvider = client.useQuery('get', '/v1/workspaces/{workspaceId}/volume-providers/{id}', {
+    params: {
+      path: {
+        workspaceId: workspaceId!,
+        id: volumeProviderId
+      }
+    },
+  }, {
+    enabled: !!workspaceId && !!volumeProviderId
+  })
+
+  const href = `/workspaces/${workspaceId}/volume-providers/${volumeProviderId}`
+  const label = volumeProvider.data?.name || 'Volume Provider'
+
+  return (
+    <BreadcrumbElement
+      href={href}
+      isCurrentPage={isCurrentPage}
+      onClick={() => navigate(href)}
+    >
+      <span>{label}</span>
+    </BreadcrumbElement>
+  )
+}
+
+interface VolumesBreadcrumbProps {
+  isCurrentPage?: boolean
+}
+
+function VolumesBreadcrumb({ isCurrentPage }: VolumesBreadcrumbProps) {
+  const navigate = useNavigate()
+  const { workspaceId } = useSelectedWorkspaceId()
+  const href = `/workspaces/${workspaceId}/volumes`
+
+  return (
+    <BreadcrumbElement
+      href={href}
+      isCurrentPage={isCurrentPage}
+      onClick={() => navigate(href)}
+    >
+      <span>Volumes</span>
+    </BreadcrumbElement>
+  )
+}
+
+interface VolumeBreadcrumbProps {
+  volumeId: number
+  isCurrentPage?: boolean
+}
+
+function VolumeBreadcrumb({ volumeId, isCurrentPage }: VolumeBreadcrumbProps) {
+  const navigate = useNavigate()
+  const { workspaceId } = useSelectedWorkspaceId()
+  const client = useDboxedQueryClient()
+
+  const volume = client.useQuery('get', '/v1/workspaces/{workspaceId}/volumes/{id}', {
+    params: {
+      path: {
+        workspaceId: workspaceId!,
+        id: volumeId
+      }
+    },
+  }, {
+    enabled: !!workspaceId && !!volumeId
+  })
+
+  const href = `/workspaces/${workspaceId}/volumes/${volumeId}`
+  const label = volume.data?.name || 'Volume'
+
+  return (
+    <BreadcrumbElement
+      href={href}
+      isCurrentPage={isCurrentPage}
+      onClick={() => navigate(href)}
+    >
+      <span>{label}</span>
+    </BreadcrumbElement>
+  )
+}
+
 interface DboxedBreadcrumbsProps {
   className?: string
 }
@@ -484,6 +594,92 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
     if (pathSegments[currentIndex] === 'create') {
       breadcrumbElements.push(
         <BreadcrumbSeparator key="sep-create-box"/>,
+        <BreadcrumbItem key="create">
+          <CreateBreadcrumb isCurrentPage={true}/>
+        </BreadcrumbItem>
+      )
+    }
+  }
+
+  // Handle volume-providers path
+  if (pathSegments[currentIndex] === 'volume-providers') {
+    const isCurrentPage = pathSegments.length === currentIndex + 1
+
+    breadcrumbElements.push(
+      <BreadcrumbSeparator key="sep-workspace-volume-providers"/>,
+      <BreadcrumbItem key="volume-providers">
+        <VolumeProvidersBreadcrumb isCurrentPage={isCurrentPage}/>
+      </BreadcrumbItem>
+    )
+
+    currentIndex++
+
+    // Handle specific volume provider ID
+    const volumeProviderIdSegment = pathSegments[currentIndex]
+    if (volumeProviderIdSegment && volumeProviderIdSegment.match(/^\d+$/)) {
+      const volumeProviderId = parseInt(volumeProviderIdSegment)
+      const isCurrentPage = pathSegments.length === currentIndex + 1
+
+      breadcrumbElements.push(
+        <BreadcrumbSeparator key="sep-volume-providers"/>,
+        <BreadcrumbItem key="volume-provider">
+          <VolumeProviderBreadcrumb
+            volumeProviderId={volumeProviderId}
+            isCurrentPage={isCurrentPage}
+          />
+        </BreadcrumbItem>
+      )
+
+      currentIndex++
+    }
+
+    // Handle create path
+    if (pathSegments[currentIndex] === 'create') {
+      breadcrumbElements.push(
+        <BreadcrumbSeparator key="sep-create-volume-provider"/>,
+        <BreadcrumbItem key="create">
+          <CreateBreadcrumb isCurrentPage={true}/>
+        </BreadcrumbItem>
+      )
+    }
+  }
+
+  // Handle volumes path
+  if (pathSegments[currentIndex] === 'volumes') {
+    const isCurrentPage = pathSegments.length === currentIndex + 1
+
+    breadcrumbElements.push(
+      <BreadcrumbSeparator key="sep-workspace-volumes"/>,
+      <BreadcrumbItem key="volumes">
+        <VolumesBreadcrumb isCurrentPage={isCurrentPage}/>
+      </BreadcrumbItem>
+    )
+
+    currentIndex++
+
+    // Handle specific volume ID
+    const volumeIdSegment = pathSegments[currentIndex]
+    if (volumeIdSegment && volumeIdSegment.match(/^\d+$/)) {
+      const volumeId = parseInt(volumeIdSegment)
+      const isCurrentPage = pathSegments.length === currentIndex + 1
+
+      breadcrumbElements.push(
+        <BreadcrumbSeparator key="sep-volumes"/>,
+        <BreadcrumbItem key="volume">
+          <VolumeBreadcrumb
+            volumeId={volumeId}
+            isCurrentPage={isCurrentPage}
+          />
+        </BreadcrumbItem>
+      )
+
+      currentIndex++
+    }
+
+    // Handle create path
+    if (pathSegments[currentIndex] === 'create') {
+      breadcrumbElements.push(
+        <BreadcrumbSeparator key="sep-create-volume"/>,
         <BreadcrumbItem key="create">
           <CreateBreadcrumb isCurrentPage={true}/>
         </BreadcrumbItem>

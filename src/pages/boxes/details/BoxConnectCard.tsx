@@ -5,6 +5,7 @@ import { useDboxedQueryClient } from "@/api/api"
 import { useState } from "react"
 import { toast } from "sonner"
 import { Copy, Key, RefreshCw } from "lucide-react"
+import { envVars } from "@/env.ts"
 
 interface BoxTokenCardProps {
   boxId: number
@@ -14,7 +15,8 @@ interface BoxTokenCardProps {
 
 export function BoxConnectCard({ boxId, workspaceId, boxUrl }: BoxTokenCardProps) {
   const client = useDboxedQueryClient()
-  const [specUrl, setSpecUrl] = useState<string>("")
+  const [natsUrl, setNatsUrl] = useState<string>("")
+  const [httpURl, setHttpURl] = useState<string>("")
 
   const tokenMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/generate-token')
 
@@ -33,7 +35,12 @@ export function BoxConnectCard({ boxId, workspaceId, boxUrl }: BoxTokenCardProps
         // Parse the box URL and add the token to existing query parameters
         const url = new URL(boxUrl)
         url.searchParams.set('token', generatedToken)
-        setSpecUrl(url.toString())
+        setNatsUrl(url.toString())
+        
+        // Generate http URL
+        const apiUrl = new URL('/v1/box-spec', envVars.VITE_API_URL)
+        apiUrl.searchParams.set('token', generatedToken)
+        setHttpURl(apiUrl.toString())
         
         toast.success("Box spec URL generated successfully!")
       },
@@ -45,12 +52,23 @@ export function BoxConnectCard({ boxId, workspaceId, boxUrl }: BoxTokenCardProps
     })
   }
 
-  const handleCopyUrl = async () => {
-    if (!specUrl) return
+  const handleCopyNatsUrl = async () => {
+    if (!natsUrl) return
     
     try {
-      await navigator.clipboard.writeText(specUrl)
-      toast.success("Spec URL copied to clipboard!")
+      await navigator.clipboard.writeText(natsUrl)
+      toast.success("Nats URL copied to clipboard!")
+    } catch {
+      toast.error("Failed to copy URL to clipboard")
+    }
+  }
+
+  const handleCopyHttpUrl = async () => {
+    if (!httpURl) return
+    
+    try {
+      await navigator.clipboard.writeText(httpURl)
+      toast.success("Http URL copied to clipboard!")
     } catch {
       toast.error("Failed to copy URL to clipboard")
     }
@@ -61,10 +79,10 @@ export function BoxConnectCard({ boxId, workspaceId, boxUrl }: BoxTokenCardProps
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <Key className="h-5 w-5" />
-          <span>Generate Spec Url</span>
+          <span>Generate Urls</span>
         </CardTitle>
         <CardDescription>
-          Generate a Spec Url that can be used with the dboxed CLI.
+          Generate a Urls that can be used with the dboxed CLI.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -90,27 +108,50 @@ export function BoxConnectCard({ boxId, workspaceId, boxUrl }: BoxTokenCardProps
           </div>
         </div>
 
-        {specUrl && (
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Generated Spec URL</label>
-            <div className="flex space-x-2">
-              <Input
-                value={specUrl}
-                readOnly
-                className="font-mono text-xs"
-                placeholder="URL will appear here..."
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleCopyUrl}
-                type={"button"}
-              >
-                <Copy className="h-4 w-4" />
-              </Button>
+        {natsUrl && (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Nats URL</label>
+              <div className="flex space-x-2">
+                <Input
+                  value={natsUrl}
+                  readOnly
+                  className="font-mono text-xs"
+                  placeholder="URL will appear here..."
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCopyNatsUrl}
+                  type={"button"}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">HTTP URL</label>
+              <div className="flex space-x-2">
+                <Input
+                  value={httpURl}
+                  readOnly
+                  className="font-mono text-xs"
+                  placeholder="API endpoint URL will appear here..."
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCopyHttpUrl}
+                  type={"button"}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
             <p className="text-xs text-muted-foreground">
-              ⚠️ This URL contains a token that will only be shown once. Copy it now and store it securely.
+              ⚠️ These URLs contain a token that will only be shown once. Copy them now and store them securely.
             </p>
           </div>
         )}

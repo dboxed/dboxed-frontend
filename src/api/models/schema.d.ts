@@ -523,6 +523,7 @@ export interface components {
             token: string;
         };
         BoxVolumeSpec: {
+            dboxed?: components["schemas"]["DboxedVolume"];
             fileBundle?: components["schemas"]["FileBundle"];
             name: string;
             /** Format: int32 */
@@ -530,6 +531,7 @@ export interface components {
             rootMode: string;
             /** Format: int32 */
             rootUid: number;
+            uuid?: string;
         };
         CreateBox: {
             /**
@@ -610,12 +612,14 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            dboxed?: components["schemas"]["CreateVolumeDboxed"];
             name: string;
-            restic?: components["schemas"]["CreateVolumeRestic"];
-            /** Format: int64 */
-            size: number;
             /** Format: int64 */
             volume_provider: number;
+        };
+        CreateVolumeDboxed: {
+            /** Format: int64 */
+            volume_id: number;
         };
         CreateVolumeProvider: {
             /**
@@ -623,17 +627,16 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            dboxed?: components["schemas"]["CreateVolumeProviderDboxed"];
             name: string;
-            restic?: components["schemas"]["CreateVolumeProviderRestic"];
             type: string;
         };
-        CreateVolumeProviderRestic: {
-            repository: string;
-            s3_access_key_id: string | null;
-            s3_secret_access_key: string | null;
-            ssh_key: string | null;
+        CreateVolumeProviderDboxed: {
+            api_url: string;
+            /** Format: int64 */
+            repository_id: number;
+            token: string;
         };
-        CreateVolumeRestic: Record<string, never>;
         CreateWorkspace: {
             /**
              * Format: uri
@@ -641,6 +644,15 @@ export interface components {
              */
             readonly $schema?: string;
             name: string;
+        };
+        DboxedVolume: {
+            apiUrl: string;
+            backupInterval: string;
+            /** Format: int64 */
+            repoId: number;
+            token: string;
+            /** Format: int64 */
+            volumeId: number;
         };
         DeprecationInfo: {
             /** Format: date-time */
@@ -1063,12 +1075,13 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            restic?: components["schemas"]["UpdateVolumeProviderRestic"];
+            dboxed?: components["schemas"]["UpdateVolumeProviderDboxed"];
         };
-        UpdateVolumeProviderRestic: {
-            s3_access_key_id?: string;
-            s3_secret_access_key?: string;
-            ssh_key?: string;
+        UpdateVolumeProviderDboxed: {
+            api_url?: string;
+            /** Format: int64 */
+            repository_id?: number;
+            token?: string;
         };
         User: {
             /**
@@ -1090,16 +1103,19 @@ export interface components {
             readonly $schema?: string;
             /** Format: date-time */
             created_at: string;
+            dboxed: components["schemas"]["VolumeDboxed"];
             /** Format: int64 */
             id: number;
             name: string;
-            /** Format: int64 */
-            size: number;
             /** Format: int64 */
             volume_provider: number;
             volume_provider_type: string;
             /** Format: int64 */
             workspace: number;
+        };
+        VolumeDboxed: {
+            /** Format: int64 */
+            volume_id: number;
         };
         VolumeProvider: {
             /**
@@ -1109,17 +1125,19 @@ export interface components {
             readonly $schema?: string;
             /** Format: date-time */
             created_at: string;
+            dboxed?: components["schemas"]["VolumeProviderDboxed"];
             /** Format: int64 */
             id: number;
             name: string;
-            restic?: components["schemas"]["VolumeProviderRestic"];
             status: string;
             type: string;
             /** Format: int64 */
             workspace: number;
         };
-        VolumeProviderRestic: {
-            repository: string;
+        VolumeProviderDboxed: {
+            api_url: string;
+            /** Format: int64 */
+            repository_id: number;
         };
         Workspace: {
             /**

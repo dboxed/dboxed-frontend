@@ -21,7 +21,7 @@ export function VolumeProviderTypeSelector({ form }: VolumeProviderTypeSelectorP
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              <SelectItem value="restic">Restic</SelectItem>
+              <SelectItem value="dboxed">DBoxed</SelectItem>
             </SelectContent>
           </Select>
           <FormMessage />

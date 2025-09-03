@@ -1,6 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Badge } from "@/components/ui/badge.tsx";
-import { formatSize } from "@/utils/size.ts";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import type { components } from "@/api/models/schema";
@@ -25,10 +24,6 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           <div>
             <label className="text-sm font-medium">Name</label>
             <p className="text-sm text-muted-foreground">{data.name}</p>
-          </div>
-          <div>
-            <label className="text-sm font-medium">Size</label>
-            <p className="text-sm text-muted-foreground">{formatSize(data.size)}</p>
           </div>
           <div>
             <label className="text-sm font-medium">Provider Type</label>

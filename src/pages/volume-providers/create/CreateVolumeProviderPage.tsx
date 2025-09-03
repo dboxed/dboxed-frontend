@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { BaseCreatePage } from "@/pages/base/BaseCreatePage.tsx"
-import { VolumeProviderTypeSelector, ResticConfigForm } from "@/pages/volume-providers/create/index.ts"
+import { VolumeProviderTypeSelector, DboxedConfigForm } from "@/pages/volume-providers/create/index.ts"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
@@ -11,17 +11,16 @@ const FormSchema = z.object({
   name: z.string().min(1, {
     message: "Name must be at least 1 character.",
   }),
-  type: z.enum(["restic"]).refine((val) => val !== undefined, {
+  type: z.enum(["dboxed"]).refine((val) => val !== undefined, {
     message: "Please select a volume provider type.",
   }),
-  restic: z.object({
-    repository: z.string().min(1, "Repository is required"),
-    s3_access_key_id: z.string().nullable().optional(),
-    s3_secret_access_key: z.string().nullable().optional(),
-    ssh_key: z.string().nullable().optional(),
+  dboxed: z.object({
+    api_url: z.string().min(1, "API URL is required"),
+    repository_id: z.number().min(1, "Repository ID is required"),
+    token: z.string().min(1, "Token is required"),
   }).optional(),
 }).refine((data) => {
-  if (data.type === "restic" && !data.restic) {
+  if (data.type === "dboxed" && !data.dboxed) {
     return false
   }
   return true
@@ -39,12 +38,11 @@ export function CreateVolumeProviderPage() {
       type: data.type,
     }
 
-    if (data.type === "restic" && data.restic) {
-      submitData.restic = {
-        repository: data.restic.repository,
-        s3_access_key_id: data.restic.s3_access_key_id || null,
-        s3_secret_access_key: data.restic.s3_secret_access_key || null,
-        ssh_key: data.restic.ssh_key || null,
+    if (data.type === "dboxed" && data.dboxed) {
+      submitData.dboxed = {
+        api_url: data.dboxed.api_url,
+        repository_id: data.dboxed.repository_id,
+        token: data.dboxed.token,
       }
     }
 
@@ -64,11 +62,10 @@ export function CreateVolumeProviderPage() {
       defaultValues={{
         name: "",
         type: undefined,
-        restic: {
-          repository: "",
-          s3_access_key_id: "",
-          s3_secret_access_key: "",
-          ssh_key: "",
+        dboxed: {
+          api_url: "",
+          repository_id: 0,
+          token: "",
         }
       }}
       resolver={zodResolver(FormSchema)}
@@ -91,8 +88,8 @@ export function CreateVolumeProviderPage() {
           
           <VolumeProviderTypeSelector form={form} />
           
-          {form.watch("type") === "restic" && (
-            <ResticConfigForm form={form} />
+          {form.watch("type") === "dboxed" && (
+            <DboxedConfigForm form={form} />
           )}
         </div>
       )}

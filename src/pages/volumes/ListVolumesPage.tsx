@@ -5,7 +5,6 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import type { components } from "@/api/models/schema";
 import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
-import { formatSize } from "@/utils/size.ts";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 
 export function ListVolumesPage() {
@@ -27,18 +26,6 @@ export function ListVolumesPage() {
           >
             {name}
           </button>
-        )
-      },
-    },
-    {
-      accessorKey: "size",
-      header: "Size",
-      cell: ({ row }) => {
-        const size = row.getValue("size") as number
-        return (
-          <div className="text-sm">
-            {formatSize(size)}
-          </div>
         )
       },
     },

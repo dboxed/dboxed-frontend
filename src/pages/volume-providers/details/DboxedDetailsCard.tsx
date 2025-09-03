@@ -1,41 +1,47 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
-import { Textarea } from "@/components/ui/textarea.tsx"
 import type { components } from "@/api/models/schema";
 import type { UseFormReturn } from "react-hook-form"
 
-interface ResticDetailsCardProps {
-  resticData: components["schemas"]["VolumeProviderRestic"]
+interface DboxedDetailsCardProps {
+  dboxedData: components["schemas"]["VolumeProviderDboxed"]
   form: UseFormReturn<any>
 }
 
-export function ResticDetailsCard({ resticData, form }: ResticDetailsCardProps) {
+export function DboxedDetailsCard({ dboxedData, form }: DboxedDetailsCardProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Restic Configuration</CardTitle>
+        <CardTitle>DBoxed Configuration</CardTitle>
         <CardDescription>
-          Restic backup repository configuration settings. Sensitive credentials are not displayed for security reasons.
+          DBoxed volume provider configuration settings. Sensitive credentials are not displayed for security reasons.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <label className="text-sm font-medium">Repository</label>
+          <label className="text-sm font-medium">API URL</label>
           <p className="text-sm text-muted-foreground font-mono break-all">
-            {resticData.repository}
+            {dboxedData.api_url}
+          </p>
+        </div>
+        
+        <div>
+          <label className="text-sm font-medium">Repository ID</label>
+          <p className="text-sm text-muted-foreground font-mono break-all">
+            {dboxedData.repository_id}
           </p>
         </div>
         
         <FormField
           control={form.control}
-          name="restic.s3_access_key_id"
+          name="dboxed.api_url"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>S3 Access Key ID</FormLabel>
+              <FormLabel>API URL</FormLabel>
               <FormControl>
                 <Input 
-                  placeholder="Enter S3 access key ID (leave blank to keep current)" 
+                  placeholder="Enter DBoxed API URL (leave blank to keep current)" 
                   {...field} 
                   value={field.value || ""}
                 />
@@ -47,33 +53,34 @@ export function ResticDetailsCard({ resticData, form }: ResticDetailsCardProps) 
         
         <FormField
           control={form.control}
-          name="restic.s3_secret_access_key"
+          name="dboxed.repository_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>S3 Secret Access Key</FormLabel>
+              <FormLabel>Repository ID</FormLabel>
+              <FormControl>
+                <Input 
+                  type="number"
+                  placeholder="Enter repository ID (leave blank to keep current)" 
+                  {...field} 
+                  value={field.value || ""}
+                  onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : "")}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="dboxed.token"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Token</FormLabel>
               <FormControl>
                 <Input 
                   type="password"
-                  placeholder="Enter S3 secret access key (leave blank to keep current)" 
-                  {...field} 
-                  value={field.value || ""}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="restic.ssh_key"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>SSH Key</FormLabel>
-              <FormControl>
-                <Textarea 
-                  placeholder="Enter SSH private key for repository access (leave blank to keep current)" 
-                  className="min-h-[100px]"
+                  placeholder="Enter DBoxed API token (leave blank to keep current)" 
                   {...field} 
                   value={field.value || ""}
                 />

@@ -1,32 +1,31 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
-import { Textarea } from "@/components/ui/textarea.tsx"
 import type { UseFormReturn } from "react-hook-form"
 
-interface ResticConfigFormProps {
+interface DboxedConfigFormProps {
   form: UseFormReturn<any>
 }
 
-export function ResticConfigForm({ form }: ResticConfigFormProps) {
+export function DboxedConfigForm({ form }: DboxedConfigFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Restic Configuration</CardTitle>
+        <CardTitle>DBoxed Configuration</CardTitle>
         <CardDescription>
-          Configure the Restic backup repository settings.
+          Configure the DBoxed volume provider settings.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <FormField
           control={form.control}
-          name="restic.repository"
+          name="dboxed.api_url"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Repository</FormLabel>
+              <FormLabel>API URL</FormLabel>
               <FormControl>
                 <Input 
-                  placeholder="Enter repository URL or path (e.g., s3:bucket/path)" 
+                  placeholder="Enter DBoxed API URL" 
                   {...field} 
                 />
               </FormControl>
@@ -37,15 +36,17 @@ export function ResticConfigForm({ form }: ResticConfigFormProps) {
         
         <FormField
           control={form.control}
-          name="restic.s3_access_key_id"
+          name="dboxed.repository_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>S3 Access Key ID (Optional)</FormLabel>
+              <FormLabel>Repository ID</FormLabel>
               <FormControl>
                 <Input 
-                  placeholder="Enter S3 access key ID" 
+                  type="number"
+                  placeholder="Enter repository ID" 
                   {...field} 
                   value={field.value || ""}
+                  onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : "")}
                 />
               </FormControl>
               <FormMessage />
@@ -55,33 +56,14 @@ export function ResticConfigForm({ form }: ResticConfigFormProps) {
         
         <FormField
           control={form.control}
-          name="restic.s3_secret_access_key"
+          name="dboxed.token"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>S3 Secret Access Key (Optional)</FormLabel>
+              <FormLabel>Token</FormLabel>
               <FormControl>
                 <Input 
                   type="password"
-                  placeholder="Enter S3 secret access key" 
-                  {...field} 
-                  value={field.value || ""}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="restic.ssh_key"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>SSH Key (Optional)</FormLabel>
-              <FormControl>
-                <Textarea 
-                  placeholder="Enter SSH private key for repository access" 
-                  className="min-h-[100px]"
+                  placeholder="Enter DBoxed API token" 
                   {...field} 
                   value={field.value || ""}
                 />

@@ -2,13 +2,16 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import { useDboxedQueryClient } from "@/api/api.ts";
+import { useEffect } from "react"
 import type { UseFormReturn } from "react-hook-form"
+import type { components } from "@/api/models/schema"
 
 interface VolumeProviderSelectorProps {
   form: UseFormReturn<any>
+  onProviderChange?: (provider: components["schemas"]["VolumeProvider"] | null) => void
 }
 
-export function VolumeProviderSelector({ form }: VolumeProviderSelectorProps) {
+export function VolumeProviderSelector({ form, onProviderChange }: VolumeProviderSelectorProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
 
@@ -20,16 +23,36 @@ export function VolumeProviderSelector({ form }: VolumeProviderSelectorProps) {
     }
   })
 
+  // Set first provider as default when data loads and notify parent
+  useEffect(() => {
+    if (volumeProvidersQuery.data?.items && volumeProvidersQuery.data.items.length > 0) {
+      const currentValue = form.getValues('volume_provider')
+      if (!currentValue || currentValue === 1) { // Only set if no value or default placeholder value
+        const firstProvider = volumeProvidersQuery.data.items[0]
+        form.setValue('volume_provider', firstProvider.id)
+        onProviderChange?.(firstProvider)
+      }
+    }
+  }, [volumeProvidersQuery.data, form, onProviderChange])
+
   return (
     <FormField
       control={form.control}
       name="volume_provider"
-      render={({ field }) => (
+      render={({ field }) => {
+        // Notify parent when selection changes
+        const handleProviderChange = (value: string) => {
+          field.onChange(value)
+          const selectedProvider = volumeProvidersQuery.data?.items?.find(p => p.id.toString() === value)
+          onProviderChange?.(selectedProvider || null)
+        }
+
+        return (
         <FormItem>
           <FormLabel>Volume Provider</FormLabel>
           <Select
             value={field.value ? field.value.toString() : ""}
-            onValueChange={(value) => field.onChange(value)}
+            onValueChange={handleProviderChange}
           >
             <FormControl>
               <SelectTrigger>
@@ -51,7 +74,8 @@ export function VolumeProviderSelector({ form }: VolumeProviderSelectorProps) {
           </Select>
           <FormMessage />
         </FormItem>
-      )}
+        )
+      }}
     />
   )
 }

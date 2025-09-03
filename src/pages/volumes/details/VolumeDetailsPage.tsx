@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.t
 import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard.tsx"
+import { DboxedVolumeInfo } from "./DboxedVolumeInfo.tsx"
 import type { components } from "@/api/models/schema";
 
 export function VolumeDetailsPage() {
@@ -42,7 +43,12 @@ export function VolumeDetailsPage() {
           </TabsList>
 
           <TabsContent value="general">
-            <GeneralInfoCard data={data} />
+            <div className="space-y-6">
+              <GeneralInfoCard data={data} />
+              {data.volume_provider_type === "dboxed" && data.dboxed && (
+                <DboxedVolumeInfo data={data} />
+              )}
+            </div>
           </TabsContent>
 
           <TabsContent value="usage">

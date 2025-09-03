@@ -2,45 +2,60 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { BaseCreatePage } from "@/pages/base/BaseCreatePage.tsx"
 import { VolumeProviderSelector } from "@/pages/volumes/create/index.ts"
+import { DboxedConfig } from "@/pages/volumes/create/DboxedConfig.tsx"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import { parseSize } from "@/utils/size.ts"
+import { useState } from "react"
 import type { components } from "@/api/models/schema";
 
 const FormSchema = z.object({
   name: z.string().min(1, {
     message: "Name must be at least 1 character.",
   }),
-  size: z.string().min(1, "Size is required").refine((val) => {
-    try {
-      const bytes = parseSize(val)
-      return bytes > 0
-    } catch {
-      return false
-    }
-  }, {
-    message: "Invalid size format. Use formats like '1GB', '512MB', '2.5TB'",
-  }),
   volume_provider: z.preprocess((val) => {
     if (typeof val === 'string') return parseInt(val)
     return val
   }, z.number().min(1, "Please select a volume provider.")),
-  restic: z.object({}).optional(),
+  dboxed: z.object({
+    fs_size: z.string().min(1, "Filesystem size is required").refine((val) => {
+      try {
+        const bytes = parseSize(val)
+        return bytes > 0
+      } catch {
+        return false
+      }
+    }, {
+      message: "Invalid size format. Use formats like '1GB', '512MB', '2.5TB'",
+    }),
+    fs_type: z.string().min(1, "Filesystem type is required"),
+  }).optional(),
+}).refine((data) => {
+  // If provider type is dboxed, require dboxed config
+  // Note: We can't directly check provider type here since it's not in form data
+  // This validation will be handled by the component logic
+  return true
+}, {
+  message: "DBoxed configuration is required for DBoxed providers.",
 })
 
 export function CreateVolumePage() {
   const { workspaceId } = useSelectedWorkspaceId()
+  const [selectedProvider, setSelectedProvider] = useState<components["schemas"]["VolumeProvider"] | null>(null)
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    // Parse the human-readable size to bytes
-    const sizeInBytes = parseSize(data.size)
-
     const submitData: components["schemas"]["CreateVolume"] = {
       name: data.name,
-      size: sizeInBytes,
       volume_provider: data.volume_provider,
-      restic: data.restic || {},
+    }
+
+    // Add dboxed configuration if provider type is dboxed
+    if (selectedProvider?.type === "dboxed" && data.dboxed) {
+      submitData.dboxed = {
+        fs_size: parseSize(data.dboxed.fs_size),
+        fs_type: data.dboxed.fs_type,
+      }
     }
 
     return submitData
@@ -58,9 +73,11 @@ export function CreateVolumePage() {
       onSubmit={onSubmit}
       defaultValues={{
         name: "",
-        size: "1GB",
         volume_provider: 1, // Will be overridden when user selects
-        restic: {},
+        dboxed: {
+          fs_size: "",
+          fs_type: "ext4",
+        }
       }}
       resolver={zodResolver(FormSchema)}
     >
@@ -80,24 +97,14 @@ export function CreateVolumePage() {
             )}
           />
           
-          <FormField
-            control={form.control}
-            name="size"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Size</FormLabel>
-                <FormControl>
-                  <Input 
-                    placeholder="Enter size (e.g., '1GB', '512MB', '2.5TB')" 
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+          <VolumeProviderSelector 
+            form={form} 
+            onProviderChange={setSelectedProvider}
           />
           
-          <VolumeProviderSelector form={form} />
+          {selectedProvider?.type === "dboxed" && (
+            <DboxedConfig form={form} />
+          )}
         </div>
       )}
     </BaseCreatePage>

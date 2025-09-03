@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.t
 import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard.tsx"
-import { ResticDetailsCard } from "./ResticDetailsCard.tsx"
+import { DboxedDetailsCard } from "./DboxedDetailsCard.tsx"
 import type { components } from "@/api/models/schema";
 
 export function VolumeProviderDetailsPage() {
@@ -18,14 +18,14 @@ export function VolumeProviderDetailsPage() {
   const buildUpdateDefaults = (data: components["schemas"]["VolumeProvider"]): components["schemas"]["UpdateVolumeProvider"] => {
     const defaults: components["schemas"]["UpdateVolumeProvider"] = {}
 
-    // Add Restic-specific defaults if Restic data exists
-    // Note: Sensitive fields (s3_access_key_id, s3_secret_access_key, ssh_key) are not 
+    // Add DBoxed-specific defaults if DBoxed data exists
+    // Note: Sensitive fields (token) are not 
     // returned by the API for security reasons, so we start with empty values
-    if (data.restic) {
-      defaults.restic = {
-        s3_access_key_id: undefined,
-        s3_secret_access_key: undefined,
-        ssh_key: undefined,
+    if (data.dboxed) {
+      defaults.dboxed = {
+        api_url: undefined,
+        repository_id: undefined,
+        token: undefined,
       }
     }
 
@@ -52,7 +52,7 @@ export function VolumeProviderDetailsPage() {
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="general">General Information</TabsTrigger>
             <TabsTrigger value="configuration">
-              {data.type === 'restic' ? 'Restic Configuration' : 'Provider Configuration'}
+              {data.type === 'dboxed' ? 'DBoxed Configuration' : 'Provider Configuration'}
             </TabsTrigger>
           </TabsList>
 
@@ -61,11 +61,11 @@ export function VolumeProviderDetailsPage() {
           </TabsContent>
 
           <TabsContent value="configuration">
-            {data.restic && (
-              <ResticDetailsCard resticData={data.restic} form={form} />
+            {data.dboxed && (
+              <DboxedDetailsCard dboxedData={data.dboxed} form={form} />
             )}
             
-            {!data.restic && (
+            {!data.dboxed && (
               <Card>
                 <CardHeader>
                   <CardTitle>Provider Configuration</CardTitle>

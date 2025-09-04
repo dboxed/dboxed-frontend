@@ -26,7 +26,7 @@ This is a React + TypeScript + Vite frontend application for DBoxed, a container
 ### Project Structure
 
 #### API Layer (`src/api/`)
-- `api.ts`: Core API client setup with authentication headers and React Query integration
+- `api.ts`: Core API client setup with authentication headers and React Query integration. Always use this when accessing the API!
 - `auth.ts`: OIDC authentication setup and user/admin role checking
 - `models/schema.d.ts`: Auto-generated TypeScript types from OpenAPI spec
 
@@ -80,3 +80,6 @@ Each resource type follows consistent patterns:
 - **Form Validation**: Zod schemas with React Hook Form integration
 
 When working with this codebase, follow existing patterns for new resources and maintain the workspace-scoped URL structure.
+
+### Very important AI instructions
+- Never try to run "npm run dev"

@@ -31,7 +31,7 @@ const FormSchema = z.object({
     }),
     fs_type: z.string().min(1, "Filesystem type is required"),
   }).optional(),
-}).refine((data) => {
+}).refine((_data) => {
   // If provider type is dboxed, require dboxed config
   // Note: We can't directly check provider type here since it's not in form data
   // This validation will be handled by the component logic

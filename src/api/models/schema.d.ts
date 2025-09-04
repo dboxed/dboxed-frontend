@@ -280,6 +280,42 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/boxes/{id}/volumes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID boxes by ID volumes */
+        get: operations["get-v1-workspaces-by-workspace-id-boxes-by-id-volumes"];
+        put?: never;
+        /** Post v1 workspaces by workspace ID boxes by ID volumes */
+        post: operations["post-v1-workspaces-by-workspace-id-boxes-by-id-volumes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/boxes/{id}/volumes/{volumeId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete v1 workspaces by workspace ID boxes by ID volumes by volume ID */
+        delete: operations["delete-v1-workspaces-by-workspace-id-boxes-by-id-volumes-by-volume-id"];
+        options?: never;
+        head?: never;
+        /** Patch v1 workspaces by workspace ID boxes by ID volumes by volume ID */
+        patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id-volumes-by-volume-id"];
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/machine-providers": {
         parameters: {
             query?: never;
@@ -469,6 +505,20 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        AttachVolumeRequest: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            root_gid: number;
+            root_mode: string;
+            /** Format: int64 */
+            root_uid: number;
+            /** Format: int64 */
+            volume_id: number;
+        };
         AwsRegion: {
             Endpoint: string;
             OptInStatus: string;
@@ -531,7 +581,6 @@ export interface components {
             rootMode: string;
             /** Format: int32 */
             rootUid: number;
-            uuid?: string;
         };
         CreateBox: {
             /**
@@ -619,7 +668,8 @@ export interface components {
         };
         CreateVolumeDboxed: {
             /** Format: int64 */
-            volume_id: number;
+            fs_size: number;
+            fs_type?: string;
         };
         CreateVolumeProvider: {
             /**
@@ -833,6 +883,16 @@ export interface components {
              */
             readonly $schema?: string;
             items: components["schemas"]["Volume"][] | null;
+            /** Format: int64 */
+            total_count: number;
+        };
+        ListBodyVolumeAttachment: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["VolumeAttachment"][] | null;
             /** Format: int64 */
             total_count: number;
         };
@@ -1069,6 +1129,18 @@ export interface components {
              */
             readonly $schema?: string;
         };
+        UpdateVolumeAttachmentRequest: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            root_gid?: number;
+            root_mode?: string;
+            /** Format: int64 */
+            root_uid?: number;
+        };
         UpdateVolumeProvider: {
             /**
              * Format: uri
@@ -1113,9 +1185,27 @@ export interface components {
             /** Format: int64 */
             workspace: number;
         };
-        VolumeDboxed: {
+        VolumeAttachment: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            box_id: number;
+            /** Format: int64 */
+            root_gid: number;
+            root_mode: string;
+            /** Format: int64 */
+            root_uid: number;
+            volume: components["schemas"]["Volume"];
             /** Format: int64 */
             volume_id: number;
+        };
+        VolumeDboxed: {
+            /** Format: int64 */
+            fs_size: number;
+            fs_type?: string;
         };
         VolumeProvider: {
             /**
@@ -1850,6 +1940,152 @@ export interface operations {
                         /** @description The retry time in milliseconds. */
                         retry?: number;
                     })[];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-boxes-by-id-volumes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListBodyVolumeAttachment"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-boxes-by-id-volumes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AttachVolumeRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-v1-workspaces-by-workspace-id-boxes-by-id-volumes-by-volume-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                volumeId: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "patch-v1-workspaces-by-workspace-id-boxes-by-id-volumes-by-volume-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                volumeId: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateVolumeAttachmentRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VolumeAttachment"];
                 };
             };
             /** @description Error */

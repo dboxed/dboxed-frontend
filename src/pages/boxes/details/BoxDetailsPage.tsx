@@ -6,6 +6,7 @@ import { GeneralInfoCard } from "./GeneralInfoCard"
 import { BoxConnectCard } from "./BoxConnectCard.tsx"
 import { LogsPage } from "./logs/LogsPage.tsx"
 import { BoxSpecTab } from "./boxspec/BoxSpecTab.tsx"
+import { VolumesTab } from "./volumes/VolumesTab.tsx"
 import type { components } from "@/api/models/schema"
 
 export function BoxDetailsPage() {
@@ -44,9 +45,10 @@ export function BoxDetailsPage() {
     >
       {(data, form) => (
         <Tabs defaultValue="general" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="general">General Information</TabsTrigger>
             <TabsTrigger value="connect">Connect Box</TabsTrigger>
+            <TabsTrigger value="volumes">Volumes</TabsTrigger>
             <TabsTrigger value="logs">Logs</TabsTrigger>
             <TabsTrigger value="boxspec">Box Spec</TabsTrigger>
           </TabsList>
@@ -57,6 +59,10 @@ export function BoxDetailsPage() {
 
           <TabsContent value="connect">
             <BoxConnectCard boxId={data.id} workspaceId={data.workspace} boxUrl={data.boxUrl} />
+          </TabsContent>
+
+          <TabsContent value="volumes">
+            <VolumesTab boxId={data.id} form={form} />
           </TabsContent>
 
           <TabsContent value="logs">

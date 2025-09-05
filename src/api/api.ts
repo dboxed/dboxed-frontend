@@ -7,9 +7,10 @@ import { type EventSourceMessage, fetchEventSource } from "@microsoft/fetch-even
 import { envVars } from "@/env.ts";
 
 const buildAuthHeaders = (token?: string) => {
+    // eslint-disable-next-line
     const headers: any = {}
     if (token) {
-        headers["Authorization"] = `Bearer ${token}`
+        headers["Authorization"] =`Bearer ${token}`
     }
     return headers
 }
@@ -43,7 +44,7 @@ export const useDboxedQueryClient = () => {
 
 interface EventSourceOptions {
     onopen?: (res: Response) => void
-    onerror?: (err: any) => void
+    onerror?: (err: unknown) => void
     onmessage?: (e: EventSourceMessage) => void
     onclose?: () => void;
     enabled?: boolean

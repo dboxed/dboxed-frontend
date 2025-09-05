@@ -11,8 +11,8 @@ import type { components } from "@/api/models/schema"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Plus, Unplug } from "lucide-react"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
-import { EditVolumeAttachmentDialog } from "./EditVolumeAttachmentDialog.tsx"
 import { formatSize } from "@/utils/size.ts"
+import { EditVolumeRootDialog } from "@/pages/boxes/details/volumes/EditVolumeRootDialog.tsx";
 
 interface AttachedVolumesProps {
   boxId: number
@@ -47,6 +47,12 @@ export function AttachedVolumes({ boxId }: AttachedVolumesProps) {
   })
 
   const detachVolumeMutation = client.useMutation('delete', '/v1/workspaces/{workspaceId}/boxes/{id}/volumes/{volumeId}', {
+    onSuccess: () => {
+      attachedVolumesQuery.refetch()
+    }
+  })
+
+  const updateAttachmentMutation = client.useMutation('patch', '/v1/workspaces/{workspaceId}/boxes/{id}/volumes/{volumeId}', {
     onSuccess: () => {
       attachedVolumesQuery.refetch()
     }
@@ -172,9 +178,29 @@ export function AttachedVolumes({ boxId }: AttachedVolumesProps) {
         const volume = attachment.volume
         return (
           <div className="flex space-x-2">
-            <EditVolumeAttachmentDialog
-              boxId={boxId}
-              attachment={attachment}
+            <EditVolumeRootDialog
+              volume={{
+                name: attachment.volume.name,
+                rootUid: attachment.root_uid,
+                rootGid: attachment.root_gid,
+                rootMode: attachment.root_mode
+              }}
+              onUpdate={(updatedVolume) => {
+                updateAttachmentMutation.mutate({
+                  params: {
+                    path: {
+                      workspaceId: workspaceId!,
+                      id: boxId,
+                      volumeId: attachment.volume_id
+                    }
+                  },
+                  body: {
+                    root_uid: updatedVolume.rootUid,
+                    root_gid: updatedVolume.rootGid,
+                    root_mode: updatedVolume.rootMode
+                  }
+                })
+              }}
               onSuccess={() => attachedVolumesQuery.refetch()}
             />
             <ConfirmationDialog
@@ -211,10 +237,10 @@ export function AttachedVolumes({ boxId }: AttachedVolumesProps) {
               </CardDescription>
             </div>
             <Button
+              type={"button"}
               variant={"outline"}
-              onClick={(e) => {
+              onClick={() => {
                 setAttachDialogOpen(true)
-                e.preventDefault()
               }}
               disabled={availableVolumes.length === 0}
               size="sm"

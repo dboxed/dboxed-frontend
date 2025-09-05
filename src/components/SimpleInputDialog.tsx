@@ -26,9 +26,11 @@ export function SimpleInputDialog({
   const [inputValue, setInputValue] = useState(defaultValue)
 
   const handleOk = () => {
-    onOk(inputValue)
-    onOpenChange(false)
-    setInputValue(defaultValue) // Reset for next time
+    if (inputValue.trim()) {
+      onOk(inputValue.trim())
+      onOpenChange(false)
+      setInputValue(defaultValue) // Reset for next time
+    }
   }
 
   const handleCancel = () => {
@@ -59,7 +61,7 @@ export function SimpleInputDialog({
               onChange={(e) => setInputValue(e.target.value)}
               placeholder={placeholder}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
+                if (e.key === 'Enter' && inputValue.trim()) {
                   handleOk()
                 }
                 if (e.key === 'Escape') {
@@ -75,7 +77,7 @@ export function SimpleInputDialog({
           <Button type="button" variant="outline" onClick={handleCancel}>
             Cancel
           </Button>
-          <Button type="button" onClick={handleOk}>
+          <Button type="button" onClick={handleOk} disabled={!inputValue.trim()}>
             OK
           </Button>
         </DialogFooter>

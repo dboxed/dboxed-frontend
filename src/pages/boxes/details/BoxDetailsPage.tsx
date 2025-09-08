@@ -5,8 +5,8 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard"
 import { BoxConnectCard } from "./BoxConnectCard.tsx"
 import { LogsPage } from "./logs/LogsPage.tsx"
-import { BoxSpecTab } from "./boxspec/BoxSpecTab.tsx"
 import { VolumesTab } from "./volumes/VolumesTab.tsx"
+import { ComposeProjects } from "./compose-projects/ComposeProjects.tsx"
 import type { components } from "@/api/models/schema"
 
 export function BoxDetailsPage() {
@@ -49,8 +49,8 @@ export function BoxDetailsPage() {
             <TabsTrigger value="general">General Information</TabsTrigger>
             <TabsTrigger value="connect">Connect Box</TabsTrigger>
             <TabsTrigger value="volumes">Volumes</TabsTrigger>
+            <TabsTrigger value="compose">Compose Projects</TabsTrigger>
             <TabsTrigger value="logs">Logs</TabsTrigger>
-            <TabsTrigger value="boxspec">Box Spec</TabsTrigger>
           </TabsList>
 
           <TabsContent value="general">
@@ -65,12 +65,12 @@ export function BoxDetailsPage() {
             <VolumesTab boxId={data.id} form={form} />
           </TabsContent>
 
-          <TabsContent value="logs">
-            <LogsPage boxId={data.id} />
+          <TabsContent value="compose">
+            <ComposeProjects form={form} />
           </TabsContent>
 
-          <TabsContent value="boxspec">
-            <BoxSpecTab form={form} />
+          <TabsContent value="logs">
+            <LogsPage boxId={data.id} />
           </TabsContent>
         </Tabs>
       )}

@@ -5,7 +5,6 @@ import { type UseFormReturn } from "react-hook-form"
 import type { components } from "@/api/models/schema"
 import { parse, stringify } from 'yaml'
 import { BoxSpecConfigSection } from "./BoxSpecConfigSection.tsx"
-import { VolumeSection } from "./VolumeSection.tsx"
 import { ComposeProjectEditor } from "./ComposeProjectEditor.tsx"
 import { MenuItem } from "./MenuItem.tsx"
 import { Menu } from "./Menu.tsx"
@@ -16,14 +15,11 @@ interface BoxSpecTabProps {
   form: UseFormReturn<components["schemas"]["UpdateBox"]>
 }
 
-type BoxVolumeSpec = components["schemas"]["BoxVolumeSpec"]
-
 export function BoxSpecTab({ form }: BoxSpecTabProps) {
   const [showYamlDialog, setShowYamlDialog] = useState(false)
   const [selectedVolumeIndex, setSelectedVolumeIndex] = useState<number | null>(null)
   const [selectedComposeProjectIndex, setSelectedComposeProjectIndex] = useState<number | null>(null)
 
-  const volumes = form.watch("boxSpec.volumes") || []
   const composeProjects = form.watch("boxSpec.composeProjects") || []
 
   const handleYamlEdit = () => {
@@ -48,38 +44,6 @@ export function BoxSpecTab({ form }: BoxSpecTabProps) {
   const handleBoxSpecConfigClick = () => {
     setSelectedVolumeIndex(null)
     setSelectedComposeProjectIndex(null)
-  }
-
-  const handleAddVolume = () => {
-    const newVolume: BoxVolumeSpec = {
-      name: `volume-${volumes.length + 1}`,
-      fileBundle: {
-        files: []
-      },
-      rootUid: 0,
-      rootGid: 0,
-      rootMode: "0755"
-    }
-    const updatedVolumes = [...volumes, newVolume]
-    form.setValue("boxSpec.volumes", updatedVolumes)
-    setSelectedVolumeIndex(updatedVolumes.length - 1)
-  }
-
-  const handleVolumeClick = (index: number) => {
-    setSelectedVolumeIndex(index)
-    setSelectedComposeProjectIndex(null)
-  }
-
-  const handleDeleteVolume = (index: number) => {
-    const updatedVolumes = [...volumes]
-    updatedVolumes.splice(index, 1)
-    form.setValue("boxSpec.volumes", updatedVolumes)
-
-    if (updatedVolumes.length === 0) {
-      setSelectedVolumeIndex(null)
-    } else if (index >= updatedVolumes.length) {
-      setSelectedVolumeIndex(updatedVolumes.length - 1)
-    }
   }
 
   const handleAddComposeProject = () => {
@@ -153,7 +117,7 @@ services:
 
   const renderContent = () => {
     if (selectedVolumeIndex !== null) {
-      return <VolumeSection form={form} volumeIndex={selectedVolumeIndex} onDeleteVolume={handleDeleteVolume}/>
+      //asd
     } else if (selectedComposeProjectIndex !== null) {
       return <ComposeProjectEditor form={form} projectIndex={selectedComposeProjectIndex} projectName={composeProjectInfos[selectedComposeProjectIndex].name} onDeleteProject={handleDeleteComposeProject} />
     } else {
@@ -172,37 +136,6 @@ services:
           >
             Box Spec
           </MenuItem>
-        </MenuSection>
-
-        <MenuSection showSeparator>
-          <MenuItem
-            onClick={handleAddVolume}
-            className="flex items-center gap-2"
-          >
-            <Plus className="h-4 w-4" />
-            Add Volume
-          </MenuItem>
-
-          <ScrollableMenuList
-            isEmpty={volumes.length === 0}
-            emptyMessage="No volumes"
-            maxHeight="max-h-40"
-          >
-            {volumes.map((volume, index) => (
-              <MenuItem
-                key={index}
-                onClick={() => handleVolumeClick(index)}
-                isActive={selectedVolumeIndex === index}
-              >
-                <div className="flex justify-between items-center">
-                  <span>{volume.name}</span>
-                  <span className="text-xs opacity-70">
-                    {volume.fileBundle?.files?.length || 0} files
-                  </span>
-                </div>
-              </MenuItem>
-            ))}
-          </ScrollableMenuList>
         </MenuSection>
 
         <MenuSection showSeparator>

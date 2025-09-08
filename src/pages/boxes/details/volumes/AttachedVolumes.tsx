@@ -12,7 +12,7 @@ import type { ColumnDef } from "@tanstack/react-table"
 import { Plus, Unplug } from "lucide-react"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
 import { formatSize } from "@/utils/size.ts"
-import { EditVolumeRootDialog } from "@/pages/boxes/details/volumes/EditVolumeRootDialog.tsx";
+import { FileModeDialog } from "@/pages/boxes/details/volumes/FileModeDialog.tsx";
 
 interface AttachedVolumesProps {
   boxId: number
@@ -178,14 +178,11 @@ export function AttachedVolumes({ boxId }: AttachedVolumesProps) {
         const volume = attachment.volume
         return (
           <div className="flex space-x-2">
-            <EditVolumeRootDialog
-              volume={{
-                name: attachment.volume.name,
-                rootUid: attachment.root_uid,
-                rootGid: attachment.root_gid,
-                rootMode: attachment.root_mode
-              }}
-              onUpdate={(updatedVolume) => {
+            <FileModeDialog
+              uid={attachment.root_uid}
+              gid={attachment.root_gid}
+              mode={attachment.root_mode}
+              onUpdate={(uid, gid, mode) => {
                 updateAttachmentMutation.mutate({
                   params: {
                     path: {
@@ -195,9 +192,9 @@ export function AttachedVolumes({ boxId }: AttachedVolumesProps) {
                     }
                   },
                   body: {
-                    root_uid: updatedVolume.rootUid,
-                    root_gid: updatedVolume.rootGid,
-                    root_mode: updatedVolume.rootMode
+                    root_uid: uid,
+                    root_gid: gid,
+                    root_mode: mode
                   }
                 })
               }}

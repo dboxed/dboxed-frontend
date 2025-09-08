@@ -1,34 +1,37 @@
-import { useState } from "react"
+import { type FormEvent, useCallback, useEffect, useState } from "react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Label } from "@/components/ui/label.tsx"
 import { Settings } from "lucide-react"
-import type { components } from "@/api/models/schema"
 
-interface EditVolumeRootDialogProps {
-  volume: components["schemas"]["BoxVolumeSpec"]
-  onUpdate: (updatedVolume: components["schemas"]["BoxVolumeSpec"]) => void
+interface FileModeDialogProps {
+  uid: number
+  gid: number
+  mode: string
+  onUpdate: (uid: number, gid: number, mode: string) => void
   onSuccess?: () => void
 }
 
-export function EditVolumeRootDialog({ volume, onUpdate, onSuccess }: EditVolumeRootDialogProps) {
-  const [open, setOpen] = useState(false)
-  const [formData, setFormData] = useState({
-    root_uid: volume.rootUid.toString(),
-    root_gid: volume.rootGid.toString(),
-    root_mode: volume.rootMode
-  })
-
-  const handleSubmit = () => {
-    const updatedVolume: components["schemas"]["BoxVolumeSpec"] = {
-      ...volume,
-      rootUid: parseInt(formData.root_uid),
-      rootGid: parseInt(formData.root_gid),
-      rootMode: formData.root_mode
+export function FileModeDialog({ uid, gid, mode, onUpdate, onSuccess }: FileModeDialogProps) {
+  const buildInitialFormData = useCallback(() => {
+    return {
+      uid: uid.toString(),
+      gid: gid.toString(),
+      mode: mode
     }
-    
-    onUpdate(updatedVolume)
+  }, [uid, gid, mode])
+
+  const [open, setOpen] = useState(false)
+  const [formData, setFormData] = useState(buildInitialFormData())
+
+  useEffect(() => {
+    setFormData(buildInitialFormData())
+  }, [buildInitialFormData]);
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    onUpdate(parseInt(formData.uid), parseInt(formData.gid), formData.mode)
     setOpen(false)
     onSuccess?.()
   }
@@ -41,6 +44,7 @@ export function EditVolumeRootDialog({ volume, onUpdate, onSuccess }: EditVolume
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
+          type={"button"}
           variant="outline"
           size="sm"
         >
@@ -49,42 +53,42 @@ export function EditVolumeRootDialog({ volume, onUpdate, onSuccess }: EditVolume
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit Volume</DialogTitle>
+          <DialogTitle>Edit permissions and ownership</DialogTitle>
           <DialogDescription>
-            Modify the permissions and ownership settings for this volume.
+            Modify the permissions and ownership settings.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="root_uid">User ID (UID)</Label>
+            <Label htmlFor="uid">UID</Label>
             <Input
-              id="root_uid"
+              id="uid"
               type="number"
               min="0"
-              value={formData.root_uid}
-              onChange={(e) => handleInputChange('root_uid', e.target.value)}
+              value={formData.uid}
+              onChange={(e) => handleInputChange('uid', e.target.value)}
               placeholder="0"
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="root_gid">Group ID (GID)</Label>
+            <Label htmlFor="gid">GID</Label>
             <Input
-              id="root_gid"
+              id="gid"
               type="number"
               min="0"
-              value={formData.root_gid}
-              onChange={(e) => handleInputChange('root_gid', e.target.value)}
+              value={formData.gid}
+              onChange={(e) => handleInputChange('gid', e.target.value)}
               placeholder="0"
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="root_mode">File Mode</Label>
+            <Label htmlFor="mode">Access Mode</Label>
             <Input
-              id="root_mode"
-              value={formData.root_mode}
-              onChange={(e) => handleInputChange('root_mode', e.target.value)}
+              id="mode"
+              value={formData.mode}
+              onChange={(e) => handleInputChange('mode', e.target.value)}
               placeholder="0700"
               pattern="[0-7]{3,4}"
               title="Enter octal file permissions (e.g., 0755, 0644)"
@@ -95,7 +99,9 @@ export function EditVolumeRootDialog({ volume, onUpdate, onSuccess }: EditVolume
             <Button
               type="button"
               variant="outline"
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                setOpen(false)
+              }}
             >
               Cancel
             </Button>

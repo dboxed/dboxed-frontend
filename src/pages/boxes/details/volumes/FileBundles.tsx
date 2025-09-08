@@ -2,8 +2,9 @@ import { Button } from "@/components/ui/button.tsx"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { DataTable } from "@/components/data-table.tsx"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
-import { EditVolumeRootDialog } from "./EditVolumeRootDialog.tsx"
+import { FileModeDialog } from "./FileModeDialog.tsx"
 import { SimpleInputDialog } from "@/components/SimpleInputDialog.tsx"
+import { FileBundleEditorDialog } from "./FileBundleEditorDialog.tsx"
 import type { components } from "@/api/models/schema"
 import type { UseFormReturn } from "react-hook-form"
 import type { ColumnDef } from "@tanstack/react-table"
@@ -19,6 +20,10 @@ export function FileBundles({ form }: FileBundlesProps) {
   
   const volumes = form.watch("boxSpec.volumes") || []
   const fileBundleVolumes = volumes.filter(volume => volume.fileBundle != null)
+
+  const getVolumeIndex = (volume: components["schemas"]["BoxVolumeSpec"]) => {
+    return volumes.findIndex(v => v === volume)
+  }
 
   const handleNewBundle = (name: string) => {
     const currentVolumes = form.getValues("boxSpec.volumes") || []
@@ -41,7 +46,14 @@ export function FileBundles({ form }: FileBundlesProps) {
     form.setValue("boxSpec.volumes", updatedVolumes)
   }
 
-  const columns: ColumnDef<components["schemas"]["BoxVolumeSpec"] & { _index: number }>[] = [
+  const handleUpdateBundle = (volumeIndex: number, updatedVolume: components["schemas"]["BoxVolumeSpec"]) => {
+    const currentVolumes = form.getValues("boxSpec.volumes") || []
+    const updatedVolumes = [...currentVolumes]
+    updatedVolumes[volumeIndex] = updatedVolume
+    form.setValue("boxSpec.volumes", updatedVolumes)
+  }
+
+  const columns: ColumnDef<components["schemas"]["BoxVolumeSpec"]>[] = [
     {
       accessorKey: "name",
       header: "Name",
@@ -96,15 +108,24 @@ export function FileBundles({ form }: FileBundlesProps) {
       cell: ({ row }) => {
         return (
           <div className="flex space-x-2">
-            <EditVolumeRootDialog
+            <FileBundleEditorDialog
               volume={row.original}
-              onUpdate={(updatedVolume) => {
+              onUpdateBundle={(updatedVolume) => handleUpdateBundle(getVolumeIndex(row.original), updatedVolume)}
+            />
+            <FileModeDialog
+              uid={row.original.rootUid || 0}
+              gid={row.original.rootGid || 0}
+              mode={row.original.rootMode || "0755"}
+              onUpdate={(uid, gid, mode) => {
                 const currentVolumes = form.getValues("boxSpec.volumes") || []
                 const updatedVolumes = [...currentVolumes]
-
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                const { _index, ...cleanUpdatedVolume } = updatedVolume as typeof updatedVolume & { _index: number }
-                updatedVolumes[row.original._index] = cleanUpdatedVolume
+                const volumeIndex = getVolumeIndex(row.original)
+                updatedVolumes[volumeIndex] = {
+                  ...updatedVolumes[volumeIndex],
+                  rootUid: uid,
+                  rootGid: gid,
+                  rootMode: mode
+                }
                 form.setValue("boxSpec.volumes", updatedVolumes)
               }}
             />
@@ -120,7 +141,7 @@ export function FileBundles({ form }: FileBundlesProps) {
               title="Delete File Bundle"
               description={`Are you sure you want to delete the file bundle "${row.original.name}"? This will remove all files in the bundle.`}
               confirmText="Delete"
-              onConfirm={() => handleDeleteBundle(row.original._index)}
+              onConfirm={() => handleDeleteBundle(getVolumeIndex(row.original))}
               destructive
             />
           </div>
@@ -128,12 +149,6 @@ export function FileBundles({ form }: FileBundlesProps) {
       }
     }
   ]
-
-  // Add index to each volume for deletion tracking
-  const volumesWithIndex = fileBundleVolumes.map((volume) => {
-    const originalIndex = volumes.findIndex(v => v === volume)
-    return { ...volume, _index: originalIndex }
-  })
 
   return (
     <>
@@ -160,7 +175,7 @@ export function FileBundles({ form }: FileBundlesProps) {
         <CardContent>
           <DataTable
             columns={columns}
-            data={volumesWithIndex}
+            data={fileBundleVolumes}
             searchColumn="name"
             searchPlaceholder="Search file bundles..."
           />

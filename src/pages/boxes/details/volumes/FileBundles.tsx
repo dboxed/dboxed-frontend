@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button.tsx"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { DataTable } from "@/components/data-table.tsx"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip.tsx"
 import { FileModeDialog } from "./FileModeDialog.tsx"
 import { SimpleInputDialog } from "@/components/SimpleInputDialog.tsx"
 import { FileBundleEditorDialog } from "./FileBundleEditorDialog.tsx"
@@ -108,42 +109,69 @@ export function FileBundles({ form }: FileBundlesProps) {
       cell: ({ row }) => {
         return (
           <div className="flex space-x-2">
-            <FileBundleEditorDialog
-              volume={row.original}
-              onUpdateBundle={(updatedVolume) => handleUpdateBundle(getVolumeIndex(row.original), updatedVolume)}
-            />
-            <FileModeDialog
-              uid={row.original.rootUid || 0}
-              gid={row.original.rootGid || 0}
-              mode={row.original.rootMode || "0755"}
-              onUpdate={(uid, gid, mode) => {
-                const currentVolumes = form.getValues("boxSpec.volumes") || []
-                const updatedVolumes = [...currentVolumes]
-                const volumeIndex = getVolumeIndex(row.original)
-                updatedVolumes[volumeIndex] = {
-                  ...updatedVolumes[volumeIndex],
-                  rootUid: uid,
-                  rootGid: gid,
-                  rootMode: mode
-                }
-                form.setValue("boxSpec.volumes", updatedVolumes)
-              }}
-            />
-            <ConfirmationDialog
-              trigger={
-                <Button
-                  variant="outline"
-                  size="sm"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              }
-              title="Delete File Bundle"
-              description={`Are you sure you want to delete the file bundle "${row.original.name}"? This will remove all files in the bundle.`}
-              confirmText="Delete"
-              onConfirm={() => handleDeleteBundle(getVolumeIndex(row.original))}
-              destructive
-            />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <FileBundleEditorDialog
+                    volume={row.original}
+                    onUpdateBundle={(updatedVolume) => handleUpdateBundle(getVolumeIndex(row.original), updatedVolume)}
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Edit files</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <FileModeDialog
+                    uid={row.original.rootUid || 0}
+                    gid={row.original.rootGid || 0}
+                    mode={row.original.rootMode || "0755"}
+                    onUpdate={(uid, gid, mode) => {
+                      const currentVolumes = form.getValues("boxSpec.volumes") || []
+                      const updatedVolumes = [...currentVolumes]
+                      const volumeIndex = getVolumeIndex(row.original)
+                      updatedVolumes[volumeIndex] = {
+                        ...updatedVolumes[volumeIndex],
+                        rootUid: uid,
+                        rootGid: gid,
+                        rootMode: mode
+                      }
+                      form.setValue("boxSpec.volumes", updatedVolumes)
+                    }}
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Edit permissions</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <ConfirmationDialog
+                    trigger={
+                      <Button
+                        variant="outline"
+                        size="sm"
+                      >
+                        <Trash2 className="w-4 h-4"/>
+                      </Button>
+                    }
+                    title="Delete File Bundle"
+                    description={`Are you sure you want to delete the file bundle "${row.original.name}"? This will remove all files in the bundle.`}
+                    confirmText="Delete"
+                    onConfirm={() => handleDeleteBundle(getVolumeIndex(row.original))}
+                    destructive
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Delete bundle</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         )
       }

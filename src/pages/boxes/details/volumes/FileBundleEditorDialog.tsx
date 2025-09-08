@@ -56,6 +56,7 @@ export function FileBundleEditorDialog({ volume, onUpdateBundle }: FileBundleEdi
     }}>
       <DialogTrigger asChild>
         <Button
+          type={"button"}
           variant="outline"
           size="sm"
         >

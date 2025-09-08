@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button.tsx"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { DataTable } from "@/components/data-table.tsx"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip.tsx"
 import { SimpleInputDialog } from "@/components/SimpleInputDialog.tsx"
 import { ComposeProjectEditorDialog } from "./ComposeProjectEditorDialog.tsx"
 import type { components } from "@/api/models/schema"
@@ -79,25 +80,43 @@ services:
       cell: ({ row }) => {
         return (
           <div className="flex space-x-2">
-            <ComposeProjectEditorDialog
-              project={row.original}
-              onUpdateProject={(updatedContent) => handleUpdateProject(row.original.index, updatedContent)}
-            />
-            <ConfirmationDialog
-              trigger={
-                <Button
-                  variant="outline"
-                  size="sm"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              }
-              title="Delete Compose Project"
-              description={`Are you sure you want to delete "${row.original.name}"? This will remove all services in this project.`}
-              confirmText="Delete"
-              onConfirm={() => handleDeleteProject(row.original.index)}
-              destructive
-            />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <ComposeProjectEditorDialog
+                    project={row.original}
+                    onUpdateProject={(updatedContent) => handleUpdateProject(row.original.index, updatedContent)}
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Edit project</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <ConfirmationDialog
+                    trigger={
+                      <Button
+                        variant="outline"
+                        size="sm"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    }
+                    title="Delete Compose Project"
+                    description={`Are you sure you want to delete "${row.original.name}"? This will remove all services in this project.`}
+                    confirmText="Delete"
+                    onConfirm={() => handleDeleteProject(row.original.index)}
+                    destructive
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Delete project</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         )
       }

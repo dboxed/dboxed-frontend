@@ -11,8 +11,9 @@ import type { components } from "@/api/models/schema"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Plus, Unplug } from "lucide-react"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip.tsx"
 import { formatSize } from "@/utils/size.ts"
-import { FileModeDialog } from "@/pages/boxes/details/volumes/FileModeDialog.tsx";
+import { FileModeDialog } from "@/pages/boxes/details/volumes/FileModeDialog.tsx"
 
 interface AttachedVolumesProps {
   boxId: number
@@ -178,44 +179,62 @@ export function AttachedVolumes({ boxId }: AttachedVolumesProps) {
         const volume = attachment.volume
         return (
           <div className="flex space-x-2">
-            <FileModeDialog
-              uid={attachment.root_uid}
-              gid={attachment.root_gid}
-              mode={attachment.root_mode}
-              onUpdate={(uid, gid, mode) => {
-                updateAttachmentMutation.mutate({
-                  params: {
-                    path: {
-                      workspaceId: workspaceId!,
-                      id: boxId,
-                      volumeId: attachment.volume_id
+            <Tooltip>
+              <TooltipTrigger>
+                <div>
+                  <FileModeDialog
+                    uid={attachment.root_uid}
+                    gid={attachment.root_gid}
+                    mode={attachment.root_mode}
+                    onUpdate={(uid, gid, mode) => {
+                      updateAttachmentMutation.mutate({
+                        params: {
+                          path: {
+                            workspaceId: workspaceId!,
+                            id: boxId,
+                            volumeId: attachment.volume_id
+                          }
+                        },
+                        body: {
+                          root_uid: uid,
+                          root_gid: gid,
+                          root_mode: mode
+                        }
+                      })
+                    }}
+                    onSuccess={() => attachedVolumesQuery.refetch()}
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Edit permissions</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <ConfirmationDialog
+                    trigger={
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={detachVolumeMutation.isPending}
+                      >
+                        <Unplug className="w-4 h-4" />
+                      </Button>
                     }
-                  },
-                  body: {
-                    root_uid: uid,
-                    root_gid: gid,
-                    root_mode: mode
-                  }
-                })
-              }}
-              onSuccess={() => attachedVolumesQuery.refetch()}
-            />
-            <ConfirmationDialog
-              trigger={
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={detachVolumeMutation.isPending}
-                >
-                  <Unplug className="w-4 h-4" />
-                </Button>
-              }
-              title="Detach Volume"
-              description={`Are you sure you want to detach volume "${volume.name}"?`}
-              confirmText="Detach"
-              onConfirm={() => handleDetachVolume(attachment.volume_id)}
-              destructive
-            />
+                    title="Detach Volume"
+                    description={`Are you sure you want to detach volume "${volume.name}"?`}
+                    confirmText="Detach"
+                    onConfirm={() => handleDetachVolume(attachment.volume_id)}
+                    destructive
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Detach volume</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         )
       }

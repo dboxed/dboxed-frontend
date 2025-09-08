@@ -7,6 +7,7 @@ import { BoxConnectCard } from "./BoxConnectCard.tsx"
 import { LogsPage } from "./logs/LogsPage.tsx"
 import { VolumesTab } from "./volumes/VolumesTab.tsx"
 import { ComposeProjects } from "./compose-projects/ComposeProjects.tsx"
+import { BoxSpecYamlEditorDialog } from "./BoxSpecYamlEditorDialog.tsx"
 import type { components } from "@/api/models/schema"
 
 export function BoxDetailsPage() {
@@ -36,6 +37,9 @@ export function BoxDetailsPage() {
       enableDelete={true}
       afterDeleteUrl={`/workspaces/${workspaceId}/boxes`}
       buildUpdateDefaults={buildUpdateDefaults}
+      customButtons={(data, form) => (
+        <BoxSpecYamlEditorDialog form={form} />
+      )}
       apiParams={{
         path: {
           workspaceId: workspaceId,

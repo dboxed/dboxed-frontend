@@ -141,6 +141,7 @@ export function ListBoxesPage() {
       title="Boxes"
       resourcePath="/v1/workspaces/{workspaceId}/boxes"
       createPath={`/workspaces/${workspaceId}/boxes/create`}
+      createButtonText="Create Box"
       columns={columns}
       apiParams={{
         path: {

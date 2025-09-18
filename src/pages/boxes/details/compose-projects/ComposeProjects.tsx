@@ -6,7 +6,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { SimpleInputDialog } from "@/components/SimpleInputDialog.tsx"
 import { ComposeProjectEditorDialog } from "./ComposeProjectEditorDialog.tsx"
 import type { components } from "@/api/models/schema"
-import type { UseFormReturn } from "react-hook-form"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Plus, Trash2 } from "lucide-react"
 import { useState } from "react"
@@ -14,15 +13,17 @@ import {
   type ComposeProjectInfo,
   extractComposeProjectInfo
 } from "@/pages/boxes/details/compose-projects/project-info.ts";
+import { deepClone } from "@/utils/clone.ts";
 
 interface ComposeProjectsProps {
-  form: UseFormReturn<components["schemas"]["UpdateBox"]>
+  box: components["schemas"]["Box"]
+  saveBox: (data: components["schemas"]["UpdateBox"]) => Promise<boolean>
 }
 
-export function ComposeProjects({ form }: ComposeProjectsProps) {
+export function ComposeProjects({ box, saveBox }: ComposeProjectsProps) {
   const [newProjectDialogOpen, setNewProjectDialogOpen] = useState(false)
   
-  const composeProjects = form.watch("boxSpec.composeProjects") || []
+  const composeProjects = box.box_spec.composeProjects || []
 
   // Transform the string array into objects for the data table
   const projectItems: ComposeProjectInfo[] = composeProjects.map((project, index) => {
@@ -30,25 +31,34 @@ export function ComposeProjects({ form }: ComposeProjectsProps) {
   })
 
   const handleNewProject = (name: string) => {
-    const currentProjects = form.getValues("boxSpec.composeProjects") || []
     const newProject = `name: ${name}
 services:
   # Add your services here
 `
-    form.setValue("boxSpec.composeProjects", [...currentProjects, newProject])
+    const newBoxSpec = deepClone(box.box_spec)
+    if (!newBoxSpec.composeProjects) {
+      newBoxSpec.composeProjects = []
+    }
+    newBoxSpec.composeProjects.push(newProject)
+    saveBox({
+      boxSpec: newBoxSpec,
+    })
   }
 
   const handleDeleteProject = (projectIndex: number) => {
-    const currentProjects = form.getValues("boxSpec.composeProjects") || []
-    const updatedProjects = currentProjects.filter((_, index) => index !== projectIndex)
-    form.setValue("boxSpec.composeProjects", updatedProjects)
+    const newBoxSpec = deepClone(box.box_spec)
+    newBoxSpec.composeProjects = newBoxSpec.composeProjects?.filter((_, index) => index !== projectIndex)
+    saveBox({
+      boxSpec: newBoxSpec,
+    })
   }
 
   const handleUpdateProject = (projectIndex: number, updatedContent: string) => {
-    const currentProjects = form.getValues("boxSpec.composeProjects") || []
-    const updatedProjects = [...currentProjects]
-    updatedProjects[projectIndex] = updatedContent
-    form.setValue("boxSpec.composeProjects", updatedProjects)
+    const newBoxSpec = deepClone(box.box_spec)
+    newBoxSpec.composeProjects![projectIndex] = updatedContent
+    saveBox({
+      boxSpec: newBoxSpec,
+    })
   }
 
   const columns: ColumnDef<ComposeProjectInfo>[] = [

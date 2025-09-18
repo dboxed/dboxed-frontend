@@ -16,10 +16,10 @@ import { formatSize } from "@/utils/size.ts"
 import { FileModeDialog } from "@/pages/boxes/details/volumes/FileModeDialog.tsx"
 
 interface AttachedVolumesProps {
-  boxId: number
+  box: components["schemas"]["Box"]
 }
 
-export function AttachedVolumes({ boxId }: AttachedVolumesProps) {
+export function AttachedVolumes({ box }: AttachedVolumesProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
   const [attachDialogOpen, setAttachDialogOpen] = useState(false)
@@ -28,7 +28,7 @@ export function AttachedVolumes({ boxId }: AttachedVolumesProps) {
     params: {
       path: {
         workspaceId: workspaceId!,
-        id: boxId
+        id: box.id
       }
     }
   })
@@ -64,7 +64,7 @@ export function AttachedVolumes({ boxId }: AttachedVolumesProps) {
       params: {
         path: {
           workspaceId: workspaceId!,
-          id: boxId
+          id: box.id
         }
       },
       body: {
@@ -81,7 +81,7 @@ export function AttachedVolumes({ boxId }: AttachedVolumesProps) {
       params: {
         path: {
           workspaceId: workspaceId!,
-          id: boxId,
+          id: box.id,
           volumeId: volumeId
         }
       }
@@ -191,7 +191,7 @@ export function AttachedVolumes({ boxId }: AttachedVolumesProps) {
                         params: {
                           path: {
                             workspaceId: workspaceId!,
-                            id: boxId,
+                            id: box.id,
                             volumeId: attachment.volume_id
                           }
                         },

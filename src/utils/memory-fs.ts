@@ -6,8 +6,8 @@ export interface FileStats {
   mode: number;
   type: FileType;
   size: number;
-  created: Date;
-  modified: Date;
+  created?: Date;
+  modified?: Date;
 }
 
 export interface FileNode {

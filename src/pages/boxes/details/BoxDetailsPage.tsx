@@ -18,12 +18,6 @@ export function BoxDetailsPage() {
     return <div>Invalid box ID</div>
   }
 
-  const buildUpdateDefaults = (data: components["schemas"]["Box"]): components["schemas"]["UpdateBox"] => {
-    return {
-      boxSpec: data.box_spec
-    }
-  }
-
   return (
     <BaseResourceDetailsPage<components["schemas"]["Box"], components["schemas"]["UpdateBox"]>
       title={data => {
@@ -33,12 +27,10 @@ export function BoxDetailsPage() {
         return `Box ${data.name}`
       }}
       resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
-      enableSave={true}
       enableDelete={true}
       afterDeleteUrl={`/workspaces/${workspaceId}/boxes`}
-      buildUpdateDefaults={buildUpdateDefaults}
-      customButtons={(data, form) => (
-        <BoxSpecYamlEditorDialog form={form} />
+      customButtons={(data, save) => (
+        <BoxSpecYamlEditorDialog box={data} saveBox={save}/>
       )}
       apiParams={{
         path: {
@@ -47,7 +39,7 @@ export function BoxDetailsPage() {
         }
       }}
     >
-      {(data, form) => (
+      {(data, save) => (
         <Tabs defaultValue="general" className="space-y-6">
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="general">General Information</TabsTrigger>
@@ -66,15 +58,15 @@ export function BoxDetailsPage() {
           </TabsContent>
 
           <TabsContent value="volumes">
-            <VolumesTab boxId={data.id} form={form} />
+            <VolumesTab box={data} saveBox={save} />
           </TabsContent>
 
           <TabsContent value="compose">
-            <ComposeProjects form={form} />
+            <ComposeProjects box={data} saveBox={save} />
           </TabsContent>
 
           <TabsContent value="logs">
-            <LogsPage boxId={data.id} />
+            <LogsPage box={data} />
           </TabsContent>
         </Tabs>
       )}

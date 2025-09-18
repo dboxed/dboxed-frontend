@@ -8,7 +8,7 @@ import type { components } from "@/api/models/schema"
 import { LogFileViewer } from "./LogFileViewer.tsx"
 
 interface LogsPageProps {
-  boxId: number
+  box: components["schemas"]["Box"]
 }
 
 function getLogFileDisplayName(logFile: components["schemas"]["LogMetadata"]): string {
@@ -32,7 +32,7 @@ function getLogFileIcon(logFile: components["schemas"]["LogMetadata"]) {
   }
 }
 
-export function LogsPage({ boxId }: LogsPageProps) {
+export function LogsPage({ box }: LogsPageProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
   const [selectedLogFile, setSelectedLogFile] = useState<string | null>(null)
@@ -42,7 +42,7 @@ export function LogsPage({ boxId }: LogsPageProps) {
     params: {
       path: {
         workspaceId: workspaceId!,
-        id: boxId,
+        id: box.id,
       }
     },
   }, {
@@ -98,7 +98,7 @@ export function LogsPage({ boxId }: LogsPageProps) {
           <div className="col-span-3">
             <LogFileViewer
               workspaceId={workspaceId}
-              boxId={boxId}
+              boxId={box.id}
               logFileName={selectedLogFile}
             />
           </div>

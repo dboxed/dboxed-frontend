@@ -1,24 +1,29 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button.tsx"
 import { EditorDialog } from "@/components/EditorDialog.tsx"
 import { FileText } from "lucide-react"
 import { toast } from "sonner"
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml"
 import type { components } from "@/api/models/schema"
-import type { UseFormReturn } from "react-hook-form"
 
 interface BoxSpecYamlEditorDialogProps {
-  form: UseFormReturn<components["schemas"]["UpdateBox"]>
+  box: components["schemas"]["Box"]
+  saveBox: (newBox: components["schemas"]["UpdateBox"]) => Promise<boolean>
 }
 
-export function BoxSpecYamlEditorDialog({ form }: BoxSpecYamlEditorDialogProps) {
+export function BoxSpecYamlEditorDialog({ box, saveBox }: BoxSpecYamlEditorDialogProps) {
   const [open, setOpen] = useState(false)
+  const [initialYaml, setBoxSpecYaml] = useState("")
+
+  useEffect(() => {
+    setBoxSpecYaml(stringifyYaml(box.box_spec))
+  }, [box.box_spec]);
 
   const handleEdit = () => {
     setOpen(true)
   }
 
-  const handleSave = (yamlContent: string): boolean => {
+  const handleSave = async (yamlContent: string) => {
     try {
       // Parse the YAML content
       const parsedData = parseYaml(yamlContent)
@@ -28,23 +33,19 @@ export function BoxSpecYamlEditorDialog({ form }: BoxSpecYamlEditorDialogProps) 
         return false
       }
 
-      // Update the form with the parsed box spec
-      form.setValue("boxSpec", parsedData as components["schemas"]["BoxSpec"])
-      
-      toast.success("Box spec updated from YAML")
-      return true
+      console.log("start")
+      if (await saveBox({
+        boxSpec: parsedData,
+      })) {
+        setOpen(false)
+      }
     } catch (error) {
       console.error("Error parsing YAML:", error)
       toast.error("Invalid YAML syntax", {
         description: error instanceof Error ? error.message : "Please check your YAML formatting"
       })
-      return false
     }
   }
-
-  // Get current box spec and convert to YAML
-  const currentBoxSpec = form.getValues("boxSpec")
-  const currentYaml = currentBoxSpec ? stringifyYaml(currentBoxSpec) : ""
 
   return (
     <>
@@ -62,7 +63,7 @@ export function BoxSpecYamlEditorDialog({ form }: BoxSpecYamlEditorDialogProps) 
         open={open}
         onOpenChange={setOpen}
         title="Edit Box Spec as YAML"
-        initialValue={currentYaml}
+        initialValue={initialYaml}
         onSave={handleSave}
         language="yaml"
       />

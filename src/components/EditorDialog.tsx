@@ -8,7 +8,7 @@ interface EditorDialogProps {
   onOpenChange: (open: boolean) => void
   title: string
   initialValue?: string
-  onSave: (value: string) => boolean | void
+  onSave: (value: string) => void
   language?: string
 }
 
@@ -32,17 +32,12 @@ export function EditorDialog({
     setYamlContent(newValue || "")
   }
 
-  const handleSave = () => {
-    const result = onSave(yamlContent)
-    // Only close the dialog if the save operation was successful
-    // If onSave returns false, keep the dialog open
-    if (result !== false) {
-      onOpenChange(false)
-    }
-  }
-
   const handleCancel = () => {
     onOpenChange(false)
+  }
+
+  const handleSave = () => {
+    onSave(yamlContent)
   }
 
   const handleOpenChange = (newOpen: boolean) => {

@@ -9,10 +9,10 @@ import { useMemo, useState } from "react"
 
 interface FileBundleEditorProps {
   volume: components["schemas"]["BoxVolumeSpec"]
-  onUpdateBundle: (newVolume: components["schemas"]["BoxVolumeSpec"]) => void
+  saveFileBundle: (newVolume: components["schemas"]["BoxVolumeSpec"]) => Promise<boolean>
 }
 
-export function FileBundleEditorDialog({ volume, onUpdateBundle }: FileBundleEditorProps) {
+export function FileBundleEditorDialog({ volume, saveFileBundle }: FileBundleEditorProps) {
   const [open, setOpen] = useState(false)
   const [selectedFilePath, setSelectedFilePath] = useState<string | null>(null)
   const fileBundle = volume?.fileBundle
@@ -36,8 +36,9 @@ export function FileBundleEditorDialog({ volume, onUpdateBundle }: FileBundleEdi
         files: updatedFiles
       }
     }
-    onUpdateBundle(newVolume)
-    setOpen(false)
+    if (await saveFileBundle(newVolume)) {
+      setOpen(false)
+    }
   }
 
   const handleCancel = () => {

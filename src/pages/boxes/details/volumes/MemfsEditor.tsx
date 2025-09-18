@@ -195,7 +195,7 @@ const buildTreeData = (volume: MemoryFileSystem) => {
   const buildTreeDataItem = (path: string): TreeDataItemWithStat | null => {
     const st = volume.stat(path)
     if (!st) return null
-    
+
     const pathParts = path.split('/').filter(p => p)
     const name = pathParts.length === 0 ? "/" : pathParts[pathParts.length - 1]
     
@@ -228,7 +228,20 @@ const buildTreeData = (volume: MemoryFileSystem) => {
     return item
   }
 
-  const root = buildTreeDataItem("/")
+  let root = buildTreeDataItem("/")
+  if (!root) {
+    root = {
+      id: "/",
+      name: "",
+      stat: {
+        uid: 0,
+        gid: 0,
+        mode: 0o755,
+        type: "dir",
+        size: 0,
+      }
+    }
+  }
   return {
     root: root,
     flat: flat,

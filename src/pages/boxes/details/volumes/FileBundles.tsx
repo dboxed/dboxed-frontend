@@ -7,19 +7,20 @@ import { FileModeDialog } from "./FileModeDialog.tsx"
 import { SimpleInputDialog } from "@/components/SimpleInputDialog.tsx"
 import { FileBundleEditorDialog } from "./FileBundleEditorDialog.tsx"
 import type { components } from "@/api/models/schema"
-import type { UseFormReturn } from "react-hook-form"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Plus, Trash2 } from "lucide-react"
 import { useState } from "react"
+import { deepClone } from "@/utils/clone.ts";
 
 interface FileBundlesProps {
-  form: UseFormReturn<components["schemas"]["UpdateBox"]>
+  box: components["schemas"]["Box"]
+  saveBox: (newBox: components["schemas"]["UpdateBox"]) => Promise<boolean>
 }
 
-export function FileBundles({ form }: FileBundlesProps) {
+export function FileBundles({ box, saveBox }: FileBundlesProps) {
   const [newBundleDialogOpen, setNewBundleDialogOpen] = useState(false)
   
-  const volumes = form.watch("boxSpec.volumes") || []
+  const volumes = box.box_spec.volumes || []
   const fileBundleVolumes = volumes.filter(volume => volume.fileBundle != null)
 
   const getVolumeIndex = (volume: components["schemas"]["BoxVolumeSpec"]) => {
@@ -27,7 +28,6 @@ export function FileBundles({ form }: FileBundlesProps) {
   }
 
   const handleNewBundle = (name: string) => {
-    const currentVolumes = form.getValues("boxSpec.volumes") || []
     const newVolume: components["schemas"]["BoxVolumeSpec"] = {
       name,
       rootUid: 0,
@@ -37,21 +37,28 @@ export function FileBundles({ form }: FileBundlesProps) {
         files: []
       }
     }
-    
-    form.setValue("boxSpec.volumes", [...currentVolumes, newVolume])
+
+    const newBoxSpec = deepClone(box.box_spec)
+    newBoxSpec.volumes?.push(newVolume)
+    saveBox({
+      boxSpec: newBoxSpec,
+    })
   }
 
   const handleDeleteBundle = (volumeIndex: number) => {
-    const currentVolumes = form.getValues("boxSpec.volumes") || []
-    const updatedVolumes = currentVolumes.filter((_, index) => index !== volumeIndex)
-    form.setValue("boxSpec.volumes", updatedVolumes)
+    const newBoxSpec = deepClone(box.box_spec)
+    newBoxSpec.volumes = newBoxSpec.volumes?.filter((_, index) => index !== volumeIndex)
+    saveBox({
+      boxSpec: newBoxSpec,
+    })
   }
 
-  const handleUpdateBundle = (volumeIndex: number, updatedVolume: components["schemas"]["BoxVolumeSpec"]) => {
-    const currentVolumes = form.getValues("boxSpec.volumes") || []
-    const updatedVolumes = [...currentVolumes]
-    updatedVolumes[volumeIndex] = updatedVolume
-    form.setValue("boxSpec.volumes", updatedVolumes)
+  const handleSaveBundle = (volumeIndex: number, updatedVolume: components["schemas"]["BoxVolumeSpec"]) => {
+    const newBoxSpec = deepClone(box.box_spec)
+    newBoxSpec.volumes![volumeIndex] = updatedVolume
+    return saveBox({
+      boxSpec: newBoxSpec,
+    })
   }
 
   const columns: ColumnDef<components["schemas"]["BoxVolumeSpec"]>[] = [
@@ -114,7 +121,7 @@ export function FileBundles({ form }: FileBundlesProps) {
                 <div>
                   <FileBundleEditorDialog
                     volume={row.original}
-                    onUpdateBundle={(updatedVolume) => handleUpdateBundle(getVolumeIndex(row.original), updatedVolume)}
+                    saveFileBundle={(updatedVolume) => handleSaveBundle(getVolumeIndex(row.original), updatedVolume)}
                   />
                 </div>
               </TooltipTrigger>
@@ -130,16 +137,14 @@ export function FileBundles({ form }: FileBundlesProps) {
                     gid={row.original.rootGid || 0}
                     mode={row.original.rootMode || "0755"}
                     onUpdate={(uid, gid, mode) => {
-                      const currentVolumes = form.getValues("boxSpec.volumes") || []
-                      const updatedVolumes = [...currentVolumes]
                       const volumeIndex = getVolumeIndex(row.original)
-                      updatedVolumes[volumeIndex] = {
-                        ...updatedVolumes[volumeIndex],
-                        rootUid: uid,
-                        rootGid: gid,
-                        rootMode: mode
-                      }
-                      form.setValue("boxSpec.volumes", updatedVolumes)
+                      const newBoxSpec = deepClone(box.box_spec)
+                      newBoxSpec.volumes![volumeIndex].rootUid = uid
+                      newBoxSpec.volumes![volumeIndex].rootGid = gid
+                      newBoxSpec.volumes![volumeIndex].rootMode = mode
+                      saveBox({
+                        boxSpec: newBoxSpec,
+                      })
                     }}
                   />
                 </div>

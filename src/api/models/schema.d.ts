@@ -1173,6 +1173,8 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            /** Format: int64 */
+            attached_to_box?: number;
             /** Format: date-time */
             created_at: string;
             dboxed: components["schemas"]["VolumeDboxed"];

@@ -43,18 +43,21 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
 
   const attachVolumeMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/volumes', {
     onSuccess: () => {
+      allVolumesQuery.refetch()
       attachedVolumesQuery.refetch()
     }
   })
 
   const detachVolumeMutation = client.useMutation('delete', '/v1/workspaces/{workspaceId}/boxes/{id}/volumes/{volumeId}', {
     onSuccess: () => {
+      allVolumesQuery.refetch()
       attachedVolumesQuery.refetch()
     }
   })
 
   const updateAttachmentMutation = client.useMutation('patch', '/v1/workspaces/{workspaceId}/boxes/{id}/volumes/{volumeId}', {
     onSuccess: () => {
+      allVolumesQuery.refetch()
       attachedVolumesQuery.refetch()
     }
   })
@@ -89,9 +92,7 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
   }
 
   const attachedVolumeAttachments = attachedVolumesQuery.data?.items || []
-  const allVolumes = allVolumesQuery.data?.items || []
-  const attachedVolumeIds = new Set(attachedVolumeAttachments.map(va => va.volume_id))
-  const availableVolumes = allVolumes.filter(v => !attachedVolumeIds.has(v.id))
+  const availableVolumes = allVolumesQuery.data?.items?.filter(v => !v.attached_to_box) || []
 
   // Define columns for the DataTable
   const columns: ColumnDef<components["schemas"]["VolumeAttachment"]>[] = [

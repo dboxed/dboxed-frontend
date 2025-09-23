@@ -39,7 +39,10 @@ export function FileBundles({ box, saveBox }: FileBundlesProps) {
     }
 
     const newBoxSpec = deepClone(box.box_spec)
-    newBoxSpec.volumes?.push(newVolume)
+    if (!newBoxSpec.volumes) {
+      newBoxSpec.volumes = []
+    }
+    newBoxSpec.volumes.push(newVolume)
     saveBox({
       boxSpec: newBoxSpec,
     })

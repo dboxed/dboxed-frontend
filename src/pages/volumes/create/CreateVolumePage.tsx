@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { BaseCreatePage } from "@/pages/base/BaseCreatePage.tsx"
 import { VolumeProviderSelector } from "@/pages/volumes/create/index.ts"
-import { DboxedConfig } from "@/pages/volumes/create/DboxedConfig.tsx"
+import { RusticConfig } from "@/pages/volumes/create/RusticConfig.tsx"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
@@ -18,7 +18,7 @@ const FormSchema = z.object({
     if (typeof val === 'string') return parseInt(val)
     return val
   }, z.number().min(1, "Please select a volume provider.")),
-  dboxed: z.object({
+  rustic: z.object({
     fs_size: z.string().min(1, "Filesystem size is required").refine((val) => {
       try {
         const bytes = parseSize(val)
@@ -32,12 +32,12 @@ const FormSchema = z.object({
     fs_type: z.string().min(1, "Filesystem type is required"),
   }).optional(),
 }).refine((_data) => {
-  // If provider type is dboxed, require dboxed config
+  // If provider type is rustic, require rustic config
   // Note: We can't directly check provider type here since it's not in form data
   // This validation will be handled by the component logic
   return true
 }, {
-  message: "DBoxed configuration is required for DBoxed providers.",
+  message: "Rustic configuration is required for rustic providers.",
 })
 
 export function CreateVolumePage() {
@@ -50,11 +50,11 @@ export function CreateVolumePage() {
       volume_provider: data.volume_provider,
     }
 
-    // Add dboxed configuration if provider type is dboxed
-    if (selectedProvider?.type === "dboxed" && data.dboxed) {
-      submitData.dboxed = {
-        fs_size: parseSize(data.dboxed.fs_size),
-        fs_type: data.dboxed.fs_type,
+    // Add rustic configuration if provider type is rustic
+    if (selectedProvider?.type === "rustic" && data.rustic) {
+      submitData.rustic = {
+        fs_size: parseSize(data.rustic.fs_size),
+        fs_type: data.rustic.fs_type,
       }
     }
 
@@ -74,7 +74,7 @@ export function CreateVolumePage() {
       defaultValues={{
         name: "",
         volume_provider: 1, // Will be overridden when user selects
-        dboxed: {
+        rustic: {
           fs_size: "",
           fs_type: "ext4",
         }
@@ -102,8 +102,8 @@ export function CreateVolumePage() {
             onProviderChange={setSelectedProvider}
           />
           
-          {selectedProvider?.type === "dboxed" && (
-            <DboxedConfig form={form} />
+          {selectedProvider?.type === "rustic" && (
+            <RusticConfig form={form} />
           )}
         </div>
       )}

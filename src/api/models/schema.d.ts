@@ -72,6 +72,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/auth/info": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 auth info */
+        get: operations["get-v1-auth-info"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/auth/me": {
         parameters: {
             query?: never;
@@ -152,6 +169,42 @@ export interface paths {
         put?: never;
         post?: never;
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/tokens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 tokens */
+        get: operations["get-v1-tokens"];
+        put?: never;
+        /** Post v1 tokens */
+        post: operations["post-v1-tokens"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/tokens/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 tokens by ID */
+        get: operations["get-v1-tokens-by-id"];
+        put?: never;
+        post?: never;
+        /** Delete v1 tokens by ID */
+        delete: operations["delete-v1-tokens-by-id"];
         options?: never;
         head?: never;
         patch?: never;
@@ -445,6 +498,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/volume-providers/by-name/{volumeProviderName}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID volume providers by name by volume provider name */
+        get: operations["get-v1-workspaces-by-workspace-id-volume-providers-by-name-by-volume-provider-name"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/volume-providers/{id}": {
         parameters: {
             query?: never;
@@ -464,6 +534,74 @@ export interface paths {
         patch: operations["patch-v1-workspaces-by-workspace-id-volume-providers-by-id"];
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/volume-providers/{id}/s3proxy/delete-object": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID volume providers by ID s3 proxy delete object */
+        post: operations["post-v1-workspaces-by-workspace-id-volume-providers-by-id-s3-proxy-delete-object"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/volume-providers/{id}/s3proxy/list-objects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID volume providers by ID s3 proxy list objects */
+        post: operations["post-v1-workspaces-by-workspace-id-volume-providers-by-id-s3-proxy-list-objects"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/volume-providers/{id}/s3proxy/presign-put": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID volume providers by ID s3 proxy presign put */
+        post: operations["post-v1-workspaces-by-workspace-id-volume-providers-by-id-s3-proxy-presign-put"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/volume-providers/{id}/s3proxy/rename-object": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID volume providers by ID s3 proxy rename object */
+        post: operations["post-v1-workspaces-by-workspace-id-volume-providers-by-id-s3-proxy-rename-object"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/volumes": {
         parameters: {
             query?: never;
@@ -476,6 +614,23 @@ export interface paths {
         put?: never;
         /** Post v1 workspaces by workspace ID volumes */
         post: operations["post-v1-workspaces-by-workspace-id-volumes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/volumes/by-name/{volumeName}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID volumes by name by volume name */
+        get: operations["get-v1-workspaces-by-workspace-id-volumes-by-name-by-volume-name"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -497,8 +652,77 @@ export interface paths {
         delete: operations["delete-v1-workspaces-by-workspace-id-volumes-by-id"];
         options?: never;
         head?: never;
-        /** Patch v1 workspaces by workspace ID volumes by ID */
-        patch: operations["patch-v1-workspaces-by-workspace-id-volumes-by-id"];
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/volumes/{id}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID volumes by ID lock */
+        post: operations["post-v1-workspaces-by-workspace-id-volumes-by-id-lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/volumes/{id}/release": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID volumes by ID release */
+        post: operations["post-v1-workspaces-by-workspace-id-volumes-by-id-release"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/volumes/{id}/snapshots": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID volumes by ID snapshots */
+        get: operations["get-v1-workspaces-by-workspace-id-volumes-by-id-snapshots"];
+        put?: never;
+        /** Post v1 workspaces by workspace ID volumes by ID snapshots */
+        post: operations["post-v1-workspaces-by-workspace-id-volumes-by-id-snapshots"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/volumes/{id}/snapshots/{snapshotId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID volumes by ID snapshots by snapshot ID */
+        get: operations["get-v1-workspaces-by-workspace-id-volumes-by-id-snapshots-by-snapshot-id"];
+        put?: never;
+        post?: never;
+        /** Delete v1 workspaces by workspace ID volumes by ID snapshots by snapshot ID */
+        delete: operations["delete-v1-workspaces-by-workspace-id-volumes-by-id-snapshots-by-snapshot-id"];
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
 }
@@ -518,6 +742,15 @@ export interface components {
             root_uid: number;
             /** Format: int64 */
             volume_id: number;
+        };
+        AuthInfo: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            oidcClientId: string;
+            oidcIssuerUrl: string;
         };
         AwsRegion: {
             Endpoint: string;
@@ -655,21 +888,37 @@ export interface components {
             apiUrl?: string;
             netbirdVersion: string;
         };
+        CreateToken: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            name: string;
+        };
+        CreateTokenResult: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: int64 */
+            id: number;
+            name: string;
+            token: string;
+        };
         CreateVolume: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            dboxed?: components["schemas"]["CreateVolumeDboxed"];
             name: string;
+            rustic?: components["schemas"]["CreateVolumeRustic"];
             /** Format: int64 */
             volume_provider: number;
-        };
-        CreateVolumeDboxed: {
-            /** Format: int64 */
-            fs_size: number;
-            fs_type?: string;
         };
         CreateVolumeProvider: {
             /**
@@ -677,15 +926,35 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            dboxed?: components["schemas"]["CreateVolumeProviderDboxed"];
             name: string;
-            type: string;
+            rustic: components["schemas"]["CreateVolumeProviderRustic"];
         };
-        CreateVolumeProviderDboxed: {
-            api_url: string;
+        CreateVolumeProviderRustic: {
+            password: string;
+            storageS3: components["schemas"]["CreateVolumeProviderStorageS3"];
+        };
+        CreateVolumeProviderStorageS3: {
+            accessKeyId: string;
+            bucket: string;
+            endpoint: string;
+            prefix: string;
+            region: string | null;
+            secretAccessKey: string;
+        };
+        CreateVolumeRustic: {
             /** Format: int64 */
-            repository_id: number;
-            token: string;
+            fs_size: number;
+            fs_type?: string;
+        };
+        CreateVolumeSnapshot: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            isLatest: boolean;
+            lockId: string;
+            rustic?: components["schemas"]["VolumeSnapshotRustic"];
         };
         CreateWorkspace: {
             /**
@@ -696,11 +965,7 @@ export interface components {
             name: string;
         };
         DboxedVolume: {
-            apiUrl: string;
             backupInterval: string;
-            /** Format: int64 */
-            repoId: number;
-            token: string;
             /** Format: int64 */
             volumeId: number;
         };
@@ -866,6 +1131,16 @@ export interface components {
             /** Format: int64 */
             total_count: number;
         };
+        ListBodyToken: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["Token"][] | null;
+            /** Format: int64 */
+            total_count: number;
+        };
         ListBodyUser: {
             /**
              * Format: uri
@@ -903,6 +1178,16 @@ export interface components {
              */
             readonly $schema?: string;
             items: components["schemas"]["VolumeProvider"][] | null;
+            /** Format: int64 */
+            total_count: number;
+        };
+        ListBodyVolumeSnapshot: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["VolumeSnapshot"][] | null;
             /** Format: int64 */
             total_count: number;
         };
@@ -1049,9 +1334,86 @@ export interface components {
             Net: string;
             VATRate: string;
         };
+        S3ObjectInfo: {
+            /** Format: date-time */
+            PresignedGetUrlExpires: string;
+            etag?: string;
+            key: string;
+            /** Format: date-time */
+            lastModified?: string;
+            presignedGetUrl: string;
+            /** Format: int64 */
+            size: number;
+        };
+        S3ProxyDeleteObjectRequest: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            key: string;
+        };
+        S3ProxyDeleteObjectResult: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+        };
+        S3ProxyListObjectsRequest: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            prefix: string;
+        };
+        S3ProxyListObjectsResult: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            objects: components["schemas"]["S3ObjectInfo"][] | null;
+        };
+        S3ProxyPresignPutRequest: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            key: string;
+        };
+        S3ProxyPresignPutResult: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: date-time */
+            expires: string;
+            presignedUrl: string;
+        };
+        S3ProxyRenameObjectRequest: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            newKey: string;
+            oldKey: string;
+        };
+        S3ProxyRenameObjectResult: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+        };
         ServerType: {
             Architecture: string;
             CPUType: string;
+            Category: string;
             /** Format: int64 */
             Cores: number;
             Deprecation: components["schemas"]["DeprecationInfo"];
@@ -1075,6 +1437,18 @@ export interface components {
             Location: components["schemas"]["Location"];
             Monthly: components["schemas"]["Price"];
             PerTBTraffic: components["schemas"]["Price"];
+        };
+        Token: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: int64 */
+            id: number;
+            name: string;
         };
         UpdateBox: {
             /**
@@ -1122,12 +1496,13 @@ export interface components {
             apiAccessToken?: string;
             netbirdVersion: string | null;
         };
-        UpdateVolume: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
+        UpdateRepositoryStorageS3: {
+            accessKeyId?: string;
+            bucket?: string;
+            endpoint?: string;
+            prefix?: string;
+            region?: string;
+            secretAccessKey?: string;
         };
         UpdateVolumeAttachmentRequest: {
             /**
@@ -1147,13 +1522,11 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            dboxed?: components["schemas"]["UpdateVolumeProviderDboxed"];
+            rustic?: components["schemas"]["UpdateVolumeProviderRustic"];
         };
-        UpdateVolumeProviderDboxed: {
-            api_url?: string;
-            /** Format: int64 */
-            repository_id?: number;
-            token?: string;
+        UpdateVolumeProviderRustic: {
+            password?: string;
+            storageS3?: components["schemas"]["UpdateRepositoryStorageS3"];
         };
         User: {
             /**
@@ -1173,14 +1546,20 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            LockId: string | null;
+            /** Format: date-time */
+            LockTime: string | null;
             /** Format: int64 */
             attached_to_box?: number;
             /** Format: date-time */
             created_at: string;
-            dboxed: components["schemas"]["VolumeDboxed"];
             /** Format: int64 */
             id: number;
+            /** Format: int64 */
+            latest_snapshot_id: number | null;
             name: string;
+            rustic: components["schemas"]["VolumeRustic"];
+            uuid: string;
             /** Format: int64 */
             volume_provider: number;
             volume_provider_type: string;
@@ -1204,10 +1583,13 @@ export interface components {
             /** Format: int64 */
             volume_id: number;
         };
-        VolumeDboxed: {
-            /** Format: int64 */
-            fs_size: number;
-            fs_type?: string;
+        VolumeLockRequest: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            prevLockId: string | null;
         };
         VolumeProvider: {
             /**
@@ -1217,19 +1599,106 @@ export interface components {
             readonly $schema?: string;
             /** Format: date-time */
             created_at: string;
-            dboxed?: components["schemas"]["VolumeProviderDboxed"];
             /** Format: int64 */
             id: number;
             name: string;
+            rustic?: components["schemas"]["VolumeProviderRustic"];
             status: string;
             type: string;
             /** Format: int64 */
             workspace: number;
         };
-        VolumeProviderDboxed: {
-            api_url: string;
+        VolumeProviderRustic: {
+            password: string;
+            storageS3: components["schemas"]["VolumeStorageS3"];
+            storageType: string;
+        };
+        VolumeReleaseRequest: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            lockI: string;
+        };
+        VolumeRustic: {
             /** Format: int64 */
-            repository_id: number;
+            fs_size: number;
+            fs_type: string;
+        };
+        VolumeSnapshot: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: int64 */
+            id: number;
+            lockId: string;
+            rustic?: components["schemas"]["VolumeSnapshotRustic"];
+            /** Format: int64 */
+            volumeId: number;
+            /** Format: int64 */
+            workspace: number;
+        };
+        VolumeSnapshotRustic: {
+            /** Format: float */
+            backupDuration: number;
+            /** Format: date-time */
+            backupEnd: string;
+            /** Format: date-time */
+            backupStart: string;
+            /** Format: int64 */
+            dataAdded: number;
+            /** Format: int64 */
+            dataAddedFiles: number;
+            /** Format: int64 */
+            dataAddedFilesPacked: number;
+            /** Format: int64 */
+            dataAddedPacked: number;
+            /** Format: int64 */
+            dataAddedTrees: number;
+            /** Format: int64 */
+            dataAddedTreesPacked: number;
+            /** Format: int64 */
+            dataBlobs: number;
+            /** Format: int64 */
+            dirsChanged: number;
+            /** Format: int64 */
+            dirsNew: number;
+            /** Format: int64 */
+            dirsUnmodified: number;
+            /** Format: int64 */
+            filesChanged: number;
+            /** Format: int64 */
+            filesNew: number;
+            /** Format: int64 */
+            filesUnmodified: number;
+            hostname: string;
+            parentSnapshotId?: string;
+            snapshotId: string;
+            /** Format: date-time */
+            snapshotTime: string;
+            /** Format: int64 */
+            totalBytesProcessed: number;
+            /** Format: int64 */
+            totalDirsProcessed: number;
+            /** Format: int64 */
+            totalDirsizeProcessed: number;
+            /** Format: float */
+            totalDuration: number;
+            /** Format: int64 */
+            totalFilesProcessed: number;
+            /** Format: int64 */
+            treeBlobs: number;
+        };
+        VolumeStorageS3: {
+            bucket: string;
+            endpoint: string;
+            prefix: string;
+            region: string | null;
         };
         Workspace: {
             /**
@@ -1361,6 +1830,35 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ListBodyWorkspace"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-auth-info": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthInfo"];
                 };
             };
             /** @description Error */
@@ -1508,6 +2006,132 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ListBodyServerType"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-tokens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListBodyToken"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-tokens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateToken"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreateTokenResult"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-tokens-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Token"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-v1-tokens-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
             /** @description Error */
@@ -2688,6 +3312,39 @@ export interface operations {
             };
         };
     };
+    "get-v1-workspaces-by-workspace-id-volume-providers-by-name-by-volume-provider-name": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                volumeProviderName: string;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VolumeProvider"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-v1-workspaces-by-workspace-id-volume-providers-by-id": {
         parameters: {
             query?: never;
@@ -2793,6 +3450,154 @@ export interface operations {
             };
         };
     };
+    "post-v1-workspaces-by-workspace-id-volume-providers-by-id-s3-proxy-delete-object": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["S3ProxyDeleteObjectRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["S3ProxyDeleteObjectResult"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-volume-providers-by-id-s3-proxy-list-objects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["S3ProxyListObjectsRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["S3ProxyListObjectsResult"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-volume-providers-by-id-s3-proxy-presign-put": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["S3ProxyPresignPutRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["S3ProxyPresignPutResult"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-volume-providers-by-id-s3-proxy-rename-object": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["S3ProxyRenameObjectRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["S3ProxyRenameObjectResult"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-v1-workspaces-by-workspace-id-volumes": {
         parameters: {
             query?: never;
@@ -2840,6 +3645,39 @@ export interface operations {
                 "application/json": components["schemas"]["CreateVolume"];
             };
         };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Volume"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-volumes-by-name-by-volume-name": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                volumeName: string;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description OK */
             200: {
@@ -2929,7 +3767,7 @@ export interface operations {
             };
         };
     };
-    "patch-v1-workspaces-by-workspace-id-volumes-by-id": {
+    "post-v1-workspaces-by-workspace-id-volumes-by-id-lock": {
         parameters: {
             query?: never;
             header?: never;
@@ -2942,7 +3780,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateVolume"];
+                "application/json": components["schemas"]["VolumeLockRequest"];
             };
         };
         responses: {
@@ -2953,6 +3791,183 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Volume"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-volumes-by-id-release": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VolumeReleaseRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Volume"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-volumes-by-id-snapshots": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListBodyVolumeSnapshot"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-volumes-by-id-snapshots": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateVolumeSnapshot"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VolumeSnapshot"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-volumes-by-id-snapshots-by-snapshot-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                snapshotId: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VolumeSnapshot"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-v1-workspaces-by-workspace-id-volumes-by-id-snapshots-by-snapshot-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                snapshotId: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
             /** @description Error */

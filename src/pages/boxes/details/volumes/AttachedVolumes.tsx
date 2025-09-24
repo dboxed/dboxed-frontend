@@ -132,16 +132,16 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
       }
     },
     {
-      accessorKey: "volume.dboxed.fs_size",
+      accessorKey: "volume.rustic.fs_size",
       header: "Size",
       cell: ({ row }) => {
         const attachment = row.original
         const volume = attachment.volume
-        
+
         switch (volume.volume_provider_type) {
-          case "dboxed":
-            return formatSize(volume.dboxed.fs_size)
-          
+          case "rustic":
+            return formatSize(volume.rustic.fs_size)
+
           default:
             return "N/A"
         }

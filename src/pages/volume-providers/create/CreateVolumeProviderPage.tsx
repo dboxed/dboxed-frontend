@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { BaseCreatePage } from "@/pages/base/BaseCreatePage.tsx"
-import { VolumeProviderTypeSelector, DboxedConfigForm } from "@/pages/volume-providers/create/index.ts"
+import { VolumeProviderTypeSelector, RusticConfigForm } from "@/pages/volume-providers/create/index.ts"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
@@ -11,16 +11,22 @@ const FormSchema = z.object({
   name: z.string().min(1, {
     message: "Name must be at least 1 character.",
   }),
-  type: z.enum(["dboxed"]).refine((val) => val !== undefined, {
+  type: z.enum(["rustic"]).refine((val) => val !== undefined, {
     message: "Please select a volume provider type.",
   }),
-  dboxed: z.object({
-    api_url: z.string().min(1, "API URL is required"),
-    repository_id: z.number().min(1, "Repository ID is required"),
-    token: z.string().min(1, "Token is required"),
-  }).optional(),
+  rustic: z.object({
+    password: z.string().min(1, "Password is required"),
+    storageS3: z.object({
+      accessKeyId: z.string().min(1, "Access Key ID is required"),
+      bucket: z.string().min(1, "Bucket is required"),
+      endpoint: z.string().min(1, "Endpoint is required"),
+      prefix: z.string().min(1, "Prefix is required"),
+      region: z.string().nullable(),
+      secretAccessKey: z.string().min(1, "Secret Access Key is required"),
+    }),
+  }),
 }).refine((data) => {
-  if (data.type === "dboxed" && !data.dboxed) {
+  if (data.type === "rustic" && !data.rustic) {
     return false
   }
   return true
@@ -35,15 +41,17 @@ export function CreateVolumeProviderPage() {
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const submitData: components["schemas"]["CreateVolumeProvider"] = {
       name: data.name,
-      type: data.type,
-    }
-
-    if (data.type === "dboxed" && data.dboxed) {
-      submitData.dboxed = {
-        api_url: data.dboxed.api_url,
-        repository_id: data.dboxed.repository_id,
-        token: data.dboxed.token,
-      }
+      rustic: {
+        password: data.rustic.password,
+        storageS3: {
+          accessKeyId: data.rustic.storageS3.accessKeyId,
+          bucket: data.rustic.storageS3.bucket,
+          endpoint: data.rustic.storageS3.endpoint,
+          prefix: data.rustic.storageS3.prefix,
+          region: data.rustic.storageS3.region,
+          secretAccessKey: data.rustic.storageS3.secretAccessKey,
+        },
+      },
     }
 
     return submitData
@@ -62,10 +70,16 @@ export function CreateVolumeProviderPage() {
       defaultValues={{
         name: "",
         type: undefined,
-        dboxed: {
-          api_url: "",
-          repository_id: 0,
-          token: "",
+        rustic: {
+          password: "",
+          storageS3: {
+            accessKeyId: "",
+            bucket: "",
+            endpoint: "",
+            prefix: "",
+            region: null,
+            secretAccessKey: "",
+          },
         }
       }}
       resolver={zodResolver(FormSchema)}
@@ -88,8 +102,8 @@ export function CreateVolumeProviderPage() {
           
           <VolumeProviderTypeSelector form={form} />
           
-          {form.watch("type") === "dboxed" && (
-            <DboxedConfigForm form={form} />
+          {form.watch("type") === "rustic" && (
+            <RusticConfigForm form={form} />
           )}
         </div>
       )}

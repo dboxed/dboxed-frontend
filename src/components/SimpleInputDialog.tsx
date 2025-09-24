@@ -1,8 +1,10 @@
-import { useState } from "react"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
+import { SimpleFormDialog } from "@/components/SimpleFormDialog"
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+
+interface SimpleInputFormData {
+  value: string
+}
 
 interface SimpleInputDialogProps {
   open: boolean
@@ -14,8 +16,8 @@ interface SimpleInputDialogProps {
   onOk: (value: string) => void
 }
 
-export function SimpleInputDialog({ 
-  open, 
+export function SimpleInputDialog({
+  open,
   onOpenChange,
   title,
   fieldLabel,
@@ -23,65 +25,51 @@ export function SimpleInputDialog({
   defaultValue = "",
   onOk
 }: SimpleInputDialogProps) {
-  const [inputValue, setInputValue] = useState(defaultValue)
+  const buildInitial = (): SimpleInputFormData => ({
+    value: defaultValue,
+  })
 
-  const handleOk = () => {
-    if (inputValue.trim()) {
-      onOk(inputValue.trim())
+  const handleSave = async (data: SimpleInputFormData) => {
+    const trimmedValue = data.value.trim()
+    if (trimmedValue) {
+      onOk(trimmedValue)
       onOpenChange(false)
-      setInputValue(defaultValue) // Reset for next time
     }
-  }
-
-  const handleCancel = () => {
-    onOpenChange(false)
-    setInputValue(defaultValue) // Reset to default
-  }
-
-  const handleOpenChange = (newOpen: boolean) => {
-    if (newOpen) {
-      setInputValue(defaultValue) // Reset when opening
-    }
-    onOpenChange(newOpen)
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-        </DialogHeader>
-
-        <div className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="input-field">{fieldLabel}</Label>
-            <Input
-              id="input-field"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder={placeholder}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && inputValue.trim()) {
-                  handleOk()
-                }
-                if (e.key === 'Escape') {
-                  handleCancel()
-                }
-              }}
-              autoFocus
-            />
-          </div>
-        </div>
-
-        <DialogFooter>
-          <Button type="button" variant="outline" onClick={handleCancel}>
-            Cancel
-          </Button>
-          <Button type="button" onClick={handleOk} disabled={!inputValue.trim()}>
-            OK
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <SimpleFormDialog<SimpleInputFormData>
+      open={open}
+      onOpenChange={onOpenChange}
+      title={title}
+      buildInitial={buildInitial}
+      onSave={handleSave}
+      saveText="OK"
+      saveDisabled={false}
+    >
+      {(form) => (
+        <FormField
+          control={form.control}
+          name="value"
+          rules={{
+            required: "This field is required",
+            validate: (value) => value.trim() !== "" || "This field cannot be empty"
+          }}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{fieldLabel}</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder={placeholder}
+                  autoFocus
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      )}
+    </SimpleFormDialog>
   )
 } 

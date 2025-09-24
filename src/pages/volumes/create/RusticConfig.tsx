@@ -4,30 +4,30 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import type { UseFormReturn } from "react-hook-form"
 
-interface DboxedConfigProps {
+interface RusticConfigProps {
   form: UseFormReturn<any>
 }
 
-export function DboxedConfig({ form }: DboxedConfigProps) {
+export function RusticConfig({ form }: RusticConfigProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>DBoxed Volume Configuration</CardTitle>
+        <CardTitle>Rustic Volume Configuration</CardTitle>
         <CardDescription>
-          Configure the filesystem settings for the selected DBoxed provider.
+          Configure the filesystem settings for the selected rustic provider.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <FormField
           control={form.control}
-          name="dboxed.fs_size"
+          name="rustic.fs_size"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Filesystem Size</FormLabel>
               <FormControl>
-                <Input 
-                  placeholder="Enter filesystem size (e.g., '10GB', '1TB')" 
-                  {...field} 
+                <Input
+                  placeholder="Enter filesystem size (e.g., '10GB', '1TB')"
+                  {...field}
                   value={field.value || ""}
                 />
               </FormControl>
@@ -37,7 +37,7 @@ export function DboxedConfig({ form }: DboxedConfigProps) {
         />
         <FormField
           control={form.control}
-          name="dboxed.fs_type"
+          name="rustic.fs_type"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Filesystem Type</FormLabel>

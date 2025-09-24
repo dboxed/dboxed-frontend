@@ -1,2 +1,2 @@
 export { VolumeProviderTypeSelector } from './VolumeProviderTypeSelector.tsx'
-export { DboxedConfigForm } from './DboxedConfigForm.tsx'
+export { RusticConfigForm } from './RusticConfigForm.tsx'

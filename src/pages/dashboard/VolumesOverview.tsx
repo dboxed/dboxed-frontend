@@ -41,7 +41,7 @@ export function VolumesOverview() {
     id: volume.id,
     name: volume.name,
     onClick: () => navigate(`/workspaces/${workspaceId}/volumes/${volume.id}`),
-    badges: volume.volume_provider_type === "dboxed" ? [{ text: formatSize(volume.dboxed.fs_size) }] : undefined,
+    badges: volume.volume_provider_type === "rustic" ? [{ text: formatSize(volume.rustic.fs_size) }] : undefined,
   }))
 
   return (

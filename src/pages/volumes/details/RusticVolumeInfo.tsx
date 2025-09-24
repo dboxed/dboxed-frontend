@@ -2,17 +2,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { formatSize } from "@/utils/size.ts"
 import type { components } from "@/api/models/schema"
 
-interface DboxedVolumeInfoProps {
+interface RusticVolumeInfoProps {
   data: components["schemas"]["Volume"]
 }
 
-export function DboxedVolumeInfo({ data }: DboxedVolumeInfoProps) {
+export function RusticVolumeInfo({ data }: RusticVolumeInfoProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>DBoxed Volume Information</CardTitle>
+        <CardTitle>Rustic Volume Information</CardTitle>
         <CardDescription>
-          Filesystem configuration details for this DBoxed volume.
+          Filesystem configuration details for this rustic volume.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -20,12 +20,12 @@ export function DboxedVolumeInfo({ data }: DboxedVolumeInfoProps) {
           <div>
             <label className="text-sm font-medium">Filesystem Size</label>
             <p className="text-sm text-muted-foreground">
-              {data.dboxed?.fs_size ? formatSize(data.dboxed.fs_size) : 'N/A'}
+              {data.rustic?.fs_size ? formatSize(data.rustic.fs_size) : 'N/A'}
             </p>
           </div>
           <div>
             <label className="text-sm font-medium">Filesystem Type</label>
-            <p className="text-sm text-muted-foreground">{data.dboxed?.fs_type || 'N/A'}</p>
+            <p className="text-sm text-muted-foreground">{data.rustic?.fs_type || 'N/A'}</p>
           </div>
         </div>
       </CardContent>

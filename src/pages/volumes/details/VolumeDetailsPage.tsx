@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.t
 import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard.tsx"
-import { DboxedVolumeInfo } from "./DboxedVolumeInfo.tsx"
+import { RusticVolumeInfo } from "./RusticVolumeInfo.tsx"
 import type { components } from "@/api/models/schema";
 
 export function VolumeDetailsPage() {
@@ -15,17 +15,16 @@ export function VolumeDetailsPage() {
     return <div>Invalid volume ID</div>
   }
 
-  const buildUpdateDefaults = (_data: components["schemas"]["Volume"]): components["schemas"]["UpdateVolume"] => {
-    const defaults: components["schemas"]["UpdateVolume"] = {}
-    return defaults
+  const buildUpdateDefaults = (_data: components["schemas"]["Volume"]) => {
+    return {}
   }
 
   return (
-    <BaseResourceDetailsPage<components["schemas"]["Volume"], components["schemas"]["UpdateVolume"]>
+    <BaseResourceDetailsPage<components["schemas"]["Volume"], any>
       title="Volume"
       resourcePath="/v1/workspaces/{workspaceId}/volumes/{id}"
       enableDelete={true}
-      enableSave={false} // UpdateVolume schema is empty, so no editable fields
+      enableSave={false} // No UpdateVolume schema available
       buildUpdateDefaults={buildUpdateDefaults}
       afterDeleteUrl={`/workspaces/${workspaceId}/volumes`}
       apiParams={{
@@ -45,8 +44,8 @@ export function VolumeDetailsPage() {
           <TabsContent value="general">
             <div className="space-y-6">
               <GeneralInfoCard data={data} />
-              {data.volume_provider_type === "dboxed" && data.dboxed && (
-                <DboxedVolumeInfo data={data} />
+              {data.volume_provider_type === "rustic" && data.rustic && (
+                <RusticVolumeInfo data={data} />
               )}
             </div>
           </TabsContent>

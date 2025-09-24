@@ -23,7 +23,7 @@ interface ComposeProjectsProps {
 export function ComposeProjects({ box, saveBox }: ComposeProjectsProps) {
   const [newProjectDialogOpen, setNewProjectDialogOpen] = useState(false)
   
-  const composeProjects = box.box_spec.composeProjects || []
+  const composeProjects = box.boxSpec.composeProjects || []
 
   // Transform the string array into objects for the data table
   const projectItems: ComposeProjectInfo[] = composeProjects.map((project, index) => {
@@ -35,7 +35,7 @@ export function ComposeProjects({ box, saveBox }: ComposeProjectsProps) {
 services:
   # Add your services here
 `
-    const newBoxSpec = deepClone(box.box_spec)
+    const newBoxSpec = deepClone(box.boxSpec)
     if (!newBoxSpec.composeProjects) {
       newBoxSpec.composeProjects = []
     }
@@ -46,7 +46,7 @@ services:
   }
 
   const handleDeleteProject = (projectIndex: number) => {
-    const newBoxSpec = deepClone(box.box_spec)
+    const newBoxSpec = deepClone(box.boxSpec)
     newBoxSpec.composeProjects = newBoxSpec.composeProjects?.filter((_, index) => index !== projectIndex)
     saveBox({
       boxSpec: newBoxSpec,
@@ -54,7 +54,7 @@ services:
   }
 
   const handleUpdateProject = (projectIndex: number, updatedContent: string) => {
-    const newBoxSpec = deepClone(box.box_spec)
+    const newBoxSpec = deepClone(box.boxSpec)
     newBoxSpec.composeProjects![projectIndex] = updatedContent
     saveBox({
       boxSpec: newBoxSpec,

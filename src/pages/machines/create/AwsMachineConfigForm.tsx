@@ -17,7 +17,7 @@ export function AwsMachineConfigForm({ form }: AwsMachineConfigFormProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
   
-  const machineProviderId = form.watch("machine_provider")
+  const machineProviderId = form.watch("machineProvider")
   
   // Fetch the selected machine provider details to get subnets
   const machineProviderQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/machine-providers/{id}', {
@@ -36,8 +36,8 @@ export function AwsMachineConfigForm({ form }: AwsMachineConfigFormProps) {
 
   // Set first subnet as default when subnets are loaded
   useEffect(() => {
-    if (subnets.length > 0 && !form.getValues("aws.subnet_id")) {
-      form.setValue("aws.subnet_id", subnets[0].subnet_id)
+    if (subnets.length > 0 && !form.getValues("aws.subnetId")) {
+      form.setValue("aws.subnetId", subnets[0].subnetId)
     }
   }, [subnets, form])
 
@@ -68,7 +68,7 @@ export function AwsMachineConfigForm({ form }: AwsMachineConfigFormProps) {
       <CardContent className="space-y-4">
         <FormField
           control={form.control}
-          name="aws.instance_type"
+          name="aws.instanceType"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Instance Type</FormLabel>
@@ -96,7 +96,7 @@ export function AwsMachineConfigForm({ form }: AwsMachineConfigFormProps) {
 
         <FormField
           control={form.control}
-          name="aws.subnet_id"
+          name="aws.subnetId"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Subnet</FormLabel>
@@ -108,11 +108,11 @@ export function AwsMachineConfigForm({ form }: AwsMachineConfigFormProps) {
                     </SelectTrigger>
                     <SelectContent>
                       {subnets.map((subnet: components["schemas"]["MachineProviderAwsSubnet"]) => (
-                        <SelectItem key={subnet.subnet_id} value={subnet.subnet_id}>
+                        <SelectItem key={subnet.subnetId} value={subnet.subnetId}>
                           <div className="flex flex-col">
-                            <span>{subnet.subnet_name || subnet.subnet_id}</span>
+                            <span>{subnet.subnetName || subnet.subnetId}</span>
                             <span className="text-xs text-muted-foreground">
-                              {subnet.availability_zone} - {subnet.cidr}
+                              {subnet.availabilityZone} - {subnet.cidr}
                             </span>
                           </div>
                         </SelectItem>
@@ -135,7 +135,7 @@ export function AwsMachineConfigForm({ form }: AwsMachineConfigFormProps) {
 
         <FormField
           control={form.control}
-          name="aws.root_volume_size"
+          name="aws.rootVolumeSize"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Root Volume Size (GB)</FormLabel>

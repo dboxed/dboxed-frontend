@@ -26,7 +26,7 @@ export function CreateMachinePage() {
   }
 
   const handleSubmit = (data: components["schemas"]["CreateMachine"]) => {
-    const mp = getMachineProvider(data.machine_provider)
+    const mp = getMachineProvider(data.machineProvider)
     if (!mp) {
       return data
     }
@@ -50,19 +50,19 @@ export function CreateMachinePage() {
       }}
       defaultValues={{
         aws: {
-          instance_type: "t3.micro",
-          root_volume_size: 20,
-          subnet_id: "",
+          instanceType: "t3.micro",
+          rootVolumeSize: 20,
+          subnetId: "",
         },
         hetzner: {
-          server_location: "fsn1",
-          server_type: "cpx11"
+          serverLocation: "fsn1",
+          serverType: "cpx11"
         }
       }}
       onSubmit={handleSubmit}
     >
       {(form) => {
-        const machineProviderId = form.watch("machine_provider")
+        const machineProviderId = form.watch("machineProvider")
         const machineProvider = machineProviderId ? getMachineProvider(machineProviderId) : undefined
         return <div className="space-y-6">
           <FormField

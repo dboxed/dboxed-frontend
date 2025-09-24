@@ -26,32 +26,32 @@ export function HetznerDetailsCard({ hetznerData, form }: HetznerDetailsCardProp
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium">Hetzner Network ID</label>
-              <p className="text-sm text-muted-foreground">{hetznerData.hetzner_network_id || "N/A"}</p>
+              <p className="text-sm text-muted-foreground">{hetznerData.hetznerNetworkId || "N/A"}</p>
             </div>
             
             <div>
               <label className="text-sm font-medium">Network Name</label>
-              <p className="text-sm text-muted-foreground">{hetznerData.hetzner_network_name}</p>
+              <p className="text-sm text-muted-foreground">{hetznerData.hetznerNetworkName}</p>
             </div>
             
             <div>
               <label className="text-sm font-medium">Network Zone</label>
-              <p className="text-sm text-muted-foreground">{hetznerData.hetzner_network_zone || "N/A"}</p>
+              <p className="text-sm text-muted-foreground">{hetznerData.hetznerNetworkZone || "N/A"}</p>
             </div>
             
             <div>
               <label className="text-sm font-medium">Hetzner Network CIDR</label>
-              <p className="text-sm text-muted-foreground">{hetznerData.hetzner_network_cidr || "N/A"}</p>
+              <p className="text-sm text-muted-foreground">{hetznerData.hetznerNetworkCidr || "N/A"}</p>
             </div>
             
             <div>
               <label className="text-sm font-medium">Cloud Subnet CIDR</label>
-              <p className="text-sm text-muted-foreground">{hetznerData.cloud_subnet_cidr || "N/A"}</p>
+              <p className="text-sm text-muted-foreground">{hetznerData.cloudSubnetCidr || "N/A"}</p>
             </div>
             
             <div>
               <label className="text-sm font-medium">Robot Subnet CIDR</label>
-              <p className="text-sm text-muted-foreground">{hetznerData.robot_subnet_cidr || "N/A"}</p>
+              <p className="text-sm text-muted-foreground">{hetznerData.robotSubnetCidr || "N/A"}</p>
             </div>
           </div>
         </div>
@@ -59,7 +59,7 @@ export function HetznerDetailsCard({ hetznerData, form }: HetznerDetailsCardProp
         <div className="space-y-4 pt-4 border-t">
           <FormField
             control={form.control}
-            name="hetzner.cloud_token"
+            name="hetzner.cloudToken"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Hetzner Cloud Token</FormLabel>
@@ -82,7 +82,7 @@ export function HetznerDetailsCard({ hetznerData, form }: HetznerDetailsCardProp
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="hetzner.robot_username"
+              name="hetzner.robotUsername"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Robot Username</FormLabel>
@@ -103,7 +103,7 @@ export function HetznerDetailsCard({ hetznerData, form }: HetznerDetailsCardProp
 
             <FormField
               control={form.control}
-              name="hetzner.robot_password"
+              name="hetzner.robotPassword"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Robot Password</FormLabel>

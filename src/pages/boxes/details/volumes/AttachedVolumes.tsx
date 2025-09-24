@@ -14,6 +14,7 @@ import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip.tsx"
 import { formatSize } from "@/utils/size.ts"
 import { FileModeDialog } from "@/pages/boxes/details/volumes/FileModeDialog.tsx"
+import { toast } from "sonner";
 
 interface AttachedVolumesProps {
   box: components["schemas"]["Box"]
@@ -71,10 +72,19 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
         }
       },
       body: {
-        volume_id: selectedVolume.id,
-        root_uid: 0,
-        root_gid: 0,
-        root_mode: "0700"
+        volumeId: selectedVolume.id,
+        rootUid: 0,
+        rootGid: 0,
+        rootMode: "0700"
+      }
+    }, {
+      onSuccess: () => {
+        toast.success("Volume attached successfully!")
+      },
+      onError: (error) => {
+        toast.error("Failed to attach volume", {
+          description: error.detail || "An error occurred while attaching the volume."
+        })
       }
     })
   }
@@ -88,11 +98,21 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
           volumeId: volumeId
         }
       }
+    },  {
+      onSuccess: () => {
+        toast.success("Volume deattached successfully!")
+      },
+      onError: (error) => {
+        toast.error("Failed to detach volume", {
+          description: error.detail || "An error occurred while detaching the volume."
+        })
+      }
     })
   }
 
   const attachedVolumeAttachments = attachedVolumesQuery.data?.items || []
-  const availableVolumes = allVolumesQuery.data?.items?.filter(v => !v.attached_to_box) || []
+  const availableVolumes = allVolumesQuery.data?.items?.filter(v => !v.attachment) || []
+  console.log(attachedVolumesQuery.data?.items)
 
   // Define columns for the DataTable
   const columns: ColumnDef<components["schemas"]["VolumeAttachment"]>[] = [
@@ -101,7 +121,7 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
       header: "Volume Name",
       cell: ({ row }) => {
         const attachment = row.original
-        const volume = attachment.volume
+        const volume = attachment.volume!
         return (
           <ReferenceLabel
             resourceId={volume.id}
@@ -118,29 +138,29 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
       }
     },
     {
-      accessorKey: "volume.volume_provider_type",
+      accessorKey: "volume.volumeProviderType",
       header: "Provider Type",
       cell: ({ row }) => {
         const attachment = row.original
-        const volume = attachment.volume
+        const volume = attachment.volume!
         
         return (
           <Badge variant="secondary" className="capitalize">
-            {volume.volume_provider_type}
+            {volume.volumeProviderType}
           </Badge>
         )
       }
     },
     {
-      accessorKey: "volume.rustic.fs_size",
+      accessorKey: "volume.rustic.fsSize",
       header: "Size",
       cell: ({ row }) => {
         const attachment = row.original
-        const volume = attachment.volume
+        const volume = attachment.volume!
 
-        switch (volume.volume_provider_type) {
+        switch (volume.volumeProviderType) {
           case "rustic":
-            return formatSize(volume.rustic.fs_size)
+            return formatSize(volume.rustic.fsSize)
 
           default:
             return "N/A"
@@ -148,26 +168,26 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
       }
     },
     {
-      accessorKey: "root_uid",
+      accessorKey: "rootUid",
       header: "UID",
       cell: ({ row }) => {
-        return row.original.root_uid
+        return row.original.rootUid
       }
     },
     {
-      accessorKey: "root_gid", 
+      accessorKey: "rootGid",
       header: "GID",
       cell: ({ row }) => {
-        return row.original.root_gid
+        return row.original.rootGid
       }
     },
     {
-      accessorKey: "root_mode",
+      accessorKey: "rootMode",
       header: "Mode",
       cell: ({ row }) => {
         return (
           <code className="text-sm bg-muted px-1 py-0.5 rounded">
-            {row.original.root_mode}
+            {row.original.rootMode}
           </code>
         )
       }
@@ -177,29 +197,29 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
       header: "Actions",
       cell: ({ row }) => {
         const attachment = row.original
-        const volume = attachment.volume
+        const volume = attachment.volume!
         return (
           <div className="flex space-x-2">
             <Tooltip>
               <TooltipTrigger>
                 <div>
                   <FileModeDialog
-                    uid={attachment.root_uid}
-                    gid={attachment.root_gid}
-                    mode={attachment.root_mode}
+                    uid={attachment.rootUid}
+                    gid={attachment.rootGid}
+                    mode={attachment.rootMode}
                     onUpdate={(uid, gid, mode) => {
                       updateAttachmentMutation.mutate({
                         params: {
                           path: {
                             workspaceId: workspaceId!,
                             id: box.id,
-                            volumeId: attachment.volume_id
+                            volumeId: attachment.volumeId
                           }
                         },
                         body: {
-                          root_uid: uid,
-                          root_gid: gid,
-                          root_mode: mode
+                          rootUid: uid,
+                          rootGid: gid,
+                          rootMode: mode
                         }
                       })
                     }}
@@ -227,7 +247,7 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
                     title="Detach Volume"
                     description={`Are you sure you want to detach volume "${volume.name}"?`}
                     confirmText="Detach"
-                    onConfirm={() => handleDetachVolume(attachment.volume_id)}
+                    onConfirm={() => handleDetachVolume(attachment.volumeId)}
                     destructive
                   />
                 </div>

@@ -44,7 +44,7 @@ export function VolumeDetailsPage() {
           <TabsContent value="general">
             <div className="space-y-6">
               <GeneralInfoCard data={data} />
-              {data.volume_provider_type === "rustic" && data.rustic && (
+              {data.volumeProviderType === "rustic" && data.rustic && (
                 <RusticVolumeInfo data={data} />
               )}
             </div>

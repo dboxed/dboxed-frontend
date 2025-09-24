@@ -126,7 +126,7 @@ export function MachineProviderInfoCard({
           <div>
             <label className="text-sm font-medium">Created At</label>
             <p className="text-sm text-muted-foreground">
-              {new Date(machineProvider.created_at).toLocaleString()}
+              {new Date(machineProvider.createdAt).toLocaleString()}
             </p>
           </div>
         </div>
@@ -150,11 +150,11 @@ export function MachineProviderInfoCard({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="text-xs text-muted-foreground">Network Name</label>
-                <p className="text-sm">{machineProvider.hetzner.hetzner_network_name}</p>
+                <p className="text-sm">{machineProvider.hetzner.hetznerNetworkName}</p>
               </div>
               <div>
                 <label className="text-xs text-muted-foreground">Network Zone</label>
-                <p className="text-sm">{machineProvider.hetzner.hetzner_network_zone || "Not set"}</p>
+                <p className="text-sm">{machineProvider.hetzner.hetznerNetworkZone || "Not set"}</p>
               </div>
             </div>
           </div>

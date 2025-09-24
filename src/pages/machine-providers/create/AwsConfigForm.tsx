@@ -30,7 +30,7 @@ export function AwsConfigForm({ form }: AwsConfigFormProps) {
       <CardContent className="space-y-4">
         <FormField
           control={form.control}
-          name="aws.aws_access_key_id"
+          name="aws.awsAccessKeyId"
           render={({ field }) => (
             <FormItem>
               <FormLabel>AWS Access Key ID</FormLabel>
@@ -51,7 +51,7 @@ export function AwsConfigForm({ form }: AwsConfigFormProps) {
 
         <FormField
           control={form.control}
-          name="aws.aws_secret_access_key"
+          name="aws.awsSecretAccessKey"
           render={({ field }) => (
             <FormItem>
               <FormLabel>AWS Secret Access Key</FormLabel>
@@ -100,7 +100,7 @@ export function AwsConfigForm({ form }: AwsConfigFormProps) {
 
         <FormField
           control={form.control}
-          name="aws.vpc_id"
+          name="aws.vpcId"
           render={({ field }) => (
             <FormItem>
               <FormLabel>VPC ID</FormLabel>

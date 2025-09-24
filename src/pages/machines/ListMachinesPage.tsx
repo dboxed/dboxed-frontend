@@ -52,12 +52,12 @@ export function ListMachinesPage() {
       },
     },
     {
-      accessorKey: "machine_provider",
+      accessorKey: "machineProvider",
       header: "Machine Provider",
       cell: ({ row }) => {
-        const machineProviderId = row.getValue("machine_provider") as number
+        const machineProviderId = row.getValue("machineProvider") as number
         const workspaceId = row.original.workspace
-        const providerType = row.original.machine_provider_type
+        const providerType = row.original.machineProviderType
         
         return (
           <div className="flex items-center gap-2">
@@ -80,10 +80,10 @@ export function ListMachinesPage() {
       },
     },
     {
-      accessorKey: "created_at",
+      accessorKey: "createdAt",
       header: "Created",
       cell: ({ row }) => {
-        const date = new Date(row.getValue("created_at"))
+        const date = new Date(row.getValue("createdAt"))
         const formattedDate = date.toLocaleDateString('en-US', {
           month: 'short',
           day: 'numeric',

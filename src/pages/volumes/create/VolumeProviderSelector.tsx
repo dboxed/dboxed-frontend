@@ -26,10 +26,10 @@ export function VolumeProviderSelector({ form, onProviderChange }: VolumeProvide
   // Set first provider as default when data loads and notify parent
   useEffect(() => {
     if (volumeProvidersQuery.data?.items && volumeProvidersQuery.data.items.length > 0) {
-      const currentValue = form.getValues('volume_provider')
+      const currentValue = form.getValues('volumeProvider')
       if (!currentValue || currentValue === 1) { // Only set if no value or default placeholder value
         const firstProvider = volumeProvidersQuery.data.items[0]
-        form.setValue('volume_provider', firstProvider.id)
+        form.setValue('volumeProvider', firstProvider.id)
         onProviderChange?.(firstProvider)
       }
     }
@@ -38,7 +38,7 @@ export function VolumeProviderSelector({ form, onProviderChange }: VolumeProvide
   return (
     <FormField
       control={form.control}
-      name="volume_provider"
+      name="volumeProvider"
       render={({ field }) => {
         // Notify parent when selection changes
         const handleProviderChange = (value: string) => {

@@ -36,7 +36,7 @@ export function HetznerMachineConfigForm({ form }: HetznerMachineConfigFormProps
       <CardContent className="space-y-4">
         <FormField
           control={form.control}
-          name="hetzner.server_location"
+          name="hetzner.serverLocation"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Server Location</FormLabel>
@@ -75,7 +75,7 @@ export function HetznerMachineConfigForm({ form }: HetznerMachineConfigFormProps
 
         <FormField
           control={form.control}
-          name="hetzner.server_type"
+          name="hetzner.serverType"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Server Type</FormLabel>

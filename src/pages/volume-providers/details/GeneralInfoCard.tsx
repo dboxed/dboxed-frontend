@@ -69,7 +69,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           <div>
             <label className="text-sm font-medium">Created</label>
             <p className="text-sm text-muted-foreground">
-              {new Date(data.created_at).toLocaleString()}
+              {new Date(data.createdAt).toLocaleString()}
             </p>
           </div>
         </div>

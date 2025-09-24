@@ -47,8 +47,6 @@ export function FileBundleEditorDialog({ volume, saveFileBundle }: FileBundleEdi
     setOpen(false)
   }
 
-  console.log("selectedFilePath", selectedFilePath)
-
   return (
     <Dialog open={open} onOpenChange={(newOpen) => {
       // Only allow closing via Save/Cancel buttons, not by clicking outside or escape

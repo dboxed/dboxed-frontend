@@ -20,12 +20,12 @@ export function RusticVolumeInfo({ data }: RusticVolumeInfoProps) {
           <div>
             <label className="text-sm font-medium">Filesystem Size</label>
             <p className="text-sm text-muted-foreground">
-              {data.rustic?.fs_size ? formatSize(data.rustic.fs_size) : 'N/A'}
+              {data.rustic?.fsSize ? formatSize(data.rustic.fsSize) : 'N/A'}
             </p>
           </div>
           <div>
             <label className="text-sm font-medium">Filesystem Type</label>
-            <p className="text-sm text-muted-foreground">{data.rustic?.fs_type || 'N/A'}</p>
+            <p className="text-sm text-muted-foreground">{data.rustic?.fsType || 'N/A'}</p>
           </div>
         </div>
       </CardContent>

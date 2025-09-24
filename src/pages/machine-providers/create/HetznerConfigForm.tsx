@@ -23,7 +23,7 @@ export function HetznerConfigForm({ form }: HetznerConfigFormProps) {
       <CardContent className="space-y-4">
         <FormField
           control={form.control}
-          name="hetzner.cloud_token"
+          name="hetzner.cloudToken"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Hetzner Cloud Token</FormLabel>
@@ -44,7 +44,7 @@ export function HetznerConfigForm({ form }: HetznerConfigFormProps) {
 
         <FormField
           control={form.control}
-          name="hetzner.hetzner_network_name"
+          name="hetzner.hetznerNetworkName"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Network Name</FormLabel>
@@ -65,7 +65,7 @@ export function HetznerConfigForm({ form }: HetznerConfigFormProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
-            name="hetzner.robot_username"
+            name="hetzner.robotUsername"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Robot Username (Optional)</FormLabel>
@@ -85,7 +85,7 @@ export function HetznerConfigForm({ form }: HetznerConfigFormProps) {
 
           <FormField
             control={form.control}
-            name="hetzner.robot_password"
+            name="hetzner.robotPassword"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Robot Password (Optional)</FormLabel>

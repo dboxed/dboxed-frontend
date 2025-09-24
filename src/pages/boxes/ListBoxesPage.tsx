@@ -34,7 +34,7 @@ export function ListBoxesPage() {
       header: "Network",
       cell: ({ row }) => {
         const networkId = row.getValue("network") as number | null
-        const networkType = row.original.network_type
+        const networkType = row.original.networkType
         const workspaceId = row.original.workspace
 
         return (
@@ -90,10 +90,10 @@ export function ListBoxesPage() {
       },
     },
     {
-      accessorKey: "dboxed_version",
+      accessorKey: "dboxedVersion",
       header: "Version",
       cell: ({ row }) => {
-        const version = row.getValue("dboxed_version") as string
+        const version = row.getValue("dboxedVersion") as string
         return (
           <div className="text-sm text-muted-foreground font-mono">
             {version}
@@ -102,10 +102,10 @@ export function ListBoxesPage() {
       },
     },
     {
-      accessorKey: "created_at",
+      accessorKey: "createdAt",
       header: "Created",
       cell: ({ row }) => {
-        const date = new Date(row.getValue("created_at"))
+        const date = new Date(row.getValue("createdAt"))
         const formattedDate = date.toLocaleDateString('en-US', {
           month: 'short',
           day: 'numeric',

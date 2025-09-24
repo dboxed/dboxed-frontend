@@ -20,7 +20,7 @@ export function RusticConfig({ form }: RusticConfigProps) {
       <CardContent className="space-y-4">
         <FormField
           control={form.control}
-          name="rustic.fs_size"
+          name="rustic.fsSize"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Filesystem Size</FormLabel>
@@ -37,7 +37,7 @@ export function RusticConfig({ form }: RusticConfigProps) {
         />
         <FormField
           control={form.control}
-          name="rustic.fs_type"
+          name="rustic.fsType"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Filesystem Type</FormLabel>

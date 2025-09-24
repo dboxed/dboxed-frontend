@@ -736,12 +736,12 @@ export interface components {
              */
             readonly $schema?: string;
             /** Format: int64 */
-            root_gid: number;
-            root_mode: string;
+            rootGid: number;
+            rootMode: string;
             /** Format: int64 */
-            root_uid: number;
+            rootUid: number;
             /** Format: int64 */
-            volume_id: number;
+            volumeId: number;
         };
         AuthInfo: {
             /**
@@ -763,11 +763,11 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            boxSpec: components["schemas"]["BoxSpec"];
             boxUrl: string;
-            box_spec: components["schemas"]["BoxSpec"];
             /** Format: date-time */
-            created_at: string;
-            dboxed_version: string;
+            createdAt: string;
+            dboxedVersion: string;
             /** Format: int64 */
             id: number;
             /** Format: int64 */
@@ -775,7 +775,7 @@ export interface components {
             name: string;
             /** Format: int64 */
             network: number | null;
-            network_type: string | null;
+            networkType: string | null;
             uuid: string;
             /** Format: int64 */
             workspace: number;
@@ -836,18 +836,18 @@ export interface components {
             box: number;
             hetzner?: components["schemas"]["CreateMachineHetzner"];
             /** Format: int64 */
-            machine_provider: number;
+            machineProvider: number;
             name: string;
         };
         CreateMachineAws: {
-            instance_type: string;
+            instanceType: string;
             /** Format: int64 */
-            root_volume_size?: number;
-            subnet_id: string;
+            rootVolumeSize?: number;
+            subnetId: string;
         };
         CreateMachineHetzner: {
-            server_location: string;
-            server_type: string;
+            serverLocation: string;
+            serverType: string;
         };
         CreateMachineProvider: {
             /**
@@ -858,20 +858,20 @@ export interface components {
             aws?: components["schemas"]["CreateMachineProviderAws"];
             hetzner?: components["schemas"]["CreateMachineProviderHetzner"];
             name: string;
-            ssh_key_public?: string;
+            sshKeyPublic?: string;
             type: string;
         };
         CreateMachineProviderAws: {
-            aws_access_key_id: string;
-            aws_secret_access_key: string;
+            awsAccessKeyId: string;
+            awsSecretAccessKey: string;
             region: string;
-            vpc_id: string;
+            vpcId: string;
         };
         CreateMachineProviderHetzner: {
-            cloud_token: string;
-            hetzner_network_name: string;
-            robot_password?: string;
-            robot_username?: string;
+            cloudToken: string;
+            hetznerNetworkName: string;
+            robotPassword?: string;
+            robotUsername?: string;
         };
         CreateNetwork: {
             /**
@@ -918,7 +918,7 @@ export interface components {
             name: string;
             rustic?: components["schemas"]["CreateVolumeRustic"];
             /** Format: int64 */
-            volume_provider: number;
+            volumeProvider: number;
         };
         CreateVolumeProvider: {
             /**
@@ -943,8 +943,8 @@ export interface components {
         };
         CreateVolumeRustic: {
             /** Format: int64 */
-            fs_size: number;
-            fs_type?: string;
+            fsSize: number;
+            fsType?: string;
         };
         CreateVolumeSnapshot: {
             /**
@@ -1251,12 +1251,12 @@ export interface components {
             /** Format: int64 */
             box: number;
             /** Format: date-time */
-            created_at: string;
+            createdAt: string;
             /** Format: int64 */
             id: number;
             /** Format: int64 */
-            machine_provider: number;
-            machine_provider_type: string;
+            machineProvider: number;
+            machineProviderType: string;
             name: string;
             /** Format: int64 */
             workspace: number;
@@ -1269,12 +1269,12 @@ export interface components {
             readonly $schema?: string;
             aws?: components["schemas"]["MachineProviderAws"];
             /** Format: date-time */
-            created_at: string;
+            createdAt: string;
             hetzner?: components["schemas"]["MachineProviderHetzner"];
             /** Format: int64 */
             id: number;
             name: string;
-            ssh_key_fingerprint: string | null;
+            sshKeyFingerprint: string | null;
             status: string;
             type: string;
             /** Format: int64 */
@@ -1282,30 +1282,30 @@ export interface components {
         };
         MachineProviderAws: {
             region: string;
-            security_group_id: string | null;
+            securityGroupId: string | null;
             subnets: components["schemas"]["MachineProviderAwsSubnet"][] | null;
-            vpc_cidr: string | null;
-            vpc_id: string | null;
-            vpc_name: string | null;
+            vpcCidr: string | null;
+            vpcId: string | null;
+            vpcName: string | null;
         };
         MachineProviderAwsSubnet: {
-            availability_zone: string;
+            availabilityZone: string;
             cidr: string;
             /** Format: int64 */
-            machine_provider: number;
-            subnet_id: string;
-            subnet_name: string | null;
+            machineProvider: number;
+            subnetId: string;
+            subnetName: string | null;
         };
         MachineProviderHetzner: {
-            cloud_subnet_cidr: string | null;
-            hetzner_network_cidr: string | null;
+            cloudSubnetCidr: string | null;
+            hetznerNetworkCidr: string | null;
             /** Format: int64 */
-            hetzner_network_id: number | null;
-            hetzner_network_name: string;
-            hetzner_network_zone: string | null;
-            robot_subnet_cidr: string | null;
+            hetznerNetworkId: number | null;
+            hetznerNetworkName: string;
+            hetznerNetworkZone: string | null;
+            robotSubnetCidr: string | null;
             /** Format: int64 */
-            robot_vswitch_id: number | null;
+            robotVswitchId: number | null;
         };
         Network: {
             /**
@@ -1314,7 +1314,7 @@ export interface components {
              */
             readonly $schema?: string;
             /** Format: date-time */
-            created_at: string;
+            createdAt: string;
             /** Format: int64 */
             id: number;
             name: string;
@@ -1473,16 +1473,16 @@ export interface components {
             readonly $schema?: string;
             aws?: components["schemas"]["UpdateMachineProviderAws"];
             hetzner?: components["schemas"]["UpdateMachineProviderHetzner"];
-            ssh_key_public?: string;
+            sshKeyPublic?: string;
         };
         UpdateMachineProviderAws: {
-            aws_access_key_id?: string;
-            aws_secret_access_key?: string;
+            awsAccessKeyId?: string;
+            awsSecretAccessKey?: string;
         };
         UpdateMachineProviderHetzner: {
-            cloud_token?: string;
-            robot_password?: string;
-            robot_username?: string;
+            cloudToken?: string;
+            robotPassword?: string;
+            robotUsername?: string;
         };
         UpdateNetwork: {
             /**
@@ -1511,10 +1511,10 @@ export interface components {
              */
             readonly $schema?: string;
             /** Format: int64 */
-            root_gid?: number;
-            root_mode?: string;
+            rootGid?: number;
+            rootMode?: string;
             /** Format: int64 */
-            root_uid?: number;
+            rootUid?: number;
         };
         UpdateVolumeProvider: {
             /**
@@ -1546,23 +1546,22 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            LockId: string | null;
+            attachment?: components["schemas"]["VolumeAttachment"];
             /** Format: date-time */
-            LockTime: string | null;
-            /** Format: int64 */
-            attached_to_box?: number;
-            /** Format: date-time */
-            created_at: string;
+            createdAt: string;
             /** Format: int64 */
             id: number;
             /** Format: int64 */
-            latest_snapshot_id: number | null;
+            latestSnapshotId: number | null;
+            lockId: string | null;
+            /** Format: date-time */
+            lockTime: string | null;
             name: string;
             rustic: components["schemas"]["VolumeRustic"];
             uuid: string;
             /** Format: int64 */
-            volume_provider: number;
-            volume_provider_type: string;
+            volumeProvider: number;
+            volumeProviderType: string;
             /** Format: int64 */
             workspace: number;
         };
@@ -1573,15 +1572,15 @@ export interface components {
              */
             readonly $schema?: string;
             /** Format: int64 */
-            box_id: number;
+            boxId: number;
             /** Format: int64 */
-            root_gid: number;
-            root_mode: string;
+            rootGid: number;
+            rootMode: string;
             /** Format: int64 */
-            root_uid: number;
-            volume: components["schemas"]["Volume"];
+            rootUid: number;
+            volume?: components["schemas"]["Volume"];
             /** Format: int64 */
-            volume_id: number;
+            volumeId: number;
         };
         VolumeLockRequest: {
             /**
@@ -1598,7 +1597,7 @@ export interface components {
              */
             readonly $schema?: string;
             /** Format: date-time */
-            created_at: string;
+            createdAt: string;
             /** Format: int64 */
             id: number;
             name: string;
@@ -1623,8 +1622,8 @@ export interface components {
         };
         VolumeRustic: {
             /** Format: int64 */
-            fs_size: number;
-            fs_type: string;
+            fsSize: number;
+            fsType: string;
         };
         VolumeSnapshot: {
             /**
@@ -1708,7 +1707,7 @@ export interface components {
             readonly $schema?: string;
             access: components["schemas"]["WorkspaceAccess"][] | null;
             /** Format: date-time */
-            created_at: string;
+            createdAt: string;
             /** Format: int64 */
             id: number;
             name: string;

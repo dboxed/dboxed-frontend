@@ -23,7 +23,7 @@ export function SshKeyForm({ form }: SshKeyFormProps) {
       <CardContent>
         <FormField
           control={form.control}
-          name="ssh_key_public"
+          name="sshKeyPublic"
           render={({ field }) => (
             <FormItem>
               <FormLabel>SSH Public Key</FormLabel>

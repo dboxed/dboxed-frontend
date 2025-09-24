@@ -53,8 +53,8 @@ export function MachineDetailsPage() {
 
           <TabsContent value="machine-provider">
             <MachineProviderInfoCard
-              machineProviderId={data.machine_provider}
-              machineProviderType={data.machine_provider_type}
+              machineProviderId={data.machineProvider}
+              machineProviderType={data.machineProviderType}
               workspaceId={data.workspace}
             />
           </TabsContent>

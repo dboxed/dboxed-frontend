@@ -23,15 +23,15 @@ export function BoxesOverview() {
 
   // Get recent items (last 3)
   const recentBoxes = boxes
-    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 3)
 
   const items = recentBoxes.map((box: components["schemas"]["Box"]) => ({
     id: box.id,
     name: box.name,
     onClick: () => navigate(`/workspaces/${workspaceId}/boxes/${box.id}`),
-    badges: box.network_type ? [{ text: box.network_type }] : undefined,
-    subtitle: new Date(box.created_at).toLocaleDateString(),
+    badges: box.networkType ? [{ text: box.networkType }] : undefined,
+    subtitle: new Date(box.createdAt).toLocaleDateString(),
   }))
 
   return (

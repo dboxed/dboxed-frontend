@@ -20,7 +20,7 @@ interface FileBundlesProps {
 export function FileBundles({ box, saveBox }: FileBundlesProps) {
   const [newBundleDialogOpen, setNewBundleDialogOpen] = useState(false)
   
-  const volumes = box.box_spec.volumes || []
+  const volumes = box.boxSpec.volumes || []
   const fileBundleVolumes = volumes.filter(volume => volume.fileBundle != null)
 
   const getVolumeIndex = (volume: components["schemas"]["BoxVolumeSpec"]) => {
@@ -38,7 +38,7 @@ export function FileBundles({ box, saveBox }: FileBundlesProps) {
       }
     }
 
-    const newBoxSpec = deepClone(box.box_spec)
+    const newBoxSpec = deepClone(box.boxSpec)
     if (!newBoxSpec.volumes) {
       newBoxSpec.volumes = []
     }
@@ -49,7 +49,7 @@ export function FileBundles({ box, saveBox }: FileBundlesProps) {
   }
 
   const handleDeleteBundle = (volumeIndex: number) => {
-    const newBoxSpec = deepClone(box.box_spec)
+    const newBoxSpec = deepClone(box.boxSpec)
     newBoxSpec.volumes = newBoxSpec.volumes?.filter((_, index) => index !== volumeIndex)
     saveBox({
       boxSpec: newBoxSpec,
@@ -57,7 +57,7 @@ export function FileBundles({ box, saveBox }: FileBundlesProps) {
   }
 
   const handleSaveBundle = (volumeIndex: number, updatedVolume: components["schemas"]["BoxVolumeSpec"]) => {
-    const newBoxSpec = deepClone(box.box_spec)
+    const newBoxSpec = deepClone(box.boxSpec)
     newBoxSpec.volumes![volumeIndex] = updatedVolume
     return saveBox({
       boxSpec: newBoxSpec,
@@ -141,7 +141,7 @@ export function FileBundles({ box, saveBox }: FileBundlesProps) {
                     mode={row.original.rootMode || "0755"}
                     onUpdate={(uid, gid, mode) => {
                       const volumeIndex = getVolumeIndex(row.original)
-                      const newBoxSpec = deepClone(box.box_spec)
+                      const newBoxSpec = deepClone(box.boxSpec)
                       newBoxSpec.volumes![volumeIndex].rootUid = uid
                       newBoxSpec.volumes![volumeIndex].rootGid = gid
                       newBoxSpec.volumes![volumeIndex].rootMode = mode

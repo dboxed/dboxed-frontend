@@ -77,10 +77,10 @@ export function ListNetworksPage() {
       },
     },
     {
-      accessorKey: "created_at",
+      accessorKey: "createdAt",
       header: "Created",
       cell: ({ row }) => {
-        const date = new Date(row.getValue("created_at"))
+        const date = new Date(row.getValue("createdAt"))
         const formattedDate = date.toLocaleDateString('en-US', {
           month: 'short',
           day: 'numeric',

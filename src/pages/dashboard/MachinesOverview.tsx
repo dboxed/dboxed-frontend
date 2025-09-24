@@ -33,14 +33,14 @@ export function MachinesOverview() {
 
   // Get recent items (last 3)
   const recentMachines = machines
-    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 3)
 
   const items = recentMachines.map((machine: components["schemas"]["Machine"]) => ({
     id: machine.id,
     name: machine.name,
     onClick: () => navigate(`/workspaces/${workspaceId}/machines/${machine.id}`),
-    badges: machine.machine_provider_type ? [{ text: machine.machine_provider_type }] : undefined,
+    badges: machine.machineProviderType ? [{ text: machine.machineProviderType }] : undefined,
   }))
 
   return (

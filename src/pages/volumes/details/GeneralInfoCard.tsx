@@ -29,7 +29,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
             <label className="text-sm font-medium">Provider Type</label>
             <div className="mt-1">
               <Badge variant="secondary" className="capitalize">
-                {data.volume_provider_type}
+                {data.volumeProviderType}
               </Badge>
             </div>
           </div>
@@ -37,13 +37,13 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
             <label className="text-sm font-medium">Volume Provider</label>
             <div className="mt-1">
               <ReferenceLabel
-                resourceId={data.volume_provider}
+                resourceId={data.volumeProvider}
                 resourcePath="/v1/workspaces/{workspaceId}/volume-providers/{id}"
                 pathParams={{
                   workspaceId: workspaceId,
-                  id: data.volume_provider
+                  id: data.volumeProvider
                 }}
-                detailsUrl={`/workspaces/${workspaceId}/volume-providers/${data.volume_provider}`}
+                detailsUrl={`/workspaces/${workspaceId}/volume-providers/${data.volumeProvider}`}
                 fallbackLabel="Volume Provider"
                 className="text-blue-600 hover:text-blue-800 underline"
               />
@@ -67,7 +67,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           <div>
             <label className="text-sm font-medium">Created</label>
             <p className="text-sm text-muted-foreground">
-              {new Date(data.created_at).toLocaleString()}
+              {new Date(data.createdAt).toLocaleString()}
             </p>
           </div>
         </div>

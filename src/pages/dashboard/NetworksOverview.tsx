@@ -23,7 +23,7 @@ export function NetworksOverview() {
 
   // Get recent items (last 3)
   const recentNetworks = networks
-    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 3)
 
   const getStatusVariant = (status: string): "default" | "secondary" | "outline" | "destructive" => {

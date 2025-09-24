@@ -19,18 +19,18 @@ const FormSchema = z.object({
   type: z.enum(["aws", "hetzner"]).refine((val) => val !== undefined, {
     message: "Please select a machine provider type.",
   }),
-  ssh_key_public: z.string().optional(),
+  sshKeyPublic: z.string().optional(),
   aws: z.object({
-    aws_access_key_id: z.string().min(1, "AWS Access Key ID is required"),
-    aws_secret_access_key: z.string().min(1, "AWS Secret Access Key is required"),
+    awsAccessKeyId: z.string().min(1, "AWS Access Key ID is required"),
+    awsSecretAccessKey: z.string().min(1, "AWS Secret Access Key is required"),
     region: z.string().min(1, "AWS Region is required"),
-    vpc_id: z.string().min(1, "VPC ID is required"),
+    vpcId: z.string().min(1, "VPC ID is required"),
   }).optional(),
   hetzner: z.object({
-    cloud_token: z.string().min(1, "Hetzner Cloud Token is required"),
-    hetzner_network_name: z.string().min(1, "Network Name is required"),
-    robot_username: z.string().optional(),
-    robot_password: z.string().optional(),
+    cloudToken: z.string().min(1, "Hetzner Cloud Token is required"),
+    hetznerNetworkName: z.string().min(1, "Network Name is required"),
+    robotUsername: z.string().optional(),
+    robotPassword: z.string().optional(),
   }).optional(),
 }).refine((data) => {
   if (data.type === "aws" && !data.aws) {
@@ -54,8 +54,8 @@ export function CreateMachineProviderPage() {
       type: data.type,
     }
 
-    if (data.ssh_key_public) {
-      submitData.ssh_key_public = data.ssh_key_public
+    if (data.sshKeyPublic) {
+      submitData.sshKeyPublic = data.sshKeyPublic
     }
 
     if (data.type === "aws" && data.aws) {
@@ -82,7 +82,7 @@ export function CreateMachineProviderPage() {
       defaultValues={{
         name: "",
         type: undefined,
-        ssh_key_public: "",
+        sshKeyPublic: "",
       }}
       resolver={zodResolver(FormSchema)}
     >

@@ -30,7 +30,7 @@ export function MachineProviderSelector({ form }: MachineProviderSelectorProps) 
     )
     
     if (selectedProvider) {
-      form.setValue('machine_provider', selectedProvider.id)
+      form.setValue('machineProvider', selectedProvider.id)
     }
   }
 
@@ -57,7 +57,7 @@ export function MachineProviderSelector({ form }: MachineProviderSelectorProps) 
   return (
     <FormField
       control={form.control}
-      name="machine_provider"
+      name="machineProvider"
       rules={{ required: "Machine provider is required" }}
       render={({ field }) => (
         <FormItem>

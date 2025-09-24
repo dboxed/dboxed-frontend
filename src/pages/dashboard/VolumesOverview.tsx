@@ -34,14 +34,14 @@ export function VolumesOverview() {
 
   // Get recent items (last 3)
   const recentVolumes = volumes
-    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 3)
 
   const items = recentVolumes.map((volume: components["schemas"]["Volume"]) => ({
     id: volume.id,
     name: volume.name,
     onClick: () => navigate(`/workspaces/${workspaceId}/volumes/${volume.id}`),
-    badges: volume.volume_provider_type === "rustic" ? [{ text: formatSize(volume.rustic.fs_size) }] : undefined,
+    badges: volume.volumeProviderType === "rustic" ? [{ text: formatSize(volume.rustic.fsSize) }] : undefined,
   }))
 
   return (

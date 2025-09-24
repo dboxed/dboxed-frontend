@@ -16,8 +16,8 @@ export function BoxSpecYamlEditorDialog({ box, saveBox }: BoxSpecYamlEditorDialo
   const [initialYaml, setBoxSpecYaml] = useState("")
 
   useEffect(() => {
-    setBoxSpecYaml(stringifyYaml(box.box_spec))
-  }, [box.box_spec]);
+    setBoxSpecYaml(stringifyYaml(box.boxSpec))
+  }, [box.boxSpec]);
 
   const handleEdit = () => {
     setOpen(true)

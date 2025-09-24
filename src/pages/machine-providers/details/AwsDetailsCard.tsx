@@ -35,24 +35,24 @@ export function AwsDetailsCard({ awsData, form }: AwsDetailsCardProps) {
             
             <div>
               <label className="text-sm font-medium">VPC ID</label>
-              <p className="text-sm text-muted-foreground">{awsData.vpc_id || "N/A"}</p>
+              <p className="text-sm text-muted-foreground">{awsData.vpcId || "N/A"}</p>
             </div>
             
             <div>
               <label className="text-sm font-medium">Security Group ID</label>
-              <p className="text-sm text-muted-foreground">{awsData.security_group_id || "N/A"}</p>
+              <p className="text-sm text-muted-foreground">{awsData.securityGroupId || "N/A"}</p>
             </div>
           </div>
 
           <div className="space-y-4">
             <div>
               <label className="text-sm font-medium">VPC Name</label>
-              <p className="text-sm text-muted-foreground">{awsData.vpc_name || "N/A"}</p>
+              <p className="text-sm text-muted-foreground">{awsData.vpcName || "N/A"}</p>
             </div>
             
             <div>
               <label className="text-sm font-medium">VPC CIDR</label>
-              <p className="text-sm text-muted-foreground">{awsData.vpc_cidr || "N/A"}</p>
+              <p className="text-sm text-muted-foreground">{awsData.vpcCidr || "N/A"}</p>
             </div>
           </div>
         </div>
@@ -61,7 +61,7 @@ export function AwsDetailsCard({ awsData, form }: AwsDetailsCardProps) {
         <div className="space-y-4 pt-4 border-t">
           <FormField
             control={form.control}
-            name="aws.aws_access_key_id"
+            name="aws.awsAccessKeyId"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>AWS Access Key ID</FormLabel>
@@ -83,7 +83,7 @@ export function AwsDetailsCard({ awsData, form }: AwsDetailsCardProps) {
 
           <FormField
             control={form.control}
-            name="aws.aws_secret_access_key"
+            name="aws.awsSecretAccessKey"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>AWS Secret Access Key</FormLabel>
@@ -125,16 +125,16 @@ export function AwsSubnetsCard({ subnets }: AwsSubnetsCardProps) {
             {subnets.map((subnet, index) => (
               <div key={index} className="pl-4 border-l-2 border-muted">
                 <p className="text-sm text-muted-foreground">
-                  <strong>Subnet ID:</strong> {subnet.subnet_id}
+                  <strong>Subnet ID:</strong> {subnet.subnetId}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  <strong>Name:</strong> {subnet.subnet_name || "N/A"}
+                  <strong>Name:</strong> {subnet.subnetName || "N/A"}
                 </p>
                 <p className="text-sm text-muted-foreground">
                   <strong>CIDR:</strong> {subnet.cidr}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  <strong>Availability Zone:</strong> {subnet.availability_zone}
+                  <strong>Availability Zone:</strong> {subnet.availabilityZone}
                 </p>
               </div>
             ))}

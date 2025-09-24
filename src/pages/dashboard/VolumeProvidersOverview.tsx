@@ -23,7 +23,7 @@ export function VolumeProvidersOverview() {
 
   // Get recent items (last 3)
   const recentVolumeProviders = volumeProviders
-    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 3)
 
   const items = recentVolumeProviders.map((provider: components["schemas"]["VolumeProvider"]) => ({

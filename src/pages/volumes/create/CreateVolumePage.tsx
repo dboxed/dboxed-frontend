@@ -14,12 +14,12 @@ const FormSchema = z.object({
   name: z.string().min(1, {
     message: "Name must be at least 1 character.",
   }),
-  volume_provider: z.preprocess((val) => {
+  volumeProvider: z.preprocess((val) => {
     if (typeof val === 'string') return parseInt(val)
     return val
   }, z.number().min(1, "Please select a volume provider.")),
   rustic: z.object({
-    fs_size: z.string().min(1, "Filesystem size is required").refine((val) => {
+    fsSize: z.string().min(1, "Filesystem size is required").refine((val) => {
       try {
         const bytes = parseSize(val)
         return bytes > 0
@@ -29,7 +29,7 @@ const FormSchema = z.object({
     }, {
       message: "Invalid size format. Use formats like '1GB', '512MB', '2.5TB'",
     }),
-    fs_type: z.string().min(1, "Filesystem type is required"),
+    fsType: z.string().min(1, "Filesystem type is required"),
   }).optional(),
 }).refine((_data) => {
   // If provider type is rustic, require rustic config
@@ -47,14 +47,14 @@ export function CreateVolumePage() {
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const submitData: components["schemas"]["CreateVolume"] = {
       name: data.name,
-      volume_provider: data.volume_provider,
+      volumeProvider: data.volumeProvider,
     }
 
     // Add rustic configuration if provider type is rustic
     if (selectedProvider?.type === "rustic" && data.rustic) {
       submitData.rustic = {
-        fs_size: parseSize(data.rustic.fs_size),
-        fs_type: data.rustic.fs_type,
+        fsSize: parseSize(data.rustic.fsSize),
+        fsType: data.rustic.fsType,
       }
     }
 
@@ -73,10 +73,10 @@ export function CreateVolumePage() {
       onSubmit={onSubmit}
       defaultValues={{
         name: "",
-        volume_provider: 1, // Will be overridden when user selects
+        volumeProvider: 1, // Will be overridden when user selects
         rustic: {
-          fs_size: "",
-          fs_type: "ext4",
+          fsSize: "",
+          fsType: "ext4",
         }
       }}
       resolver={zodResolver(FormSchema)}

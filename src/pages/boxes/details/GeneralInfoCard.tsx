@@ -40,7 +40,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
             <label className="text-sm font-medium">Dboxed Version</label>
             <p className="text-sm text-muted-foreground">
               <Badge variant="outline" className="w-fit">
-                {data.dboxed_version}
+                {data.dboxedVersion}
               </Badge>
             </p>
           </div>
@@ -85,7 +85,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
         <div>
           <label className="text-sm font-medium">Created At</label>
           <p className="text-sm text-muted-foreground">
-            {new Date(data.created_at).toLocaleString()}
+            {new Date(data.createdAt).toLocaleString()}
           </p>
         </div>
       </CardContent>

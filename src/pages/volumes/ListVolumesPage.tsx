@@ -30,10 +30,10 @@ export function ListVolumesPage() {
       },
     },
     {
-      accessorKey: "volume_provider_type",
+      accessorKey: "volumeProviderType",
       header: "Provider Type",
       cell: ({ row }) => {
-        const type = row.getValue("volume_provider_type") as string
+        const type = row.getValue("volumeProviderType") as string
         return (
           <Badge variant="secondary" className="capitalize">
             {type}
@@ -42,10 +42,10 @@ export function ListVolumesPage() {
       },
     },
     {
-      accessorKey: "volume_provider",
+      accessorKey: "volumeProvider",
       header: "Volume Provider",
       cell: ({ row }) => {
-        const providerId = row.getValue("volume_provider") as number
+        const providerId = row.getValue("volumeProvider") as number
         return (
           <ReferenceLabel
             resourceId={providerId}
@@ -62,10 +62,10 @@ export function ListVolumesPage() {
       },
     },
     {
-      accessorKey: "created_at",
+      accessorKey: "createdAt",
       header: "Created",
       cell: ({ row }) => {
-        const date = new Date(row.getValue("created_at"))
+        const date = new Date(row.getValue("createdAt"))
         const formattedDate = date.toLocaleDateString('en-US', {
           month: 'short',
           day: 'numeric',

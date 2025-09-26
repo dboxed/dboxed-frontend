@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
-import { Label } from "@/components/ui/label.tsx"
+import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { SimpleFormDialog } from "@/components/SimpleFormDialog.tsx"
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
@@ -129,26 +129,20 @@ export function NetbirdDetailsCard({ netbirdData, save }: NetbirdDetailsCardProp
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div>
-          <Label>API URL</Label>
-          <p className="text-sm text-muted-foreground font-mono break-all">
-            {netbirdData.apiUrl || "Default Netbird Cloud Service"}
-          </p>
-        </div>
+        <LabelAndValue
+          label="API URL"
+          textValue={netbirdData.apiUrl || "Default Netbird Cloud Service"}
+        />
 
-        <div>
-          <Label>Netbird Version</Label>
-          <p className="text-sm text-muted-foreground font-mono break-all">
-            {netbirdData.netbirdVersion || "Not specified"}
-          </p>
-        </div>
+        <LabelAndValue
+          label="Netbird Version"
+          textValue={netbirdData.netbirdVersion || "Not specified"}
+        />
 
-        <div>
-          <Label>API Token</Label>
-          <p className="text-sm text-muted-foreground font-mono break-all">
-            ••••••••••••••••
-          </p>
-        </div>
+        <LabelAndValue
+          label="API Token"
+          textValue="••••••••••••••••"
+        />
       </CardContent>
 
       <NetbirdEditDialog

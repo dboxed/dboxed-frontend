@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Badge } from "@/components/ui/badge.tsx";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
-import { Label } from "@/components/ui/label.tsx";
+import { LabelAndValue } from "@/components/LabelAndValue.tsx";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import type { components } from "@/api/models/schema";
 
@@ -22,21 +22,21 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 gap-6">
-          <div>
-            <Label>Name</Label>
-            <p className="text-sm text-muted-foreground">{data.name}</p>
-          </div>
-          <div>
-            <Label>Provider Type</Label>
-            <div className="mt-1">
+          <LabelAndValue
+            label="Name"
+            textValue={data.name}
+          />
+          <LabelAndValue
+            label="Provider Type"
+            value={
               <Badge variant="secondary" className="capitalize">
                 {data.volumeProviderType}
               </Badge>
-            </div>
-          </div>
-          <div>
-            <Label>Volume Provider</Label>
-            <div className="mt-1">
+            }
+          />
+          <LabelAndValue
+            label="Volume Provider"
+            value={
               <ReferenceLabel
                 resourceId={data.volumeProvider}
                 resourcePath="/v1/workspaces/{workspaceId}/volume-providers/{id}"
@@ -48,11 +48,11 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
                 fallbackLabel="Volume Provider"
                 className="text-blue-600 hover:text-blue-800 underline"
               />
-            </div>
-          </div>
-          <div>
-            <Label>Workspace</Label>
-            <div className="mt-1">
+            }
+          />
+          <LabelAndValue
+            label="Workspace"
+            value={
               <ReferenceLabel
                 resourceId={data.workspace}
                 resourcePath="/v1/workspaces/{workspaceId}"
@@ -63,14 +63,12 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
                 fallbackLabel="Workspace"
                 className="text-blue-600 hover:text-blue-800 underline"
               />
-            </div>
-          </div>
-          <div>
-            <Label>Created</Label>
-            <p className="text-sm text-muted-foreground">
-              {new Date(data.createdAt).toLocaleString()}
-            </p>
-          </div>
+            }
+          />
+          <LabelAndValue
+            label="Created"
+            textValue={new Date(data.createdAt).toLocaleString()}
+          />
         </div>
       </CardContent>
     </Card>

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
-import { Label } from "@/components/ui/label.tsx"
+import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { SimpleInputDialog } from "@/components/SimpleInputDialog.tsx"
 import type { components } from "@/api/models/schema"
@@ -35,33 +35,32 @@ export function RusticDetailsCard({ volumeProvider, save }: RusticDetailsCardPro
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div>
-          <Label>Storage Type</Label>
-          <p className="text-sm text-muted-foreground font-mono break-all">
-            {volumeProvider.rustic.storageType}
-          </p>
-        </div>
+        <LabelAndValue
+          label="Storage Type"
+          textValue={volumeProvider.rustic.storageType}
+        />
 
-        <div>
-          <Label>Password</Label>
-          <div className="flex items-center space-x-2">
-            <Input
-              type="password"
-              value="••••••••"
-              readOnly
-              className="flex-1"
-            />
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setIsPasswordDialogOpen(true)}
-            >
-              Update
-            </Button>
-          </div>
-        </div>
-
+        <LabelAndValue
+          label={"Password"}
+          value={
+            <div className="flex items-center space-x-2">
+              <Input
+                type="password"
+                value="••••••••"
+                readOnly
+                className="flex-1"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsPasswordDialogOpen(true)}
+              >
+                Update
+              </Button>
+            </div>
+        }
+        />
       </CardContent>
 
       <SimpleInputDialog

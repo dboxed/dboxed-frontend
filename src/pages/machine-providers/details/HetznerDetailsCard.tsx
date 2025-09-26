@@ -3,7 +3,7 @@ import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessa
 import { Input } from "@/components/ui/input.tsx"
 import type { UseFormReturn } from "react-hook-form"
 import type { components } from "@/api/models/schema"
-import { Label } from "@/components/ui/label.tsx";
+import { LabelAndValue } from "@/components/LabelAndValue.tsx";
 
 interface HetznerDetailsCardProps {
   hetznerData: components["schemas"]["MachineProviderHetzner"]
@@ -25,35 +25,35 @@ export function HetznerDetailsCard({ hetznerData, form }: HetznerDetailsCardProp
         {/* Read-only fields */}
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label>Hetzner Network ID</Label>
-              <p className="text-sm text-muted-foreground">{hetznerData.hetznerNetworkId || "N/A"}</p>
-            </div>
+            <LabelAndValue
+              label="Hetzner Network ID"
+              textValue={hetznerData.hetznerNetworkId || "N/A"}
+            />
             
-            <div>
-              <Label>Network Name</Label>
-              <p className="text-sm text-muted-foreground">{hetznerData.hetznerNetworkName}</p>
-            </div>
+            <LabelAndValue
+              label="Network Name"
+              textValue={hetznerData.hetznerNetworkName}
+            />
             
-            <div>
-              <Label>Network Zone</Label>
-              <p className="text-sm text-muted-foreground">{hetznerData.hetznerNetworkZone || "N/A"}</p>
-            </div>
+            <LabelAndValue
+              label="Network Zone"
+              textValue={hetznerData.hetznerNetworkZone || "N/A"}
+            />
             
-            <div>
-              <Label>Hetzner Network CIDR</Label>
-              <p className="text-sm text-muted-foreground">{hetznerData.hetznerNetworkCidr || "N/A"}</p>
-            </div>
+            <LabelAndValue
+              label="Hetzner Network CIDR"
+              textValue={hetznerData.hetznerNetworkCidr || "N/A"}
+            />
             
-            <div>
-              <Label>Cloud Subnet CIDR</Label>
-              <p className="text-sm text-muted-foreground">{hetznerData.cloudSubnetCidr || "N/A"}</p>
-            </div>
+            <LabelAndValue
+              label="Cloud Subnet CIDR"
+              textValue={hetznerData.cloudSubnetCidr || "N/A"}
+            />
             
-            <div>
-              <Label>Robot Subnet CIDR</Label>
-              <p className="text-sm text-muted-foreground">{hetznerData.robotSubnetCidr || "N/A"}</p>
-            </div>
+            <LabelAndValue
+              label="Robot Subnet CIDR"
+              textValue={hetznerData.robotSubnetCidr || "N/A"}
+            />
           </div>
         </div>
 

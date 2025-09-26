@@ -3,7 +3,7 @@ import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessa
 import { Input } from "@/components/ui/input.tsx"
 import type { UseFormReturn } from "react-hook-form"
 import type { components } from "@/api/models/schema"
-import { Label } from "@/components/ui/label.tsx";
+import { LabelAndValue } from "@/components/LabelAndValue.tsx";
 
 interface AwsDetailsCardProps {
   awsData: components["schemas"]["MachineProviderAws"]
@@ -29,32 +29,32 @@ export function AwsDetailsCard({ awsData, form }: AwsDetailsCardProps) {
         {/* Read-only fields in two-column layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
-            <div>
-              <Label>Region</Label>
-              <p className="text-sm text-muted-foreground">{awsData.region}</p>
-            </div>
+            <LabelAndValue
+              label="Region"
+              textValue={awsData.region}
+            />
             
-            <div>
-              <Label>VPC ID</Label>
-              <p className="text-sm text-muted-foreground">{awsData.vpcId || "N/A"}</p>
-            </div>
+            <LabelAndValue
+              label="VPC ID"
+              textValue={awsData.vpcId || "N/A"}
+            />
             
-            <div>
-              <Label>Security Group ID</Label>
-              <p className="text-sm text-muted-foreground">{awsData.securityGroupId || "N/A"}</p>
-            </div>
+            <LabelAndValue
+              label="Security Group ID"
+              textValue={awsData.securityGroupId || "N/A"}
+            />
           </div>
 
           <div className="space-y-4">
-            <div>
-              <Label>VPC Name</Label>
-              <p className="text-sm text-muted-foreground">{awsData.vpcName || "N/A"}</p>
-            </div>
+            <LabelAndValue
+              label="VPC Name"
+              textValue={awsData.vpcName || "N/A"}
+            />
             
-            <div>
-              <Label>VPC CIDR</Label>
-              <p className="text-sm text-muted-foreground">{awsData.vpcCidr || "N/A"}</p>
-            </div>
+            <LabelAndValue
+              label="VPC CIDR"
+              textValue={awsData.vpcCidr || "N/A"}
+            />
           </div>
         </div>
 

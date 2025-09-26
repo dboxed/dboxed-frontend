@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Badge } from "@/components/ui/badge.tsx";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
-import { Label } from "@/components/ui/label.tsx";
+import { LabelAndValue } from "@/components/LabelAndValue.tsx";
 import type { components } from "@/api/models/schema";
 
 interface GeneralInfoCardProps {
@@ -32,29 +32,29 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 gap-6">
-          <div>
-            <Label>Name</Label>
-            <p className="text-sm text-muted-foreground">{data.name}</p>
-          </div>
-          <div>
-            <Label>Type</Label>
-            <div className="mt-1">
+          <LabelAndValue
+            label="Name"
+            textValue={data.name}
+          />
+          <LabelAndValue
+            label="Type"
+            value={
               <Badge variant="secondary" className="capitalize">
                 {data.type}
               </Badge>
-            </div>
-          </div>
-          <div>
-            <Label>Status</Label>
-            <div className="mt-1">
+            }
+          />
+          <LabelAndValue
+            label="Status"
+            value={
               <Badge variant={getStatusVariant(data.status)} className="capitalize">
                 {data.status}
               </Badge>
-            </div>
-          </div>
-          <div>
-            <Label>Workspace</Label>
-            <div className="mt-1">
+            }
+          />
+          <LabelAndValue
+            label="Workspace"
+            value={
               <ReferenceLabel
                 resourceId={data.workspace}
                 resourcePath="/v1/workspaces/{workspaceId}"
@@ -65,14 +65,12 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
                 fallbackLabel="Workspace"
                 className="text-blue-600 hover:text-blue-800 underline"
               />
-            </div>
-          </div>
-          <div>
-            <Label>Created</Label>
-            <p className="text-sm text-muted-foreground">
-              {new Date(data.createdAt).toLocaleString()}
-            </p>
-          </div>
+            }
+          />
+          <LabelAndValue
+            label="Created"
+            textValue={new Date(data.createdAt).toLocaleString()}
+          />
         </div>
       </CardContent>
     </Card>

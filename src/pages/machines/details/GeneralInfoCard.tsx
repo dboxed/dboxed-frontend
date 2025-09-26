@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
-import { Label } from "@/components/ui/label.tsx"
+import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import type { components } from "@/api/models/schema"
 
 interface GeneralInfoCardProps {
@@ -19,14 +19,14 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label>Name</Label>
-            <p className="text-sm text-muted-foreground">{data.name}</p>
-          </div>
+          <LabelAndValue
+            label="Name"
+            textValue={data.name}
+          />
 
-          <div>
-            <Label>Box</Label>
-            <p className="text-sm text-muted-foreground">
+          <LabelAndValue
+            label="Box"
+            value={
               <ReferenceLabel
                 resourceId={data.box}
                 resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
@@ -37,12 +37,12 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
                 detailsUrl={`/workspaces/${data.workspace}/boxes/${data.box}`}
                 fallbackLabel="Box"
               />
-            </p>
-          </div>
+            }
+          />
           
-          <div>
-            <Label>Workspace</Label>
-            <p className="text-sm text-muted-foreground">
+          <LabelAndValue
+            label="Workspace"
+            value={
               <ReferenceLabel
                 resourceId={data.workspace}
                 resourcePath="/v1/workspaces/{workspaceId}"
@@ -50,41 +50,39 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
                 detailsUrl={`/workspaces/${data.workspace}`}
                 fallbackLabel="Workspace"
               />
-            </p>
-          </div>
+            }
+          />
           
-          <div>
-            <Label>Machine Provider</Label>
-            <p className="text-sm text-muted-foreground">
+          <LabelAndValue
+            label="Machine Provider"
+            value={
               <ReferenceLabel
                 resourceId={data.machineProvider}
                 resourcePath="/v1/workspaces/{workspaceId}/machine-providers/{id}"
-                pathParams={{ 
-                  workspaceId: data.workspace, 
+                pathParams={{
+                  workspaceId: data.workspace,
                   id: data.machineProvider
                 }}
                 detailsUrl={`/workspaces/${data.workspace}/machine-providers/${data.machineProvider}`}
                 fallbackLabel="Provider"
               />
-            </p>
-          </div>
+            }
+          />
           
-          <div>
-            <Label>Machine Provider Type</Label>
-            <p className="text-sm text-muted-foreground">
+          <LabelAndValue
+            label="Machine Provider Type"
+            value={
               <Badge variant="outline" className="w-fit">
                 {data.machineProviderType}
               </Badge>
-            </p>
-          </div>
+            }
+          />
         </div>
         
-        <div>
-          <Label>Created At</Label>
-          <p className="text-sm text-muted-foreground">
-            {new Date(data.createdAt).toLocaleString()}
-          </p>
-        </div>
+        <LabelAndValue
+          label="Created At"
+          textValue={new Date(data.createdAt).toLocaleString()}
+        />
       </CardContent>
     </Card>
   )

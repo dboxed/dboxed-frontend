@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { LoginGate } from './components/login-gate';
 import { onSigninCallback, useIsAdmin, userManager } from './api/auth';
-import { Route, Routes, useLocation, useNavigate } from 'react-router';
+import { Route, Routes, useLocation } from 'react-router';
 import MainLayout from "@/layouts/MainLayout.tsx";
 import { AuthProvider } from "react-oidc-context";
 import { NoWorkspaceScreen } from "@/components/NoWorkspaceScreen.tsx";

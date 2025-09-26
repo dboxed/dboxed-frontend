@@ -1,5 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
 import { BaseCreateDialog } from "@/components/BaseCreateDialog.tsx"
 import { VolumeProviderSelector } from "@/pages/volumes/create/index.ts"
 import { RusticConfig } from "@/pages/volumes/create/RusticConfig.tsx"
@@ -10,35 +8,6 @@ import { parseSize } from "@/utils/size.ts"
 import { useState } from "react"
 import type { components } from "@/api/models/schema";
 
-const FormSchema = z.object({
-  name: z.string().min(1, {
-    message: "Name must be at least 1 character.",
-  }),
-  volumeProvider: z.preprocess((val) => {
-    if (typeof val === 'string') return parseInt(val)
-    return val
-  }, z.number().min(1, "Please select a volume provider.")),
-  rustic: z.object({
-    fsSize: z.string().min(1, "Filesystem size is required").refine((val) => {
-      try {
-        const bytes = parseSize(val)
-        return bytes > 0
-      } catch {
-        return false
-      }
-    }, {
-      message: "Invalid size format. Use formats like '1GB', '512MB', '2.5TB'",
-    }),
-    fsType: z.string().min(1, "Filesystem type is required"),
-  }).optional(),
-}).refine((_data) => {
-  // If provider type is rustic, require rustic config
-  // Note: We can't directly check provider type here since it's not in form data
-  // This validation will be handled by the component logic
-  return true
-}, {
-  message: "Rustic configuration is required for rustic providers.",
-})
 
 interface CreateVolumeDialogProps {
   open: boolean
@@ -49,25 +18,17 @@ export function CreateVolumeDialog({ open, onOpenChange }: CreateVolumeDialogPro
   const { workspaceId } = useSelectedWorkspaceId()
   const [selectedProvider, setSelectedProvider] = useState<components["schemas"]["VolumeProvider"] | null>(null)
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    const submitData: components["schemas"]["CreateVolume"] = {
-      name: data.name,
-      volumeProvider: data.volumeProvider,
+  function onSubmit(data: components["schemas"]["CreateVolume"]) {
+    // Process rustic fsSize if it's a string (convert to bytes)
+    if (selectedProvider?.type === "rustic" && data.rustic && typeof data.rustic.fsSize === "string") {
+      data.rustic.fsSize = parseSize(data.rustic.fsSize)
     }
 
-    // Add rustic configuration if provider type is rustic
-    if (selectedProvider?.type === "rustic" && data.rustic) {
-      submitData.rustic = {
-        fsSize: parseSize(data.rustic.fsSize),
-        fsType: data.rustic.fsType,
-      }
-    }
-
-    return submitData
+    return data
   }
 
   return (
-    <BaseCreateDialog
+    <BaseCreateDialog<components["schemas"]["CreateVolume"]>
       open={open}
       onOpenChange={onOpenChange}
       title="Create Volume"
@@ -86,7 +47,6 @@ export function CreateVolumeDialog({ open, onOpenChange }: CreateVolumeDialogPro
           fsType: "ext4",
         }
       }}
-      resolver={zodResolver(FormSchema)}
     >
       {(form) => (
         <div className="space-y-6">

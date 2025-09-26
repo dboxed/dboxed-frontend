@@ -1,5 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
 import { BaseCreateDialog } from "@/components/BaseCreateDialog.tsx"
 import { NetbirdConfigForm, NetworkTypeSelector } from "@/pages/networks/create/index.ts"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
@@ -7,27 +5,6 @@ import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import type { components } from "@/api/models/schema";
 
-const FormSchema = z.object({
-  name: z.string().min(1, {
-    message: "Name must be at least 1 character.",
-  }),
-  type: z.enum(["netbird"]).refine((val) => val !== undefined, {
-    message: "Please select a network type.",
-  }),
-  netbird: z.object({
-    netbirdVersion: z.string().optional().default("latest"),
-    apiUrl: z.string().url("Please enter a valid URL").optional().or(z.literal("")),
-    apiAccessToken: z.string().optional(),
-  }).optional(),
-}).refine((data) => {
-  if (data.type === "netbird" && !data.netbird) {
-    return false
-  }
-  return true
-}, {
-  message: "Please configure the selected network type.",
-  path: ["type"]
-})
 
 interface CreateNetworkDialogProps {
   open: boolean
@@ -37,35 +14,8 @@ interface CreateNetworkDialogProps {
 export function CreateNetworkDialog({ open, onOpenChange }: CreateNetworkDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    const submitData: components["schemas"]["CreateNetwork"] = {
-      name: data.name,
-      type: data.type,
-    }
-
-    if (data.type === "netbird") {
-      const netbirdConfig: components["schemas"]["CreateNetworkNetbird"] = {
-        netbirdVersion: data.netbird?.netbirdVersion || "",
-      }
-
-      if (data.netbird) {
-        if (data.netbird.apiUrl && data.netbird.apiUrl.trim() !== "") {
-          netbirdConfig.apiUrl = data.netbird.apiUrl
-        }
-
-        if (data.netbird.apiAccessToken && data.netbird.apiAccessToken.trim() !== "") {
-          netbirdConfig.apiAccessToken = data.netbird.apiAccessToken
-        }
-      }
-
-      submitData.netbird = netbirdConfig
-    }
-
-    return submitData
-  }
-
   return (
-    <BaseCreateDialog
+    <BaseCreateDialog<components["schemas"]["CreateNetwork"]>
       open={open}
       onOpenChange={onOpenChange}
       title="Create Network"
@@ -75,17 +25,15 @@ export function CreateNetworkDialog({ open, onOpenChange }: CreateNetworkDialogP
           workspaceId: workspaceId,
         }
       }}
-      onSubmit={onSubmit}
       defaultValues={{
         name: "",
-        type: undefined,
+        type: "netbird",
         netbird: {
           netbirdVersion: "latest",
           apiUrl: "",
           apiAccessToken: "",
         },
       }}
-      resolver={zodResolver(FormSchema)}
     >
       {(form) => (
         <div className="space-y-6">

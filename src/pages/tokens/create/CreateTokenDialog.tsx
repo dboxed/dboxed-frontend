@@ -14,10 +14,6 @@ interface CreateTokenDialogProps {
 export function CreateTokenDialog({ open, onOpenChange }: CreateTokenDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
 
-  const handleSubmit = (data: components["schemas"]["CreateToken"]) => {
-    return data
-  }
-
   return (
     <BaseCreateDialog<components["schemas"]["CreateToken"]>
       open={open}
@@ -32,7 +28,6 @@ export function CreateTokenDialog({ open, onOpenChange }: CreateTokenDialogProps
       defaultValues={{
         forWorkspace: true
       }}
-      onSubmit={handleSubmit}
     >
       {(form) => {
         const forWorkspace = form.watch("forWorkspace")

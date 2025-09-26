@@ -43,12 +43,10 @@ export function BaseResourceDetailsPage<T, U>(props: BaseResourceDetailsPageProp
         body: data as any,
       }, {
         onSuccess: data => {
-          console.log("ok")
           resolve()
           resourceQuery.refetch()
         },
         onError: error => {
-          console.log("err", error)
           reject(error)
           resourceQuery.refetch()
         },

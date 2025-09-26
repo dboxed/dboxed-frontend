@@ -6,37 +6,42 @@ import { useDboxedQueryClient } from "@/api/api"
 import { DataTable } from "@/components/data-table.tsx"
 import type { ColumnDef } from "@tanstack/react-table"
 import type { paths } from "@/api/models/schema"
+import type { FieldValues } from "react-hook-form"
+import { OpenDialogButton } from "@/components/OpenDialogButton.tsx"
+import type { ComponentType } from "react"
 
-interface BaseListPageProps<TData = any> {
+interface BaseListPageProps<TData extends FieldValues> {
   title: string
   resourcePath: keyof paths
   createPath?: string
   columns: ColumnDef<TData>[]
-  apiParams?: Record<string, any>
+  apiParams?: Record<string, unknown>
+  createButton?: React.ReactNode
+  createDialog?: ComponentType<{ open: boolean; onOpenChange: (open: boolean) => void }>
   createButtonText?: string
   emptyStateMessage?: string
   loadingMessage?: string
   errorMessage?: string
   hideCreateButton?: boolean
-  customCreateAction?: () => void
   transformData?: (data: any) => TData[]
   showCreateButton?: boolean
   searchColumn?: string
   searchPlaceholder?: string
 }
 
-export function BaseListPage<TData = any>({
+export function BaseListPage<TData extends FieldValues>({
   title,
   resourcePath,
   createPath,
   columns,
   apiParams = {},
+  createButton,
+  createDialog,
   createButtonText = `Create ${title.slice(0, -1)}`, // Remove 's' from plural title
   emptyStateMessage,
   loadingMessage = `Loading ${title.toLowerCase()}...`,
   errorMessage = `Failed to load ${title.toLowerCase()}`,
   hideCreateButton = false,
-  customCreateAction,
   transformData,
   showCreateButton = true,
   searchColumn,
@@ -50,26 +55,36 @@ export function BaseListPage<TData = any>({
   })
 
   const handleCreateClick = () => {
-    if (customCreateAction) {
-      customCreateAction()
-    } else if (createPath) {
+    if (createPath) {
       navigate(createPath)
     }
   }
 
-  const shouldShowCreateButton = showCreateButton && !hideCreateButton && (createPath || customCreateAction)
+  const shouldShowCreateButton = !!(showCreateButton && !hideCreateButton && (createButton || createDialog || createPath))
+
+  let actualCreateButton = createButton
+  if (shouldShowCreateButton && !actualCreateButton) {
+    if (createDialog) {
+      actualCreateButton = (
+        <OpenDialogButton dialog={createDialog}>
+          <Plus className="mr-2 h-4 w-4"/>
+          {createButtonText}
+        </OpenDialogButton>
+      )
+    } else if (createPath) {
+      actualCreateButton = <Button onClick={handleCreateClick}>
+        <Plus className="mr-2 h-4 w-4"/>
+        {createButtonText}
+      </Button>
+    }
+  }
 
   if (query.isLoading) {
     return (
       <BasePage title={title}>
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">{title}</h2>
-          {shouldShowCreateButton && (
-            <Button onClick={handleCreateClick}>
-              <Plus className="mr-2 h-4 w-4" />
-              {createButtonText}
-            </Button>
-          )}
+          {actualCreateButton}
         </div>
         <div className="text-muted-foreground">{loadingMessage}</div>
       </BasePage>
@@ -81,12 +96,7 @@ export function BaseListPage<TData = any>({
       <BasePage title={title}>
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">{title}</h2>
-          {shouldShowCreateButton && (
-            <Button onClick={handleCreateClick}>
-              <Plus className="mr-2 h-4 w-4" />
-              {createButtonText}
-            </Button>
-          )}
+          {actualCreateButton}
         </div>
         <div className="text-red-600">{errorMessage}</div>
       </BasePage>
@@ -102,29 +112,24 @@ export function BaseListPage<TData = any>({
     data = (query.data as any)?.items || (Array.isArray(query.data) ? query.data : [])
   }
 
-  const defaultEmptyMessage = emptyStateMessage || 
-    `No ${title.toLowerCase()} found yet.${createPath || customCreateAction ? ` Create your first ${title.slice(0, -1).toLowerCase()} to get started.` : ''}`
+  const defaultEmptyMessage = emptyStateMessage ||
+    `No ${title.toLowerCase()} found yet.${shouldShowCreateButton ? ` Create your first ${title.slice(0, -1).toLowerCase()} to get started.` : ''}`
 
   return (
     <BasePage title={title}>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">{title}</h2>
-        {shouldShowCreateButton && (
-          <Button onClick={handleCreateClick}>
-            <Plus className="mr-2 h-4 w-4" />
-            {createButtonText}
-          </Button>
-        )}
+        {actualCreateButton}
       </div>
-      
+
       {data.length === 0 ? (
         <div className="text-muted-foreground">
           {defaultEmptyMessage}
         </div>
       ) : (
-        <DataTable 
-          columns={columns} 
-          data={data} 
+        <DataTable
+          columns={columns}
+          data={data}
           searchColumn={searchColumn}
           searchPlaceholder={searchPlaceholder}
         />

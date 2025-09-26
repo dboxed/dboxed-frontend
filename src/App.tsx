@@ -13,7 +13,7 @@ import { CreateMachinePage, MachineDetailsPage, MachinesPage } from "@/pages/mac
 import { WorkspaceDashboardPage } from "@/pages/dashboard/WorkspaceDashboardPage.tsx";
 import { CreateNetworkPage, ListNetworksPage, NetworkDetailsPage } from "@/pages/networks";
 import { BoxDetailsPage } from "@/pages/boxes/details";
-import { CreateBoxPage, ListBoxesPage } from "@/pages/boxes";
+import { ListBoxesPage } from "@/pages/boxes";
 import { CreateVolumeProviderPage, VolumeProviderDetailsPage } from "@/pages/volume-providers";
 import { CreateVolumePage, VolumeDetailsPage, VolumesPage } from "@/pages/volumes";
 import { CreateTokenPage, ListTokensPage, TokenDetailsPage } from "@/pages/tokens";
@@ -104,7 +104,6 @@ function AuthenticatedApp() {
         <Route path="/workspaces/:workspaceId/machine-providers/create" element={<CreateMachineProviderPage/>}/>
         <Route path="/workspaces/:workspaceId/volume-providers/create" element={<CreateVolumeProviderPage/>}/>
         <Route path="/workspaces/:workspaceId/volumes/create" element={<CreateVolumePage/>}/>
-        <Route path="/workspaces/:workspaceId/boxes/create" element={<CreateBoxPage/>}/>
         <Route path="/workspaces/:workspaceId/machines/create" element={<CreateMachinePage/>}/>
         <Route path="/workspaces/:workspaceId/networks/create" element={<CreateNetworkPage/>}/>
         <Route path="/workspaces/:workspaceId/tokens/create" element={<CreateTokenPage/>}/>

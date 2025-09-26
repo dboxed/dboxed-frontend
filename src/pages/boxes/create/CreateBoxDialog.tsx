@@ -1,19 +1,22 @@
-import { BaseCreatePage } from "@/pages/base/BaseCreatePage.tsx"
+import { BaseCreateDialog } from "@/components/BaseCreateDialog.tsx"
 import { NetworkSelector } from "./NetworkSelector.tsx"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/schema"
 
-export function CreateBoxPage() {
+interface CreateBoxDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+export function CreateBoxDialog({ open, onOpenChange }: CreateBoxDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
 
-  const handleSubmit = (data: components["schemas"]["CreateBox"]) => {
-    return data
-  }
-
   return (
-    <BaseCreatePage<components["schemas"]["CreateBox"]>
+    <BaseCreateDialog<components["schemas"]["CreateBox"]>
+      open={open}
+      onOpenChange={onOpenChange}
       title="Create Box"
       apiRoute="/v1/workspaces/{workspaceId}/boxes"
       apiParams={{
@@ -21,13 +24,10 @@ export function CreateBoxPage() {
           workspaceId: workspaceId,
         }
       }}
-      defaultValues={{
-
-      }}
-      onSubmit={handleSubmit}
+      defaultValues={{}}
     >
-      {(form) => {
-        return <div className="space-y-6">
+      {(form) => (
+        <div className="space-y-6">
           <FormField
             control={form.control}
             name="name"
@@ -41,10 +41,10 @@ export function CreateBoxPage() {
               </FormItem>
             )}
           />
-          
+
           <NetworkSelector form={form} />
         </div>
-      }}
-    </BaseCreatePage>
+      )}
+    </BaseCreateDialog>
   )
-} 
+}

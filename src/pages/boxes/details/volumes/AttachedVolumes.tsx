@@ -112,7 +112,6 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
 
   const attachedVolumeAttachments = attachedVolumesQuery.data?.items || []
   const availableVolumes = allVolumesQuery.data?.items?.filter(v => !v.attachment) || []
-  console.log(attachedVolumesQuery.data?.items)
 
   // Define columns for the DataTable
   const columns: ColumnDef<components["schemas"]["VolumeAttachment"]>[] = [

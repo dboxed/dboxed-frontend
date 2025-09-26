@@ -6,6 +6,7 @@ import type { components } from "@/api/models/schema";
 import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
+import { CreateBoxDialog } from "./create/CreateBoxDialog.tsx";
 
 export function ListBoxesPage() {
   const navigate = useNavigate()
@@ -137,20 +138,22 @@ export function ListBoxesPage() {
   ]
 
   return (
-    <BaseListPage<components["schemas"]["Box"]>
-      title="Boxes"
-      resourcePath="/v1/workspaces/{workspaceId}/boxes"
-      createPath={`/workspaces/${workspaceId}/boxes/create`}
-      createButtonText="Create Box"
-      columns={columns}
-      apiParams={{
-        path: {
-          workspaceId: workspaceId,
-        }
-      }}
-      emptyStateMessage="No boxes created yet. Create your first box to get started."
-      searchColumn="name"
-      searchPlaceholder="Search boxes..."
-    />
+    <>
+      <BaseListPage<components["schemas"]["Box"]>
+        title="Boxes"
+        resourcePath="/v1/workspaces/{workspaceId}/boxes"
+        createDialog={CreateBoxDialog}
+        createButtonText="Create Box"
+        columns={columns}
+        apiParams={{
+          path: {
+            workspaceId: workspaceId,
+          }
+        }}
+        emptyStateMessage="No boxes created yet. Create your first box to get started."
+        searchColumn="name"
+        searchPlaceholder="Search boxes..."
+      />
+    </>
   )
 } 

@@ -33,7 +33,6 @@ export function BoxSpecYamlEditorDialog({ box, saveBox }: BoxSpecYamlEditorDialo
         return false
       }
 
-      console.log("start")
       if (await saveBox({
         boxSpec: parsedData,
       })) {

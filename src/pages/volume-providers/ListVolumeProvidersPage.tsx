@@ -5,6 +5,7 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import type { components } from "@/api/models/schema";
 import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
+import { CreateVolumeProviderDialog } from "@/pages/volume-providers/create/CreateVolumeProviderDialog.tsx";
 
 export function ListVolumeProvidersPage() {
   const navigate = useNavigate()
@@ -103,7 +104,7 @@ export function ListVolumeProvidersPage() {
     <BaseListPage<components["schemas"]["VolumeProvider"]>
       title="Volume Providers"
       resourcePath="/v1/workspaces/{workspaceId}/volume-providers"
-      createPath={`/workspaces/${workspaceId}/volume-providers/create`}
+      createDialog={CreateVolumeProviderDialog}
       columns={columns}
       apiParams={{
         path: {

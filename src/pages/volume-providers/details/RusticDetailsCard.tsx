@@ -5,7 +5,6 @@ import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { SimpleInputDialog } from "@/components/SimpleInputDialog.tsx"
 import type { components } from "@/api/models/schema"
-import { Label } from "@/components/ui/label.tsx";
 
 interface RusticDetailsCardProps {
   volumeProvider: components["schemas"]["VolumeProvider"]

@@ -5,6 +5,7 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import type { components } from "@/api/models/schema";
 import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
+import { CreateMachineProviderDialog } from "@/pages/machine-providers/create/CreateMachineProviderDialog.tsx";
 
 export function ListMachineProvidersPage() {
   const navigate = useNavigate()
@@ -103,7 +104,7 @@ export function ListMachineProvidersPage() {
     <BaseListPage<components["schemas"]["MachineProvider"]>
       title="Machine Providers"
       resourcePath="/v1/workspaces/{workspaceId}/machine-providers"
-      createPath={`/workspaces/${workspaceId}/machine-providers/create`}
+      createDialog={CreateMachineProviderDialog}
       columns={columns}
       apiParams={{
         path: {

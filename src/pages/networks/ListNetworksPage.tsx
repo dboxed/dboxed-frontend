@@ -5,6 +5,7 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import type { components } from "@/api/models/schema";
 import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
+import { CreateNetworkDialog } from "@/pages/networks/create/CreateNetworkDialog.tsx";
 
 export function ListNetworksPage() {
   const navigate = useNavigate()
@@ -115,7 +116,7 @@ export function ListNetworksPage() {
     <BaseListPage<components["schemas"]["Network"]>
       title="Networks"
       resourcePath="/v1/workspaces/{workspaceId}/networks"
-      createPath={`/workspaces/${workspaceId}/networks/create`}
+      createDialog={CreateNetworkDialog}
       columns={columns}
       apiParams={{
         path: {

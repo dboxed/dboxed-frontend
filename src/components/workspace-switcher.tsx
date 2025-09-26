@@ -1,4 +1,5 @@
 import { ChevronsUpDown, Plus } from "lucide-react"
+import { useState } from "react"
 
 import {
   DropdownMenu,
@@ -13,6 +14,7 @@ import type { components } from "@/api/models/schema";
 import { useLocation, useNavigate } from "react-router";
 import { useDboxedQueryClient } from "@/api/api.ts";
 import { useIsAdmin } from "@/api/auth.ts";
+import { CreateWorkspaceDialog } from "@/pages/workspaces/CreateWorkspaceDialog.tsx";
 
 export function useSelectedWorkspaceId() {
   const location = useLocation()
@@ -46,6 +48,7 @@ export function WorkspaceSwitcher() {
   const navigate = useNavigate()
   const client = useDboxedQueryClient()
   const isAdminQuery = useIsAdmin()
+  const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
   const { isMobile } = useSidebar()
 
@@ -104,7 +107,7 @@ export function WorkspaceSwitcher() {
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2" onSelect={() => navigate("/workspaces/create")}>
+            <DropdownMenuItem className="gap-2 p-2" onSelect={() => setCreateDialogOpen(true)}>
               <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                 <Plus className="size-4" />
               </div>
@@ -112,6 +115,10 @@ export function WorkspaceSwitcher() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <CreateWorkspaceDialog
+          open={createDialogOpen}
+          onOpenChange={setCreateDialogOpen}
+        />
       </SidebarMenuItem>
     </SidebarMenu>
   )

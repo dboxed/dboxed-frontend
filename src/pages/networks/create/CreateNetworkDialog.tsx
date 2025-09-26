@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { BaseCreatePage } from "@/pages/base/BaseCreatePage.tsx"
+import { BaseCreateDialog } from "@/components/BaseCreateDialog.tsx"
 import { NetbirdConfigForm, NetworkTypeSelector } from "@/pages/networks/create/index.ts"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
@@ -29,7 +29,12 @@ const FormSchema = z.object({
   path: ["type"]
 })
 
-export function CreateNetworkPage() {
+interface CreateNetworkDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+export function CreateNetworkDialog({ open, onOpenChange }: CreateNetworkDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -52,7 +57,7 @@ export function CreateNetworkPage() {
           netbirdConfig.apiAccessToken = data.netbird.apiAccessToken
         }
       }
-      
+
       submitData.netbird = netbirdConfig
     }
 
@@ -60,7 +65,9 @@ export function CreateNetworkPage() {
   }
 
   return (
-    <BaseCreatePage
+    <BaseCreateDialog
+      open={open}
+      onOpenChange={onOpenChange}
       title="Create Network"
       apiRoute="/v1/workspaces/{workspaceId}/networks"
       apiParams={{
@@ -95,14 +102,14 @@ export function CreateNetworkPage() {
               </FormItem>
             )}
           />
-          
+
           <NetworkTypeSelector form={form} />
-          
+
           {form.watch("type") === "netbird" && (
             <NetbirdConfigForm form={form} />
           )}
         </div>
       )}
-    </BaseCreatePage>
+    </BaseCreateDialog>
   )
-} 
+}

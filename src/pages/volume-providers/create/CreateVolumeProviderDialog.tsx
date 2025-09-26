@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { BaseCreatePage } from "@/pages/base/BaseCreatePage.tsx"
+import { BaseCreateDialog } from "@/components/BaseCreateDialog.tsx"
 import { VolumeProviderTypeSelector, RusticConfigForm } from "@/pages/volume-providers/create/index.ts"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
@@ -35,7 +35,12 @@ const FormSchema = z.object({
   path: ["type"]
 })
 
-export function CreateVolumeProviderPage() {
+interface CreateVolumeProviderDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+export function CreateVolumeProviderDialog({ open, onOpenChange }: CreateVolumeProviderDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -58,7 +63,9 @@ export function CreateVolumeProviderPage() {
   }
 
   return (
-    <BaseCreatePage
+    <BaseCreateDialog
+      open={open}
+      onOpenChange={onOpenChange}
       title="Create Volume Provider"
       apiRoute="/v1/workspaces/{workspaceId}/volume-providers"
       apiParams={{
@@ -99,14 +106,14 @@ export function CreateVolumeProviderPage() {
               </FormItem>
             )}
           />
-          
+
           <VolumeProviderTypeSelector form={form} />
-          
+
           {form.watch("type") === "rustic" && (
             <RusticConfigForm form={form} />
           )}
         </div>
       )}
-    </BaseCreatePage>
+    </BaseCreateDialog>
   )
 }

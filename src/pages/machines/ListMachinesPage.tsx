@@ -6,6 +6,7 @@ import type { components } from "@/api/models/schema";
 import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
+import { CreateMachineDialog } from "./create/CreateMachineDialog.tsx";
 
 export function ListMachinesPage() {
   const navigate = useNavigate()
@@ -118,7 +119,7 @@ export function ListMachinesPage() {
     <BaseListPage<components["schemas"]["Machine"]>
       title="Machines"
       resourcePath="/v1/workspaces/{workspaceId}/machines"
-      createPath={`/workspaces/${workspaceId}/machines/create`}
+      createDialog={CreateMachineDialog}
       columns={columns}
       apiParams={{
         path: {

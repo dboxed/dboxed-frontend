@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { BaseCreatePage } from "@/pages/base/BaseCreatePage.tsx"
+import { BaseCreateDialog } from "@/components/BaseCreateDialog.tsx"
 import {
   AwsConfigForm,
   HetznerConfigForm,
@@ -45,7 +45,12 @@ const FormSchema = z.object({
   path: ["type"]
 })
 
-export function CreateMachineProviderPage() {
+interface CreateMachineProviderDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+export function CreateMachineProviderDialog({ open, onOpenChange }: CreateMachineProviderDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -70,7 +75,9 @@ export function CreateMachineProviderPage() {
   }
 
   return (
-    <BaseCreatePage
+    <BaseCreateDialog
+      open={open}
+      onOpenChange={onOpenChange}
       title="Create Machine Provider"
       apiRoute="/v1/workspaces/{workspaceId}/machine-providers"
       apiParams={{
@@ -101,19 +108,19 @@ export function CreateMachineProviderPage() {
               </FormItem>
             )}
           />
-          
+
           <MachineProviderTypeSelector form={form} />
           <SshKeyForm form={form} />
-          
+
           {form.watch("type") === "aws" && (
             <AwsConfigForm form={form} />
           )}
-          
+
           {form.watch("type") === "hetzner" && (
             <HetznerConfigForm form={form} />
           )}
         </div>
       )}
-    </BaseCreatePage>
+    </BaseCreateDialog>
   )
-} 
+}

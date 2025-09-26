@@ -4,19 +4,19 @@ import { onSigninCallback, useIsAdmin, userManager } from './api/auth';
 import { Route, Routes, useLocation, useNavigate } from 'react-router';
 import MainLayout from "@/layouts/MainLayout.tsx";
 import { AuthProvider } from "react-oidc-context";
-import { CreateWorkspacePage } from "@/pages/workspaces/CreateWorkspacePage.tsx";
+import { NoWorkspaceScreen } from "@/components/NoWorkspaceScreen.tsx";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import { useDboxedQueryClient } from "@/api/api.ts";
 import { Toaster } from "sonner";
-import { CreateMachineProviderPage, MachineProviderDetailsPage } from "@/pages/machine-providers";
-import { CreateMachinePage, MachineDetailsPage, MachinesPage } from "@/pages/machines";
+import { MachineProviderDetailsPage } from "@/pages/machine-providers";
+import { MachineDetailsPage, MachinesPage } from "@/pages/machines";
 import { WorkspaceDashboardPage } from "@/pages/dashboard/WorkspaceDashboardPage.tsx";
-import { CreateNetworkPage, ListNetworksPage, NetworkDetailsPage } from "@/pages/networks";
+import { ListNetworksPage, NetworkDetailsPage } from "@/pages/networks";
 import { BoxDetailsPage } from "@/pages/boxes/details";
 import { ListBoxesPage } from "@/pages/boxes";
-import { CreateVolumeProviderPage, VolumeProviderDetailsPage } from "@/pages/volume-providers";
-import { CreateVolumePage, VolumeDetailsPage, VolumesPage } from "@/pages/volumes";
-import { CreateTokenPage, ListTokensPage, TokenDetailsPage } from "@/pages/tokens";
+import { VolumeProviderDetailsPage } from "@/pages/volume-providers";
+import { VolumeDetailsPage, VolumesPage } from "@/pages/volumes";
+import { ListTokensPage, TokenDetailsPage } from "@/pages/tokens";
 import { AdminWorkspacesListPage } from "@/pages/admin/AdminWorkspacesListPage.tsx";
 import { AdminListUsersPage } from "@/pages/admin/AdminListUsersPage.tsx";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -47,7 +47,6 @@ function AuthenticatedApp() {
   const isAdminQuery = useIsAdmin()
   const { workspaceId, setWorkspaceId } = useSelectedWorkspaceId()
   const location = useLocation()
-  const navigate = useNavigate()
   const client = useDboxedQueryClient()
   const workspaces = client.useQuery('get', '/v1/workspaces')
 
@@ -56,7 +55,7 @@ function AuthenticatedApp() {
 
   if (workspaces.isLoading) return <div>Loading workspaces...</div>;
 
-  if (location.pathname !== "/workspaces/create" && !location.pathname.startsWith("/admin/")) {
+  if (!location.pathname.startsWith("/admin/")) {
     let needNewWorkspaceId = false
     if (!workspaceId) {
       needNewWorkspaceId = true
@@ -65,7 +64,7 @@ function AuthenticatedApp() {
     }
     if (needNewWorkspaceId) {
       if (!workspaces.data?.items?.length) {
-        navigate("/workspaces/create")
+        return <NoWorkspaceScreen />
       } else {
         setWorkspaceId(workspaces.data.items[0].id)
       }
@@ -100,13 +99,6 @@ function AuthenticatedApp() {
             </>
           )}
         </Route>
-        <Route path="/workspaces/create" element={<CreateWorkspacePage/>}/>
-        <Route path="/workspaces/:workspaceId/machine-providers/create" element={<CreateMachineProviderPage/>}/>
-        <Route path="/workspaces/:workspaceId/volume-providers/create" element={<CreateVolumeProviderPage/>}/>
-        <Route path="/workspaces/:workspaceId/volumes/create" element={<CreateVolumePage/>}/>
-        <Route path="/workspaces/:workspaceId/machines/create" element={<CreateMachinePage/>}/>
-        <Route path="/workspaces/:workspaceId/networks/create" element={<CreateNetworkPage/>}/>
-        <Route path="/workspaces/:workspaceId/tokens/create" element={<CreateTokenPage/>}/>
       </Routes>
     </div>
   )

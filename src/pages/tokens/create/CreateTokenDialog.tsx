@@ -1,4 +1,4 @@
-import { BaseCreatePage } from "@/pages/base/BaseCreatePage.tsx"
+import { BaseCreateDialog } from "@/components/BaseCreateDialog.tsx"
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
@@ -6,7 +6,12 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/schema"
 import { BoxSelector } from "./BoxSelector.tsx"
 
-export function CreateTokenPage() {
+interface CreateTokenDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+export function CreateTokenDialog({ open, onOpenChange }: CreateTokenDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
 
   const handleSubmit = (data: components["schemas"]["CreateToken"]) => {
@@ -14,7 +19,9 @@ export function CreateTokenPage() {
   }
 
   return (
-    <BaseCreatePage<components["schemas"]["CreateToken"]>
+    <BaseCreateDialog<components["schemas"]["CreateToken"]>
+      open={open}
+      onOpenChange={onOpenChange}
       title="Create Token"
       apiRoute="/v1/workspaces/{workspaceId}/tokens"
       apiParams={{
@@ -84,6 +91,6 @@ export function CreateTokenPage() {
           )}
         </div>
       }}
-    </BaseCreatePage>
+    </BaseCreateDialog>
   )
 }

@@ -6,6 +6,7 @@ import type { components } from "@/api/models/schema";
 import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
+import { CreateTokenDialog } from "./create/CreateTokenDialog.tsx";
 
 export function ListTokensPage() {
   const navigate = useNavigate()
@@ -110,7 +111,7 @@ export function ListTokensPage() {
     <BaseListPage<components["schemas"]["Token"]>
       title="Tokens"
       resourcePath="/v1/workspaces/{workspaceId}/tokens"
-      createPath={`/workspaces/${workspaceId}/tokens/create`}
+      createDialog={CreateTokenDialog}
       createButtonText="Create Token"
       columns={columns}
       apiParams={{

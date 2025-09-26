@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { BaseCreatePage } from "@/pages/base/BaseCreatePage.tsx"
+import { BaseCreateDialog } from "@/components/BaseCreateDialog.tsx"
 import { VolumeProviderSelector } from "@/pages/volumes/create/index.ts"
 import { RusticConfig } from "@/pages/volumes/create/RusticConfig.tsx"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
@@ -40,7 +40,12 @@ const FormSchema = z.object({
   message: "Rustic configuration is required for rustic providers.",
 })
 
-export function CreateVolumePage() {
+interface CreateVolumeDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+export function CreateVolumeDialog({ open, onOpenChange }: CreateVolumeDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const [selectedProvider, setSelectedProvider] = useState<components["schemas"]["VolumeProvider"] | null>(null)
 
@@ -62,7 +67,9 @@ export function CreateVolumePage() {
   }
 
   return (
-    <BaseCreatePage
+    <BaseCreateDialog
+      open={open}
+      onOpenChange={onOpenChange}
       title="Create Volume"
       apiRoute="/v1/workspaces/{workspaceId}/volumes"
       apiParams={{
@@ -96,17 +103,17 @@ export function CreateVolumePage() {
               </FormItem>
             )}
           />
-          
-          <VolumeProviderSelector 
-            form={form} 
+
+          <VolumeProviderSelector
+            form={form}
             onProviderChange={setSelectedProvider}
           />
-          
+
           {selectedProvider?.type === "rustic" && (
             <RusticConfig form={form} />
           )}
         </div>
       )}
-    </BaseCreatePage>
+    </BaseCreateDialog>
   )
 }

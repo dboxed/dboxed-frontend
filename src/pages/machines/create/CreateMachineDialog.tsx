@@ -1,4 +1,4 @@
-import { BaseCreatePage } from "@/pages/base/BaseCreatePage.tsx"
+import { BaseCreateDialog } from "@/components/BaseCreateDialog.tsx"
 import { MachineProviderSelector } from "./MachineProviderSelector.tsx"
 import { BoxSelector } from "./BoxSelector.tsx"
 import { AwsMachineConfigForm } from "./AwsMachineConfigForm.tsx"
@@ -9,7 +9,12 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/schema"
 import { useDboxedQueryClient } from "@/api/api.ts";
 
-export function CreateMachinePage() {
+interface CreateMachineDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+export function CreateMachineDialog({ open, onOpenChange }: CreateMachineDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
 
@@ -40,7 +45,9 @@ export function CreateMachinePage() {
   }
 
   return (
-    <BaseCreatePage<components["schemas"]["CreateMachine"]>
+    <BaseCreateDialog<components["schemas"]["CreateMachine"]>
+      open={open}
+      onOpenChange={onOpenChange}
       title="Create Machine"
       apiRoute="/v1/workspaces/{workspaceId}/machines"
       apiParams={{
@@ -80,18 +87,18 @@ export function CreateMachinePage() {
           />
 
           <BoxSelector form={form} />
-          
+
           <MachineProviderSelector form={form} />
 
           {machineProvider?.type === "aws" && (
             <AwsMachineConfigForm form={form} />
           )}
-          
+
           {machineProvider?.type === "hetzner" && (
             <HetznerMachineConfigForm form={form} />
           )}
         </div>
       }}
-    </BaseCreatePage>
+    </BaseCreateDialog>
   )
-} 
+}

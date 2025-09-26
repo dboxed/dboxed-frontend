@@ -6,6 +6,7 @@ import type { components } from "@/api/models/schema";
 import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
+import { CreateVolumeDialog } from "./create/CreateVolumeDialog.tsx";
 
 export function ListVolumesPage() {
   const navigate = useNavigate()
@@ -100,7 +101,7 @@ export function ListVolumesPage() {
     <BaseListPage<components["schemas"]["Volume"]>
       title="Volumes"
       resourcePath="/v1/workspaces/{workspaceId}/volumes"
-      createPath={`/workspaces/${workspaceId}/volumes/create`}
+      createDialog={CreateVolumeDialog}
       columns={columns}
       apiParams={{
         path: {

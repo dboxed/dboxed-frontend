@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
+import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import { Key } from "lucide-react"
 import type { components } from "@/api/models/schema"
 
@@ -21,55 +22,56 @@ export function TokenDetailsCard({ token }: TokenDetailsCardProps) {
           API token information and configuration.
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <LabelAndValue
-          label="Name"
-          textValue={token.name}
-        />
-
-        <LabelAndValue
-          label="Scope"
-          value={
-            <Badge variant={token.forWorkspace ? "default" : "secondary"}>
-              {token.forWorkspace ? "Workspace" : "Box"}
-            </Badge>
-          }
-        />
-
-        {token.boxId && (
+      <CardContent>
+        <DetailsCardLayout>
           <LabelAndValue
-            label="Associated Box"
+            label="Name"
+            textValue={token.name}
+          />
+
+          <LabelAndValue
+            label="Scope"
             value={
-              <ReferenceLabel
-                resourceId={token.boxId}
-                resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
-                pathParams={{
-                  workspaceId: token.workspace,
-                  id: token.boxId
-                }}
-                detailsUrl={`/workspaces/${token.workspace}/boxes/${token.boxId}`}
-                fallbackLabel="Box"
-                className="text-blue-600 hover:text-blue-800 underline text-sm"
-              />
+              <Badge variant={token.forWorkspace ? "default" : "secondary"}>
+                {token.forWorkspace ? "Workspace" : (
+                  <>
+                    Box {token.boxId && (
+                      <>
+                        (<ReferenceLabel
+                          resourceId={token.boxId}
+                          resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
+                          pathParams={{
+                            workspaceId: token.workspace,
+                            id: token.boxId
+                          }}
+                          detailsUrl={`/workspaces/${token.workspace}/boxes/${token.boxId}`}
+                          fallbackLabel="Box"
+                          className="text-blue-600 hover:text-blue-800 underline text-sm"
+                        />)
+                      </>
+                    )}
+                  </>
+                )}
+              </Badge>
             }
           />
-        )}
 
-        <LabelAndValue
-          label="Created At"
-          textValue={new Date(token.createdAt).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          })}
-        />
+          <LabelAndValue
+            label="Created At"
+            textValue={new Date(token.createdAt).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
+          />
 
-        <LabelAndValue
-          label="Token ID"
-          textValue={token.id}
-        />
+          <LabelAndValue
+            label="Token ID"
+            textValue={token.id}
+          />
+        </DetailsCardLayout>
       </CardContent>
     </Card>
   )

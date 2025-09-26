@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx"
+import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import { useDboxedQueryClient } from "@/api/api"
 import { Link } from "react-router"
 
@@ -93,7 +94,7 @@ export function MachineProviderInfoCard({
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <DetailsCardLayout>
           <LabelAndValue
             label="Name"
             value={
@@ -128,7 +129,7 @@ export function MachineProviderInfoCard({
             label="Created At"
             textValue={new Date(machineProvider.createdAt).toLocaleString()}
           />
-        </div>
+        </DetailsCardLayout>
 
         {/* Show provider-specific information */}
         {machineProvider.aws && (

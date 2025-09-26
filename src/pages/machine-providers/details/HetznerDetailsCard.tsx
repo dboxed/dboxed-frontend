@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input.tsx"
 import type { UseFormReturn } from "react-hook-form"
 import type { components } from "@/api/models/schema"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx";
+import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx";
 
 interface HetznerDetailsCardProps {
   hetznerData: components["schemas"]["MachineProviderHetzner"]
@@ -23,8 +24,7 @@ export function HetznerDetailsCard({ hetznerData, form }: HetznerDetailsCardProp
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Read-only fields */}
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <DetailsCardLayout>
             <LabelAndValue
               label="Hetzner Network ID"
               textValue={hetznerData.hetznerNetworkId || "N/A"}
@@ -54,8 +54,7 @@ export function HetznerDetailsCard({ hetznerData, form }: HetznerDetailsCardProp
               label="Robot Subnet CIDR"
               textValue={hetznerData.robotSubnetCidr || "N/A"}
             />
-          </div>
-        </div>
+        </DetailsCardLayout>
 
         <div className="space-y-4 pt-4 border-t">
           <FormField

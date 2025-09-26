@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx"
+import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import type { components } from "@/api/models/schema"
 
 interface GeneralInfoCardProps {
@@ -17,8 +18,8 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           Basic machine details and configuration.
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <CardContent>
+        <DetailsCardLayout>
           <LabelAndValue
             label="Name"
             textValue={data.name}
@@ -77,12 +78,11 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
               </Badge>
             }
           />
-        </div>
-        
-        <LabelAndValue
-          label="Created At"
-          textValue={new Date(data.createdAt).toLocaleString()}
-        />
+          <LabelAndValue
+            label="Created At"
+            textValue={new Date(data.createdAt).toLocaleString()}
+          />
+        </DetailsCardLayout>
       </CardContent>
     </Card>
   )

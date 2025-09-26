@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx"
+import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import { SimpleFormDialog } from "@/components/SimpleFormDialog.tsx"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
@@ -199,26 +200,28 @@ export function VolumeStorageS3DetailsCard({ storageS3, save }: VolumeStorageS3D
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <LabelAndValue
-          label="S3 Bucket"
-          textValue={storageS3.bucket}
-        />
+      <CardContent>
+        <DetailsCardLayout>
+          <LabelAndValue
+            label="S3 Bucket"
+            textValue={storageS3.bucket}
+          />
 
-        <LabelAndValue
-          label="S3 Endpoint"
-          textValue={storageS3.endpoint}
-        />
+          <LabelAndValue
+            label="S3 Endpoint"
+            textValue={storageS3.endpoint}
+          />
 
-        <LabelAndValue
-          label="S3 Prefix"
-          textValue={storageS3.prefix}
-        />
+          <LabelAndValue
+            label="S3 Prefix"
+            textValue={storageS3.prefix}
+          />
 
-        <LabelAndValue
-          label="S3 Region"
-          textValue={storageS3.region || 'Not specified'}
-        />
+          <LabelAndValue
+            label="S3 Region"
+            textValue={storageS3.region || 'Not specified'}
+          />
+        </DetailsCardLayout>
       </CardContent>
 
       <S3EditDialog

@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input.tsx"
 import type { UseFormReturn } from "react-hook-form"
 import type { components } from "@/api/models/schema"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx";
+import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx";
 
 interface AwsDetailsCardProps {
   awsData: components["schemas"]["MachineProviderAws"]
@@ -27,8 +28,7 @@ export function AwsDetailsCard({ awsData, form }: AwsDetailsCardProps) {
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Read-only fields in two-column layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-4">
+        <DetailsCardLayout>
             <LabelAndValue
               label="Region"
               textValue={awsData.region}
@@ -43,9 +43,6 @@ export function AwsDetailsCard({ awsData, form }: AwsDetailsCardProps) {
               label="Security Group ID"
               textValue={awsData.securityGroupId || "N/A"}
             />
-          </div>
-
-          <div className="space-y-4">
             <LabelAndValue
               label="VPC Name"
               textValue={awsData.vpcName || "N/A"}
@@ -55,8 +52,7 @@ export function AwsDetailsCard({ awsData, form }: AwsDetailsCardProps) {
               label="VPC CIDR"
               textValue={awsData.vpcCidr || "N/A"}
             />
-          </div>
-        </div>
+        </DetailsCardLayout>
 
         {/* Editable fields for UpdateMachineProvider */}
         <div className="space-y-4 pt-4 border-t">

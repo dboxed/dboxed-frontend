@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { formatSize } from "@/utils/size.ts"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx"
+import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import type { components } from "@/api/models/schema"
 
 interface RusticVolumeInfoProps {
@@ -17,7 +18,7 @@ export function RusticVolumeInfo({ data }: RusticVolumeInfoProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 gap-6">
+        <DetailsCardLayout>
           <LabelAndValue
             label="Filesystem Size"
             textValue={data.rustic?.fsSize ? formatSize(data.rustic.fsSize) : 'N/A'}
@@ -26,7 +27,7 @@ export function RusticVolumeInfo({ data }: RusticVolumeInfoProps) {
             label="Filesystem Type"
             textValue={data.rustic?.fsType || 'N/A'}
           />
-        </div>
+        </DetailsCardLayout>
       </CardContent>
     </Card>
   )

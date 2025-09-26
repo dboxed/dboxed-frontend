@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
+import { Label } from "@/components/ui/label.tsx"
 import { SimpleFormDialog } from "@/components/SimpleFormDialog.tsx"
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
@@ -129,21 +130,21 @@ export function NetbirdDetailsCard({ netbirdData, save }: NetbirdDetailsCardProp
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <label className="text-sm font-medium">API URL</label>
+          <Label>API URL</Label>
           <p className="text-sm text-muted-foreground font-mono break-all">
             {netbirdData.apiUrl || "Default Netbird Cloud Service"}
           </p>
         </div>
 
         <div>
-          <label className="text-sm font-medium">Netbird Version</label>
+          <Label>Netbird Version</Label>
           <p className="text-sm text-muted-foreground font-mono break-all">
             {netbirdData.netbirdVersion || "Not specified"}
           </p>
         </div>
 
         <div>
-          <label className="text-sm font-medium">API Token</label>
+          <Label>API Token</Label>
           <p className="text-sm text-muted-foreground font-mono break-all">
             ••••••••••••••••
           </p>

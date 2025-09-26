@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
+import { Label } from "@/components/ui/label.tsx"
 import type { components } from "@/api/models/schema"
 
 interface GeneralInfoCardProps {
@@ -19,12 +20,12 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium">Name</label>
+            <Label>Name</Label>
             <p className="text-sm text-muted-foreground">{data.name}</p>
           </div>
           
           <div>
-            <label className="text-sm font-medium">Workspace</label>
+            <Label>Workspace</Label>
             <p className="text-sm text-muted-foreground">
               <ReferenceLabel
                 resourceId={data.workspace}
@@ -37,7 +38,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           </div>
           
           <div>
-            <label className="text-sm font-medium">Dboxed Version</label>
+            <Label>Dboxed Version</Label>
             <p className="text-sm text-muted-foreground">
               <Badge variant="outline" className="w-fit">
                 {data.dboxedVersion}
@@ -46,7 +47,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           </div>
           
           <div>
-            <label className="text-sm font-medium">Network</label>
+            <Label>Network</Label>
             <p className="text-sm text-muted-foreground">
               <ReferenceLabel
                 resourceId={data.network}
@@ -62,7 +63,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           </div>
 
           <div>
-            <label className="text-sm font-medium">Machine</label>
+            <Label>Machine</Label>
             <p className="text-sm text-muted-foreground">
               {data.machine ? (
                 <ReferenceLabel
@@ -83,7 +84,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
         </div>
         
         <div>
-          <label className="text-sm font-medium">Created At</label>
+          <Label>Created At</Label>
           <p className="text-sm text-muted-foreground">
             {new Date(data.createdAt).toLocaleString()}
           </p>

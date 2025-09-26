@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
+import { Label } from "@/components/ui/label.tsx"
 import { useDboxedQueryClient } from "@/api/api"
 import { Link } from "react-router"
 
@@ -94,7 +95,7 @@ export function MachineProviderInfoCard({
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium">Name</label>
+            <Label>Name</Label>
             <p className="text-sm text-muted-foreground">
               <Link 
                 to={`/workspaces/${workspaceId}/machine-providers/${machineProviderId}`}
@@ -106,7 +107,7 @@ export function MachineProviderInfoCard({
           </div>
           
           <div>
-            <label className="text-sm font-medium">Type</label>
+            <Label>Type</Label>
             <p className="text-sm text-muted-foreground">
               <Badge variant="outline" className="w-fit">
                 {machineProvider.type}
@@ -115,7 +116,7 @@ export function MachineProviderInfoCard({
           </div>
           
           <div>
-            <label className="text-sm font-medium">Status</label>
+            <Label>Status</Label>
             <p className="text-sm text-muted-foreground">
               <Badge variant="outline" className="w-fit">
                 {machineProvider.status}
@@ -124,7 +125,7 @@ export function MachineProviderInfoCard({
           </div>
           
           <div>
-            <label className="text-sm font-medium">Created At</label>
+            <Label>Created At</Label>
             <p className="text-sm text-muted-foreground">
               {new Date(machineProvider.createdAt).toLocaleString()}
             </p>
@@ -137,7 +138,7 @@ export function MachineProviderInfoCard({
             <h4 className="text-sm font-medium mb-2">AWS Configuration</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs text-muted-foreground">Region</label>
+                <Label>Region</Label>
                 <p className="text-sm">{machineProvider.aws.region}</p>
               </div>
             </div>
@@ -149,11 +150,11 @@ export function MachineProviderInfoCard({
             <h4 className="text-sm font-medium mb-2">Hetzner Configuration</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs text-muted-foreground">Network Name</label>
+                <Label>Network Name</Label>
                 <p className="text-sm">{machineProvider.hetzner.hetznerNetworkName}</p>
               </div>
               <div>
-                <label className="text-xs text-muted-foreground">Network Zone</label>
+                <Label>Network Zone</Label>
                 <p className="text-sm">{machineProvider.hetzner.hetznerNetworkZone || "Not set"}</p>
               </div>
             </div>

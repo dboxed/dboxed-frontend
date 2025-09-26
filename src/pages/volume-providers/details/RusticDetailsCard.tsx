@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
+import { Label } from "@/components/ui/label.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { SimpleInputDialog } from "@/components/SimpleInputDialog.tsx"
 import type { components } from "@/api/models/schema"
@@ -35,14 +36,14 @@ export function RusticDetailsCard({ volumeProvider, save }: RusticDetailsCardPro
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <label className="text-sm font-medium">Storage Type</label>
+          <Label>Storage Type</Label>
           <p className="text-sm text-muted-foreground font-mono break-all">
             {volumeProvider.rustic.storageType}
           </p>
         </div>
 
         <div>
-          <label className="text-sm font-medium">Password</label>
+          <Label>Password</Label>
           <div className="flex items-center space-x-2">
             <Input
               type="password"

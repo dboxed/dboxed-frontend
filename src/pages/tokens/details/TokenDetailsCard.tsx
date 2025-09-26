@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
+import { Label } from "@/components/ui/label.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import { Key } from "lucide-react"
 import type { components } from "@/api/models/schema"
@@ -22,14 +23,14 @@ export function TokenDetailsCard({ token }: TokenDetailsCardProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <label className="text-sm font-medium">Name</label>
+          <Label>Name</Label>
           <p className="text-sm text-muted-foreground font-mono break-all">
             {token.name}
           </p>
         </div>
 
         <div>
-          <label className="text-sm font-medium">Scope</label>
+          <Label>Scope</Label>
           <div className="mt-1">
             <Badge variant={token.forWorkspace ? "default" : "secondary"}>
               {token.forWorkspace ? "Workspace" : "Box"}
@@ -39,7 +40,7 @@ export function TokenDetailsCard({ token }: TokenDetailsCardProps) {
 
         {token.boxId && (
           <div>
-            <label className="text-sm font-medium">Associated Box</label>
+            <Label>Associated Box</Label>
             <div className="mt-1">
               <ReferenceLabel
                 resourceId={token.boxId}
@@ -57,7 +58,7 @@ export function TokenDetailsCard({ token }: TokenDetailsCardProps) {
         )}
 
         <div>
-          <label className="text-sm font-medium">Created At</label>
+          <Label>Created At</Label>
           <p className="text-sm text-muted-foreground">
             {new Date(token.createdAt).toLocaleDateString('en-US', {
               year: 'numeric',
@@ -70,7 +71,7 @@ export function TokenDetailsCard({ token }: TokenDetailsCardProps) {
         </div>
 
         <div>
-          <label className="text-sm font-medium">Token ID</label>
+          <Label>Token ID</Label>
           <p className="text-sm text-muted-foreground font-mono break-all">
             {token.id}
           </p>

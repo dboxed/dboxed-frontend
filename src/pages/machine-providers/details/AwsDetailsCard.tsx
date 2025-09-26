@@ -3,6 +3,7 @@ import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessa
 import { Input } from "@/components/ui/input.tsx"
 import type { UseFormReturn } from "react-hook-form"
 import type { components } from "@/api/models/schema"
+import { Label } from "@/components/ui/label.tsx";
 
 interface AwsDetailsCardProps {
   awsData: components["schemas"]["MachineProviderAws"]
@@ -29,29 +30,29 @@ export function AwsDetailsCard({ awsData, form }: AwsDetailsCardProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium">Region</label>
+              <Label>Region</Label>
               <p className="text-sm text-muted-foreground">{awsData.region}</p>
             </div>
             
             <div>
-              <label className="text-sm font-medium">VPC ID</label>
+              <Label>VPC ID</Label>
               <p className="text-sm text-muted-foreground">{awsData.vpcId || "N/A"}</p>
             </div>
             
             <div>
-              <label className="text-sm font-medium">Security Group ID</label>
+              <Label>Security Group ID</Label>
               <p className="text-sm text-muted-foreground">{awsData.securityGroupId || "N/A"}</p>
             </div>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium">VPC Name</label>
+              <Label>VPC Name</Label>
               <p className="text-sm text-muted-foreground">{awsData.vpcName || "N/A"}</p>
             </div>
             
             <div>
-              <label className="text-sm font-medium">VPC CIDR</label>
+              <Label>VPC CIDR</Label>
               <p className="text-sm text-muted-foreground">{awsData.vpcCidr || "N/A"}</p>
             </div>
           </div>

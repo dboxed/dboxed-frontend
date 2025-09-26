@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Badge } from "@/components/ui/badge.tsx";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
+import { Label } from "@/components/ui/label.tsx";
 import type { components } from "@/api/models/schema";
 
 interface GeneralInfoCardProps {
@@ -32,11 +33,11 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
       <CardContent>
         <div className="grid grid-cols-2 gap-6">
           <div>
-            <label className="text-sm font-medium">Name</label>
+            <Label>Name</Label>
             <p className="text-sm text-muted-foreground">{data.name}</p>
           </div>
           <div>
-            <label className="text-sm font-medium">Type</label>
+            <Label>Type</Label>
             <div className="mt-1">
               <Badge variant="secondary" className="capitalize">
                 {data.type}
@@ -44,7 +45,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
             </div>
           </div>
           <div>
-            <label className="text-sm font-medium">Status</label>
+            <Label>Status</Label>
             <div className="mt-1">
               <Badge variant={getStatusVariant(data.status)} className="capitalize">
                 {data.status}
@@ -52,7 +53,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
             </div>
           </div>
           <div>
-            <label className="text-sm font-medium">Workspace</label>
+            <Label>Workspace</Label>
             <div className="mt-1">
               <ReferenceLabel
                 resourceId={data.workspace}
@@ -67,7 +68,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
             </div>
           </div>
           <div>
-            <label className="text-sm font-medium">Created</label>
+            <Label>Created</Label>
             <p className="text-sm text-muted-foreground">
               {new Date(data.createdAt).toLocaleString()}
             </p>

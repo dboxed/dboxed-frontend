@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
+import { Label } from "@/components/ui/label.tsx"
 import { SimpleFormDialog } from "@/components/SimpleFormDialog.tsx"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
@@ -200,28 +201,28 @@ export function VolumeStorageS3DetailsCard({ storageS3, save }: VolumeStorageS3D
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <label className="text-sm font-medium">S3 Bucket</label>
+          <Label>S3 Bucket</Label>
           <p className="text-sm text-muted-foreground font-mono break-all">
             {storageS3.bucket}
           </p>
         </div>
 
         <div>
-          <label className="text-sm font-medium">S3 Endpoint</label>
+          <Label>S3 Endpoint</Label>
           <p className="text-sm text-muted-foreground font-mono break-all">
             {storageS3.endpoint}
           </p>
         </div>
 
         <div>
-          <label className="text-sm font-medium">S3 Prefix</label>
+          <Label>S3 Prefix</Label>
           <p className="text-sm text-muted-foreground font-mono break-all">
             {storageS3.prefix}
           </p>
         </div>
 
         <div>
-          <label className="text-sm font-medium">S3 Region</label>
+          <Label>S3 Region</Label>
           <p className="text-sm text-muted-foreground font-mono break-all">
             {storageS3.region || 'Not specified'}
           </p>

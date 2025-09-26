@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { Input } from "@/components/ui/input.tsx"
+import { Label } from "@/components/ui/label.tsx"
 import { useDboxedQueryClient } from "@/api/api"
 import { useState } from "react"
 import { toast } from "sonner"
@@ -111,7 +112,7 @@ export function BoxConnectCard({ boxId, workspaceId, boxUrl }: BoxTokenCardProps
         {natsUrl && (
           <div className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Nats URL</label>
+              <Label>Nats URL</Label>
               <div className="flex space-x-2">
                 <Input
                   value={natsUrl}
@@ -131,7 +132,7 @@ export function BoxConnectCard({ boxId, workspaceId, boxUrl }: BoxTokenCardProps
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">HTTP URL</label>
+              <Label>HTTP URL</Label>
               <div className="flex space-x-2">
                 <Input
                   value={httpURl}

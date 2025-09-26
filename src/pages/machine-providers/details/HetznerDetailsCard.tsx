@@ -3,6 +3,7 @@ import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessa
 import { Input } from "@/components/ui/input.tsx"
 import type { UseFormReturn } from "react-hook-form"
 import type { components } from "@/api/models/schema"
+import { Label } from "@/components/ui/label.tsx";
 
 interface HetznerDetailsCardProps {
   hetznerData: components["schemas"]["MachineProviderHetzner"]
@@ -25,32 +26,32 @@ export function HetznerDetailsCard({ hetznerData, form }: HetznerDetailsCardProp
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium">Hetzner Network ID</label>
+              <Label>Hetzner Network ID</Label>
               <p className="text-sm text-muted-foreground">{hetznerData.hetznerNetworkId || "N/A"}</p>
             </div>
             
             <div>
-              <label className="text-sm font-medium">Network Name</label>
+              <Label>Network Name</Label>
               <p className="text-sm text-muted-foreground">{hetznerData.hetznerNetworkName}</p>
             </div>
             
             <div>
-              <label className="text-sm font-medium">Network Zone</label>
+              <Label>Network Zone</Label>
               <p className="text-sm text-muted-foreground">{hetznerData.hetznerNetworkZone || "N/A"}</p>
             </div>
             
             <div>
-              <label className="text-sm font-medium">Hetzner Network CIDR</label>
+              <Label>Hetzner Network CIDR</Label>
               <p className="text-sm text-muted-foreground">{hetznerData.hetznerNetworkCidr || "N/A"}</p>
             </div>
             
             <div>
-              <label className="text-sm font-medium">Cloud Subnet CIDR</label>
+              <Label>Cloud Subnet CIDR</Label>
               <p className="text-sm text-muted-foreground">{hetznerData.cloudSubnetCidr || "N/A"}</p>
             </div>
             
             <div>
-              <label className="text-sm font-medium">Robot Subnet CIDR</label>
+              <Label>Robot Subnet CIDR</Label>
               <p className="text-sm text-muted-foreground">{hetznerData.robotSubnetCidr || "N/A"}</p>
             </div>
           </div>

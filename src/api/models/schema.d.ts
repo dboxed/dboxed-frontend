@@ -946,10 +946,12 @@ export interface components {
             readonly $schema?: string;
             name: string;
             rustic: components["schemas"]["CreateVolumeProviderRustic"];
+            type: string;
         };
         CreateVolumeProviderRustic: {
             password: string;
             storageS3: components["schemas"]["CreateVolumeProviderStorageS3"];
+            storageType: string;
         };
         CreateVolumeProviderStorageS3: {
             accessKeyId: string;

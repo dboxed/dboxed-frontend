@@ -7,7 +7,7 @@ import type { UseFormReturn } from "react-hook-form"
 import type { components } from "@/api/models/schema"
 
 interface VolumeProviderSelectorProps {
-  form: UseFormReturn<any>
+  form: UseFormReturn<components["schemas"]["CreateVolume"]>
   onProviderChange?: (provider: components["schemas"]["VolumeProvider"] | null) => void
 }
 

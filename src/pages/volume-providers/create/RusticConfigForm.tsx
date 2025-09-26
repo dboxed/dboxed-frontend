@@ -2,23 +2,10 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input.tsx"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import type { UseFormReturn } from "react-hook-form"
+import type { components } from "@/api/models/schema";
 
 interface RusticConfigFormProps {
-  form: UseFormReturn<{
-    name: string;
-    type: "rustic";
-    rustic: {
-      password: string;
-      storageS3: {
-        accessKeyId: string;
-        bucket: string;
-        endpoint: string;
-        prefix: string;
-        region: string | null;
-        secretAccessKey: string;
-      };
-    };
-  }>
+  form: UseFormReturn<components["schemas"]["CreateVolumeProvider"]>
 }
 
 export function RusticConfigForm({ form }: RusticConfigFormProps) {

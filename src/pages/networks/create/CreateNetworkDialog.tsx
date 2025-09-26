@@ -1,7 +1,9 @@
 import { BaseCreateDialog } from "@/components/BaseCreateDialog.tsx"
-import { NetbirdConfigForm, NetworkTypeSelector } from "@/pages/networks/create/index.ts"
+import { NetbirdConfigForm } from "@/pages/networks/create/index.ts"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
+import { Network } from "lucide-react"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import type { components } from "@/api/models/schema";
 
@@ -30,7 +32,7 @@ export function CreateNetworkDialog({ open, onOpenChange }: CreateNetworkDialogP
         type: "netbird",
         netbird: {
           netbirdVersion: "latest",
-          apiUrl: "",
+          apiUrl: undefined,
           apiAccessToken: "",
         },
       }}
@@ -51,7 +53,31 @@ export function CreateNetworkDialog({ open, onOpenChange }: CreateNetworkDialogP
             )}
           />
 
-          <NetworkTypeSelector form={form} />
+          <FormField
+            control={form.control}
+            name="type"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Network Type</FormLabel>
+                <Select {...field}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a network type" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="netbird">
+                      <div className="flex items-center space-x-2">
+                        <Network className="h-4 w-4" />
+                        <span>Netbird</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           {form.watch("type") === "netbird" && (
             <NetbirdConfigForm form={form} />

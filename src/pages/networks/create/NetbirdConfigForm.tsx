@@ -67,7 +67,7 @@ export function NetbirdConfigForm({ form }: NetbirdConfigFormProps) {
           name="netbird.apiAccessToken"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>API Access Token (Optional)</FormLabel>
+              <FormLabel>API Access Token</FormLabel>
               <FormControl>
                 <Input
                   placeholder="your-netbird-api-token"
@@ -76,7 +76,7 @@ export function NetbirdConfigForm({ form }: NetbirdConfigFormProps) {
                 />
               </FormControl>
               <FormDescription>
-                Your Netbird API access token for authentication. Required for private Netbird instances.
+                Your Netbird API access token for authentication.
               </FormDescription>
               <FormMessage />
             </FormItem>

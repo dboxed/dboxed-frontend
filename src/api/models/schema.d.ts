@@ -894,7 +894,7 @@ export interface components {
             type: string;
         };
         CreateNetworkNetbird: {
-            apiAccessToken?: string;
+            apiAccessToken: string;
             apiUrl?: string;
             netbirdVersion: string;
         };

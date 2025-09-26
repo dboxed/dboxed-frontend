@@ -14,12 +14,6 @@ export function MachineDetailsPage() {
     return <div>Invalid machine ID</div>
   }
 
-  const buildUpdateDefaults = (): components["schemas"]["UpdateMachine"] => {
-    return {
-
-    }
-  }
-
   return (
     <BaseResourceDetailsPage<components["schemas"]["Machine"], components["schemas"]["UpdateMachine"]>
       title={data => {
@@ -29,10 +23,8 @@ export function MachineDetailsPage() {
         return `Machine ${data.name}`
       }}
       resourcePath="/v1/workspaces/{workspaceId}/machines/{id}"
-      enableSave={false}
       enableDelete={true}
       afterDeleteUrl={`/workspaces/${workspaceId}/machines`}
-      buildUpdateDefaults={buildUpdateDefaults}
       apiParams={{
         path: {
           workspaceId: workspaceId,

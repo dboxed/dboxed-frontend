@@ -106,23 +106,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/box-spec": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get v1 box spec */
-        get: operations["get-v1-box-spec"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/v1/machine-provider-info/aws/regions": {
         parameters: {
             query?: never;
@@ -169,42 +152,6 @@ export interface paths {
         put?: never;
         post?: never;
         delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/tokens": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get v1 tokens */
-        get: operations["get-v1-tokens"];
-        put?: never;
-        /** Post v1 tokens */
-        post: operations["post-v1-tokens"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/tokens/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get v1 tokens by ID */
-        get: operations["get-v1-tokens-by-id"];
-        put?: never;
-        post?: never;
-        /** Delete v1 tokens by ID */
-        delete: operations["delete-v1-tokens-by-id"];
         options?: never;
         head?: never;
         patch?: never;
@@ -264,6 +211,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/boxes/by-name/{boxName}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID boxes by name by box name */
+        get: operations["get-v1-workspaces-by-workspace-id-boxes-by-name-by-box-name"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/boxes/{id}": {
         parameters: {
             query?: never;
@@ -283,17 +247,17 @@ export interface paths {
         patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id"];
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/boxes/{id}/generate-token": {
+    "/v1/workspaces/{workspaceId}/boxes/{id}/box-spec": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Get v1 workspaces by workspace ID boxes by ID box spec */
+        get: operations["get-v1-workspaces-by-workspace-id-boxes-by-id-box-spec"];
         put?: never;
-        /** Post v1 workspaces by workspace ID boxes by ID generate token */
-        post: operations["post-v1-workspaces-by-workspace-id-boxes-by-id-generate-token"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -478,6 +442,59 @@ export interface paths {
         head?: never;
         /** Patch v1 workspaces by workspace ID networks by ID */
         patch: operations["patch-v1-workspaces-by-workspace-id-networks-by-id"];
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/tokens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID tokens */
+        get: operations["get-v1-workspaces-by-workspace-id-tokens"];
+        put?: never;
+        /** Post v1 workspaces by workspace ID tokens */
+        post: operations["post-v1-workspaces-by-workspace-id-tokens"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/tokens/by-name/{tokenName}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID tokens by name by token name */
+        get: operations["get-v1-workspaces-by-workspace-id-tokens-by-name-by-token-name"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/tokens/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID tokens by ID */
+        get: operations["get-v1-workspaces-by-workspace-id-tokens-by-id"];
+        put?: never;
+        post?: never;
+        /** Delete v1 workspaces by workspace ID tokens by ID */
+        delete: operations["delete-v1-workspaces-by-workspace-id-tokens-by-id"];
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/v1/workspaces/{workspaceId}/volume-providers": {
@@ -776,6 +793,7 @@ export interface components {
             /** Format: int64 */
             network: number | null;
             networkType: string | null;
+            status: string;
             uuid: string;
             /** Format: int64 */
             workspace: number;
@@ -796,14 +814,6 @@ export interface components {
             logs?: components["schemas"]["LogsSpec"];
             uuid: string;
             volumes?: components["schemas"]["BoxVolumeSpec"][] | null;
-        };
-        BoxToken: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            token: string;
         };
         BoxVolumeSpec: {
             dboxed?: components["schemas"]["DboxedVolume"];
@@ -894,6 +904,9 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            /** Format: int64 */
+            boxId?: number;
+            forWorkspace?: boolean;
             name: string;
         };
         CreateTokenResult: {
@@ -902,12 +915,17 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            /** Format: int64 */
+            boxId?: number;
             /** Format: date-time */
             createdAt: string;
+            forWorkspace: boolean;
             /** Format: int64 */
             id: number;
             name: string;
             token: string;
+            /** Format: int64 */
+            workspace: number;
         };
         CreateVolume: {
             /**
@@ -1258,6 +1276,7 @@ export interface components {
             machineProvider: number;
             machineProviderType: string;
             name: string;
+            status: string;
             /** Format: int64 */
             workspace: number;
         };
@@ -1444,11 +1463,16 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            /** Format: int64 */
+            boxId?: number;
             /** Format: date-time */
             createdAt: string;
+            forWorkspace: boolean;
             /** Format: int64 */
             id: number;
             name: string;
+            /** Format: int64 */
+            workspace: number;
         };
         UpdateBox: {
             /**
@@ -1494,7 +1518,7 @@ export interface components {
         };
         UpdateNetworkNetbird: {
             apiAccessToken?: string;
-            netbirdVersion: string | null;
+            netbirdVersion?: string;
         };
         UpdateRepositoryStorageS3: {
             accessKeyId?: string;
@@ -1552,12 +1576,13 @@ export interface components {
             /** Format: int64 */
             id: number;
             /** Format: int64 */
-            latestSnapshotId: number | null;
-            lockId: string | null;
+            latestSnapshotId?: number;
+            lockId?: string;
             /** Format: date-time */
-            lockTime: string | null;
+            lockTime?: string;
             name: string;
-            rustic: components["schemas"]["VolumeRustic"];
+            rustic?: components["schemas"]["VolumeRustic"];
+            status: string;
             uuid: string;
             /** Format: int64 */
             volumeProvider: number;
@@ -1637,6 +1662,7 @@ export interface components {
             id: number;
             lockId: string;
             rustic?: components["schemas"]["VolumeSnapshotRustic"];
+            status: string;
             /** Format: int64 */
             volumeId: number;
             /** Format: int64 */
@@ -1900,37 +1926,6 @@ export interface operations {
             };
         };
     };
-    "get-v1-box-spec": {
-        parameters: {
-            query?: {
-                token?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BoxFile"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
     "get-v1-machine-provider-info-aws-regions": {
         parameters: {
             query?: never;
@@ -2005,132 +2000,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ListBodyServerType"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "get-v1-tokens": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ListBodyToken"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "post-v1-tokens": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateToken"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CreateTokenResult"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "get-v1-tokens-by-id": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Token"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "delete-v1-tokens-by-id": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
                 };
             };
             /** @description Error */
@@ -2338,6 +2207,39 @@ export interface operations {
             };
         };
     };
+    "get-v1-workspaces-by-workspace-id-boxes-by-name-by-box-name": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                boxName: string;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Box"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-v1-workspaces-by-workspace-id-boxes-by-id": {
         parameters: {
             query?: never;
@@ -2443,7 +2345,7 @@ export interface operations {
             };
         };
     };
-    "post-v1-workspaces-by-workspace-id-boxes-by-id-generate-token": {
+    "get-v1-workspaces-by-workspace-id-boxes-by-id-box-spec": {
         parameters: {
             query?: never;
             header?: never;
@@ -2462,7 +2364,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BoxToken"];
+                    "application/json": components["schemas"]["BoxFile"];
                 };
             };
             /** @description Error */
@@ -3230,6 +3132,175 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Network"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-tokens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListBodyToken"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-tokens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateToken"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreateTokenResult"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-tokens-by-name-by-token-name": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tokenName: string;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Token"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-tokens-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Token"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-v1-workspaces-by-workspace-id-tokens-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
             /** @description Error */

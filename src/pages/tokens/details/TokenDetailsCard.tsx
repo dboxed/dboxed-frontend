@@ -1,0 +1,81 @@
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
+import { Badge } from "@/components/ui/badge.tsx"
+import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
+import { Key } from "lucide-react"
+import type { components } from "@/api/models/schema"
+
+interface TokenDetailsCardProps {
+  token: components["schemas"]["Token"]
+}
+
+export function TokenDetailsCard({ token }: TokenDetailsCardProps) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center space-x-2">
+          <Key className="h-5 w-5" />
+          <span>Token Details</span>
+        </CardTitle>
+        <CardDescription>
+          API token information and configuration.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div>
+          <label className="text-sm font-medium">Name</label>
+          <p className="text-sm text-muted-foreground font-mono break-all">
+            {token.name}
+          </p>
+        </div>
+
+        <div>
+          <label className="text-sm font-medium">Scope</label>
+          <div className="mt-1">
+            <Badge variant={token.forWorkspace ? "default" : "secondary"}>
+              {token.forWorkspace ? "Workspace" : "Box"}
+            </Badge>
+          </div>
+        </div>
+
+        {token.boxId && (
+          <div>
+            <label className="text-sm font-medium">Associated Box</label>
+            <div className="mt-1">
+              <ReferenceLabel
+                resourceId={token.boxId}
+                resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
+                pathParams={{
+                  workspaceId: token.workspace,
+                  id: token.boxId
+                }}
+                detailsUrl={`/workspaces/${token.workspace}/boxes/${token.boxId}`}
+                fallbackLabel="Box"
+                className="text-blue-600 hover:text-blue-800 underline text-sm"
+              />
+            </div>
+          </div>
+        )}
+
+        <div>
+          <label className="text-sm font-medium">Created At</label>
+          <p className="text-sm text-muted-foreground">
+            {new Date(token.createdAt).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
+          </p>
+        </div>
+
+        <div>
+          <label className="text-sm font-medium">Token ID</label>
+          <p className="text-sm text-muted-foreground font-mono break-all">
+            {token.id}
+          </p>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}

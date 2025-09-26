@@ -16,6 +16,7 @@ import { BoxDetailsPage } from "@/pages/boxes/details";
 import { CreateBoxPage, ListBoxesPage } from "@/pages/boxes";
 import { CreateVolumeProviderPage, VolumeProviderDetailsPage } from "@/pages/volume-providers";
 import { CreateVolumePage, VolumeDetailsPage, VolumesPage } from "@/pages/volumes";
+import { CreateTokenPage, ListTokensPage, TokenDetailsPage } from "@/pages/tokens";
 import { AdminWorkspacesListPage } from "@/pages/admin/AdminWorkspacesListPage.tsx";
 import { AdminListUsersPage } from "@/pages/admin/AdminListUsersPage.tsx";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -90,6 +91,8 @@ function AuthenticatedApp() {
           <Route path="/workspaces/:workspaceId/boxes/:boxId" element={<BoxDetailsPage/>}/>
           <Route path="/workspaces/:workspaceId/networks" element={<ListNetworksPage/>}/>
           <Route path="/workspaces/:workspaceId/networks/:networkId" element={<NetworkDetailsPage/>}/>
+          <Route path="/workspaces/:workspaceId/tokens" element={<ListTokensPage/>}/>
+          <Route path="/workspaces/:workspaceId/tokens/:tokenId" element={<TokenDetailsPage/>}/>
           {isAdminQuery.isAdmin && (
             <>
               <Route path="/admin/workspaces" element={<AdminWorkspacesListPage/>}/>
@@ -104,6 +107,7 @@ function AuthenticatedApp() {
         <Route path="/workspaces/:workspaceId/boxes/create" element={<CreateBoxPage/>}/>
         <Route path="/workspaces/:workspaceId/machines/create" element={<CreateMachinePage/>}/>
         <Route path="/workspaces/:workspaceId/networks/create" element={<CreateNetworkPage/>}/>
+        <Route path="/workspaces/:workspaceId/tokens/create" element={<CreateTokenPage/>}/>
       </Routes>
     </div>
   )

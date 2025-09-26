@@ -15,20 +15,6 @@ export function NetworkDetailsPage() {
     return <div>Invalid network ID</div>
   }
 
-  const buildUpdateDefaults = (data: components["schemas"]["Network"]): components["schemas"]["UpdateNetwork"] => {
-    const defaults: components["schemas"]["UpdateNetwork"] = {}
-
-    // Add Netbird-specific defaults if Netbird data exists
-    if (data.netbird) {
-      defaults.netbird = {
-        netbirdVersion: data.netbird.netbirdVersion,
-        apiAccessToken: undefined, // Don't pre-populate sensitive token field
-      }
-    }
-
-    return defaults
-  }
-
   return (
     <BaseResourceDetailsPage<components["schemas"]["Network"], components["schemas"]["UpdateNetwork"]>
       title={data => {
@@ -39,8 +25,6 @@ export function NetworkDetailsPage() {
       }}
       resourcePath="/v1/workspaces/{workspaceId}/networks/{id}"
       enableDelete={true}
-      enableSave={true}
-      buildUpdateDefaults={buildUpdateDefaults}
       afterDeleteUrl={`/workspaces/${workspaceId}/networks`}
       apiParams={{
         path: {
@@ -49,7 +33,7 @@ export function NetworkDetailsPage() {
         }
       }}
     >
-      {(data, form) => (
+      {(data, save) => (
         <Tabs defaultValue="general" className="space-y-6">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="general">General Information</TabsTrigger>
@@ -64,7 +48,7 @@ export function NetworkDetailsPage() {
 
           <TabsContent value="configuration">
             {data.netbird && (
-              <NetbirdDetailsCard netbirdData={data.netbird} form={form} />
+              <NetbirdDetailsCard netbirdData={data.netbird} save={save} />
             )}
             
             {!data.netbird && (

@@ -15,17 +15,11 @@ export function VolumeDetailsPage() {
     return <div>Invalid volume ID</div>
   }
 
-  const buildUpdateDefaults = (_data: components["schemas"]["Volume"]) => {
-    return {}
-  }
-
   return (
     <BaseResourceDetailsPage<components["schemas"]["Volume"], any>
       title="Volume"
       resourcePath="/v1/workspaces/{workspaceId}/volumes/{id}"
       enableDelete={true}
-      enableSave={false} // No UpdateVolume schema available
-      buildUpdateDefaults={buildUpdateDefaults}
       afterDeleteUrl={`/workspaces/${workspaceId}/volumes`}
       apiParams={{
         path: {
@@ -34,7 +28,7 @@ export function VolumeDetailsPage() {
         }
       }}
     >
-      {(data, _form) => (
+      {(data) => (
         <Tabs defaultValue="general" className="space-y-6">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="general">General Information</TabsTrigger>

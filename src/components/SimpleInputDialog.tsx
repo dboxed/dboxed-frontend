@@ -13,7 +13,7 @@ interface SimpleInputDialogProps {
   fieldLabel: string
   placeholder?: string
   defaultValue?: string
-  onOk: (value: string) => void
+  onSave: (value: string) => (Promise<boolean> | boolean)
 }
 
 export function SimpleInputDialog({
@@ -23,7 +23,7 @@ export function SimpleInputDialog({
   fieldLabel,
   placeholder,
   defaultValue = "",
-  onOk
+  onSave
 }: SimpleInputDialogProps) {
   const buildInitial = (): SimpleInputFormData => ({
     value: defaultValue,
@@ -32,9 +32,9 @@ export function SimpleInputDialog({
   const handleSave = async (data: SimpleInputFormData) => {
     const trimmedValue = data.value.trim()
     if (trimmedValue) {
-      onOk(trimmedValue)
-      onOpenChange(false)
+      return onSave(trimmedValue)
     }
+    return false
   }
 
   return (

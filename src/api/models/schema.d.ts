@@ -962,7 +962,7 @@ export interface components {
         CreateVolumeRustic: {
             /** Format: int64 */
             fsSize: number;
-            fsType?: string;
+            fsType: string;
         };
         CreateVolumeSnapshot: {
             /**

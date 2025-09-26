@@ -38,7 +38,9 @@ export function SimpleSelectDialog<T>({
     if (selectedItem) {
       onOk(selectedItem)
       onOpenChange(false)
+      return true
     }
+    return false
   }
 
   return (

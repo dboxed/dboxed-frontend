@@ -34,6 +34,7 @@ export function FileModeDialog({ uid, gid, mode, onUpdate, onSuccess }: FileMode
     onUpdate(parseInt(formData.uid), parseInt(formData.gid), formData.mode)
     setOpen(false)
     onSuccess?.()
+    return true
   }
 
   return (

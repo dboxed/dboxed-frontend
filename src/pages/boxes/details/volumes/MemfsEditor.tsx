@@ -89,40 +89,44 @@ export function MemfsEditor({ volume, className, onFileSelect }: MemfsEditorProp
 
   const handleAddFile = (name: string) => {
     if (!selectedItem) {
-      return
+      return false
     }
     const path = selectedItem.id + "/" + name
     try {
       if (volume.exists(path)) {
         console.warn(`File ${path} already exists`)
-        return
+        return false
       }
       volume.writeFile(path, '', { mode: 0o644 | textModeMarker })
       handleChange()
+      return true
     } catch (error) {
       console.error('Failed to create file:', error)
+      return false
     }
   }
   const handleAddDirectory = (name: string) => {
     if (!selectedItem) {
-      return
+      return false
     }
     const path = selectedItem.id + "/" + name
     try {
       if (volume.exists(path)) {
         console.warn(`File ${path} already exists`)
-        return
+        return false
       }
       volume.mkdir(path, {mode: 0o700})
       handleChange()
+      return true
     } catch (error) {
       console.error('Failed to create file:', error)
+      return false
     }
   }
 
   const handleDelete = () => {
     if (!selectedItem) {
-      return
+      return false
     }
     try {
       const stat = volume.stat(selectedItem.id)
@@ -132,8 +136,10 @@ export function MemfsEditor({ volume, className, onFileSelect }: MemfsEditorProp
         volume.unlink(selectedItem.id)
       }
       handleChange()
+      return true
     } catch (error) {
       console.error('Failed to delete:', error)
+      return false
     }
   }
 
@@ -161,7 +167,7 @@ export function MemfsEditor({ volume, className, onFileSelect }: MemfsEditorProp
         title="New File"
         fieldLabel="File Name"
         placeholder="Enter filename..."
-        onOk={handleAddFile}
+        onSave={handleAddFile}
       />
 
       <SimpleInputDialog
@@ -170,7 +176,7 @@ export function MemfsEditor({ volume, className, onFileSelect }: MemfsEditorProp
         title="New Directory"
         fieldLabel="Directory Name"
         placeholder="Enter directory name..."
-        onOk={handleAddDirectory}
+        onSave={handleAddDirectory}
       />
 
       {selectedItem && <ConfirmationDialog

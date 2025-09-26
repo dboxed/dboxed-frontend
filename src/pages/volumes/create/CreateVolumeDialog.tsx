@@ -43,7 +43,7 @@ export function CreateVolumeDialog({ open, onOpenChange }: CreateVolumeDialogPro
         name: "",
         volumeProvider: 1, // Will be overridden when user selects
         rustic: {
-          fsSize: "",
+          fsSize: 1024 * 1024 * 1024, // 1G
           fsType: "ext4",
         }
       }}

@@ -34,10 +34,7 @@ function NetbirdEditDialog({ open, onOpenChange, netbirdData, save }: NetbirdEdi
       },
     }
 
-    const success = await save(updateData)
-    if (success) {
-      onOpenChange(false)
-    }
+    return await save(updateData)
   }
 
   return (

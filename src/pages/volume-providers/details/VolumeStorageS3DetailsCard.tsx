@@ -48,10 +48,7 @@ function S3EditDialog({ open, onOpenChange, storageS3, save }: S3EditDialogProps
       },
     }
 
-    const success = await save(updateData)
-    if (success) {
-      onOpenChange(false)
-    }
+    return await save(updateData)
   }
 
   return (

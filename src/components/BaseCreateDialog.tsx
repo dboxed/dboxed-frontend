@@ -71,6 +71,7 @@ export function BaseCreateDialog<T extends FieldValues = FieldValues, R extends 
       if (onSuccess) {
         onSuccess(responseData as R)
       }
+      return true
     } catch (error: any) {
       toast.error(`Failed to create ${title.toLowerCase()}`, {
         description: error.detail || `An error occurred while creating the ${title.toLowerCase()}.`
@@ -78,7 +79,7 @@ export function BaseCreateDialog<T extends FieldValues = FieldValues, R extends 
       if (onError) {
         onError(error)
       }
-      throw error // Re-throw to prevent dialog from closing
+      return false
     }
   }
 

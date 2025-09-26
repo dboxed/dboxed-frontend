@@ -1,4 +1,4 @@
-import { type ReactNode, useCallback } from "react"
+import { type ReactNode, useCallback, useState } from "react"
 import { useEffect } from "react"
 import { useForm, type UseFormReturn, type FieldValues, type DefaultValues } from "react-hook-form"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -12,7 +12,7 @@ interface SimpleFormDialogProps<T extends FieldValues = FieldValues> {
   title: string
   children: (form: UseFormReturn<T>) => ReactNode
   buildInitial: () => DefaultValues<T> | undefined
-  onSave: (formData: T) => void | Promise<void>
+  onSave: (formData: T) => Promise<boolean>
   onCancel?: () => void
   saveText?: string
   cancelText?: string
@@ -33,6 +33,8 @@ export function SimpleFormDialog<T extends FieldValues = FieldValues>({
   saveDisabled = false,
   isLoading = false,
 }: SimpleFormDialogProps<T>) {
+  const [oldOpen, setOldOpen] = useState(open)
+
   const doBuildInitial = useCallback(() => {
     const data = buildInitial()
     if (data === undefined) {
@@ -47,10 +49,11 @@ export function SimpleFormDialog<T extends FieldValues = FieldValues>({
 
   // Reset form data when dialog opens
   useEffect(() => {
-    if (open) {
+    if (open && !oldOpen) {
       form.reset(doBuildInitial())
     }
-  }, [open, doBuildInitial, form])
+    setOldOpen(open)
+  }, [doBuildInitial, form, open, oldOpen])
 
   const handleCancel = () => {
     if (onCancel) {
@@ -61,7 +64,10 @@ export function SimpleFormDialog<T extends FieldValues = FieldValues>({
 
   const handleSave = async () => {
     const formData = form.getValues()
-    await onSave(formData)
+    const ret = await onSave(formData)
+    if (ret) {
+      onOpenChange(false)
+    }
   }
 
   return (

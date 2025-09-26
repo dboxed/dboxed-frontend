@@ -19,7 +19,7 @@ export function RusticDetailsCard({ volumeProvider, save }: RusticDetailsCardPro
   }
 
   const handlePasswordUpdate = async (newPassword: string) => {
-    await save({
+    return await save({
       rustic: {
         password: newPassword
       }
@@ -69,7 +69,7 @@ export function RusticDetailsCard({ volumeProvider, save }: RusticDetailsCardPro
         title="Update Rustic Password"
         fieldLabel="New Password"
         placeholder="Enter new password"
-        onOk={handlePasswordUpdate}
+        onSave={handlePasswordUpdate}
       />
     </Card>
   )

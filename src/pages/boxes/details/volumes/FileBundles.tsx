@@ -43,7 +43,7 @@ export function FileBundles({ box, saveBox }: FileBundlesProps) {
       newBoxSpec.volumes = []
     }
     newBoxSpec.volumes.push(newVolume)
-    saveBox({
+    return saveBox({
       boxSpec: newBoxSpec,
     })
   }
@@ -224,7 +224,7 @@ export function FileBundles({ box, saveBox }: FileBundlesProps) {
         title="Create New File Bundle"
         fieldLabel="Bundle Name"
         placeholder="Enter a name for the file bundle..."
-        onOk={handleNewBundle}
+        onSave={handleNewBundle}
       />
     </>
   )

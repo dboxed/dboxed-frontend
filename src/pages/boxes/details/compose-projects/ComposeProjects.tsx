@@ -40,7 +40,7 @@ services:
       newBoxSpec.composeProjects = []
     }
     newBoxSpec.composeProjects.push(newProject)
-    saveBox({
+    return saveBox({
       boxSpec: newBoxSpec,
     })
   }
@@ -48,7 +48,7 @@ services:
   const handleDeleteProject = (projectIndex: number) => {
     const newBoxSpec = deepClone(box.boxSpec)
     newBoxSpec.composeProjects = newBoxSpec.composeProjects?.filter((_, index) => index !== projectIndex)
-    saveBox({
+    return saveBox({
       boxSpec: newBoxSpec,
     })
   }
@@ -56,7 +56,7 @@ services:
   const handleUpdateProject = (projectIndex: number, updatedContent: string) => {
     const newBoxSpec = deepClone(box.boxSpec)
     newBoxSpec.composeProjects![projectIndex] = updatedContent
-    saveBox({
+    return saveBox({
       boxSpec: newBoxSpec,
     })
   }
@@ -171,7 +171,7 @@ services:
         title="Create New Compose Project"
         fieldLabel="Project Name"
         placeholder="Enter a name for the compose project..."
-        onOk={handleNewProject}
+        onSave={handleNewProject}
       />
     </>
   )

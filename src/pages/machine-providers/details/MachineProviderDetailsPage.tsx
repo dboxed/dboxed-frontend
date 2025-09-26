@@ -1,6 +1,4 @@
 import { BaseResourceDetailsPage } from "@/pages/base/BaseResourceDetailsPage.tsx"
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
-import { Input } from "@/components/ui/input.tsx"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx"
 import { useParams } from "react-router"
@@ -8,6 +6,7 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard.tsx"
 import { AwsDetailsCard, AwsSubnetsCard } from "./AwsDetailsCard.tsx"
 import { HetznerDetailsCard } from "./HetznerDetailsCard.tsx"
+import { SshConfigCard } from "./SshConfigCard.tsx"
 import type { components } from "@/api/models/schema";
 
 export function MachineProviderDetailsPage() {
@@ -18,26 +17,16 @@ export function MachineProviderDetailsPage() {
     return <div>Invalid machine provider ID</div>
   }
 
-  const buildUpdateDefaults = (data: components["schemas"]["MachineProvider"]): components["schemas"]["UpdateMachineProvider"] => {
-    const defaults: components["schemas"]["UpdateMachineProvider"] = {
-    }
-
-    // Add Hetzner-specific defaults if Hetzner data exists
-    if (data.hetzner) {
-      defaults.hetzner = {
-      }
-    }
-
-    return defaults
-  }
-
   return (
     <BaseResourceDetailsPage<components["schemas"]["MachineProvider"], components["schemas"]["UpdateMachineProvider"]>
-      title="Machine Provider"
+      title={data => {
+        if (!data) {
+          return "Machine Provider"
+        }
+        return `Machine Provider ${data.name}`
+      }}
       resourcePath="/v1/workspaces/{workspaceId}/machine-providers/{id}"
       enableDelete={true}
-      enableSave={true}
-      buildUpdateDefaults={buildUpdateDefaults}
       afterDeleteUrl={`/workspaces/${workspaceId}/machine-providers`}
       apiParams={{
         path: {
@@ -46,7 +35,7 @@ export function MachineProviderDetailsPage() {
         }
       }}
     >
-      {(data, form) => (
+      {(data, save) => (
         <Tabs defaultValue="general" className="space-y-6">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="general">General Information</TabsTrigger>
@@ -60,47 +49,20 @@ export function MachineProviderDetailsPage() {
           <TabsContent value="general">
             <div className="space-y-6">
               <GeneralInfoCard data={data} />
-              
-              <Card>
-                <CardHeader>
-                  <CardTitle>SSH Configuration</CardTitle>
-                  <CardDescription>
-                    SSH key configuration for the machine provider.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <FormField
-                    control={form.control}
-                    name="sshKeyPublic"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>SSH Public Key</FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="Enter SSH public key" 
-                            {...field} 
-                            value={field.value || ""}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </CardContent>
-              </Card>
+              <SshConfigCard data={data} save={save} />
             </div>
           </TabsContent>
 
           <TabsContent value="provider">
             {data.aws && (
               <div className="space-y-6">
-                <AwsDetailsCard awsData={data.aws} form={form} />
+                <AwsDetailsCard awsData={data.aws} save={save} />
                 <AwsSubnetsCard subnets={data.aws.subnets} />
               </div>
             )}
-            
+
             {data.hetzner && (
-              <HetznerDetailsCard hetznerData={data.hetzner} form={form} />
+              <HetznerDetailsCard hetznerData={data.hetzner} save={save} />
             )}
             
             {!data.aws && !data.hetzner && (

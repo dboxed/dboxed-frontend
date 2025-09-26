@@ -1,15 +1,18 @@
 import { useNavigate } from "react-router"
+import { useState } from "react"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/api.ts"
 import { HardDrive } from "lucide-react"
 import type { components } from "@/api/models/schema"
 import { WorkspaceOverviewCard } from "@/pages/dashboard/WorkspaceOverviewCard.tsx"
 import { formatSize } from "@/utils/size.ts"
+import { CreateVolumeDialog } from "@/pages/volumes/create/CreateVolumeDialog.tsx"
 
 export function VolumesOverview() {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
+  const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
   // Fetch volume providers (needed for volume creation validation)
   const volumeProvidersQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/volume-providers', {
@@ -45,7 +48,8 @@ export function VolumesOverview() {
   }))
 
   return (
-    <WorkspaceOverviewCard
+    <>
+      <WorkspaceOverviewCard
       icon={<HardDrive className="h-5 w-5" />}
       title="Volumes"
       description="Your storage volumes"
@@ -56,7 +60,7 @@ export function VolumesOverview() {
       emptyState={{
         message: "No volumes created yet",
         createButtonText: "Create First Volume",
-        onCreateClick: () => navigate(`/workspaces/${workspaceId}/volumes/create`),
+        onCreateClick: () => setCreateDialogOpen(true),
         isCreateDisabled: volumeProviders.length === 0,
         createDisabledMessage: "Create a volume provider first",
       }}
@@ -64,9 +68,14 @@ export function VolumesOverview() {
         viewAllText: "View All",
         onViewAllClick: () => navigate(`/workspaces/${workspaceId}/volumes`),
         addNewText: "Add New",
-        onAddNewClick: () => navigate(`/workspaces/${workspaceId}/volumes/create`),
+        onAddNewClick: () => setCreateDialogOpen(true),
         isAddNewDisabled: volumeProviders.length === 0,
       }}
-    />
+      />
+      <CreateVolumeDialog
+        open={createDialogOpen}
+        onOpenChange={setCreateDialogOpen}
+      />
+    </>
   )
 } 

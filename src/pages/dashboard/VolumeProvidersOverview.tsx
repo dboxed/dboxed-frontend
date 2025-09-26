@@ -1,14 +1,17 @@
 import { useNavigate } from "react-router"
+import { useState } from "react"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/api.ts"
 import { Database } from "lucide-react"
 import type { components } from "@/api/models/schema"
 import { WorkspaceOverviewCard } from "@/pages/dashboard/WorkspaceOverviewCard.tsx"
+import { CreateVolumeProviderDialog } from "@/pages/volume-providers/create/CreateVolumeProviderDialog.tsx"
 
 export function VolumeProvidersOverview() {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
+  const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
   // Fetch volume providers
   const volumeProvidersQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/volume-providers', {
@@ -38,7 +41,8 @@ export function VolumeProvidersOverview() {
   }))
 
   return (
-    <WorkspaceOverviewCard
+    <>
+      <WorkspaceOverviewCard
       icon={<Database className="h-5 w-5" />}
       title="Volume Providers"
       description="Manage your storage providers"
@@ -49,14 +53,19 @@ export function VolumeProvidersOverview() {
       emptyState={{
         message: "No volume providers configured yet",
         createButtonText: "Create First Provider",
-        onCreateClick: () => navigate(`/workspaces/${workspaceId}/volume-providers/create`),
+        onCreateClick: () => setCreateDialogOpen(true),
       }}
       actions={{
         viewAllText: "View All",
         onViewAllClick: () => navigate(`/workspaces/${workspaceId}/volume-providers`),
         addNewText: "Add New",
-        onAddNewClick: () => navigate(`/workspaces/${workspaceId}/volume-providers/create`),
+        onAddNewClick: () => setCreateDialogOpen(true),
       }}
-    />
+      />
+      <CreateVolumeProviderDialog
+        open={createDialogOpen}
+        onOpenChange={setCreateDialogOpen}
+      />
+    </>
   )
 } 

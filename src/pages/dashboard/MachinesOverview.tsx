@@ -1,14 +1,17 @@
 import { useNavigate } from "react-router"
+import { useState } from "react"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/api.ts"
 import { Monitor } from "lucide-react"
 import type { components } from "@/api/models/schema"
 import { WorkspaceOverviewCard } from "@/pages/dashboard/WorkspaceOverviewCard.tsx"
+import { CreateMachineDialog } from "@/pages/machines/create/CreateMachineDialog.tsx"
 
 export function MachinesOverview() {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
+  const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
   // Fetch machine providers (needed for machine creation validation)
   const machineProvidersQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/machine-providers', {
@@ -44,28 +47,34 @@ export function MachinesOverview() {
   }))
 
   return (
-    <WorkspaceOverviewCard
-      icon={<Monitor className="h-5 w-5" />}
-      title="Machines"
-      description="Your deployed and configured machines"
-      count={machines.length}
-      isLoading={machinesQuery.isLoading}
-      error={!!machinesQuery.error}
-      items={items}
-      emptyState={{
-        message: "No machines created yet",
-        createButtonText: "Create First Machine",
-        onCreateClick: () => navigate(`/workspaces/${workspaceId}/machines/create`),
-        isCreateDisabled: machineProviders.length === 0,
-        createDisabledMessage: "Create a machine provider first",
-      }}
-      actions={{
-        viewAllText: "View All",
-        onViewAllClick: () => navigate(`/workspaces/${workspaceId}/machines`),
-        addNewText: "Add New",
-        onAddNewClick: () => navigate(`/workspaces/${workspaceId}/machines/create`),
-        isAddNewDisabled: machineProviders.length === 0,
-      }}
-    />
+    <>
+      <WorkspaceOverviewCard
+        icon={<Monitor className="h-5 w-5" />}
+        title="Machines"
+        description="Your deployed and configured machines"
+        count={machines.length}
+        isLoading={machinesQuery.isLoading}
+        error={!!machinesQuery.error}
+        items={items}
+        emptyState={{
+          message: "No machines created yet",
+          createButtonText: "Create First Machine",
+          onCreateClick: () => setCreateDialogOpen(true),
+          isCreateDisabled: machineProviders.length === 0,
+          createDisabledMessage: "Create a machine provider first",
+        }}
+        actions={{
+          viewAllText: "View All",
+          onViewAllClick: () => navigate(`/workspaces/${workspaceId}/machines`),
+          addNewText: "Add New",
+          onAddNewClick: () => setCreateDialogOpen(true),
+          isAddNewDisabled: machineProviders.length === 0,
+        }}
+      />
+      <CreateMachineDialog
+        open={createDialogOpen}
+        onOpenChange={setCreateDialogOpen}
+      />
+    </>
   )
 } 

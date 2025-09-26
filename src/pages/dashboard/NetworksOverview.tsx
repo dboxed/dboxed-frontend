@@ -1,14 +1,17 @@
 import { useNavigate } from "react-router"
+import { useState } from "react"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/api.ts"
 import { Network } from "lucide-react"
 import type { components } from "@/api/models/schema"
 import { WorkspaceOverviewCard } from "@/pages/dashboard/WorkspaceOverviewCard.tsx"
+import { CreateNetworkDialog } from "@/pages/networks/create/CreateNetworkDialog.tsx"
 
 export function NetworksOverview() {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
+  const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
   // Fetch networks
   const networksQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/networks', {
@@ -48,25 +51,31 @@ export function NetworksOverview() {
   }))
 
   return (
-    <WorkspaceOverviewCard
-      icon={<Network className="h-5 w-5" />}
-      title="Networks"
-      description="Manage your network configurations"
-      count={networks.length}
-      isLoading={networksQuery.isLoading}
-      error={!!networksQuery.error}
-      items={items}
-      emptyState={{
-        message: "No networks configured yet",
-        createButtonText: "Create First Network",
-        onCreateClick: () => navigate(`/workspaces/${workspaceId}/networks/create`),
-      }}
-      actions={{
-        viewAllText: "View All",
-        onViewAllClick: () => navigate(`/workspaces/${workspaceId}/networks`),
-        addNewText: "Add New",
-        onAddNewClick: () => navigate(`/workspaces/${workspaceId}/networks/create`),
-      }}
-    />
+    <>
+      <WorkspaceOverviewCard
+        icon={<Network className="h-5 w-5" />}
+        title="Networks"
+        description="Manage your network configurations"
+        count={networks.length}
+        isLoading={networksQuery.isLoading}
+        error={!!networksQuery.error}
+        items={items}
+        emptyState={{
+          message: "No networks configured yet",
+          createButtonText: "Create First Network",
+          onCreateClick: () => setCreateDialogOpen(true),
+        }}
+        actions={{
+          viewAllText: "View All",
+          onViewAllClick: () => navigate(`/workspaces/${workspaceId}/networks`),
+          addNewText: "Add New",
+          onAddNewClick: () => setCreateDialogOpen(true),
+        }}
+      />
+      <CreateNetworkDialog
+        open={createDialogOpen}
+        onOpenChange={setCreateDialogOpen}
+      />
+    </>
   )
 } 

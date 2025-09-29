@@ -72,6 +72,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/auth/current-token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 auth current token */
+        get: operations["get-v1-auth-current-token"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/current-user": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 auth current user */
+        get: operations["get-v1-auth-current-user"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/auth/info": {
         parameters: {
             query?: never;
@@ -81,23 +115,6 @@ export interface paths {
         };
         /** Get v1 auth info */
         get: operations["get-v1-auth-info"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/auth/me": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get v1 auth me */
-        get: operations["get-v1-auth-me"];
         put?: never;
         post?: never;
         delete?: never;
@@ -909,24 +926,6 @@ export interface components {
             forWorkspace?: boolean;
             name: string;
         };
-        CreateTokenResult: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: int64 */
-            boxId?: number;
-            /** Format: date-time */
-            createdAt: string;
-            forWorkspace: boolean;
-            /** Format: int64 */
-            id: number;
-            name: string;
-            token: string;
-            /** Format: int64 */
-            workspace: number;
-        };
         CreateVolume: {
             /**
              * Format: uri
@@ -1473,6 +1472,7 @@ export interface components {
             /** Format: int64 */
             id: number;
             name: string;
+            token?: string;
             /** Format: int64 */
             workspace: number;
         };
@@ -1870,6 +1870,64 @@ export interface operations {
             };
         };
     };
+    "get-v1-auth-current-token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Token"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-auth-current-user": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["User"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-v1-auth-info": {
         parameters: {
             query?: never;
@@ -1886,35 +1944,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AuthInfo"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "get-v1-auth-me": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["User"];
                 };
             };
             /** @description Error */
@@ -3201,7 +3230,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CreateTokenResult"];
+                    "application/json": components["schemas"]["Token"];
                 };
             };
             /** @description Error */

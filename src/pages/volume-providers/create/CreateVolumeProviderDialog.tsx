@@ -1,10 +1,8 @@
-import { useState } from "react"
 import { BaseCreateDialog } from "@/components/BaseCreateDialog.tsx"
 import { RusticConfigForm } from "@/pages/volume-providers/create/index.ts"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
-import { Label } from "@/components/ui/label.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import type { components } from "@/api/models/schema";
 

@@ -19,7 +19,7 @@ export const onSigninCallback = () => {
 export const useCurrentUser = () => {
   const client = useDboxedQueryClient();
 
-  const userQuery = client.useQuery('get', '/v1/auth/me', {});
+  const userQuery = client.useQuery('get', '/v1/auth/current-user', {});
   return {
     user: userQuery.data as components['schemas']['User'] | undefined,
     isLoading: userQuery.isLoading,

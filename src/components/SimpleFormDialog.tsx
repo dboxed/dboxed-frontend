@@ -18,6 +18,7 @@ interface SimpleFormDialogProps<T extends FieldValues = FieldValues> {
   cancelText?: string
   saveDisabled?: boolean
   isLoading?: boolean
+  showCancel?: boolean
 }
 
 export function SimpleFormDialog<T extends FieldValues = FieldValues>({
@@ -32,6 +33,7 @@ export function SimpleFormDialog<T extends FieldValues = FieldValues>({
   cancelText = "Cancel",
   saveDisabled = false,
   isLoading = false,
+  showCancel = true,
 }: SimpleFormDialogProps<T>) {
   const [oldOpen, setOldOpen] = useState(open)
 
@@ -84,14 +86,16 @@ export function SimpleFormDialog<T extends FieldValues = FieldValues>({
         </Form>
 
         <DialogFooter>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleCancel}
-            disabled={isLoading}
-          >
-            {cancelText}
-          </Button>
+          {showCancel && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleCancel}
+              disabled={isLoading}
+            >
+              {cancelText}
+            </Button>
+          )}
           <Button
             type="button"
             onClick={handleSave}

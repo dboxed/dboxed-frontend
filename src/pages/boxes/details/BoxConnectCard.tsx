@@ -7,6 +7,7 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { Copy, Key, RefreshCw } from "lucide-react"
 import { envVars } from "@/env.ts"
+import { randomString } from "@/utils/random.ts";
 
 interface BoxTokenCardProps {
   boxId: number
@@ -19,35 +20,41 @@ export function BoxConnectCard({ boxId, workspaceId, boxUrl }: BoxTokenCardProps
   const [natsUrl, setNatsUrl] = useState<string>("")
   const [httpURl, setHttpURl] = useState<string>("")
 
-  const tokenMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/generate-token')
+  const createTokenMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/tokens')
 
   const handleGenerateToken = () => {
-    tokenMutation.mutate({
+    createTokenMutation.mutate({
       params: {
         path: {
           workspaceId: workspaceId,
-          id: boxId,
         }
+      },
+      body: {
+        name: `box_${boxId}_${randomString(8)}`,
+        forWorkspace: false,
+        boxId: boxId,
       }
     }, {
       onSuccess: (responseData) => {
-        const generatedToken = responseData.token
+        if (responseData.token) {
+          const generatedToken = responseData.token
 
-        // Parse the box URL and add the token to existing query parameters
-        const url = new URL(boxUrl)
-        url.searchParams.set('token', generatedToken)
-        setNatsUrl(url.toString())
-        
-        // Generate http URL
-        const apiUrl = new URL('/v1/box-spec', envVars.VITE_API_URL)
-        apiUrl.searchParams.set('token', generatedToken)
-        setHttpURl(apiUrl.toString())
-        
-        toast.success("Box spec URL generated successfully!")
+          // Parse the box URL and add the token to existing query parameters
+          const url = new URL(boxUrl)
+          url.searchParams.set('token', generatedToken)
+          setNatsUrl(url.toString())
+
+          // Generate http URL
+          const apiUrl = new URL(`/v1/workspaces/${workspaceId}/boxes/${boxId}/box-spec`, envVars.VITE_API_URL)
+          apiUrl.searchParams.set('token', generatedToken)
+          setHttpURl(apiUrl.toString())
+
+          toast.success("Box connection URLs generated successfully!")
+        }
       },
       onError: (error) => {
-        toast.error("Failed to generate box token", {
-          description: error.detail || "An error occurred while generating the token."
+        toast.error("Failed to create box token", {
+          description: error.detail || "An error occurred while creating the token."
         })
       }
     })
@@ -83,26 +90,26 @@ export function BoxConnectCard({ boxId, workspaceId, boxUrl }: BoxTokenCardProps
           <span>Generate Urls</span>
         </CardTitle>
         <CardDescription>
-          Generate a Urls that can be used with the dboxed CLI.
+          Create a new token and generate URLs that can be used with the dboxed CLI.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
           <div className="flex space-x-2">
-            <Button 
+            <Button
               onClick={handleGenerateToken}
-              disabled={tokenMutation.isPending}
+              disabled={createTokenMutation.isPending}
               variant="outline"
               type={"button"}
             >
-              {tokenMutation.isPending ? (
+              {createTokenMutation.isPending ? (
                 <>
                   <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  Generating...
+                  Creating Token...
                 </>
               ) : (
                 <>
-                  Generate
+                  Generate Connection URLs
                 </>
               )}
             </Button>
@@ -152,7 +159,7 @@ export function BoxConnectCard({ boxId, workspaceId, boxUrl }: BoxTokenCardProps
             </div>
 
             <p className="text-xs text-muted-foreground">
-              ⚠️ These URLs contain a token that will only be shown once. Copy them now and store them securely.
+              ⚠️ These URLs contain a newly created token. You can manage tokens from the tokens page.
             </p>
           </div>
         )}

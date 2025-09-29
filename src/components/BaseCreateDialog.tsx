@@ -12,7 +12,7 @@ interface BaseCreateDialogProps<T extends FieldValues = FieldValues, R extends F
   children: (form: UseFormReturn<T>) => React.ReactNode
   apiRoute: keyof paths
   apiParams?: Record<string, unknown>
-  onSuccess?: (data: R) => void
+  onSuccess?: (data: R) => (boolean | void) // when this returns false, the dialog is not closed automatically
   onError?: (error: any) => void
   submitButtonText?: string
   cancelButtonText?: string
@@ -66,10 +66,13 @@ export function BaseCreateDialog<T extends FieldValues = FieldValues, R extends 
       await queryClient.invalidateQueries()
 
       toast.success(`${title} created successfully!`)
-      onOpenChange(false)
 
       if (onSuccess) {
-        onSuccess(responseData as R)
+        const ret = onSuccess(responseData as R)
+        if (typeof ret === "boolean") {
+          return ret
+        }
+        return true
       }
       return true
     } catch (error: any) {

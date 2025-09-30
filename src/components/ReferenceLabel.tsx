@@ -2,15 +2,15 @@ import { Link } from "react-router"
 import { useDboxedQueryClient } from "@/api/api.ts"
 import type { paths } from "@/api/models/schema";
 
-interface ReferenceLabelProps {
+interface ReferenceLabelProps<TResource extends { name: string }> {
   /** The ID of the resource to fetch and display */
-  resourceId: number | null
+  resourceId: number | string | null
   /** The API path to fetch the resource (e.g., "/v1/workspaces/{workspaceId}") */
   resourcePath: keyof paths
   /** Parameters to substitute in the resource path */
   pathParams: Record<string, any>
-  /** URL to navigate to when the link is clicked */
-  detailsUrl: string
+  /** URL to navigate to when the link is clicked, or a function that receives the resource data and returns the URL */
+  detailsUrl: string | ((resource: TResource) => string)
   /** Text to show before the ID if resource loading fails */
   fallbackLabel?: string
   /** CSS classes for the link styling */
@@ -20,7 +20,7 @@ interface ReferenceLabelProps {
 /**
  * A reusable component that fetches a resource by ID and displays it as a clickable link
  * with the resource name. Handles loading states and error fallbacks gracefully.
- * 
+ *
  * @example
  * <ReferenceLabel
  *   resourceId={workspaceId}
@@ -30,17 +30,17 @@ interface ReferenceLabelProps {
  *   fallbackLabel="Workspace"
  * />
  */
-export function ReferenceLabel({
+export function ReferenceLabel<TResource extends { name: string }>({
   resourceId,
   resourcePath,
   pathParams,
   detailsUrl,
   fallbackLabel = "Unknown",
   className = "text-blue-600 hover:text-blue-800 underline"
-}: ReferenceLabelProps) {
+}: ReferenceLabelProps<TResource>) {
   const client = useDboxedQueryClient()
 
-  const resourceQuery = client.useQuery('get', resourcePath as any, {
+  const resourceQuery = client.useQuery('get', resourcePath, {
     params: {
       path: pathParams
     },
@@ -64,10 +64,11 @@ export function ReferenceLabel({
     )
   }
 
-  const resource = resourceQuery.data as { name: string }
+  const resource = resourceQuery.data
+  const url = typeof detailsUrl === 'function' ? detailsUrl(resource) : detailsUrl
 
   return (
-    <Link to={detailsUrl} className={className}>
+    <Link to={url} className={className}>
       {resource.name}
     </Link>
   )

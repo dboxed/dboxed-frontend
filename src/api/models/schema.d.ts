@@ -228,15 +228,32 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/boxes/by-name/{boxName}": {
+    "/v1/workspaces/{workspaceId}/boxes/by-name/{name}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get v1 workspaces by workspace ID boxes by name by box name */
-        get: operations["get-v1-workspaces-by-workspace-id-boxes-by-name-by-box-name"];
+        /** Get v1 workspaces by workspace ID boxes by name by name */
+        get: operations["get-v1-workspaces-by-workspace-id-boxes-by-name-by-name"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/boxes/by-uuid/{uuid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID boxes by UUID by UUID */
+        get: operations["get-v1-workspaces-by-workspace-id-boxes-by-uuid-by-uuid"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1579,6 +1596,7 @@ export interface components {
             id: number;
             /** Format: int64 */
             latestSnapshotId?: number;
+            lockBoxUuid?: string;
             lockId?: string;
             /** Format: date-time */
             lockTime?: string;
@@ -1615,7 +1633,8 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            prevLockId: string | null;
+            boxUuid?: string;
+            prevLockId?: string;
         };
         VolumeProvider: {
             /**
@@ -2238,12 +2257,45 @@ export interface operations {
             };
         };
     };
-    "get-v1-workspaces-by-workspace-id-boxes-by-name-by-box-name": {
+    "get-v1-workspaces-by-workspace-id-boxes-by-name-by-name": {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                boxName: string;
+                name: string;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Box"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-boxes-by-uuid-by-uuid": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                uuid: string;
                 /** @description The workspace id */
                 workspaceId: number;
             };

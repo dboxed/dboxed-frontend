@@ -4,6 +4,7 @@ import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { LabelAndValue } from "@/components/LabelAndValue.tsx";
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
+import { VolumeLockBadge } from "@/pages/volumes/details/VolumeLockBadge.tsx";
 import type { components } from "@/api/models/schema";
 
 interface GeneralInfoCardProps {
@@ -66,6 +67,58 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
               />
             }
           />
+          {data.attachment && (
+            <LabelAndValue
+              label="Attached To"
+              value={
+                <ReferenceLabel<components["schemas"]["Box"]>
+                  resourceId={data.attachment.boxId}
+                  resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
+                  pathParams={{
+                    workspaceId: workspaceId,
+                    id: data.attachment.boxId
+                  }}
+                  detailsUrl={(box) => `/workspaces/${workspaceId}/boxes/${box.id}`}
+                  fallbackLabel="Box"
+                  className="text-blue-600 hover:text-blue-800 underline"
+                />
+              }
+            />
+          )}
+          <LabelAndValue
+            label="Lock Status"
+            value={<VolumeLockBadge volume={data} />}
+          />
+          {data.lockId && data.lockBoxUuid && (
+            <>
+              <LabelAndValue
+                label="Locked By"
+                value={
+                  <ReferenceLabel<components["schemas"]["Box"]>
+                    resourceId={data.lockBoxUuid}
+                    resourcePath="/v1/workspaces/{workspaceId}/boxes/by-uuid/{uuid}"
+                    pathParams={{
+                      workspaceId: workspaceId,
+                      uuid: data.lockBoxUuid
+                    }}
+                    detailsUrl={(box) => `/workspaces/${workspaceId}/boxes/${box.id}`}
+                    fallbackLabel="Box"
+                    className="text-blue-600 hover:text-blue-800 underline"
+                  />
+                }
+              />
+              <LabelAndValue
+                label="Lock ID"
+                textValue={data.lockId}
+              />
+              {data.lockTime && (
+                <LabelAndValue
+                  label="Lock Time"
+                  textValue={new Date(data.lockTime).toLocaleString()}
+                />
+              )}
+            </>
+          )}
           <LabelAndValue
             label="Created"
             textValue={new Date(data.createdAt).toLocaleString()}

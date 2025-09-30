@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { CreateVolumeDialog } from "./create/CreateVolumeDialog.tsx";
+import { VolumeLockBadge } from "./details/VolumeLockBadge.tsx";
 
 export function ListVolumesPage() {
   const navigate = useNavigate()
@@ -40,6 +41,38 @@ export function ListVolumesPage() {
             {type}
           </Badge>
         )
+      },
+    },
+    {
+      accessorKey: "attachment",
+      header: "Attachment",
+      cell: ({ row }) => {
+        const attachment = row.original.attachment
+        if (attachment) {
+          return (
+            <ReferenceLabel<components["schemas"]["Box"]>
+              resourceId={attachment.boxId}
+              resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
+              pathParams={{
+                workspaceId: workspaceId,
+                id: attachment.boxId
+              }}
+              detailsUrl={(box) => `/workspaces/${workspaceId}/boxes/${box.id}`}
+              fallbackLabel="Box"
+              className="text-blue-600 hover:text-blue-800 underline text-sm"
+            />
+          )
+        }
+        return (
+          <span className="text-sm text-muted-foreground">Not attached</span>
+        )
+      },
+    },
+    {
+      accessorKey: "lockId",
+      header: "Lock",
+      cell: ({ row }) => {
+        return <VolumeLockBadge volume={row.original} />
       },
     },
     {

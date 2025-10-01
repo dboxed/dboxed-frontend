@@ -1,10 +1,10 @@
 import { BaseResourceDetailsPage } from "@/pages/base/BaseResourceDetailsPage.tsx"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx"
 import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard.tsx"
 import { RusticVolumeInfo } from "./RusticVolumeInfo.tsx"
+import { SnapshotsTab } from "./SnapshotsTab.tsx"
 import type { components } from "@/api/models/schema";
 
 export function VolumeDetailsPage() {
@@ -32,7 +32,7 @@ export function VolumeDetailsPage() {
         <Tabs defaultValue="general" className="space-y-6">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="general">General Information</TabsTrigger>
-            <TabsTrigger value="usage">Volume Usage</TabsTrigger>
+            <TabsTrigger value="snapshots">Snapshots</TabsTrigger>
           </TabsList>
 
           <TabsContent value="general">
@@ -44,20 +44,8 @@ export function VolumeDetailsPage() {
             </div>
           </TabsContent>
 
-          <TabsContent value="usage">
-            <Card>
-              <CardHeader>
-                <CardTitle>Volume Usage</CardTitle>
-                <CardDescription>
-                  Information about how this volume is being used.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Volume usage and attachment information will be displayed here when available.
-                </p>
-              </CardContent>
-            </Card>
+          <TabsContent value="snapshots">
+            <SnapshotsTab volumeId={volumeId} />
           </TabsContent>
         </Tabs>
       )}

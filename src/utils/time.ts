@@ -21,3 +21,37 @@ export function formatTimeAgo(date: Date | string): string {
     return `${days} day${days !== 1 ? 's' : ''} ago`
   }
 }
+
+/**
+ * Formats a duration in seconds to a human-readable string.
+ * @param seconds The duration in seconds
+ * @returns A string like "5m 30s", "2h 15m", "1d 3h", etc.
+ */
+export function formatDuration(seconds: number): string {
+  if (seconds < 0) {
+    return "0s"
+  }
+
+  const days = Math.floor(seconds / 86400)
+  const hours = Math.floor((seconds % 86400) / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
+  const secs = Math.floor(seconds % 60)
+
+  const parts: string[] = []
+
+  if (days > 0) {
+    parts.push(`${days}d`)
+  }
+  if (hours > 0) {
+    parts.push(`${hours}h`)
+  }
+  if (minutes > 0) {
+    parts.push(`${minutes}m`)
+  }
+  if (secs > 0 || parts.length === 0) {
+    parts.push(`${secs}s`)
+  }
+
+  // Show max 2 parts for readability
+  return parts.slice(0, 2).join(' ')
+}

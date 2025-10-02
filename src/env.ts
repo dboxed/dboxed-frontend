@@ -2,6 +2,7 @@
 // these are replaces via envsubst in run.sh
 const initialEnvVars = {
   VITE_API_URL: '${VITE_API_URL}',
+  VITE_API_URL_PUBLIC: '${VITE_API_URL_PUBLIC}',
   VITE_OIDC_ISSUER_URL: '${VITE_OIDC_ISSUER_URL}',
   VITE_OIDC_CLIENT_ID: '${VITE_OIDC_CLIENT_ID}',
 }

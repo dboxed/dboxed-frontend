@@ -45,7 +45,7 @@ export function BoxConnectCard({ boxId, workspaceId, boxUrl }: BoxTokenCardProps
           setNatsUrl(url.toString())
 
           // Generate http URL
-          const apiUrl = new URL(`/v1/workspaces/${workspaceId}/boxes/${boxId}/box-spec`, envVars.VITE_API_URL)
+          const apiUrl = new URL(`/v1/workspaces/${workspaceId}/boxes/${boxId}/box-spec`, envVars.VITE_API_URL_PUBLIC)
           apiUrl.searchParams.set('token', generatedToken)
           setHttpURl(apiUrl.toString())
 

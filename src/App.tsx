@@ -16,6 +16,7 @@ import { BoxDetailsPage } from "@/pages/boxes/details";
 import { ListBoxesPage } from "@/pages/boxes";
 import { VolumeProviderDetailsPage } from "@/pages/volume-providers";
 import { VolumeDetailsPage, VolumesPage } from "@/pages/volumes";
+import { SnapshotDetailsPage } from "@/pages/volumes/snapshots/SnapshotDetailsPage.tsx";
 import { ListTokensPage, TokenDetailsPage } from "@/pages/tokens";
 import { AdminWorkspacesListPage } from "@/pages/admin/AdminWorkspacesListPage.tsx";
 import { AdminListUsersPage } from "@/pages/admin/AdminListUsersPage.tsx";
@@ -86,6 +87,7 @@ function AuthenticatedApp() {
           <Route path="/workspaces/:workspaceId/volume-providers" element={<VolumesPage/>}/>
           <Route path="/workspaces/:workspaceId/volume-providers/:volumeProviderId" element={<VolumeProviderDetailsPage />}/>
           <Route path="/workspaces/:workspaceId/volumes/:volumeId" element={<VolumeDetailsPage />}/>
+          <Route path="/workspaces/:workspaceId/volumes/:volumeId/snapshots/:snapshotId" element={<SnapshotDetailsPage />}/>
           <Route path="/workspaces/:workspaceId/boxes" element={<ListBoxesPage/>}/>
           <Route path="/workspaces/:workspaceId/boxes/:boxId" element={<BoxDetailsPage/>}/>
           <Route path="/workspaces/:workspaceId/networks" element={<ListNetworksPage/>}/>

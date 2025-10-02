@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button.tsx"
 import { DataTable } from "@/components/data-table.tsx"
 import { useDboxedQueryClient } from "@/api/api.ts"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
+import { useNavigate } from "react-router"
 import { formatTimeAgo, formatDuration } from "@/utils/time.ts"
 import type { components } from "@/api/models/schema"
 import type { ColumnDef } from "@tanstack/react-table"
@@ -14,6 +15,7 @@ interface SnapshotsTabProps {
 
 export function SnapshotsTab({ volumeId }: SnapshotsTabProps) {
   const { workspaceId } = useSelectedWorkspaceId()
+  const navigate = useNavigate()
   const client = useDboxedQueryClient()
 
   const snapshotsQuery = client.useQuery(
@@ -79,12 +81,9 @@ export function SnapshotsTab({ volumeId }: SnapshotsTabProps) {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => {
-              // TODO: Implement snapshot restore/delete functionality
-              console.log("Snapshot action:", id)
-            }}
+            onClick={() => navigate(`/workspaces/${workspaceId}/volumes/${volumeId}/snapshots/${id}`)}
           >
-            View
+            View Details
           </Button>
         )
       }

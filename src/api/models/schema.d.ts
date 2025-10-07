@@ -308,14 +308,15 @@ export interface paths {
         /** Get v1 workspaces by workspace ID boxes by ID logs */
         get: operations["get-v1-workspaces-by-workspace-id-boxes-by-id-logs"];
         put?: never;
-        post?: never;
+        /** Post v1 workspaces by workspace ID boxes by ID logs */
+        post: operations["post-v1-workspaces-by-workspace-id-boxes-by-id-logs"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/boxes/{id}/logs/stream": {
+    "/v1/workspaces/{workspaceId}/boxes/{id}/logs/{logId}/stream": {
         parameters: {
             query?: never;
             header?: never;
@@ -750,8 +751,7 @@ export interface paths {
         /** Get v1 workspaces by workspace ID volumes by ID snapshots */
         get: operations["get-v1-workspaces-by-workspace-id-volumes-by-id-snapshots"];
         put?: never;
-        /** Post v1 workspaces by workspace ID volumes by ID snapshots */
-        post: operations["post-v1-workspaces-by-workspace-id-volumes-by-id-snapshots"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -815,7 +815,6 @@ export interface components {
              */
             readonly $schema?: string;
             boxSpec: components["schemas"]["BoxSpec"];
-            boxUrl: string;
             /** Format: date-time */
             createdAt: string;
             dboxedVersion: string;
@@ -845,7 +844,6 @@ export interface components {
             dboxedBinaryHash?: string;
             dboxedBinaryUrl?: string;
             dns: components["schemas"]["DnsSpec"];
-            logs?: components["schemas"]["LogsSpec"];
             uuid: string;
             volumes?: components["schemas"]["BoxVolumeSpec"][] | null;
         };
@@ -982,16 +980,6 @@ export interface components {
             fsSize: number;
             fsType: string;
         };
-        CreateVolumeSnapshot: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            isLatest: boolean;
-            lockId: string;
-            rustic?: components["schemas"]["VolumeSnapshotRustic"];
-        };
         CreateWorkspace: {
             /**
              * Format: uri
@@ -1015,6 +1003,7 @@ export interface components {
             hostname: string;
             networkDomain: string;
         };
+        EndOfHistory: Record<string, never>;
         ErrorDetail: {
             /** @description Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id' */
             location?: string;
@@ -1117,13 +1106,13 @@ export interface components {
             /** Format: int64 */
             total_count: number;
         };
-        ListBodyLogMetadata: {
+        ListBodyLogMetadataModel: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            items: components["schemas"]["LogMetadata"][] | null;
+            items: components["schemas"]["LogMetadataModel"][] | null;
             /** Format: int64 */
             total_count: number;
         };
@@ -1257,6 +1246,19 @@ export interface components {
                 [key: string]: unknown;
             };
         };
+        LogMetadataModel: {
+            /** Format: date-time */
+            createdAt: string;
+            fileName: string;
+            format: string;
+            /** Format: int64 */
+            id: number;
+            metadata?: {
+                [key: string]: unknown;
+            };
+            /** Format: int64 */
+            workspace: number;
+        };
         LogsBatch: {
             lines: components["schemas"]["LogsLine"][] | null;
             /** Format: int64 */
@@ -1269,14 +1271,6 @@ export interface components {
             line: string;
             /** Format: date-time */
             time: string;
-        };
-        LogsNatsSpec: {
-            logId: string;
-            logStream: string;
-            metadataKVStore: string;
-        };
-        LogsSpec: {
-            nats: components["schemas"]["LogsNatsSpec"];
         };
         Machine: {
             /**
@@ -1364,6 +1358,15 @@ export interface components {
         NetworkNetbird: {
             apiUrl: string;
             netbirdVersion: string;
+        };
+        PostLogs: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            lines: components["schemas"]["LogsLine"][] | null;
+            metadata: components["schemas"]["LogMetadata"];
         };
         Price: {
             Currency: string;
@@ -1602,7 +1605,6 @@ export interface components {
             lockTime?: string;
             name: string;
             rustic?: components["schemas"]["VolumeRustic"];
-            status: string;
             uuid: string;
             /** Format: int64 */
             volumeProvider: number;
@@ -1683,7 +1685,6 @@ export interface components {
             id: number;
             lockId: string;
             rustic?: components["schemas"]["VolumeSnapshotRustic"];
-            status: string;
             /** Format: int64 */
             volumeId: number;
             /** Format: int64 */
@@ -2480,7 +2481,46 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ListBodyLogMetadata"];
+                    "application/json": components["schemas"]["ListBodyLogMetadataModel"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-boxes-by-id-logs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PostLogs"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
             /** @description Error */
@@ -2497,12 +2537,12 @@ export interface operations {
     "logs-stream": {
         parameters: {
             query?: {
-                file?: string;
-                seq?: number;
+                since?: string;
             };
             header?: never;
             path: {
                 id: number;
+                logId: number;
                 /** @description The workspace id */
                 workspaceId: number;
             };
@@ -2517,6 +2557,17 @@ export interface operations {
                 };
                 content: {
                     "text/event-stream": ({
+                        data: components["schemas"]["EndOfHistory"];
+                        /**
+                         * @description The event name.
+                         * @constant
+                         */
+                        event: "end-of-history";
+                        /** @description The event ID. */
+                        id?: number;
+                        /** @description The retry time in milliseconds. */
+                        retry?: number;
+                    } | {
                         data: components["schemas"]["LogsError"];
                         /**
                          * @description The event name.
@@ -2533,13 +2584,13 @@ export interface operations {
                          * @description The event name.
                          * @constant
                          */
-                        event: "logs";
+                        event: "logs-batch";
                         /** @description The event ID. */
                         id?: number;
                         /** @description The retry time in milliseconds. */
                         retry?: number;
                     } | {
-                        data: components["schemas"]["LogMetadata"];
+                        data: components["schemas"]["LogMetadataModel"];
                         /**
                          * @description The event name.
                          * @constant
@@ -4014,43 +4065,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ListBodyVolumeSnapshot"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "post-v1-workspaces-by-workspace-id-volumes-by-id-snapshots": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-                /** @description The workspace id */
-                workspaceId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateVolumeSnapshot"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["VolumeSnapshot"];
                 };
             };
             /** @description Error */

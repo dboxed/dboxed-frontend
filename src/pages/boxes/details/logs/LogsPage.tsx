@@ -7,21 +7,22 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Box, Container } from "lucide-react"
 import type { components } from "@/api/models/schema"
 import { LogFileViewer } from "./LogFileViewer.tsx"
+import { InstanceSelector } from "./InstanceSelector.tsx"
 
 interface LogsPageProps {
   box: components["schemas"]["Box"]
 }
 
-function getLogEntryName(logFile: components["schemas"]["LogMetadata"]): string {
+function getLogEntryName(logFile: components["schemas"]["LogMetadataModel"]): string {
   const containerInfo = logFile.metadata?.container as Record<string, unknown>
   if (logFile.format === "docker-logs" && containerInfo?.Name) {
     return containerInfo.Name as string
   }
-  
+
   return logFile.fileName
 }
 
-function getLogFileIcon(logFile: components["schemas"]["LogMetadata"]) {
+function getLogFileIcon(logFile: components["schemas"]["LogMetadataModel"]) {
   switch (logFile.format) {
     case 'slog-json':
       return <Box className="h-4 w-4" />
@@ -35,8 +36,9 @@ function getLogFileIcon(logFile: components["schemas"]["LogMetadata"]) {
 export function LogsPage({ box }: LogsPageProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [selectedLogFile, setSelectedLogFile] = useState<string | null>(null)
+  const [selectedLogId, setSelectedLogId] = useState<number | null>(null)
   const [selectedEntryName, setSelectedEntryName] = useState<string | null>(null)
+  const [logsSince, setLogsSince] = useState<string>("1h")
 
   // Fetch available log files
   const logFiles = client.useQuery('get', "/v1/workspaces/{workspaceId}/boxes/{id}/logs", {
@@ -52,10 +54,7 @@ export function LogsPage({ box }: LogsPageProps) {
 
   const handleLogEntryChange = (entryName: string) => {
     setSelectedEntryName(entryName)
-    const entryLogFiles = getLogFilesForEntry(entryName)
-    if (entryLogFiles.length > 0) {
-      setSelectedLogFile(entryLogFiles[0].fileName)
-    }
+    setSelectedLogId(null)
   }
 
   const getLogFilesForEntry = (entryName: string) => {
@@ -71,7 +70,7 @@ export function LogsPage({ box }: LogsPageProps) {
     }
     acc[entryName].push(logFile)
     return acc
-  }, {} as Record<string, components["schemas"]["LogMetadata"][]>) : {}
+  }, {} as Record<string, components["schemas"]["LogMetadataModel"][]>) : {}
 
   const entryNames = Object.keys(entryGroups)
   const selectedEntryLogFiles = selectedEntryName ? getLogFilesForEntry(selectedEntryName) : []
@@ -124,29 +123,38 @@ export function LogsPage({ box }: LogsPageProps) {
 
           <div className="col-span-3">
             <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Log file:</span>
-                <Select
-                  value={selectedLogFile || ""}
-                  onValueChange={setSelectedLogFile}
-                >
-                  <SelectTrigger className="w-64">
-                    <SelectValue placeholder="Select a log file" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {selectedEntryLogFiles.map((logFile) => (
-                      <SelectItem key={logFile.fileName} value={logFile.fileName}>
-                        {logFile.fileName}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <div className="flex items-center gap-4">
+                <InstanceSelector
+                  selectedLogId={selectedLogId}
+                  onLogIdChange={setSelectedLogId}
+                  logFiles={selectedEntryLogFiles}
+                />
+
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">Logs since:</span>
+                  <Select
+                    value={logsSince}
+                    onValueChange={setLogsSince}
+                  >
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1h">1h</SelectItem>
+                      <SelectItem value="12h">12h</SelectItem>
+                      <SelectItem value="24h">1d</SelectItem>
+                      <SelectItem value="168h">7d</SelectItem>
+                      <SelectItem value="720h">30d</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <LogFileViewer
                 workspaceId={workspaceId}
                 boxId={box.id}
-                logFileName={selectedLogFile}
+                logId={selectedLogId}
+                since={logsSince}
               />
             </div>
           </div>

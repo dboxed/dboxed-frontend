@@ -7,15 +7,16 @@ import { useDboxedApiEventSource } from "@/api/api.ts";
 interface LogFileViewerProps {
   workspaceId: number
   boxId: number
-  logFileName: string | null
+  logId: number | null
+  since?: string
 }
 
 const isoPattern = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.)(\d+)Z$/;
 
-export function LogFileViewer({ workspaceId, boxId, logFileName }: LogFileViewerProps) {
+export function LogFileViewer({ workspaceId, boxId, logId, since }: LogFileViewerProps) {
   const [logData, setLogData] = useState<string>("")
   const eventSourceRef = useRef<EventSource | null>(null)
-  const [metadataHolder] = useState<(components["schemas"]["LogMetadata"] | null)[]>([null])
+  const [metadataHolder] = useState<(components["schemas"]["LogMetadataModel"] | null)[]>([null])
 
   // Close EventSource on unmount or when log file changes
   useEffect(() => {
@@ -25,21 +26,25 @@ export function LogFileViewer({ workspaceId, boxId, logFileName }: LogFileViewer
         eventSourceRef.current = null
       }
     }
-  }, [logFileName])
+  }, [logId])
 
-  const url = new URL(`/v1/workspaces/${workspaceId}/boxes/${boxId}/logs/stream`, envVars.VITE_API_URL)
-  if (logFileName) {
-    url.searchParams.set('file', logFileName)
+  let url = ""
+  if (logId) {
+    const u = new URL(`/v1/workspaces/${workspaceId}/boxes/${boxId}/logs/${logId}/stream`, envVars.VITE_API_URL)
+    if (since) {
+      u.searchParams.set('since', since)
+    }
+    url = u.toString()
   }
 
   // when the url changes, clear the logs (the stream is going to be restarted)
   useEffect(() => {
-    if (logFileName) {
+    if (url) {
       setLogData("Loading...")
     } else {
       setLogData("Please select a log file")
     }
-  }, [url.toString()]);
+  }, [url]);
 
   const formatTime = (time: string) => {
     const m = isoPattern.exec(time)
@@ -55,7 +60,7 @@ export function LogFileViewer({ workspaceId, boxId, logFileName }: LogFileViewer
     }
   }
 
-  const formatLine = (metadata: components["schemas"]["LogMetadata"] | null, line: components["schemas"]["LogsLine"]) => {
+  const formatLine = (metadata: components["schemas"]["LogMetadataModel"] | null, line: components["schemas"]["LogsLine"]) => {
     try {
       switch (metadata?.format) {
         case 'slog-json': {
@@ -80,8 +85,8 @@ export function LogFileViewer({ workspaceId, boxId, logFileName }: LogFileViewer
     }
   }
 
-  useDboxedApiEventSource(url.toString(), {
-    enabled: !!logFileName,
+  useDboxedApiEventSource(url?.toString() || "", {
+    enabled: !!logId && !!url,
     onopen: () => {
       // clear it before the first line gets received
       setLogData("")
@@ -92,13 +97,11 @@ export function LogFileViewer({ workspaceId, boxId, logFileName }: LogFileViewer
 
         if (e.event == 'metadata') {
           metadataHolder[0] = data
-        } else if (e.event === 'logs' && data.lines) {
-          // Handle log batch
-          const logLines = data.lines.map((line: components["schemas"]["LogsLine"]) =>
-            formatLine(metadataHolder[0], line)
-          ).join('\n')
-
-          setLogData(prev => prev + logLines + '\n')
+        } else if (e.event === 'logs-batch') {
+          const newLines = data.lines.map((l: components["schemas"]["LogsLine"])  => formatLine(metadataHolder[0], l)).join('\n')
+          setLogData(prev => prev + newLines + '\n')
+        } else if (e.event === "end-of-history") {
+          setLogData(prev => prev + "...end of history..." + '\n')
         } else if (e.event === 'error') {
           setLogData(prev => prev + 'ERROR while loading logs: ' + data.message + '\n')
         }

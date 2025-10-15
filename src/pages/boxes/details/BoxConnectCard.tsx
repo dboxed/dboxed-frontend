@@ -6,19 +6,17 @@ import { useDboxedQueryClient } from "@/api/api"
 import { useState } from "react"
 import { toast } from "sonner"
 import { Copy, Key, RefreshCw } from "lucide-react"
-import { envVars } from "@/env.ts"
-import { randomString } from "@/utils/random.ts";
+import { envVars, DEFAULT_API_URL } from "@/env.ts"
+import { randomString } from "@/utils/random.ts"
+import type { components } from "@/api/models/schema"
 
 interface BoxTokenCardProps {
-  boxId: number
-  workspaceId: number
-  boxUrl: string
+  box: components["schemas"]["Box"]
 }
 
-export function BoxConnectCard({ boxId, workspaceId, boxUrl }: BoxTokenCardProps) {
+export function BoxConnectCard({ box }: BoxTokenCardProps) {
   const client = useDboxedQueryClient()
-  const [natsUrl, setNatsUrl] = useState<string>("")
-  const [httpURl, setHttpURl] = useState<string>("")
+  const [cliCommand, setCliCommand] = useState<string>("")
 
   const createTokenMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/tokens')
 
@@ -26,30 +24,29 @@ export function BoxConnectCard({ boxId, workspaceId, boxUrl }: BoxTokenCardProps
     createTokenMutation.mutate({
       params: {
         path: {
-          workspaceId: workspaceId,
+          workspaceId: box.workspace,
         }
       },
       body: {
-        name: `box_${boxId}_${randomString(8)}`,
+        name: `box_${box.id}_${randomString(8)}`,
         forWorkspace: false,
-        boxId: boxId,
+        boxId: box.id,
       }
     }, {
       onSuccess: (responseData) => {
         if (responseData.token) {
           const generatedToken = responseData.token
+          let command = `dboxed sandbox run ${box.name}`
 
-          // Parse the box URL and add the token to existing query parameters
-          const url = new URL(boxUrl)
-          url.searchParams.set('token', generatedToken)
-          setNatsUrl(url.toString())
+          // Add --api-url if VITE_API_URL_PUBLIC is different from DEFAULT_API_URL
+          if (envVars.VITE_API_URL_PUBLIC !== DEFAULT_API_URL) {
+            command += ` --api-url ${envVars.VITE_API_URL_PUBLIC}`
+          }
 
-          // Generate http URL
-          const apiUrl = new URL(`/v1/workspaces/${workspaceId}/boxes/${boxId}/box-spec`, envVars.VITE_API_URL_PUBLIC)
-          apiUrl.searchParams.set('token', generatedToken)
-          setHttpURl(apiUrl.toString())
+          command += ` --api-token ${generatedToken}`
 
-          toast.success("Box connection URLs generated successfully!")
+          setCliCommand(command)
+          toast.success("CLI command generated successfully!")
         }
       },
       onError: (error) => {
@@ -60,25 +57,14 @@ export function BoxConnectCard({ boxId, workspaceId, boxUrl }: BoxTokenCardProps
     })
   }
 
-  const handleCopyNatsUrl = async () => {
-    if (!natsUrl) return
-    
-    try {
-      await navigator.clipboard.writeText(natsUrl)
-      toast.success("Nats URL copied to clipboard!")
-    } catch {
-      toast.error("Failed to copy URL to clipboard")
-    }
-  }
+  const handleCopyCommand = async () => {
+    if (!cliCommand) return
 
-  const handleCopyHttpUrl = async () => {
-    if (!httpURl) return
-    
     try {
-      await navigator.clipboard.writeText(httpURl)
-      toast.success("Http URL copied to clipboard!")
+      await navigator.clipboard.writeText(cliCommand)
+      toast.success("CLI command copied to clipboard!")
     } catch {
-      toast.error("Failed to copy URL to clipboard")
+      toast.error("Failed to copy command to clipboard")
     }
   }
 
@@ -87,10 +73,10 @@ export function BoxConnectCard({ boxId, workspaceId, boxUrl }: BoxTokenCardProps
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <Key className="h-5 w-5" />
-          <span>Generate Urls</span>
+          <span>Connect to Box</span>
         </CardTitle>
         <CardDescription>
-          Create a new token and generate URLs that can be used with the dboxed CLI.
+          Generate a CLI command to connect to this box with the dboxed CLI.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -109,48 +95,28 @@ export function BoxConnectCard({ boxId, workspaceId, boxUrl }: BoxTokenCardProps
                 </>
               ) : (
                 <>
-                  Generate Connection URLs
+                  Generate CLI Command
                 </>
               )}
             </Button>
           </div>
         </div>
 
-        {natsUrl && (
+        {cliCommand && (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Nats URL</Label>
+              <Label>CLI Command</Label>
               <div className="flex space-x-2">
                 <Input
-                  value={natsUrl}
+                  value={cliCommand}
                   readOnly
                   className="font-mono text-xs"
-                  placeholder="URL will appear here..."
+                  placeholder="Command will appear here..."
                 />
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={handleCopyNatsUrl}
-                  type={"button"}
-                >
-                  <Copy className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label>HTTP URL</Label>
-              <div className="flex space-x-2">
-                <Input
-                  value={httpURl}
-                  readOnly
-                  className="font-mono text-xs"
-                  placeholder="API endpoint URL will appear here..."
-                />
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleCopyHttpUrl}
+                  onClick={handleCopyCommand}
                   type={"button"}
                 >
                   <Copy className="h-4 w-4" />
@@ -159,7 +125,7 @@ export function BoxConnectCard({ boxId, workspaceId, boxUrl }: BoxTokenCardProps
             </div>
 
             <p className="text-xs text-muted-foreground">
-              ⚠️ These URLs contain a newly created token. You can manage tokens from the tokens page.
+              ⚠️ This command contains a newly created token. You can manage tokens from the tokens page.
             </p>
           </div>
         )}

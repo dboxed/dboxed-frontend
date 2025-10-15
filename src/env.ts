@@ -1,4 +1,6 @@
 
+export const DEFAULT_API_URL = "https://api.dboxed.io"
+
 // these are replaces via envsubst in run.sh
 const initialEnvVars = {
   VITE_API_URL: '${VITE_API_URL}',

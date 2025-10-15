@@ -19,7 +19,7 @@ interface VolumeLockBadgeProps {
  */
 export function VolumeLockBadge({ volume }: VolumeLockBadgeProps) {
   const { workspaceId } = useSelectedWorkspaceId()
-  const isLocked = volume.lockId && volume.lockBoxUuid
+  const isLocked = volume.lockId
 
   if (!isLocked) {
     return (
@@ -62,20 +62,20 @@ export function VolumeLockBadge({ volume }: VolumeLockBadgeProps) {
             {timePassedText && (
               <p>Lock refreshed {timePassedText}</p>
             )}
-            <div className="flex items-center gap-1">
+            {volume.lockBoxId && <div className="flex items-center gap-1">
               <span>Locked by box:</span>
               <ReferenceLabel<components["schemas"]["Box"]>
-                resourceId={volume.lockBoxUuid}
-                resourcePath="/v1/workspaces/{workspaceId}/boxes/by-uuid/{uuid}"
+                resourceId={volume.lockBoxId}
+                resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
                 pathParams={{
                   workspaceId: workspaceId,
-                  uuid: volume.lockBoxUuid
+                  id: volume.lockBoxId
                 }}
                 detailsUrl={(box) => `/workspaces/${workspaceId}/boxes/${box.id}`}
                 fallbackLabel="Box"
                 className="text-blue-400 hover:text-blue-300 underline"
               />
-            </div>
+            </div>}
           </div>
         </TooltipContent>
       </Tooltip>

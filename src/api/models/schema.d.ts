@@ -1599,7 +1599,8 @@ export interface components {
             id: number;
             /** Format: int64 */
             latestSnapshotId?: number;
-            lockBoxUuid?: string;
+            /** Format: int64 */
+            lockBoxId?: number;
             lockId?: string;
             /** Format: date-time */
             lockTime?: string;
@@ -1635,7 +1636,8 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            boxUuid?: string;
+            /** Format: int64 */
+            boxId?: number;
             prevLockId?: string;
         };
         VolumeProvider: {
@@ -1666,7 +1668,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            lockI: string;
+            lockId: string;
         };
         VolumeRustic: {
             /** Format: int64 */

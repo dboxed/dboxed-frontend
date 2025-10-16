@@ -3,8 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { DataTable } from "@/components/data-table.tsx"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip.tsx"
-import { SimpleInputDialog } from "@/components/SimpleInputDialog.tsx"
+import { CreateComposeProjectDialog } from "./CreateComposeProjectDialog.tsx"
 import { ComposeProjectEditorDialog } from "./ComposeProjectEditorDialog.tsx"
+import { useDboxedQueryClient } from "@/api/api.ts"
+import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/schema"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Plus, Trash2 } from "lucide-react"
@@ -13,51 +15,126 @@ import {
   type ComposeProjectInfo,
   extractComposeProjectInfo
 } from "@/pages/boxes/details/compose-projects/project-info.ts";
-import { deepClone } from "@/utils/clone.ts";
+import { toast } from "sonner"
 
 interface ComposeProjectsProps {
   box: components["schemas"]["Box"]
-  saveBox: (data: components["schemas"]["UpdateBox"]) => Promise<boolean>
 }
 
-export function ComposeProjects({ box, saveBox }: ComposeProjectsProps) {
+export function ComposeProjects({ box }: ComposeProjectsProps) {
+  const { workspaceId } = useSelectedWorkspaceId()
+  const client = useDboxedQueryClient()
   const [newProjectDialogOpen, setNewProjectDialogOpen] = useState(false)
-  
-  const composeProjects = box.boxSpec.composeProjects || []
 
-  // Transform the string array into objects for the data table
-  const projectItems: ComposeProjectInfo[] = composeProjects.map((project, index) => {
-    return extractComposeProjectInfo(project, index)
+  // Fetch compose projects from the API
+  const composeProjectsQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects', {
+    params: {
+      path: {
+        workspaceId: workspaceId!,
+        id: box.id
+      }
+    }
   })
 
-  const handleNewProject = (name: string) => {
-    const newProject = `name: ${name}
-services:
-  # Add your services here
-`
-    const newBoxSpec = deepClone(box.boxSpec)
-    if (!newBoxSpec.composeProjects) {
-      newBoxSpec.composeProjects = []
+  const createProjectMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects', {
+    onSuccess: () => {
+      composeProjectsQuery.refetch()
     }
-    newBoxSpec.composeProjects.push(newProject)
-    return saveBox({
-      boxSpec: newBoxSpec,
+  })
+
+  const updateProjectMutation = client.useMutation('patch', '/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects/{composeName}', {
+    onSuccess: () => {
+      composeProjectsQuery.refetch()
+    }
+  })
+
+  const deleteProjectMutation = client.useMutation('delete', '/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects/{composeName}', {
+    onSuccess: () => {
+      composeProjectsQuery.refetch()
+    }
+  })
+
+  const composeProjects = composeProjectsQuery.data?.items || []
+
+  // Transform the compose projects into objects for the data table
+  const projectItems: ComposeProjectInfo[] = composeProjects.map((project) => {
+    return extractComposeProjectInfo(project.composeProject, 0, project.name)
+  })
+
+  const handleNewProject = (name: string, content: string) => {
+    return new Promise<boolean>((resolve) => {
+      createProjectMutation.mutate({
+        params: {
+          path: {
+            workspaceId: workspaceId!,
+            id: box.id
+          }
+        },
+        body: {
+          name: name,
+          composeProject: content
+        }
+      }, {
+        onSuccess: () => {
+          toast.success("Compose project created successfully!")
+          resolve(true)
+        },
+        onError: (error) => {
+          toast.error("Failed to create compose project", {
+            description: error.detail || "An error occurred while creating the compose project."
+          })
+          resolve(false)
+        }
+      })
     })
   }
 
-  const handleDeleteProject = (projectIndex: number) => {
-    const newBoxSpec = deepClone(box.boxSpec)
-    newBoxSpec.composeProjects = newBoxSpec.composeProjects?.filter((_, index) => index !== projectIndex)
-    return saveBox({
-      boxSpec: newBoxSpec,
+  const handleDeleteProject = (projectName: string) => {
+    deleteProjectMutation.mutate({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+          id: box.id,
+          composeName: projectName
+        }
+      }
+    }, {
+      onSuccess: () => {
+        toast.success("Compose project deleted successfully!")
+      },
+      onError: (error) => {
+        toast.error("Failed to delete compose project", {
+          description: error.detail || "An error occurred while deleting the compose project."
+        })
+      }
     })
   }
 
-  const handleUpdateProject = (projectIndex: number, updatedContent: string) => {
-    const newBoxSpec = deepClone(box.boxSpec)
-    newBoxSpec.composeProjects![projectIndex] = updatedContent
-    return saveBox({
-      boxSpec: newBoxSpec,
+  const handleUpdateProject = (projectName: string, updatedContent: string) => {
+    return new Promise<boolean>((resolve) => {
+      updateProjectMutation.mutate({
+        params: {
+          path: {
+            workspaceId: workspaceId!,
+            id: box.id,
+            composeName: projectName
+          }
+        },
+        body: {
+          composeProject: updatedContent
+        }
+      }, {
+        onSuccess: () => {
+          toast.success("Compose project updated successfully!")
+          resolve(true)
+        },
+        onError: (error) => {
+          toast.error("Failed to update compose project", {
+            description: error.detail || "An error occurred while updating the compose project."
+          })
+          resolve(false)
+        }
+      })
     })
   }
 
@@ -95,7 +172,7 @@ services:
                 <div>
                   <ComposeProjectEditorDialog
                     project={row.original}
-                    onUpdateProject={(updatedContent) => handleUpdateProject(row.original.index, updatedContent)}
+                    onUpdateProject={(updatedContent) => handleUpdateProject(row.original.name, updatedContent)}
                   />
                 </div>
               </TooltipTrigger>
@@ -118,7 +195,7 @@ services:
                     title="Delete Compose Project"
                     description={`Are you sure you want to delete "${row.original.name}"? This will remove all services in this project.`}
                     confirmText="Delete"
-                    onConfirm={() => handleDeleteProject(row.original.index)}
+                    onConfirm={() => handleDeleteProject(row.original.name)}
                     destructive
                   />
                 </div>
@@ -165,13 +242,11 @@ services:
         </CardContent>
       </Card>
 
-      <SimpleInputDialog
+      <CreateComposeProjectDialog
         open={newProjectDialogOpen}
         onOpenChange={setNewProjectDialogOpen}
-        title="Create New Compose Project"
-        fieldLabel="Project Name"
-        placeholder="Enter a name for the compose project..."
         onSave={handleNewProject}
+        isLoading={createProjectMutation.isPending}
       />
     </>
   )

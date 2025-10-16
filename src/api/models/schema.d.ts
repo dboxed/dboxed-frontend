@@ -298,6 +298,42 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID boxes by ID compose projects */
+        get: operations["get-v1-workspaces-by-workspace-id-boxes-by-id-compose-projects"];
+        put?: never;
+        /** Post v1 workspaces by workspace ID boxes by ID compose projects */
+        post: operations["post-v1-workspaces-by-workspace-id-boxes-by-id-compose-projects"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects/{composeName}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete v1 workspaces by workspace ID boxes by ID compose projects by compose name */
+        delete: operations["delete-v1-workspaces-by-workspace-id-boxes-by-id-compose-projects-by-compose-name"];
+        options?: never;
+        head?: never;
+        /** Patch v1 workspaces by workspace ID boxes by ID compose projects by compose name */
+        patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id-compose-projects-by-compose-name"];
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/boxes/{id}/logs": {
         parameters: {
             query?: never;
@@ -831,7 +867,6 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            boxSpec: components["schemas"]["BoxSpec"];
             /** Format: date-time */
             createdAt: string;
             dboxedVersion: string;
@@ -848,13 +883,21 @@ export interface components {
             /** Format: int64 */
             workspace: number;
         };
+        BoxComposeProject: {
+            /** Format: int64 */
+            boxId: number;
+            composeProject: string;
+            name: string;
+        };
         BoxSpec: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            composeProjects?: string[] | null;
+            composeProjects?: {
+                [key: string]: string;
+            };
             uuid: string;
             volumes?: components["schemas"]["DboxedVolume"][] | null;
         };
@@ -867,6 +910,15 @@ export interface components {
             name: string;
             /** Format: int64 */
             network?: number;
+        };
+        CreateBoxComposeProject: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            composeProject: string;
+            name: string;
         };
         CreateMachine: {
             /**
@@ -1082,6 +1134,16 @@ export interface components {
              */
             readonly $schema?: string;
             items: components["schemas"]["Box"][] | null;
+            /** Format: int64 */
+            total_count: number;
+        };
+        ListBodyBoxComposeProject: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["BoxComposeProject"][] | null;
             /** Format: int64 */
             total_count: number;
         };
@@ -1491,7 +1553,14 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            boxSpec: components["schemas"]["BoxSpec"];
+        };
+        UpdateBoxComposeProject: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            composeProject: string;
         };
         UpdateMachine: {
             /**
@@ -2438,6 +2507,154 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["BoxSpec"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-boxes-by-id-compose-projects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListBodyBoxComposeProject"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-boxes-by-id-compose-projects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateBoxComposeProject"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-v1-workspaces-by-workspace-id-boxes-by-id-compose-projects-by-compose-name": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                composeName: string;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "patch-v1-workspaces-by-workspace-id-boxes-by-id-compose-projects-by-compose-name": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                composeName: string;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateBoxComposeProject"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
             /** @description Error */

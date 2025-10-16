@@ -7,20 +7,24 @@ export interface ComposeProjectInfo {
   serviceCount: number
 }
 
-export const extractComposeProjectInfo = (project: string, index: number): ComposeProjectInfo => {
-  let name = `<no-name-${index}>`
+export const extractComposeProjectInfo = (project: string, index: number, providedName?: string): ComposeProjectInfo => {
+  let name = providedName || `<no-name-${index}>`
   let serviceCount = 0
-  try {
-    // we first try to find the line starting with name: and then parse that as yaml
-    // the idea is that this should work even in cases where the rest of the yaml is invalid
-    const re = /name:.*/;
-    const m = re.exec(project)
-    if (m) {
-      const nameY = parse(m[0])
-      name = nameY.name as string
+
+  // Only try to extract name from YAML if not provided
+  if (!providedName) {
+    try {
+      // we first try to find the line starting with name: and then parse that as yaml
+      // the idea is that this should work even in cases where the rest of the yaml is invalid
+      const re = /name:.*/;
+      const m = re.exec(project)
+      if (m) {
+        const nameY = parse(m[0])
+        name = nameY.name as string
+      }
+    } catch {
+      // Ignore YAML parsing errors for project name extraction
     }
-  } catch {
-    // Ignore YAML parsing errors for project name extraction
   }
 
   try {

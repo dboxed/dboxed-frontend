@@ -159,7 +159,7 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
 
         switch (volume.volumeProviderType) {
           case "rustic":
-            return formatSize(volume.rustic.fsSize)
+            return formatSize(volume.rustic!.fsSize)
 
           default:
             return "N/A"

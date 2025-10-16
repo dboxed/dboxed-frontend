@@ -58,7 +58,7 @@ export function BoxDetailsPage() {
           </TabsContent>
 
           <TabsContent value="volumes">
-            <VolumesTab box={data} saveBox={save} />
+            <VolumesTab box={data} />
           </TabsContent>
 
           <TabsContent value="compose">

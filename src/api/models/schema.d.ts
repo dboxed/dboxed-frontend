@@ -973,7 +973,6 @@ export interface components {
             bucket: string;
             endpoint: string;
             prefix: string;
-            region: string | null;
             secretAccessKey: string;
         };
         CreateVolumeRustic: {
@@ -1537,7 +1536,6 @@ export interface components {
             bucket?: string;
             endpoint?: string;
             prefix?: string;
-            region?: string;
             secretAccessKey?: string;
         };
         UpdateVolumeAttachmentRequest: {
@@ -1737,7 +1735,6 @@ export interface components {
             bucket: string;
             endpoint: string;
             prefix: string;
-            region: string | null;
         };
         Workspace: {
             /**

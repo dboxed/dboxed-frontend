@@ -7,6 +7,7 @@ import { SimpleFormDialog } from "@/components/SimpleFormDialog.tsx"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
+import { useDboxedQueryClient } from "@/api/api.ts"
 import type { components } from "@/api/models/schema"
 
 type ProviderType = "amazon-s3" | "hetzner" | "generic"
@@ -20,32 +21,6 @@ interface S3FormData {
   prefix: string
   region: string
 }
-
-const AWS_REGIONS = [
-  { value: "us-east-1", label: "US East (N. Virginia)" },
-  { value: "us-east-2", label: "US East (Ohio)" },
-  { value: "us-west-1", label: "US West (N. California)" },
-  { value: "us-west-2", label: "US West (Oregon)" },
-  { value: "ca-central-1", label: "Canada (Central)" },
-  { value: "eu-west-1", label: "EU (Ireland)" },
-  { value: "eu-west-2", label: "EU (London)" },
-  { value: "eu-west-3", label: "EU (Paris)" },
-  { value: "eu-central-1", label: "EU (Frankfurt)" },
-  { value: "eu-north-1", label: "EU (Stockholm)" },
-  { value: "ap-northeast-1", label: "Asia Pacific (Tokyo)" },
-  { value: "ap-northeast-2", label: "Asia Pacific (Seoul)" },
-  { value: "ap-northeast-3", label: "Asia Pacific (Osaka)" },
-  { value: "ap-southeast-1", label: "Asia Pacific (Singapore)" },
-  { value: "ap-southeast-2", label: "Asia Pacific (Sydney)" },
-  { value: "ap-south-1", label: "Asia Pacific (Mumbai)" },
-  { value: "sa-east-1", label: "South America (São Paulo)" },
-]
-
-const HETZNER_LOCATIONS = [
-  { value: "fsn1", label: "Falkenstein (fsn1)" },
-  { value: "nbg1", label: "Nuremberg (nbg1)" },
-  { value: "hel1", label: "Helsinki (hel1)" },
-]
 
 function detectProviderType(endpoint: string): ProviderType {
   if (endpoint.includes("amazonaws.com")) {
@@ -93,6 +68,15 @@ interface S3EditDialogProps {
 }
 
 function S3EditDialog({ open, onOpenChange, storageS3, save }: S3EditDialogProps) {
+  const client = useDboxedQueryClient()
+
+  // Fetch AWS regions and Hetzner locations
+  const awsRegionsQuery = client.useQuery('get', '/v1/machine-provider-info/aws/regions')
+  const hetznerLocationsQuery = client.useQuery('get', '/v1/machine-provider-info/hetzner/locations')
+
+  const awsRegions = awsRegionsQuery.data?.items || []
+  const hetznerLocations = hetznerLocationsQuery.data?.items || []
+
   const buildInitial = (): S3FormData => {
     const providerType = detectProviderType(storageS3.endpoint)
     const extractedRegion = extractRegionFromEndpoint(storageS3.endpoint, providerType)
@@ -180,11 +164,17 @@ function S3EditDialog({ open, onOpenChange, storageS3, save }: S3EditDialogProps
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {AWS_REGIONS.map((region) => (
-                            <SelectItem key={region.value} value={region.value}>
-                              {region.label}
-                            </SelectItem>
-                          ))}
+                          {awsRegionsQuery.isLoading ? (
+                            <div className="px-2 py-1.5 text-sm text-muted-foreground">Loading regions...</div>
+                          ) : awsRegions.length > 0 ? (
+                            awsRegions.map((region: components["schemas"]["AwsRegion"]) => (
+                              <SelectItem key={region.RegionName} value={region.RegionName}>
+                                {region.RegionName}
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <div className="px-2 py-1.5 text-sm text-muted-foreground">No regions available</div>
+                          )}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -207,11 +197,17 @@ function S3EditDialog({ open, onOpenChange, storageS3, save }: S3EditDialogProps
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {HETZNER_LOCATIONS.map((location) => (
-                            <SelectItem key={location.value} value={location.value}>
-                              {location.label}
-                            </SelectItem>
-                          ))}
+                          {hetznerLocationsQuery.isLoading ? (
+                            <div className="px-2 py-1.5 text-sm text-muted-foreground">Loading locations...</div>
+                          ) : hetznerLocations.length > 0 ? (
+                            hetznerLocations.map((location: components["schemas"]["HetznerLocation"]) => (
+                              <SelectItem key={location.name} value={location.name}>
+                                {location.description} ({location.city}, {location.country})
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <div className="px-2 py-1.5 text-sm text-muted-foreground">No locations available</div>
+                          )}
                         </SelectContent>
                       </Select>
                       <FormMessage />

@@ -1,5 +1,4 @@
 import { AttachedVolumes } from "./AttachedVolumes.tsx"
-import { FileBundles } from "./FileBundles.tsx"
 import type { components } from "@/api/models/schema"
 
 interface VolumesTabProps {
@@ -11,7 +10,6 @@ export function VolumesTab({ box, saveBox }: VolumesTabProps) {
   return (
     <div className="space-y-6">
       <AttachedVolumes box={box} />
-      <FileBundles box={box} saveBox={saveBox} />
     </div>
   )
 }

@@ -672,15 +672,32 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/volumes/by-name/{volumeName}": {
+    "/v1/workspaces/{workspaceId}/volumes/by-name/{name}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get v1 workspaces by workspace ID volumes by name by volume name */
-        get: operations["get-v1-workspaces-by-workspace-id-volumes-by-name-by-volume-name"];
+        /** Get v1 workspaces by workspace ID volumes by name by name */
+        get: operations["get-v1-workspaces-by-workspace-id-volumes-by-name-by-name"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/volumes/by-uuid/{uuid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID volumes by UUID by UUID */
+        get: operations["get-v1-workspaces-by-workspace-id-volumes-by-uuid-by-uuid"];
         put?: never;
         post?: never;
         delete?: never;
@@ -831,31 +848,15 @@ export interface components {
             /** Format: int64 */
             workspace: number;
         };
-        BoxFile: {
+        BoxSpec: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            spec: components["schemas"]["BoxSpec"];
-        };
-        BoxSpec: {
             composeProjects?: string[] | null;
-            dboxedBinaryHash?: string;
-            dboxedBinaryUrl?: string;
-            dns: components["schemas"]["DnsSpec"];
             uuid: string;
-            volumes?: components["schemas"]["BoxVolumeSpec"][] | null;
-        };
-        BoxVolumeSpec: {
-            dboxed?: components["schemas"]["DboxedVolume"];
-            fileBundle?: components["schemas"]["FileBundle"];
-            name: string;
-            /** Format: int32 */
-            rootGid: number;
-            rootMode: string;
-            /** Format: int32 */
-            rootUid: number;
+            volumes?: components["schemas"]["DboxedVolume"][] | null;
         };
         CreateBox: {
             /**
@@ -991,17 +992,20 @@ export interface components {
         DboxedVolume: {
             backupInterval: string;
             /** Format: int64 */
-            volumeId: number;
+            id: number;
+            name: string;
+            /** Format: int32 */
+            rootGid: number;
+            rootMode: string;
+            /** Format: int32 */
+            rootUid: number;
+            uuid: string;
         };
         DeprecationInfo: {
             /** Format: date-time */
             Announced: string;
             /** Format: date-time */
             UnavailableAfter: string;
-        };
-        DnsSpec: {
-            hostname: string;
-            networkDomain: string;
         };
         EndOfHistory: Record<string, never>;
         ErrorDetail: {
@@ -1040,20 +1044,6 @@ export interface components {
              * @default about:blank
              */
             type: string;
-        };
-        FileBundle: {
-            files: components["schemas"]["FileBundleEntry"][] | null;
-        };
-        FileBundleEntry: {
-            data?: string;
-            /** Format: int64 */
-            gid: number;
-            mode: string;
-            path: string;
-            stringData?: string;
-            type?: string;
-            /** Format: int64 */
-            uid: number;
         };
         Healthz: {
             /**
@@ -2450,7 +2440,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BoxFile"];
+                    "application/json": components["schemas"]["BoxSpec"];
                 };
             };
             /** @description Error */
@@ -3872,12 +3862,45 @@ export interface operations {
             };
         };
     };
-    "get-v1-workspaces-by-workspace-id-volumes-by-name-by-volume-name": {
+    "get-v1-workspaces-by-workspace-id-volumes-by-name-by-name": {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                volumeName: string;
+                name: string;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Volume"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-volumes-by-uuid-by-uuid": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                uuid: string;
                 /** @description The workspace id */
                 workspaceId: number;
             };

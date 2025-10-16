@@ -9,7 +9,7 @@ import { useDboxedQueryClient } from "@/api/api.ts"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/schema"
 import type { ColumnDef } from "@tanstack/react-table"
-import { Plus, Trash2 } from "lucide-react"
+import { Plus, Trash2, Edit } from "lucide-react"
 import { useState } from "react"
 import {
   type ComposeProjectInfo,
@@ -25,6 +25,7 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
   const [newProjectDialogOpen, setNewProjectDialogOpen] = useState(false)
+  const [editingProject, setEditingProject] = useState<ComposeProjectInfo | null>(null)
 
   // Fetch compose projects from the API
   const composeProjectsQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects', {
@@ -169,12 +170,13 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
           <div className="flex space-x-2">
             <Tooltip>
               <TooltipTrigger asChild>
-                <div>
-                  <ComposeProjectEditorDialog
-                    project={row.original}
-                    onUpdateProject={(updatedContent) => handleUpdateProject(row.original.name, updatedContent)}
-                  />
-                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setEditingProject(row.original)}
+                >
+                  <Edit className="w-4 h-4" />
+                </Button>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Edit project</p>
@@ -248,6 +250,19 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
         onSave={handleNewProject}
         isLoading={createProjectMutation.isPending}
       />
+
+      {editingProject && (
+        <ComposeProjectEditorDialog
+          open={true}
+          onOpenChange={(open) => {
+            if (!open) {
+              setEditingProject(null)
+            }
+          }}
+          project={editingProject}
+          onUpdateProject={(updatedContent) => handleUpdateProject(editingProject.name, updatedContent)}
+        />
+      )}
     </>
   )
 }

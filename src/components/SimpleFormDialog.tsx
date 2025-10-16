@@ -19,6 +19,7 @@ interface SimpleFormDialogProps<T extends FieldValues = FieldValues> {
   saveDisabled?: boolean
   isLoading?: boolean
   showCancel?: boolean
+  wide?: boolean
 }
 
 export function SimpleFormDialog<T extends FieldValues = FieldValues>({
@@ -34,6 +35,7 @@ export function SimpleFormDialog<T extends FieldValues = FieldValues>({
   saveDisabled = false,
   isLoading = false,
   showCancel = true,
+  wide = false,
 }: SimpleFormDialogProps<T>) {
   const [oldOpen, setOldOpen] = useState(open)
 
@@ -74,13 +76,13 @@ export function SimpleFormDialog<T extends FieldValues = FieldValues>({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className={wide ? "max-w-[95vw] min-w-[80vw] max-h-[90vh] min-h-[70vh] flex flex-col h-full" : "max-w-md"}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
-          <div className="py-4">
+          <div className={wide ? "flex-1 min-h-0" : "py-4"}>
             {children(form)}
           </div>
         </Form>

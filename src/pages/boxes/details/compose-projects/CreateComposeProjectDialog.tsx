@@ -51,6 +51,7 @@ export function CreateComposeProjectDialog({
       onSave={handleSave}
       saveText="Create Project"
       isLoading={isLoading}
+      wide={true}
     >
       {(form) => (
         <div className="space-y-4">

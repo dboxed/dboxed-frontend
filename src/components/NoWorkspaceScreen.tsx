@@ -17,7 +17,7 @@ export function NoWorkspaceScreen() {
         <div className="space-y-2">
           <h1 className="text-2xl font-bold">Welcome to DBoxed</h1>
           <p className="text-muted-foreground">
-            You need to create a workspace to get started. Workspaces help you organize and manage your containers and infrastructure.
+            You need to create a workspace to get started. Workspaces help you organize and manage your workloads.
           </p>
         </div>
 

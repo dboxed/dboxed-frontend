@@ -12,10 +12,10 @@ export function NoWorkspaceScreen() {
   }, [])
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8">
+    <div className="flex flex-col items-center min-h-screen p-8 pt-16">
       <div className="text-center space-y-6 max-w-md">
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold">Welcome to DBoxed</h1>
+          <h1 className="text-3xl font-bold">Welcome to DBoxed</h1>
           <p className="text-muted-foreground">
             You need to create a workspace to get started. Workspaces help you organize and manage your workloads.
           </p>

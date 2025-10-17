@@ -4,7 +4,7 @@ import { useDboxedQueryClient } from "@/api/api.ts"
 import { Card, CardContent } from "@/components/ui/card.tsx"
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
-import { Box, Container } from "lucide-react"
+import { Box, Container, HardDrive } from "lucide-react"
 import type { components } from "@/api/models/schema"
 import { LogFileViewer } from "./LogFileViewer.tsx"
 import { InstanceSelector } from "./InstanceSelector.tsx"
@@ -14,6 +14,13 @@ interface LogsPageProps {
 }
 
 function getLogEntryName(logFile: components["schemas"]["LogMetadataModel"]): string {
+  // Check for volume metadata
+  const volumeInfo = logFile.metadata?.volume as Record<string, unknown>
+  if (volumeInfo) {
+    return volumeInfo.name as string
+  }
+
+  // Check for container name
   const containerInfo = logFile.metadata?.container as Record<string, unknown>
   if (logFile.format === "docker-logs" && containerInfo?.Name) {
     return containerInfo.Name as string
@@ -23,6 +30,12 @@ function getLogEntryName(logFile: components["schemas"]["LogMetadataModel"]): st
 }
 
 function getLogFileIcon(logFile: components["schemas"]["LogMetadataModel"]) {
+  // Check for volume metadata first
+  const volumeInfo = logFile.metadata?.volume as Record<string, unknown>
+  if (volumeInfo) {
+    return <HardDrive className="h-4 w-4" />
+  }
+
   switch (logFile.format) {
     case 'slog-json':
       return <Box className="h-4 w-4" />

@@ -2,8 +2,6 @@ import { useNavigate } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/api.ts"
 import { BasePage } from "@/pages/base/BasePage.tsx"
-import { MachineProvidersOverview } from "./MachineProvidersOverview.tsx"
-import { MachinesOverview } from "./MachinesOverview.tsx"
 import { NetworksOverview } from "./NetworksOverview.tsx"
 import { BoxesOverview } from "./BoxesOverview.tsx"
 import { VolumeProvidersOverview } from "./VolumeProvidersOverview.tsx"
@@ -63,11 +61,11 @@ export function WorkspaceDashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          <MachineProvidersOverview />
+          {/*<MachineProvidersOverview />*/}
           <VolumeProvidersOverview />
           <NetworksOverview />
           <BoxesOverview />
-          <MachinesOverview />
+          {/*<MachinesOverview />*/}
           <VolumesOverview />
         </div>
       </div>

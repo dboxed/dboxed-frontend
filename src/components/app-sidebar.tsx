@@ -32,11 +32,11 @@ const navMain = [
     navigate: "/workspaces/{workspaceId}/boxes",
     icon: Box,
   },
-  {
+  /*{
     title: "Machines",
     navigate: "/workspaces/{workspaceId}/machines",
     icon: Monitor,
-  },
+  },*/
 ]
 
 const navAdmin = [

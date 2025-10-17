@@ -65,11 +65,6 @@ export function VolumeProviderSelector({ form, onProviderChange }: VolumeProvide
                   {provider.name} ({provider.type})
                 </SelectItem>
               ))}
-              {volumeProvidersQuery.data?.items?.length === 0 && (
-                <SelectItem value="" disabled>
-                  No volume providers available
-                </SelectItem>
-              )}
             </SelectContent>
           </Select>
           <FormMessage />

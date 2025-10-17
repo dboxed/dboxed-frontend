@@ -7,8 +7,8 @@ import { DataTable } from "@/components/data-table.tsx"
 import type { ColumnDef } from "@tanstack/react-table"
 import type { paths } from "@/api/models/schema"
 import type { FieldValues } from "react-hook-form"
-import { OpenDialogButton } from "@/components/OpenDialogButton.tsx"
-import type { ComponentType } from "react"
+import { useState, type ComponentType } from "react"
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip.tsx"
 
 interface BaseListPageProps<TData extends FieldValues> {
   title: string
@@ -27,6 +27,8 @@ interface BaseListPageProps<TData extends FieldValues> {
   showCreateButton?: boolean
   searchColumn?: string
   searchPlaceholder?: string
+  allowCreate?: boolean
+  createDisabledMessage?: string
 }
 
 export function BaseListPage<TData extends FieldValues>({
@@ -45,10 +47,13 @@ export function BaseListPage<TData extends FieldValues>({
   transformData,
   showCreateButton = true,
   searchColumn,
-  searchPlaceholder
+  searchPlaceholder,
+  allowCreate = true,
+  createDisabledMessage
 }: BaseListPageProps<TData>) {
   const client = useDboxedQueryClient()
   const navigate = useNavigate()
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const query = client.useQuery('get', resourcePath as any, {
     params: Object.keys(apiParams).length > 0 ? { ...apiParams } : undefined
@@ -64,20 +69,46 @@ export function BaseListPage<TData extends FieldValues>({
 
   let actualCreateButton = createButton
   if (shouldShowCreateButton && !actualCreateButton) {
-    if (createDialog) {
-      actualCreateButton = (
-        <OpenDialogButton dialog={createDialog}>
-          <Plus className="mr-2 h-4 w-4"/>
-          {createButtonText}
-        </OpenDialogButton>
-      )
-    } else if (createPath) {
-      actualCreateButton = <Button onClick={handleCreateClick}>
+    const buttonContent = (onClick: () => void) => (
+      <Button
+        onClick={onClick}
+        disabled={!allowCreate}
+      >
         <Plus className="mr-2 h-4 w-4"/>
         {createButtonText}
       </Button>
+    )
+
+    if (createDialog) {
+      actualCreateButton = !allowCreate && createDisabledMessage ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div>
+              {buttonContent(() => setIsDialogOpen(true))}
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            {createDisabledMessage}
+          </TooltipContent>
+        </Tooltip>
+      ) : buttonContent(() => setIsDialogOpen(true))
+    } else if (createPath) {
+      actualCreateButton = !allowCreate && createDisabledMessage ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div>
+              {buttonContent(handleCreateClick)}
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            {createDisabledMessage}
+          </TooltipContent>
+        </Tooltip>
+      ) : buttonContent(handleCreateClick)
     }
   }
+
+  const CreateDialog = createDialog
 
   if (query.isLoading) {
     return (
@@ -133,6 +164,10 @@ export function BaseListPage<TData extends FieldValues>({
           searchColumn={searchColumn}
           searchPlaceholder={searchPlaceholder}
         />
+      )}
+
+      {CreateDialog && (
+        <CreateDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
       )}
     </BasePage>
   )

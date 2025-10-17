@@ -8,10 +8,24 @@ import { BaseListPage } from "@/pages/base";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { CreateVolumeDialog } from "./create/CreateVolumeDialog.tsx";
 import { VolumeLockBadge } from "./details/VolumeLockBadge.tsx";
+import { useDboxedQueryClient } from "@/api/api.ts";
 
 export function ListVolumesPage() {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
+  const client = useDboxedQueryClient()
+
+  // Fetch volume providers to check if any exist
+  const volumeProvidersQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/volume-providers', {
+    params: {
+      path: {
+        workspaceId: workspaceId!,
+      }
+    }
+  })
+
+  const volumeProviders = volumeProvidersQuery.data?.items || []
+  const hasVolumeProviders = volumeProviders.length > 0
 
   // Define columns for the DataTable
   const columns: ColumnDef<components["schemas"]["Volume"]>[] = [
@@ -141,6 +155,8 @@ export function ListVolumesPage() {
           workspaceId: workspaceId,
         }
       }}
+      allowCreate={hasVolumeProviders}
+      createDisabledMessage="Create a volume provider first"
       emptyStateMessage="No volumes configured yet. Create your first volume to get started."
       searchColumn="name"
       searchPlaceholder="Search volumes..."

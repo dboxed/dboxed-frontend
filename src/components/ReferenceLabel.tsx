@@ -40,7 +40,7 @@ export function ReferenceLabel<TResource extends { name: string }>({
 }: ReferenceLabelProps<TResource>) {
   const client = useDboxedQueryClient()
 
-  const resourceQuery = client.useQuery('get', resourcePath, {
+  const resourceQuery = client.useQuery('get', resourcePath as any, {
     params: {
       path: pathParams
     },
@@ -64,7 +64,7 @@ export function ReferenceLabel<TResource extends { name: string }>({
     )
   }
 
-  const resource = resourceQuery.data
+  const resource = resourceQuery.data as TResource
   const url = typeof detailsUrl === 'function' ? detailsUrl(resource) : detailsUrl
 
   return (

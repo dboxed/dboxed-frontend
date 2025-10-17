@@ -89,17 +89,17 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
             label="Lock Status"
             value={<VolumeLockBadge volume={data} />}
           />
-          {data.lockId && data.lockBoxUuid && (
+          {data.lockId && data.lockBoxId && (
             <>
               <LabelAndValue
                 label="Locked By"
                 value={
                   <ReferenceLabel<components["schemas"]["Box"]>
-                    resourceId={data.lockBoxUuid}
-                    resourcePath="/v1/workspaces/{workspaceId}/boxes/by-uuid/{uuid}"
+                    resourceId={data.lockBoxId}
+                    resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
                     pathParams={{
                       workspaceId: workspaceId,
-                      uuid: data.lockBoxUuid
+                      id: data.lockBoxId
                     }}
                     detailsUrl={(box) => `/workspaces/${workspaceId}/boxes/${box.id}`}
                     fallbackLabel="Box"

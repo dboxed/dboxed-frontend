@@ -42,7 +42,7 @@ export function BaseResourceDetailsPage<T, U>(props: BaseResourceDetailsPageProp
         params: props.apiParams as any,
         body: data as any,
       }, {
-        onSuccess: data => {
+        onSuccess: _data => {
           resolve()
           resourceQuery.refetch()
         },

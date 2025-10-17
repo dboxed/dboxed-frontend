@@ -124,24 +124,6 @@ export function RusticConfigForm({ form }: RusticConfigFormProps) {
               </FormItem>
             )}
           />
-
-          <FormField
-            control={form.control}
-            name="rustic.storageS3.region"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Region (optional)</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter S3 region"
-                    {...field}
-                    value={field.value || ""}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </div>
       </CardContent>
     </Card>

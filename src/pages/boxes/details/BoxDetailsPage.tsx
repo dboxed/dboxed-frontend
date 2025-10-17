@@ -35,7 +35,7 @@ export function BoxDetailsPage() {
         }
       }}
     >
-      {(data, save) => (
+      {(data, _save) => (
         <Tabs defaultValue="general" className="space-y-6">
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="general">General Information</TabsTrigger>

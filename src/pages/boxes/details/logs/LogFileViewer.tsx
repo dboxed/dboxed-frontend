@@ -110,7 +110,8 @@ export function LogFileViewer({ workspaceId, boxId, logId, since }: LogFileViewe
       }
     },
     onerror: (err) => {
-      setLogData(prev => prev + 'ERROR while loading logs: ' + err.toString() + '\n')
+      const errorMessage = err instanceof Error ? err.message : String(err)
+      setLogData(prev => prev + 'ERROR while loading logs: ' + errorMessage + '\n')
     }
   })
 

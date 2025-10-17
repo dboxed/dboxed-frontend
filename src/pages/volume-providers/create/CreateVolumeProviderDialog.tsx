@@ -37,7 +37,6 @@ export function CreateVolumeProviderDialog({ open, onOpenChange }: CreateVolumeP
             bucket: "",
             endpoint: "",
             prefix: "",
-            region: null,
             secretAccessKey: "",
           },
         }

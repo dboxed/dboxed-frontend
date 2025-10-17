@@ -1,4 +1,4 @@
-import { Box, LayoutDashboard, Monitor, Network, Users, HardDrive, Key } from "lucide-react"
+import { Box, LayoutDashboard, Network, Users, HardDrive, Key } from "lucide-react"
 
 import { NavItems } from "@/components/nav-items.tsx"
 import { NavUser } from "@/components/nav-user"

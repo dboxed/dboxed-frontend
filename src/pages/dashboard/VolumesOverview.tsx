@@ -44,7 +44,7 @@ export function VolumesOverview() {
     id: volume.id,
     name: volume.name,
     onClick: () => navigate(`/workspaces/${workspaceId}/volumes/${volume.id}`),
-    badges: volume.volumeProviderType === "rustic" ? [{ text: formatSize(volume.rustic.fsSize) }] : undefined,
+    badges: volume.volumeProviderType === "rustic" && volume.rustic ? [{ text: formatSize(volume.rustic.fsSize) }] : undefined,
   }))
 
   return (

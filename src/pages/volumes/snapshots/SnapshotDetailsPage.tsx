@@ -4,7 +4,6 @@ import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
-import { Badge } from "@/components/ui/badge.tsx"
 import { formatTimeAgo, formatDuration } from "@/utils/time.ts"
 import { formatSize } from "@/utils/size.ts"
 import type { components } from "@/api/models/schema"
@@ -45,14 +44,6 @@ export function SnapshotDetailsPage() {
                 <LabelAndValue
                   label="Snapshot ID"
                   textValue={data.id.toString()}
-                />
-                <LabelAndValue
-                  label="Status"
-                  value={
-                    <Badge variant="secondary" className="capitalize">
-                      {data.status}
-                    </Badge>
-                  }
                 />
                 <LabelAndValue
                   label="Created"

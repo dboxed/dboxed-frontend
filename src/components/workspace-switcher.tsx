@@ -45,7 +45,6 @@ export function useSelectedWorkspaceId() {
 }
 
 export function WorkspaceSwitcher() {
-  const navigate = useNavigate()
   const client = useDboxedQueryClient()
   const isAdminQuery = useIsAdmin()
   const [createDialogOpen, setCreateDialogOpen] = useState(false)

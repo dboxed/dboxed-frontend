@@ -355,11 +355,6 @@ export function VolumeStorageS3DetailsCard({ storageS3, save }: VolumeStorageS3D
             label="S3 Prefix"
             textValue={storageS3.prefix}
           />
-
-          <LabelAndValue
-            label="S3 Region"
-            textValue={storageS3.region || 'Not specified'}
-          />
         </DetailsCardLayout>
       </CardContent>
 

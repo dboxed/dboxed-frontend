@@ -24,8 +24,8 @@ export function SnapshotsTab({ volumeId }: SnapshotsTabProps) {
     {
       params: {
         path: {
-          workspaceId: workspaceId,
-          id: volumeId
+          workspaceId: workspaceId!,
+          id: parseInt(volumeId)
         }
       }
     }

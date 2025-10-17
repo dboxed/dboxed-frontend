@@ -111,7 +111,7 @@ export function CreateTokenDialog({ open, onOpenChange }: CreateTokenDialogProps
   }
 
   return (
-    <BaseCreateDialog<components["schemas"]["CreateToken"], components["schemas"]["Token"]>
+    <BaseCreateDialog<components["schemas"]["CreateToken"], components["schemas"]["CreateToken"], components["schemas"]["Token"]>
       open={open}
       onOpenChange={handleClose}
       title="Create Token"

@@ -4,12 +4,13 @@ import type { DefaultValues, FieldValues, UseFormReturn } from "react-hook-form"
 import type { paths } from "@/api/models/schema"
 import { useQueryClient } from "@tanstack/react-query"
 import { SimpleFormDialog } from "./SimpleFormDialog.tsx"
+import { deepClone } from "@/utils/clone.ts";
 
-interface BaseCreateDialogProps<T extends FieldValues = FieldValues, R extends FieldValues = FieldValues> {
+interface BaseCreateDialogProps<F extends FieldValues = FieldValues, C extends FieldValues = F, R extends FieldValues = FieldValues> {
   open: boolean
   onOpenChange: (open: boolean) => void
   title: string
-  children: (form: UseFormReturn<T>) => React.ReactNode
+  children: (form: UseFormReturn<F>) => React.ReactNode
   apiRoute: keyof paths
   apiParams?: Record<string, unknown>
   onSuccess?: (data: R) => (boolean | void) // when this returns false, the dialog is not closed automatically
@@ -17,11 +18,11 @@ interface BaseCreateDialogProps<T extends FieldValues = FieldValues, R extends F
   submitButtonText?: string
   cancelButtonText?: string
   isLoading?: boolean
-  onSubmit?: (data: T) => T
-  defaultValues?: DefaultValues<T>
+  onSubmit?: (data: F) => C
+  defaultValues?: DefaultValues<F>
 }
 
-export function BaseCreateDialog<T extends FieldValues = FieldValues, R extends FieldValues = FieldValues>({
+export function BaseCreateDialog<F extends FieldValues = FieldValues, C extends FieldValues = F, R extends FieldValues = FieldValues>({
   open,
   onOpenChange,
   title,
@@ -35,7 +36,7 @@ export function BaseCreateDialog<T extends FieldValues = FieldValues, R extends 
   isLoading = false,
   onSubmit,
   defaultValues,
-}: BaseCreateDialogProps<T, R>) {
+}: BaseCreateDialogProps<F, C, R>) {
   const client = useDboxedQueryClient()
   const queryClient = useQueryClient()
   const createMutation = client.useMutation('post', apiRoute as any)
@@ -44,12 +45,12 @@ export function BaseCreateDialog<T extends FieldValues = FieldValues, R extends 
     return defaultValues
   }
 
-  const handleSave = async (data: T) => {
-    let processedData = data
+  const handleSave = async (data: F) => {
+    let processedData: C
     if (onSubmit) {
-      // make a copy first
-      processedData = JSON.parse(JSON.stringify(data))
-      processedData = onSubmit(processedData)
+      processedData = onSubmit(deepClone(data))
+    } else {
+      processedData = data as unknown as C
     }
 
     try {
@@ -89,7 +90,7 @@ export function BaseCreateDialog<T extends FieldValues = FieldValues, R extends 
   const isSubmitting = createMutation.isPending || isLoading
 
   return (
-    <SimpleFormDialog<T>
+    <SimpleFormDialog<F>
       open={open}
       onOpenChange={onOpenChange}
       title={title}

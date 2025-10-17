@@ -2,10 +2,10 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input.tsx"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import type { UseFormReturn } from "react-hook-form"
-import type { components } from "@/api/models/schema";
+import { S3StorageForm } from "@/pages/volume-providers/S3StorageForm.tsx"
 
 interface RusticConfigFormProps {
-  form: UseFormReturn<components["schemas"]["CreateVolumeProvider"]>
+  form: UseFormReturn<any>
 }
 
 export function RusticConfigForm({ form }: RusticConfigFormProps) {
@@ -39,90 +39,10 @@ export function RusticConfigForm({ form }: RusticConfigFormProps) {
         <div className="space-y-4">
           <h3 className="text-lg font-medium">S3 Storage Configuration</h3>
 
-          <FormField
-            control={form.control}
-            name="rustic.storageS3.accessKeyId"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Access Key ID</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter S3 Access Key ID"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="rustic.storageS3.secretAccessKey"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Secret Access Key</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Enter S3 Secret Access Key"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="rustic.storageS3.bucket"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Bucket</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter S3 bucket name"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="rustic.storageS3.endpoint"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Endpoint</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter S3 endpoint URL"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="rustic.storageS3.prefix"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Prefix</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter S3 prefix (optional)"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+          <S3StorageForm
+            form={form}
+            fieldPrefix="rustic.storageS3."
+            showProviderTypeSelector={true}
           />
         </div>
       </CardContent>

@@ -46,6 +46,26 @@ function getLogFileIcon(logFile: components["schemas"]["LogMetadataModel"]) {
   }
 }
 
+function getLogFileCategory(logFile: components["schemas"]["LogMetadataModel"]): 'service' | 'container' | 'volume' | 'other' {
+  // Check for volume metadata
+  const volumeInfo = logFile.metadata?.volume as Record<string, unknown>
+  if (volumeInfo) {
+    return 'volume'
+  }
+
+  // Check for container logs
+  if (logFile.format === 'docker-logs') {
+    return 'container'
+  }
+
+  // Check for service logs
+  if (logFile.format === 'slog-json') {
+    return 'service'
+  }
+
+  return 'other'
+}
+
 export function LogsPage({ box }: LogsPageProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
@@ -85,7 +105,22 @@ export function LogsPage({ box }: LogsPageProps) {
     return acc
   }, {} as Record<string, components["schemas"]["LogMetadataModel"][]>) : {}
 
-  const entryNames = Object.keys(entryGroups)
+  // Sort entry names by category: service -> container -> volume -> other
+  const categoryOrder = { 'service': 1, 'container': 2, 'volume': 3, 'other': 4 }
+  const entryNames = Object.keys(entryGroups).sort((a, b) => {
+    const categoryA = getLogFileCategory(entryGroups[a][0])
+    const categoryB = getLogFileCategory(entryGroups[b][0])
+    const orderA = categoryOrder[categoryA]
+    const orderB = categoryOrder[categoryB]
+
+    if (orderA !== orderB) {
+      return orderA - orderB
+    }
+
+    // Within same category, sort alphabetically
+    return a.localeCompare(b)
+  })
+
   const selectedEntryLogFiles = selectedEntryName ? getLogFilesForEntry(selectedEntryName) : []
 
   if (!workspaceId) {

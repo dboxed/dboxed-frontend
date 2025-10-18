@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
+import { Plus, LogOut } from "lucide-react"
 import { CreateWorkspaceDialog } from "@/pages/workspaces/CreateWorkspaceDialog.tsx"
+import { useAuth } from "react-oidc-context"
 
 export function NoWorkspaceScreen() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
+  const auth = useAuth()
 
   // Auto-open the dialog when this screen is shown
   useEffect(() => {
@@ -21,14 +23,26 @@ export function NoWorkspaceScreen() {
           </p>
         </div>
 
-        <Button
-          onClick={() => setCreateDialogOpen(true)}
-          size="lg"
-          className="gap-2"
-        >
-          <Plus className="h-4 w-4" />
-          Create Your First Workspace
-        </Button>
+        <div className="flex flex-col gap-3">
+          <Button
+            onClick={() => setCreateDialogOpen(true)}
+            size="lg"
+            className="gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            Create Your First Workspace
+          </Button>
+
+          <Button
+            onClick={() => auth.signoutRedirect()}
+            variant="outline"
+            size="lg"
+            className="gap-2"
+          >
+            <LogOut className="h-4 w-4" />
+            Logout
+          </Button>
+        </div>
       </div>
 
       <CreateWorkspaceDialog

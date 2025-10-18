@@ -1715,7 +1715,6 @@ export interface components {
             workspace: number;
         };
         VolumeProviderRustic: {
-            password: string;
             storageS3: components["schemas"]["VolumeStorageS3"];
             storageType: string;
         };
@@ -1731,6 +1730,7 @@ export interface components {
             /** Format: int64 */
             fsSize: number;
             fsType: string;
+            password: string;
         };
         VolumeSnapshot: {
             /**

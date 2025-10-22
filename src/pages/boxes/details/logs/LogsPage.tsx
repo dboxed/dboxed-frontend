@@ -8,7 +8,7 @@ import { FaDocker } from "react-icons/fa";
 import type { components } from "@/api/models/schema"
 import { LogViewerWithControls } from "./LogViewerWithControls.tsx"
 
-import DBoxedIcon from "@/../public/dboxed-icon.svg?react";
+import DBoxedIcon from "/public/dboxed-icon.svg?react";
 
 interface LogsPageProps {
   box: components["schemas"]["Box"]

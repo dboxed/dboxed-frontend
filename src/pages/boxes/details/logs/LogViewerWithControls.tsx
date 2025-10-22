@@ -40,11 +40,13 @@ export function LogViewerWithControls({ workspaceId, boxId, logFiles }: LogViewe
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-4">
-        <InstanceSelector
-          selectedLogId={selectedLogId}
-          onLogIdChange={setSelectedLogId}
-          logFiles={sortedLogFiles}
-        />
+        {sortedLogFiles.length > 1 && (
+          <InstanceSelector
+            selectedLogId={selectedLogId}
+            onLogIdChange={setSelectedLogId}
+            logFiles={sortedLogFiles}
+          />
+        )}
 
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium">Logs since:</span>

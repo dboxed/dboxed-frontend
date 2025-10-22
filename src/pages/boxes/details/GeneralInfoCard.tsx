@@ -6,11 +6,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip.tsx"
-import { FileText } from "lucide-react"
+import { FileText, ScrollText } from "lucide-react"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import { ContainerLogsDialog } from "./status/ContainerLogsDialog.tsx"
+import { ReconcileLogsDialog } from "./status/ReconcileLogsDialog.tsx"
 import type { components } from "@/api/models/schema"
 
 interface GeneralInfoCardProps {
@@ -89,6 +90,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
   const client = useDboxedQueryClient()
   const [containers, setContainers] = useState<DockerContainer[]>([])
   const [selectedContainerForLogs, setSelectedContainerForLogs] = useState<string | null>(null)
+  const [showReconcileLogs, setShowReconcileLogs] = useState(false)
 
   const { data: runStatus } = client.useQuery('get', "/v1/workspaces/{workspaceId}/boxes/{id}/run-status", {
     params: {
@@ -192,7 +194,25 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Run Status</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>Run Status</CardTitle>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowReconcileLogs(true)}
+                  >
+                    <ScrollText className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>View reconcile logs</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -310,6 +330,12 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           onOpenChange={(open) => !open && setSelectedContainerForLogs(null)}
         />
       )}
+
+      <ReconcileLogsDialog
+        boxId={data.id}
+        open={showReconcileLogs}
+        onOpenChange={setShowReconcileLogs}
+      />
     </div>
   )
 } 

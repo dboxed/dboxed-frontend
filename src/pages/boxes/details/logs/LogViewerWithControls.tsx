@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
 import { InstanceSelector } from "./InstanceSelector.tsx"
 import type { components } from "@/api/models/schema"
@@ -10,20 +10,32 @@ interface LogViewerWithControlsProps {
   logFiles: components["schemas"]["LogMetadataModel"][]
 }
 
+const getLogCreationDate = (f: components["schemas"]["LogMetadataModel"]) => {
+  const containerInfo = f.metadata?.container as Record<string, unknown>
+  return containerInfo?.Created
+    ? new Date(containerInfo.Created as string).getTime()
+    : new Date(f.createdAt).getTime()
+}
+
 export function LogViewerWithControls({ workspaceId, boxId, logFiles }: LogViewerWithControlsProps) {
   const [selectedLogId, setSelectedLogId] = useState<number | null>(null)
   const [logsSince, setLogsSince] = useState<string>("1h")
 
+  // Sort log files by creation date (newest first)
+  const sortedLogFiles = useMemo(() => [...logFiles].sort((a, b) => {
+    return getLogCreationDate(b) - getLogCreationDate(a) // Descending order (newest first)
+  }), [logFiles])
+
   useEffect(() => {
-    const s = logFiles.find(m => m.id == selectedLogId)
+    const s = sortedLogFiles.find(m => m.id == selectedLogId)
     if (!s) {
-      if (logFiles.length) {
-        setSelectedLogId(logFiles[0].id)
+      if (sortedLogFiles.length) {
+        setSelectedLogId(sortedLogFiles[0].id)
       } else {
         setSelectedLogId(null)
       }
     }
-  }, [boxId, logFiles, selectedLogId]);
+  }, [boxId, sortedLogFiles, selectedLogId]);
 
   return (
     <div className="space-y-4">
@@ -31,7 +43,7 @@ export function LogViewerWithControls({ workspaceId, boxId, logFiles }: LogViewe
         <InstanceSelector
           selectedLogId={selectedLogId}
           onLogIdChange={setSelectedLogId}
-          logFiles={logFiles}
+          logFiles={sortedLogFiles}
         />
 
         <div className="flex items-center gap-2">

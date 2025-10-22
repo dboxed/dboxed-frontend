@@ -20,6 +20,7 @@ interface ConfirmationDialogProps {
   cancelText?: string
   onConfirm: () => void
   destructive?: boolean
+  children?: React.ReactNode
 }
 
 export function ConfirmationDialog({
@@ -31,7 +32,8 @@ export function ConfirmationDialog({
   confirmText = "Confirm",
   cancelText = "Cancel",
   onConfirm,
-  destructive = false
+  destructive = false,
+  children
 }: ConfirmationDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -45,6 +47,7 @@ export function ConfirmationDialog({
             {description}
           </AlertDialogDescription>
         </AlertDialogHeader>
+        {children}
         <AlertDialogFooter>
           <AlertDialogCancel>{cancelText}</AlertDialogCancel>
           <AlertDialogAction

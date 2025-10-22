@@ -55,16 +55,24 @@ function BoxDetailsContent({ data }: { data: components["schemas"]["Box"] }) {
   }, [runStatus?.statusTime])
 
   const isStale = elapsedSeconds >= 30
-  const isStopped = runStatus?.runStatus === 'stopped'
 
   return (
     <div className="space-y-6">
-      {isStale && runStatus?.statusTime && !isStopped && (
+      {isStale && runStatus?.statusTime && data.desiredState === 'up' && (
         <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Stale Status</AlertTitle>
           <AlertDescription>
-            Box status has not updated for {elapsedSeconds} seconds
+            Box status has not updated for {elapsedSeconds} seconds.<br/>
+            <p>
+              Automatic starting of sandboxes for the box is not implemented yet. This will come in a future release of dboxed.
+            </p>
+            <p>
+              This means you might need to manually run <code className="px-1.5 py-0.5 rounded bg-muted font-mono text-xs">dboxed sandbox run ...</code> yourself.
+            </p>
+            <p>
+              Check the <strong>Connect Box</strong> tab for details.
+            </p>
           </AlertDescription>
         </Alert>
       )}
@@ -145,7 +153,25 @@ export function BoxDetailsPage() {
             onConfirm={async () => {
               await save({ desiredState: 'up' })
             }}
-          />
+          >
+            <Alert variant="destructive">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>Note</AlertTitle>
+              <AlertDescription>
+                <div className="space-y-2">
+                  <p>
+                    Automatic starting of sandboxes for the box is not implemented yet. This will come in a future release of dboxed.
+                  </p>
+                  <p>
+                    This means you will need to manually run <code className="px-1.5 py-0.5 rounded bg-muted font-mono text-xs">dboxed sandbox run ...</code> yourself.
+                  </p>
+                  <p>
+                    Check the <strong>Connect Box</strong> tab for details.
+                  </p>
+                </div>
+              </AlertDescription>
+            </Alert>
+          </ConfirmationDialog>
           <ConfirmationDialog
             trigger={
               <Button

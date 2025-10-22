@@ -14,53 +14,42 @@ interface LogsPageProps {
 }
 
 function getLogEntryName(logFile: components["schemas"]["LogMetadataModel"]): string {
-  // Check for volume metadata
-  const volumeInfo = logFile.metadata?.volume as Record<string, unknown>
-  if (volumeInfo) {
-    return volumeInfo.name as string
-  }
-
-  // Check for container name
-  const containerInfo = logFile.metadata?.container as Record<string, unknown>
-  if (logFile.format === "docker-logs" && containerInfo?.Name) {
-    return containerInfo.Name as string
+  // Extract name from path: "prefix/name/..." -> "name"
+  const parts = logFile.fileName.split('/')
+  if (parts.length >= 2) {
+    return parts[1]
   }
 
   return logFile.fileName
 }
 
 function getLogFileIcon(logFile: components["schemas"]["LogMetadataModel"]) {
-  // Check for volume metadata first
-  const volumeInfo = logFile.metadata?.volume as Record<string, unknown>
-  if (volumeInfo) {
-    return <HardDrive className="h-4 w-4" />
-  }
+  const category = getLogFileCategory(logFile)
 
-  switch (logFile.format) {
-    case 'slog-json':
+  switch (category) {
+    case 'dboxed':
       return <Box className="h-4 w-4" />
-    case 'docker-logs':
+    case 'container':
       return <Container className="h-4 w-4" />
+    case 'volume':
+      return <HardDrive className="h-4 w-4" />
     default:
       return null
   }
 }
 
-function getLogFileCategory(logFile: components["schemas"]["LogMetadataModel"]): 'service' | 'container' | 'volume' | 'other' {
-  // Check for volume metadata
-  const volumeInfo = logFile.metadata?.volume as Record<string, unknown>
-  if (volumeInfo) {
-    return 'volume'
-  }
-
-  // Check for container logs
-  if (logFile.format === 'docker-logs') {
+function getLogFileCategory(logFile: components["schemas"]["LogMetadataModel"]): 'dboxed' | 'container' | 'volume' | 'other' {
+  // Determine category based on path prefix
+  if (logFile.fileName.startsWith('containers/')) {
     return 'container'
   }
 
-  // Check for service logs
-  if (logFile.format === 'slog-json') {
-    return 'service'
+  if (logFile.fileName.startsWith('volumes/')) {
+    return 'volume'
+  }
+
+  if (logFile.fileName.startsWith('dboxed/')) {
+    return 'dboxed'
   }
 
   return 'other'
@@ -105,8 +94,8 @@ export function LogsPage({ box }: LogsPageProps) {
     return acc
   }, {} as Record<string, components["schemas"]["LogMetadataModel"][]>) : {}
 
-  // Sort entry names by category: service -> container -> volume -> other
-  const categoryOrder = { 'service': 1, 'container': 2, 'volume': 3, 'other': 4 }
+  // Sort entry names by category: dboxed -> container -> volume -> other
+  const categoryOrder = { 'dboxed': 1, 'container': 2, 'volume': 3, 'other': 4 }
   const entryNames = Object.keys(entryGroups).sort((a, b) => {
     const categoryA = getLogFileCategory(entryGroups[a][0])
     const categoryB = getLogFileCategory(entryGroups[b][0])

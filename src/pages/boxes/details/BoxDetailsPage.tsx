@@ -5,7 +5,9 @@ import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/api.ts"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx"
-import { AlertTriangle } from "lucide-react"
+import { Button } from "@/components/ui/button.tsx"
+import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
+import { AlertTriangle, Play, StopCircle } from "lucide-react"
 import { GeneralInfoCard } from "./GeneralInfoCard"
 import { BoxConnectCard } from "./BoxConnectCard.tsx"
 import { LogsPage } from "./logs/LogsPage.tsx"
@@ -125,6 +127,45 @@ export function BoxDetailsPage() {
           id: boxId,
         }
       }}
+      customButtons={(data, save) => (
+        <>
+          <ConfirmationDialog
+            trigger={
+              <Button
+                variant="outline"
+                disabled={data.desiredState === 'up'}
+              >
+                <Play className="h-4 w-4 mr-2" />
+                Start
+              </Button>
+            }
+            title="Start Box?"
+            description="This will start the box and all configured containers."
+            confirmText="Start"
+            onConfirm={async () => {
+              await save({ desiredState: 'up' })
+            }}
+          />
+          <ConfirmationDialog
+            trigger={
+              <Button
+                variant="outline"
+                disabled={data.desiredState !== 'up'}
+              >
+                <StopCircle className="h-4 w-4 mr-2" />
+                Stop
+              </Button>
+            }
+            title="Stop Box?"
+            description="This will stop the box and all running containers."
+            confirmText="Stop"
+            onConfirm={async () => {
+              await save({ desiredState: 'down' })
+            }}
+            destructive
+          />
+        </>
+      )}
     >
       {(data, _save) => <BoxDetailsContent data={data} />}
     </BaseResourceDetailsPage>

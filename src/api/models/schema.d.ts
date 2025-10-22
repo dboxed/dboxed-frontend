@@ -906,6 +906,7 @@ export interface components {
             /** Format: date-time */
             createdAt: string;
             dboxedVersion: string;
+            desiredState: string;
             /** Format: int64 */
             id: number;
             /** Format: int64 */
@@ -954,6 +955,7 @@ export interface components {
             composeProjects?: {
                 [key: string]: string;
             };
+            desiredState: string;
             uuid: string;
             volumes?: components["schemas"]["DboxedVolume"][] | null;
         };
@@ -1622,6 +1624,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            desiredState?: string;
         };
         UpdateBoxComposeProject: {
             /**

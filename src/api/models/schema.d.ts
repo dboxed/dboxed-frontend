@@ -368,6 +368,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/boxes/{id}/run-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID boxes by ID run status */
+        get: operations["get-v1-workspaces-by-workspace-id-boxes-by-id-run-status"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Patch v1 workspaces by workspace ID boxes by ID run status */
+        patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id-run-status"];
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/boxes/{id}/volumes": {
         parameters: {
             query?: never;
@@ -490,6 +508,23 @@ export interface paths {
         put?: never;
         /** Post v1 workspaces by workspace ID networks */
         post: operations["post-v1-workspaces-by-workspace-id-networks"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/networks/by-name/{name}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID networks by name by name */
+        get: operations["get-v1-workspaces-by-workspace-id-networks-by-name-by-name"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -804,7 +839,8 @@ export interface paths {
         /** Get v1 workspaces by workspace ID volumes by ID snapshots */
         get: operations["get-v1-workspaces-by-workspace-id-volumes-by-id-snapshots"];
         put?: never;
-        post?: never;
+        /** Post v1 workspaces by workspace ID volumes by ID snapshots */
+        post: operations["post-v1-workspaces-by-workspace-id-volumes-by-id-snapshots"];
         delete?: never;
         options?: never;
         head?: never;
@@ -840,10 +876,10 @@ export interface components {
              */
             readonly $schema?: string;
             /** Format: int64 */
-            rootGid: number;
-            rootMode: string;
+            rootGid?: number;
+            rootMode?: string;
             /** Format: int64 */
-            rootUid: number;
+            rootUid?: number;
             /** Format: int64 */
             volumeId: number;
         };
@@ -884,10 +920,30 @@ export interface components {
             workspace: number;
         };
         BoxComposeProject: {
-            /** Format: int64 */
-            boxId: number;
             composeProject: string;
             name: string;
+        };
+        BoxRunStatus: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            dockerPs?: string;
+            runStatus?: string;
+            /** Format: date-time */
+            startTime?: string;
+            /** Format: date-time */
+            statusTime?: string;
+            /** Format: date-time */
+            stopTime?: string;
+        };
+        BoxRunStatusInfo: {
+            runStatus?: string;
+            /** Format: date-time */
+            startTime?: string;
+            /** Format: date-time */
+            stopTime?: string;
         };
         BoxSpec: {
             /**
@@ -907,9 +963,11 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            composeProjects?: components["schemas"]["CreateBoxComposeProject"][] | null;
             name: string;
             /** Format: int64 */
             network?: number;
+            volumeAttachments?: components["schemas"]["AttachVolumeRequest"][] | null;
         };
         CreateBoxComposeProject: {
             /**
@@ -1031,6 +1089,15 @@ export interface components {
             /** Format: int64 */
             fsSize: number;
             fsType: string;
+        };
+        CreateVolumeSnapshot: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            lockId: string;
+            rustic?: components["schemas"]["VolumeSnapshotRustic"];
         };
         CreateWorkspace: {
             /**
@@ -1304,6 +1371,8 @@ export interface components {
             format: string;
             /** Format: int64 */
             id: number;
+            /** Format: date-time */
+            lastLogTime: string | null;
             metadata?: {
                 [key: string]: unknown;
             };
@@ -1561,6 +1630,15 @@ export interface components {
              */
             readonly $schema?: string;
             composeProject: string;
+        };
+        UpdateBoxRunStatus: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            dockerPs?: string;
+            runStatus?: components["schemas"]["BoxRunStatusInfo"];
         };
         UpdateMachine: {
             /**
@@ -2820,6 +2898,78 @@ export interface operations {
             };
         };
     };
+    "get-v1-workspaces-by-workspace-id-boxes-by-id-run-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BoxRunStatus"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "patch-v1-workspaces-by-workspace-id-boxes-by-id-run-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateBoxRunStatus"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-v1-workspaces-by-workspace-id-boxes-by-id-volumes": {
         parameters: {
             query?: never;
@@ -3359,6 +3509,39 @@ export interface operations {
                 "application/json": components["schemas"]["CreateNetwork"];
             };
         };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Network"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-networks-by-name-by-name": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                name: string;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description OK */
             200: {
@@ -4304,6 +4487,43 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ListBodyVolumeSnapshot"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-volumes-by-id-snapshots": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateVolumeSnapshot"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VolumeSnapshot"];
                 };
             };
             /** @description Error */

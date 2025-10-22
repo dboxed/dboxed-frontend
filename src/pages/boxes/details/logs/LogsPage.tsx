@@ -3,12 +3,10 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/api.ts"
 import { Card, CardContent } from "@/components/ui/card.tsx"
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table.tsx"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
 import { HardDrive } from "lucide-react"
 import { FaDocker } from "react-icons/fa";
 import type { components } from "@/api/models/schema"
-import { LogFileViewer } from "./LogFileViewer.tsx"
-import { InstanceSelector } from "./InstanceSelector.tsx"
+import { LogViewerWithControls } from "./LogViewerWithControls.tsx"
 
 import DBoxedIcon from "@/../public/dboxed-icon.svg?react";
 
@@ -61,9 +59,7 @@ function getLogFileCategory(logFile: components["schemas"]["LogMetadataModel"]):
 export function LogsPage({ box }: LogsPageProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [selectedLogId, setSelectedLogId] = useState<number | null>(null)
   const [selectedEntryName, setSelectedEntryName] = useState<string | null>(null)
-  const [logsSince, setLogsSince] = useState<string>("1h")
 
   // Fetch available log files
   const logFiles = client.useQuery('get', "/v1/workspaces/{workspaceId}/boxes/{id}/logs", {
@@ -79,7 +75,6 @@ export function LogsPage({ box }: LogsPageProps) {
 
   const handleLogEntryChange = (entryName: string) => {
     setSelectedEntryName(entryName)
-    setSelectedLogId(null)
   }
 
   const getLogFilesForEntry = (entryName: string) => {
@@ -162,41 +157,11 @@ export function LogsPage({ box }: LogsPageProps) {
           </div>
 
           <div className="col-span-3">
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <InstanceSelector
-                  selectedLogId={selectedLogId}
-                  onLogIdChange={setSelectedLogId}
-                  logFiles={selectedEntryLogFiles}
-                />
-
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">Logs since:</span>
-                  <Select
-                    value={logsSince}
-                    onValueChange={setLogsSince}
-                  >
-                    <SelectTrigger className="w-32">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1h">1h</SelectItem>
-                      <SelectItem value="12h">12h</SelectItem>
-                      <SelectItem value="24h">1d</SelectItem>
-                      <SelectItem value="168h">7d</SelectItem>
-                      <SelectItem value="720h">30d</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <LogFileViewer
-                workspaceId={workspaceId}
-                boxId={box.id}
-                logId={selectedLogId}
-                since={logsSince}
-              />
-            </div>
+            <LogViewerWithControls
+              workspaceId={workspaceId}
+              boxId={box.id}
+              logFiles={selectedEntryLogFiles}
+            />
           </div>
         </div>
       </CardContent>

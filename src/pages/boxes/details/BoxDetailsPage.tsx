@@ -38,8 +38,8 @@ export function BoxDetailsPage() {
       {(data, _save) => (
         <Tabs defaultValue="general" className="space-y-6">
           <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="general">General Information</TabsTrigger>
-            <TabsTrigger value="connect">Connect Box</TabsTrigger>
+            <TabsTrigger value="general">General</TabsTrigger>
+            <TabsTrigger value="connect">Connect</TabsTrigger>
             <TabsTrigger value="volumes">Volumes</TabsTrigger>
             <TabsTrigger value="compose">Compose Projects</TabsTrigger>
             <TabsTrigger value="logs">Logs</TabsTrigger>

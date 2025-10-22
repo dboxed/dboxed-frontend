@@ -4,10 +4,13 @@ import { useDboxedQueryClient } from "@/api/api.ts"
 import { Card, CardContent } from "@/components/ui/card.tsx"
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
-import { Box, Container, HardDrive } from "lucide-react"
+import { HardDrive } from "lucide-react"
+import { FaDocker } from "react-icons/fa";
 import type { components } from "@/api/models/schema"
 import { LogFileViewer } from "./LogFileViewer.tsx"
 import { InstanceSelector } from "./InstanceSelector.tsx"
+
+import DBoxedIcon from "@/../public/dboxed-icon.svg?react";
 
 interface LogsPageProps {
   box: components["schemas"]["Box"]
@@ -28,9 +31,9 @@ function getLogFileIcon(logFile: components["schemas"]["LogMetadataModel"]) {
 
   switch (category) {
     case 'dboxed':
-      return <Box className="h-4 w-4" />
+      return <DBoxedIcon className="h-4 w-4" />
     case 'container':
-      return <Container className="h-4 w-4" />
+      return <FaDocker className="h-4 w-4" />
     case 'volume':
       return <HardDrive className="h-4 w-4" />
     default:

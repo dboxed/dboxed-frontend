@@ -1,20 +1,30 @@
 import { useEffect, useRef, useState } from "react"
 import type { components } from "@/api/models/schema"
-import { LazyLog } from "@melloware/react-logviewer"
-import { envVars } from "@/env.ts";
-import { useDboxedApiEventSource } from "@/api/api.ts";
+import { envVars } from "@/env.ts"
+import { useDboxedApiEventSource } from "@/api/api.ts"
+import { VirtualizedLogViewer } from "@/components/logs/VirtualizedLogViewer.tsx"
 
-interface LogFileViewerProps {
+interface StreamingLogViewerProps {
   workspaceId: number
   boxId: number
   logId: number | null
   since?: string
+  follow?: boolean
+  height?: string
+  className?: string
 }
 
-const isoPattern = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.)(\d+)Z$/;
+const isoPattern = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.)(\d+)Z$/
 
-export function LogFileViewer({ workspaceId, boxId, logId, since }: LogFileViewerProps) {
-  const [logData, setLogData] = useState<string>("")
+export function StreamingLogViewer({
+  workspaceId,
+  boxId,
+  logId,
+  since,
+  height,
+  className
+}: StreamingLogViewerProps) {
+  const [logLines, setLogLines] = useState<string[]>([])
   const eventSourceRef = useRef<EventSource | null>(null)
   const [metadataHolder] = useState<(components["schemas"]["LogMetadataModel"] | null)[]>([null])
 
@@ -30,21 +40,24 @@ export function LogFileViewer({ workspaceId, boxId, logId, since }: LogFileViewe
 
   let url = ""
   if (logId) {
-    const u = new URL(`/v1/workspaces/${workspaceId}/boxes/${boxId}/logs/${logId}/stream`, envVars.VITE_API_URL)
+    const u = new URL(
+      `/v1/workspaces/${workspaceId}/boxes/${boxId}/logs/${logId}/stream`,
+      envVars.VITE_API_URL
+    )
     if (since) {
       u.searchParams.set('since', since)
     }
     url = u.toString()
   }
 
-  // when the url changes, clear the logs (the stream is going to be restarted)
+  // When the URL changes, clear the logs
   useEffect(() => {
     if (url) {
-      setLogData("Loading...")
+      setLogLines([])
     } else {
-      setLogData("Please select a log file")
+      setLogLines(["Please select a log file"])
     }
-  }, [url]);
+  }, [url])
 
   const formatTime = (time: string) => {
     const m = isoPattern.exec(time)
@@ -53,19 +66,22 @@ export function LogFileViewer({ workspaceId, boxId, logId, since }: LogFileViewe
     }
     try {
       let nano = m[2]
-      while (nano.length < 9) nano = "0" + nano;
+      while (nano.length < 9) nano = "0" + nano
       return `${m[1]}${nano}Z`
     } catch {
       return time
     }
   }
 
-  const formatLine = (metadata: components["schemas"]["LogMetadataModel"] | null, line: components["schemas"]["LogsLine"]) => {
+  const formatLine = (
+    metadata: components["schemas"]["LogMetadataModel"] | null,
+    line: components["schemas"]["LogsLine"]
+  ) => {
     try {
       switch (metadata?.format) {
         case 'slog-json': {
           const parsed = JSON.parse(line.line)
-          const keys = Object.keys(parsed).filter(x => x != "time")
+          const keys = Object.keys(parsed).filter(x => x !== "time")
           let ret = formatTime(parsed.time)
           keys.forEach((k) => {
             const v = parsed[k]
@@ -88,22 +104,23 @@ export function LogFileViewer({ workspaceId, boxId, logId, since }: LogFileViewe
   useDboxedApiEventSource(url?.toString() || "", {
     enabled: !!logId && !!url,
     onopen: () => {
-      // clear it before the first line gets received
-      setLogData("")
+      setLogLines([])
     },
     onmessage: e => {
       try {
         const data = JSON.parse(e.data)
 
-        if (e.event == 'metadata') {
+        if (e.event === 'metadata') {
           metadataHolder[0] = data
         } else if (e.event === 'logs-batch') {
-          const newLines = data.lines.map((l: components["schemas"]["LogsLine"])  => formatLine(metadataHolder[0], l)).join('\n')
-          setLogData(prev => prev + newLines + '\n')
+          const newLines = data.lines.map((l: components["schemas"]["LogsLine"]) =>
+            formatLine(metadataHolder[0], l)
+          )
+          setLogLines(prev => [...prev, ...newLines])
         } else if (e.event === "end-of-history") {
-          setLogData(prev => prev + "...end of history..." + '\n')
+          setLogLines(prev => [...prev, "...end of history..."])
         } else if (e.event === 'error') {
-          setLogData(prev => prev + 'ERROR while loading logs: ' + data.message + '\n')
+          setLogLines(prev => [...prev, `ERROR while loading logs: ${data.message}`])
         }
       } catch (error) {
         console.error('Error parsing log data:', error)
@@ -111,26 +128,15 @@ export function LogFileViewer({ workspaceId, boxId, logId, since }: LogFileViewe
     },
     onerror: (err) => {
       const errorMessage = err instanceof Error ? err.message : String(err)
-      setLogData(prev => prev + 'ERROR while loading logs: ' + errorMessage + '\n')
+      setLogLines(prev => [...prev, `ERROR while loading logs: ${errorMessage}`])
     }
   })
 
   return (
-    <div className="h-96 border rounded-md">
-      <LazyLog
-        text={logData}
-        follow={true}
-        enableSearch={true}
-        enableHotKeys={true}
-        enableVirtualization={true}
-        style={{
-          backgroundColor: '#1a1a1a',
-          color: '#ffffff',
-          fontFamily: 'Monaco, Menlo, "Ubuntu Mono", monospace',
-          fontSize: '12px',
-          lineHeight: '1.4'
-        }}
-      />
-    </div>
+    <VirtualizedLogViewer
+      lines={logLines}
+      height={height}
+      className={className}
+    />
   )
-} 
+}

@@ -1,5 +1,4 @@
 export { BoxDetailsPage } from './BoxDetailsPage.tsx'
 export { GeneralInfoCard } from './GeneralInfoCard'
 export { LogsPage } from './logs/LogsPage.tsx'
-export { LogFileViewer } from './logs/LogFileViewer.tsx'
 export { BoxConnectCard } from './BoxConnectCard.tsx'

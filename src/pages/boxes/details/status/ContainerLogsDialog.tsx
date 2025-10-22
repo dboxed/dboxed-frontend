@@ -43,7 +43,7 @@ export function ContainerLogsDialog({ containerName, boxId, open, onOpenChange }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-6xl max-h-[90vh]">
+      <DialogContent className="min-w-[80%] max-h-[80%]">
         <DialogHeader>
           <DialogTitle>Container Logs: {containerName}</DialogTitle>
         </DialogHeader>

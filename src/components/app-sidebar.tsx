@@ -1,10 +1,11 @@
-import { Box, LayoutDashboard, Network, Users, HardDrive, Key } from "lucide-react"
+import { Box, LayoutDashboard, Network, Users, HardDrive, Key, BookOpen } from "lucide-react"
 
 import { NavItems } from "@/components/nav-items.tsx"
 import { NavUser } from "@/components/nav-user"
 import { WorkspaceSwitcher } from "@/components/workspace-switcher.tsx"
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail, } from "@/components/ui/sidebar"
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail, SidebarSeparator } from "@/components/ui/sidebar"
 import { useCurrentUser } from "@/api/auth.ts";
+import { FaXTwitter, FaGithub } from 'react-icons/fa6';
 
 const navMain = [
   {
@@ -52,6 +53,24 @@ const navAdmin = [
   },
 ]
 
+const navResources = [
+  {
+    title: "Documentation",
+    url: "https://dboxed.io/docs",
+    icon: BookOpen,
+  },
+  {
+    title: "@dboxed_io",
+    url: "https://x.com/dboxed_io",
+    icon: FaXTwitter,
+  },
+  {
+    title: "dboxed/dboxed",
+    url: "https://github.com/dboxed/dboxed",
+    icon: FaGithub,
+  },
+]
+
 interface AppSidebarProps {
   isAdmin?: boolean | undefined
 }
@@ -71,6 +90,10 @@ export function AppSidebar({ isAdmin }: AppSidebarProps) {
         <NavItems title={"Admin"} items={navAdmin}/>
       </SidebarContent>}
       <SidebarFooter>
+        <SidebarContent>
+          <NavItems title={"Resources"} items={navResources}/>
+        </SidebarContent>
+        <SidebarSeparator />
         <NavUser user={user.user}/>
       </SidebarFooter>
       <SidebarRail/>

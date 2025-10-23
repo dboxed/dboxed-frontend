@@ -24,6 +24,30 @@ interface Item {
   items?: Item[]
 }
 
+function NavButton({item}: {item: Item}) {
+  const navigate = useNavigate()
+  const { workspaceId } = useParams();
+
+  const handleSelect = (item: Item) => {
+    if (item.navigate) {
+      const l = item.navigate.replace('{workspaceId}', workspaceId || 'invalid')
+      navigate(l)
+    }
+  }
+
+  const button = <SidebarMenuButton tooltip={item.title} onClick={() => handleSelect(item)} className={item.url ? "cursor-pointer" : ""}>
+    {item.icon && <item.icon />}
+    <span>{item.title}</span>
+    {item.items && <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />}
+  </SidebarMenuButton>
+
+  if (item.url) {
+    return <a href={item.url} target={"_blank"}>{button}</a>
+  } else {
+    return button
+  }
+}
+
 export function NavItems({
   title,
   items,
@@ -54,11 +78,7 @@ export function NavItems({
           >
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title} onClick={() => handleSelect(item)}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
-                  {item.items && <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />}
-                </SidebarMenuButton>
+                <NavButton item={item}/>
               </CollapsibleTrigger>
               {item.items && <CollapsibleContent>
                 <SidebarMenuSub>

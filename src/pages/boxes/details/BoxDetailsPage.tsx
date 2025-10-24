@@ -135,6 +135,30 @@ export function BoxDetailsPage() {
           id: boxId,
         }
       }}
+      deleteConfirmationChildren={(data) => {
+        if (data.desiredState === 'up') {
+          return (
+            <Alert variant="destructive">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>Warning: Box is Running</AlertTitle>
+              <AlertDescription>
+                <div className="space-y-2">
+                  <p>
+                    <strong>This box has desired state set to "up" and may be actively running.</strong>
+                  </p>
+                  <p>
+                    It is strongly recommended to stop the box before deletion to ensure a clean shutdown of all containers and services.
+                  </p>
+                  <p>
+                    Click the <strong>Stop</strong> button first, wait for the box to stop, then delete it.
+                  </p>
+                </div>
+              </AlertDescription>
+            </Alert>
+          )
+        }
+        return null
+      }}
       customButtons={(data, save) => (
         <>
           <ConfirmationDialog

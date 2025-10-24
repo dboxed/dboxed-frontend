@@ -7,6 +7,7 @@ export interface BaseDetailsPagePropsBase<T, U> {
   children: (data: T, save: (data: U) => Promise<boolean>) => React.ReactNode
   enableDelete?: boolean
   deleteButtonText?: string
+  deleteConfirmationChildren?: (data: T) => React.ReactNode
   customButtons?: (data: T, save: (data: U) => Promise<boolean>) => React.ReactNode
 }
 
@@ -106,7 +107,9 @@ export function BaseDetailsPage<T, U>(props: BaseDetailsPageProps<T, U>) {
                 resourceName={props.title}
                 isLoading={props.isDeleting}
                 buttonText={props.deleteButtonText}
-              />
+              >
+                {props.deleteConfirmationChildren && props.deleteConfirmationChildren(props.resourceData)}
+              </DeleteButton>
             )}
           </div>
           <div className="flex space-x-2">

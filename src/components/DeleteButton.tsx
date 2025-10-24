@@ -13,6 +13,7 @@ interface DeleteButtonProps {
   confirmationDescription?: string
   size?: "default" | "sm" | "lg" | "icon"
   variant?: "destructive" | "ghost" | "outline"
+  children?: React.ReactNode
 }
 
 export function DeleteButton({
@@ -25,7 +26,8 @@ export function DeleteButton({
   confirmationTitle,
   confirmationDescription,
   size = "default",
-  variant = "destructive"
+  variant = "destructive",
+  children
 }: DeleteButtonProps) {
   const isDisabled = disabled || isLoading
 
@@ -51,6 +53,8 @@ export function DeleteButton({
       confirmText="Delete"
       onConfirm={onDelete}
       destructive
-    />
+    >
+      {children}
+    </ConfirmationDialog>
   )
 } 

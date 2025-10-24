@@ -83,7 +83,7 @@ export function CreateVolumeProviderDialog({ open, onOpenChange }: CreateVolumeP
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter volume provider name" {...field} />
+                  <Input placeholder="Enter volume provider name" autoCapitalize={"off"} {...field} />
                 </FormControl>
                 <FormMessage/>
               </FormItem>

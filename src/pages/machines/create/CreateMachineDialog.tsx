@@ -79,7 +79,7 @@ export function CreateMachineDialog({ open, onOpenChange }: CreateMachineDialogP
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter machine name" {...field} />
+                  <Input placeholder="Enter machine name" autoCapitalize={"off"} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

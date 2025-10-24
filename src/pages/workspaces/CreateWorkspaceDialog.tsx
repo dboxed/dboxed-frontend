@@ -33,7 +33,7 @@ export function CreateWorkspaceDialog({ open, onOpenChange }: CreateWorkspaceDia
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Please enter the name" {...field} />
+                <Input placeholder="Please enter the name" autoCapitalize={"off"} {...field} />
               </FormControl>
               <FormDescription>
                 This is the name of the workspace.

@@ -14,6 +14,7 @@ interface SimpleInputDialogProps {
   placeholder?: string
   defaultValue?: string
   onSave: (value: string) => (Promise<boolean> | boolean)
+  autoCapitalize?: string
 }
 
 export function SimpleInputDialog({
@@ -23,7 +24,8 @@ export function SimpleInputDialog({
   fieldLabel,
   placeholder,
   defaultValue = "",
-  onSave
+  onSave,
+  autoCapitalize
 }: SimpleInputDialogProps) {
   const buildInitial = (): SimpleInputFormData => ({
     value: defaultValue,
@@ -63,6 +65,7 @@ export function SimpleInputDialog({
                   {...field}
                   placeholder={placeholder}
                   autoFocus
+                  autoCapitalize={autoCapitalize}
                 />
               </FormControl>
               <FormMessage />

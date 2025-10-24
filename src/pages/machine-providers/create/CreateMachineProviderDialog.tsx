@@ -45,7 +45,7 @@ export function CreateMachineProviderDialog({ open, onOpenChange }: CreateMachin
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter machine provider name" {...field} />
+                  <Input placeholder="Enter machine provider name" autoCapitalize={"off"} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

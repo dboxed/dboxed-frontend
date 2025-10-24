@@ -35,7 +35,7 @@ export function CreateBoxDialog({ open, onOpenChange }: CreateBoxDialogProps) {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter box name" {...field} />
+                  <Input placeholder="Enter box name" autoCapitalize={"off"} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

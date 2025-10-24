@@ -46,7 +46,7 @@ export function CreateNetworkDialog({ open, onOpenChange }: CreateNetworkDialogP
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter network name" {...field} />
+                  <Input placeholder="Enter network name" autoCapitalize={"off"} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

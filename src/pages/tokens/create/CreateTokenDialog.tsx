@@ -137,7 +137,7 @@ export function CreateTokenDialog({ open, onOpenChange }: CreateTokenDialogProps
               <FormItem>
                 <FormLabel>Token Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter token name" {...field} />
+                  <Input placeholder="Enter token name" autoCapitalize={"off"} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

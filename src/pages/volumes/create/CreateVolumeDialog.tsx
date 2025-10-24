@@ -57,7 +57,7 @@ export function CreateVolumeDialog({ open, onOpenChange }: CreateVolumeDialogPro
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter volume name" {...field} />
+                  <Input placeholder="Enter volume name" autoCapitalize={"off"} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

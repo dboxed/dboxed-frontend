@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronRight, type LucideIcon } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger, } from "@/components/ui/collapsible"
 import {
@@ -14,12 +14,13 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import { useNavigate, useParams } from "react-router";
+import type { ReactElement } from "react";
 
 interface Item {
   title: string
   url?: string
   navigate?: string
-  icon?: LucideIcon
+  icon?: ReactElement
   isActive?: boolean
   items?: Item[]
 }
@@ -36,7 +37,7 @@ function NavButton({item}: {item: Item}) {
   }
 
   const button = <SidebarMenuButton tooltip={item.title} onClick={() => handleSelect(item)} className={item.url ? "cursor-pointer" : ""}>
-    {item.icon && <item.icon />}
+    {item.icon }
     <span>{item.title}</span>
     {item.items && <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />}
   </SidebarMenuButton>

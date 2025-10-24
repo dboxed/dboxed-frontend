@@ -11,32 +11,32 @@ const navMain = [
   {
     title: "Dashboard",
     navigate: "/workspaces/{workspaceId}",
-    icon: LayoutDashboard,
+    icon: <LayoutDashboard/>,
   },
   {
     title: "Tokens",
     navigate: "/workspaces/{workspaceId}/tokens",
-    icon: Key,
+    icon: <Key/>,
   },
   {
     title: "Networks",
     navigate: "/workspaces/{workspaceId}/networks",
-    icon: Network,
+    icon: <Network/>,
   },
   {
     title: "Volumes",
     navigate: "/workspaces/{workspaceId}/volumes",
-    icon: HardDrive,
+    icon: <HardDrive/>,
   },
   {
     title: "Boxes",
     navigate: "/workspaces/{workspaceId}/boxes",
-    icon: Box,
+    icon: <Box/>,
   },
   /*{
     title: "Machines",
     navigate: "/workspaces/{workspaceId}/machines",
-    icon: Monitor,
+    icon: <Monitor,
   },*/
 ]
 
@@ -44,12 +44,12 @@ const navAdmin = [
   {
     title: "All Workspaces",
     navigate: "/admin/workspaces",
-    icon: LayoutDashboard,
+    icon: <LayoutDashboard/>,
   },
   {
     title: "Users",
     navigate: "/admin/users",
-    icon: Users,
+    icon: <Users/>,
   },
 ]
 
@@ -57,17 +57,17 @@ const navResources = [
   {
     title: "Documentation",
     url: "https://dboxed.io/docs",
-    icon: BookOpen,
+    icon: <BookOpen/>,
   },
   {
     title: "@dboxed_io",
     url: "https://x.com/dboxed_io",
-    icon: FaXTwitter,
+    icon: <FaXTwitter/>,
   },
   {
     title: "dboxed/dboxed",
     url: "https://github.com/dboxed/dboxed",
-    icon: FaGithub,
+    icon: <FaGithub/>,
   },
 ]
 

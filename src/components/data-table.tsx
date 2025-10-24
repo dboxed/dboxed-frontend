@@ -23,6 +23,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   searchColumn?: string
   searchPlaceholder?: string
+  disableSearch?: boolean
 }
 
 export function DataTable<TData, TValue>({
@@ -30,6 +31,7 @@ export function DataTable<TData, TValue>({
                                            data,
                                            searchColumn,
                                            searchPlaceholder = "Search...",
+                                           disableSearch = true, // we disable it for now until we have proper all-columns search
                                          }: DataTableProps<TData, TValue>) {
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -59,7 +61,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      {searchColumn && (
+      {!disableSearch && searchColumn && (
         <div className="flex items-center py-4">
           <Input
             placeholder={searchPlaceholder}

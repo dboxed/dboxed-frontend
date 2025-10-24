@@ -65,7 +65,10 @@ function AuthenticatedApp() {
     }
     if (needNewWorkspaceId) {
       if (!workspaces.data?.items?.length) {
-        return <NoWorkspaceScreen />
+        return <div>
+          <Toaster />
+          <NoWorkspaceScreen />
+        </div>
       } else {
         setWorkspaceId(workspaces.data.items[0].id)
       }

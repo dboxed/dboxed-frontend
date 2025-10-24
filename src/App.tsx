@@ -21,6 +21,8 @@ import { ListTokensPage, TokenDetailsPage } from "@/pages/tokens";
 import { AdminWorkspacesListPage } from "@/pages/admin/AdminWorkspacesListPage.tsx";
 import { AdminListUsersPage } from "@/pages/admin/AdminListUsersPage.tsx";
 import { ThemeProvider } from "@/components/theme-provider";
+import CookieConsentComponent from "@/components/cookie-consent/CookieConsent.tsx";
+import { envVars } from "@/env.ts";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -56,6 +58,8 @@ function AuthenticatedApp() {
 
   if (workspaces.isLoading) return <div>Loading workspaces...</div>;
 
+  const cookieConsent = envVars.VITE_MATOMO_TAG_MANAGER ? <CookieConsentComponent/> : null
+
   if (!location.pathname.startsWith("/admin/")) {
     let needNewWorkspaceId = false
     if (!workspaceId) {
@@ -67,6 +71,7 @@ function AuthenticatedApp() {
       if (!workspaces.data?.items?.length) {
         return <div>
           <Toaster />
+          {cookieConsent}
           <NoWorkspaceScreen />
         </div>
       } else {
@@ -79,6 +84,7 @@ function AuthenticatedApp() {
   return (
     <div className="flex h-screen">
       <Toaster />
+      {cookieConsent}
       <Routes>
         <Route path="/" element={<MainLayout isAdmin={isAdminQuery.isAdmin} />}>
           <Route path="/workspaces/:workspaceId" element={<WorkspaceDashboardPage/>}/>

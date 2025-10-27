@@ -14,13 +14,11 @@ interface LogsPageProps {
   box: components["schemas"]["Box"]
 }
 
-function getLogEntryName(logFile: components["schemas"]["LogMetadataModel"]): string {
-  // Extract name from path: "prefix/name/..." -> "name"
+function getLogEntryGroup(logFile: components["schemas"]["LogMetadataModel"]): string {
   const parts = logFile.fileName.split('/')
   if (parts.length >= 2) {
-    return parts[1]
+    return parts.slice(0, 2).join("/")
   }
-
   return logFile.fileName
 }
 
@@ -79,12 +77,12 @@ export function LogsPage({ box }: LogsPageProps) {
 
   const getLogFilesForEntry = (entryName: string) => {
     if (!logFiles.data?.items) return []
-    return logFiles.data.items.filter(logFile => getLogEntryName(logFile) === entryName)
+    return logFiles.data.items.filter(logFile => getLogEntryGroup(logFile) === entryName)
   }
 
-  // Group log files by entry name
+  // Group log files
   const entryGroups = logFiles.data?.items ? logFiles.data.items.reduce((acc, logFile) => {
-    const entryName = getLogEntryName(logFile)
+    const entryName = getLogEntryGroup(logFile)
     if (!acc[entryName]) {
       acc[entryName] = []
     }

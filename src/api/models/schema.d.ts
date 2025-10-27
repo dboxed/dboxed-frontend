@@ -550,6 +550,128 @@ export interface paths {
         patch: operations["patch-v1-workspaces-by-workspace-id-networks-by-id"];
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/s3-buckets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID s3 buckets */
+        get: operations["get-v1-workspaces-by-workspace-id-s3-buckets"];
+        put?: never;
+        /** Post v1 workspaces by workspace ID s3 buckets */
+        post: operations["post-v1-workspaces-by-workspace-id-s3-buckets"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/s3-buckets/by-bucket-name/{bucket}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID s3 buckets by bucket name by bucket */
+        get: operations["get-v1-workspaces-by-workspace-id-s3-buckets-by-bucket-name-by-bucket"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/s3-buckets/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID s3 buckets by ID */
+        get: operations["get-v1-workspaces-by-workspace-id-s3-buckets-by-id"];
+        put?: never;
+        post?: never;
+        /** Delete v1 workspaces by workspace ID s3 buckets by ID */
+        delete: operations["delete-v1-workspaces-by-workspace-id-s3-buckets-by-id"];
+        options?: never;
+        head?: never;
+        /** Patch v1 workspaces by workspace ID s3 buckets by ID */
+        patch: operations["patch-v1-workspaces-by-workspace-id-s3-buckets-by-id"];
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/s3-buckets/{id}/proxy/delete-object": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID s3 buckets by ID proxy delete object */
+        post: operations["post-v1-workspaces-by-workspace-id-s3-buckets-by-id-proxy-delete-object"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/s3-buckets/{id}/proxy/list-objects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID s3 buckets by ID proxy list objects */
+        post: operations["post-v1-workspaces-by-workspace-id-s3-buckets-by-id-proxy-list-objects"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/s3-buckets/{id}/proxy/presign-put": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID s3 buckets by ID proxy presign put */
+        post: operations["post-v1-workspaces-by-workspace-id-s3-buckets-by-id-proxy-presign-put"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/s3-buckets/{id}/proxy/rename-object": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID s3 buckets by ID proxy rename object */
+        post: operations["post-v1-workspaces-by-workspace-id-s3-buckets-by-id-proxy-rename-object"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/tokens": {
         parameters: {
             query?: never;
@@ -655,74 +777,6 @@ export interface paths {
         head?: never;
         /** Patch v1 workspaces by workspace ID volume providers by ID */
         patch: operations["patch-v1-workspaces-by-workspace-id-volume-providers-by-id"];
-        trace?: never;
-    };
-    "/v1/workspaces/{workspaceId}/volume-providers/{id}/s3proxy/delete-object": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Post v1 workspaces by workspace ID volume providers by ID s3 proxy delete object */
-        post: operations["post-v1-workspaces-by-workspace-id-volume-providers-by-id-s3-proxy-delete-object"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/workspaces/{workspaceId}/volume-providers/{id}/s3proxy/list-objects": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Post v1 workspaces by workspace ID volume providers by ID s3 proxy list objects */
-        post: operations["post-v1-workspaces-by-workspace-id-volume-providers-by-id-s3-proxy-list-objects"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/workspaces/{workspaceId}/volume-providers/{id}/s3proxy/presign-put": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Post v1 workspaces by workspace ID volume providers by ID s3 proxy presign put */
-        post: operations["post-v1-workspaces-by-workspace-id-volume-providers-by-id-s3-proxy-presign-put"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/workspaces/{workspaceId}/volume-providers/{id}/s3proxy/rename-object": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Post v1 workspaces by workspace ID volume providers by ID s3 proxy rename object */
-        post: operations["post-v1-workspaces-by-workspace-id-volume-providers-by-id-s3-proxy-rename-object"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
         trace?: never;
     };
     "/v1/workspaces/{workspaceId}/volumes": {
@@ -1043,6 +1097,17 @@ export interface components {
             apiUrl?: string;
             netbirdVersion: string;
         };
+        CreateS3Bucket: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            accessKeyId: string;
+            bucket: string;
+            endpoint: string;
+            secretAccessKey: string;
+        };
         CreateToken: {
             /**
              * Format: uri
@@ -1077,15 +1142,10 @@ export interface components {
         };
         CreateVolumeProviderRustic: {
             password: string;
-            storageS3: components["schemas"]["CreateVolumeProviderStorageS3"];
+            /** Format: int64 */
+            s3BucketId: number | null;
+            storagePrefix: string;
             storageType: string;
-        };
-        CreateVolumeProviderStorageS3: {
-            accessKeyId: string;
-            bucket: string;
-            endpoint: string;
-            prefix: string;
-            secretAccessKey: string;
         };
         CreateVolumeRustic: {
             /** Format: int64 */
@@ -1263,6 +1323,16 @@ export interface components {
              */
             readonly $schema?: string;
             items: components["schemas"]["Network"][] | null;
+            /** Format: int64 */
+            total_count: number;
+        };
+        ListBodyS3Bucket: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["S3Bucket"][] | null;
             /** Format: int64 */
             total_count: number;
         };
@@ -1496,6 +1566,22 @@ export interface components {
             Net: string;
             VATRate: string;
         };
+        S3Bucket: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            bucket: string;
+            /** Format: date-time */
+            createdAt: string;
+            endpoint: string;
+            /** Format: int64 */
+            id: number;
+            status: string;
+            /** Format: int64 */
+            workspace: number;
+        };
         S3ObjectInfo: {
             /** Format: date-time */
             PresignedGetUrlExpires: string;
@@ -1682,10 +1768,19 @@ export interface components {
             netbirdVersion?: string;
         };
         UpdateRepositoryStorageS3: {
+            /** Format: int64 */
+            s3BucketId: number | null;
+            storagePrefix: string | null;
+        };
+        UpdateS3Bucket: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
             accessKeyId?: string;
             bucket?: string;
             endpoint?: string;
-            prefix?: string;
             secretAccessKey?: string;
         };
         UpdateVolumeAttachmentRequest: {
@@ -1745,8 +1840,9 @@ export interface components {
             name: string;
             rustic?: components["schemas"]["VolumeRustic"];
             uuid: string;
+            volumeProvider: components["schemas"]["VolumeProvider"];
             /** Format: int64 */
-            volumeProvider: number;
+            volumeProviderId: number;
             volumeProviderType: string;
             /** Format: int64 */
             workspace: number;
@@ -1796,7 +1892,9 @@ export interface components {
             workspace: number;
         };
         VolumeProviderRustic: {
-            storageS3: components["schemas"]["VolumeStorageS3"];
+            /** Format: int64 */
+            s3BucketId: number | null;
+            storagePrefix: string;
             storageType: string;
         };
         VolumeReleaseRequest: {
@@ -1880,11 +1978,6 @@ export interface components {
             totalFilesProcessed: number;
             /** Format: int64 */
             treeBlobs: number;
-        };
-        VolumeStorageS3: {
-            bucket: string;
-            endpoint: string;
-            prefix: string;
         };
         Workspace: {
             /**
@@ -3671,6 +3764,360 @@ export interface operations {
             };
         };
     };
+    "get-v1-workspaces-by-workspace-id-s3-buckets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListBodyS3Bucket"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-s3-buckets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateS3Bucket"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["S3Bucket"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-s3-buckets-by-bucket-name-by-bucket": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                bucket: string;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["S3Bucket"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-s3-buckets-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["S3Bucket"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-v1-workspaces-by-workspace-id-s3-buckets-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "patch-v1-workspaces-by-workspace-id-s3-buckets-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateS3Bucket"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["S3Bucket"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-s3-buckets-by-id-proxy-delete-object": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["S3ProxyDeleteObjectRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["S3ProxyDeleteObjectResult"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-s3-buckets-by-id-proxy-list-objects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["S3ProxyListObjectsRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["S3ProxyListObjectsResult"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-s3-buckets-by-id-proxy-presign-put": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["S3ProxyPresignPutRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["S3ProxyPresignPutResult"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-s3-buckets-by-id-proxy-rename-object": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["S3ProxyRenameObjectRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["S3ProxyRenameObjectResult"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-v1-workspaces-by-workspace-id-tokens": {
         parameters: {
             query?: never;
@@ -4033,154 +4480,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["VolumeProvider"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "post-v1-workspaces-by-workspace-id-volume-providers-by-id-s3-proxy-delete-object": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-                /** @description The workspace id */
-                workspaceId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["S3ProxyDeleteObjectRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["S3ProxyDeleteObjectResult"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "post-v1-workspaces-by-workspace-id-volume-providers-by-id-s3-proxy-list-objects": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-                /** @description The workspace id */
-                workspaceId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["S3ProxyListObjectsRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["S3ProxyListObjectsResult"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "post-v1-workspaces-by-workspace-id-volume-providers-by-id-s3-proxy-presign-put": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-                /** @description The workspace id */
-                workspaceId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["S3ProxyPresignPutRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["S3ProxyPresignPutResult"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "post-v1-workspaces-by-workspace-id-volume-providers-by-id-s3-proxy-rename-object": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-                /** @description The workspace id */
-                workspaceId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["S3ProxyRenameObjectRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["S3ProxyRenameObjectResult"];
                 };
             };
             /** @description Error */

@@ -49,14 +49,16 @@ interface S3StorageFormProps<TFieldValues extends FieldValues> {
   form: UseFormReturn<TFieldValues>
   fieldPrefix?: string
   showProviderTypeSelector?: boolean
+  showPrefixField?: boolean
   accessKeyPlaceholder?: string
   secretAccessKeyPlaceholder?: string
 }
 
-export function S3StorageForm<TFieldValues extends FieldValues>({
+export function S3BucketForm<TFieldValues extends FieldValues>({
   form,
   fieldPrefix = "",
   showProviderTypeSelector = true,
+  showPrefixField = true,
   accessKeyPlaceholder = "Enter S3 Access Key ID",
   secretAccessKeyPlaceholder = "Enter S3 Secret Access Key"
 }: S3StorageFormProps<TFieldValues>) {
@@ -261,22 +263,24 @@ export function S3StorageForm<TFieldValues extends FieldValues>({
         />
       )}
 
-      <FormField
-        control={form.control}
-        name={getFieldName("prefix")}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Prefix</FormLabel>
-            <FormControl>
-              <Input
-                {...field}
-                placeholder="Enter S3 prefix (optional)"
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      {showPrefixField && (
+        <FormField
+          control={form.control}
+          name={getFieldName("prefix")}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Prefix</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder="Enter S3 prefix (optional)"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      )}
     </div>
   )
 }

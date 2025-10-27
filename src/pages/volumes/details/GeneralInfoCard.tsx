@@ -40,13 +40,13 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
             label="Volume Provider"
             value={
               <ReferenceLabel
-                resourceId={data.volumeProvider}
+                resourceId={data.volumeProviderId}
                 resourcePath="/v1/workspaces/{workspaceId}/volume-providers/{id}"
                 pathParams={{
                   workspaceId: workspaceId,
-                  id: data.volumeProvider
+                  id: data.volumeProviderId
                 }}
-                detailsUrl={`/workspaces/${workspaceId}/volume-providers/${data.volumeProvider}`}
+                detailsUrl={`/workspaces/${workspaceId}/volume-providers/${data.volumeProviderId}`}
                 fallbackLabel="Volume Provider"
                 className="text-blue-600 hover:text-blue-800 underline"
               />

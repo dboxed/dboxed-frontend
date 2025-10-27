@@ -5,7 +5,6 @@ import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard.tsx"
 import { RusticDetailsCard } from "./RusticDetailsCard.tsx"
-import { VolumeStorageS3DetailsCard } from "./VolumeStorageS3DetailsCard.tsx"
 import type { components } from "@/api/models/schema";
 
 export function VolumeProviderDetailsPage() {
@@ -46,9 +45,6 @@ export function VolumeProviderDetailsPage() {
             {data.rustic ? (
               <div className="space-y-6">
                 <RusticDetailsCard volumeProvider={data} save={save} />
-                {data.rustic.storageS3 && (
-                  <VolumeStorageS3DetailsCard storageS3={data.rustic.storageS3} save={save} />
-                )}
               </div>
             ) : (
               <Card>

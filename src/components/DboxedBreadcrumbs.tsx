@@ -390,6 +390,61 @@ function VolumeBreadcrumb({ volumeId, isCurrentPage }: VolumeBreadcrumbProps) {
   )
 }
 
+interface S3BucketsBreadcrumbProps {
+  isCurrentPage?: boolean
+}
+
+function S3BucketsBreadcrumb({ isCurrentPage }: S3BucketsBreadcrumbProps) {
+  const navigate = useNavigate()
+  const { workspaceId } = useSelectedWorkspaceId()
+  const href = `/workspaces/${workspaceId}/s3-buckets`
+
+  return (
+    <BreadcrumbElement
+      href={href}
+      isCurrentPage={isCurrentPage}
+      onClick={() => navigate(href)}
+    >
+      <span>S3 Buckets</span>
+    </BreadcrumbElement>
+  )
+}
+
+interface S3BucketBreadcrumbProps {
+  s3BucketId: number
+  isCurrentPage?: boolean
+}
+
+function S3BucketBreadcrumb({ s3BucketId, isCurrentPage }: S3BucketBreadcrumbProps) {
+  const navigate = useNavigate()
+  const { workspaceId } = useSelectedWorkspaceId()
+  const client = useDboxedQueryClient()
+
+  const s3Bucket = client.useQuery('get', '/v1/workspaces/{workspaceId}/s3-buckets/{id}', {
+    params: {
+      path: {
+        workspaceId: workspaceId!,
+        id: s3BucketId
+      }
+    },
+  }, {
+    enabled: !!workspaceId && !!s3BucketId
+  })
+
+  const href = `/workspaces/${workspaceId}/s3-buckets/${s3BucketId}`
+  const label = s3Bucket.data?.bucket || 'S3 Bucket'
+
+  return (
+    <BreadcrumbElement
+      href={href}
+      isCurrentPage={isCurrentPage}
+      onClick={() => navigate(href)}
+    >
+      <span>{label}</span>
+    </BreadcrumbElement>
+  )
+}
+
 interface DboxedBreadcrumbsProps {
   className?: string
 }
@@ -680,6 +735,49 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
     if (pathSegments[currentIndex] === 'create') {
       breadcrumbElements.push(
         <BreadcrumbSeparator key="sep-create-volume"/>,
+        <BreadcrumbItem key="create">
+          <CreateBreadcrumb isCurrentPage={true}/>
+        </BreadcrumbItem>
+      )
+    }
+  }
+
+  // Handle s3-buckets path
+  if (pathSegments[currentIndex] === 's3-buckets') {
+    const isCurrentPage = pathSegments.length === currentIndex + 1
+
+    breadcrumbElements.push(
+      <BreadcrumbSeparator key="sep-workspace-s3-buckets"/>,
+      <BreadcrumbItem key="s3-buckets">
+        <S3BucketsBreadcrumb isCurrentPage={isCurrentPage}/>
+      </BreadcrumbItem>
+    )
+
+    currentIndex++
+
+    // Handle specific S3 bucket ID
+    const s3BucketIdSegment = pathSegments[currentIndex]
+    if (s3BucketIdSegment && s3BucketIdSegment.match(/^\d+$/)) {
+      const s3BucketId = parseInt(s3BucketIdSegment)
+      const isCurrentPage = pathSegments.length === currentIndex + 1
+
+      breadcrumbElements.push(
+        <BreadcrumbSeparator key="sep-s3-buckets"/>,
+        <BreadcrumbItem key="s3-bucket">
+          <S3BucketBreadcrumb
+            s3BucketId={s3BucketId}
+            isCurrentPage={isCurrentPage}
+          />
+        </BreadcrumbItem>
+      )
+
+      currentIndex++
+    }
+
+    // Handle create path
+    if (pathSegments[currentIndex] === 'create') {
+      breadcrumbElements.push(
+        <BreadcrumbSeparator key="sep-create-s3-bucket"/>,
         <BreadcrumbItem key="create">
           <CreateBreadcrumb isCurrentPage={true}/>
         </BreadcrumbItem>

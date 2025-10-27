@@ -5,47 +5,17 @@ import { Input } from "@/components/ui/input.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/schema"
-import { buildEndpoint, type ProviderType } from "@/pages/volume-providers/S3StorageForm.tsx"
 
 interface CreateVolumeProviderDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-type CreateVolumeProviderFormData = components["schemas"]["CreateVolumeProvider"] & {
-  rustic: components["schemas"]["CreateVolumeProvider"]["rustic"] & {
-    storageS3: components["schemas"]["CreateVolumeProvider"]["rustic"]["storageS3"] & {
-      providerType: ProviderType
-      region: string
-    }
-  }
-}
-
 export function CreateVolumeProviderDialog({ open, onOpenChange }: CreateVolumeProviderDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
 
-  const handleSubmit = (data: CreateVolumeProviderFormData): components["schemas"]["CreateVolumeProvider"] => {
-    const { providerType, region, ...s3Data } = data.rustic.storageS3
-
-    // Build endpoint from provider type and region
-    const endpoint = providerType === "generic"
-      ? s3Data.endpoint
-      : buildEndpoint(providerType, region)
-
-    return {
-      ...data,
-      rustic: {
-        ...data.rustic,
-        storageS3: {
-          ...s3Data,
-          endpoint,
-        },
-      },
-    }
-  }
-
   return (
-    <BaseCreateDialog<CreateVolumeProviderFormData, components["schemas"]["CreateVolumeProvider"], components["schemas"]["VolumeProvider"]>
+    <BaseCreateDialog<components["schemas"]["CreateVolumeProvider"]>
       open={open}
       onOpenChange={onOpenChange}
       title="Create Volume Provider"
@@ -55,22 +25,14 @@ export function CreateVolumeProviderDialog({ open, onOpenChange }: CreateVolumeP
           workspaceId: workspaceId,
         }
       }}
-      onSubmit={handleSubmit}
       defaultValues={{
         name: "",
-        type: "",
+        type: "rustic",
         rustic: {
           password: "",
           storageType: "s3",
-          storageS3: {
-            providerType: "generic",
-            accessKeyId: "",
-            bucket: "",
-            endpoint: "",
-            prefix: "",
-            secretAccessKey: "",
-            region: "",
-          },
+          storagePrefix: "",
+          s3BucketId: null,
         }
       }}
     >

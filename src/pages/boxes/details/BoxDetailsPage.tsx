@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react"
 import { BaseResourceDetailsPage } from "@/pages/base/BaseResourceDetailsPage.tsx"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx"
 import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useDboxedQueryClient } from "@/api/api.ts"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
@@ -13,69 +11,13 @@ import { BoxConnectCard } from "./BoxConnectCard.tsx"
 import { LogsPage } from "./logs/LogsPage.tsx"
 import { VolumesTab } from "./volumes/VolumesTab.tsx"
 import { ComposeProjects } from "./compose-projects/ComposeProjects.tsx"
+import { BoxStatusStalenessAlert } from "./BoxStatusStalenessAlert.tsx"
 import type { components } from "@/api/models/schema"
 
 function BoxDetailsContent({ data }: { data: components["schemas"]["Box"] }) {
-  const { workspaceId } = useSelectedWorkspaceId()
-  const client = useDboxedQueryClient()
-  const [elapsedSeconds, setElapsedSeconds] = useState<number>(0)
-
-  const { data: runStatus } = client.useQuery('get', "/v1/workspaces/{workspaceId}/boxes/{id}/run-status", {
-    params: {
-      path: {
-        workspaceId: workspaceId!,
-        id: data.id,
-      }
-    },
-  }, {
-    refetchInterval: 5000, // Refresh every 5 seconds
-  })
-
-  // Track staleness of status
-  useEffect(() => {
-    if (!runStatus?.statusTime) {
-      setElapsedSeconds(0)
-      return
-    }
-
-    const calculateElapsed = () => {
-      const statusTime = new Date(runStatus.statusTime!).getTime()
-      const now = Date.now()
-      const elapsed = Math.floor((now - statusTime) / 1000)
-      setElapsedSeconds(elapsed)
-    }
-
-    // Calculate immediately
-    calculateElapsed()
-
-    // Update every second
-    const interval = setInterval(calculateElapsed, 1000)
-
-    return () => clearInterval(interval)
-  }, [runStatus?.statusTime])
-
-  const isStale = elapsedSeconds >= 30
-
   return (
     <div className="space-y-6">
-      {isStale && runStatus?.statusTime && data.desiredState === 'up' && (
-        <Alert variant="destructive">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>Stale Status</AlertTitle>
-          <AlertDescription>
-            Box status has not updated for {elapsedSeconds} seconds.<br/>
-            <p>
-              Automatic starting of sandboxes for the box is not implemented yet. This will come in a future release of dboxed.
-            </p>
-            <p>
-              This means you might need to manually run <code className="px-1.5 py-0.5 rounded bg-muted font-mono text-xs">dboxed sandbox run ...</code> yourself.
-            </p>
-            <p>
-              Check the <strong>Connect Box</strong> tab for details.
-            </p>
-          </AlertDescription>
-        </Alert>
-      )}
+      <BoxStatusStalenessAlert box={data} />
 
       <Tabs defaultValue="general" className="space-y-6">
         <TabsList className="grid w-full grid-cols-5">

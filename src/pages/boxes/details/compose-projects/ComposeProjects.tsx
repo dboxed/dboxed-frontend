@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { DataTable } from "@/components/data-table.tsx"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip.tsx"
-import { CreateComposeProjectDialog } from "./CreateComposeProjectDialog.tsx"
+import { AddComposeProjectDialog } from "./AddComposeProjectDialog.tsx"
 import { ComposeProjectEditorDialog } from "./ComposeProjectEditorDialog.tsx"
 import { useDboxedQueryClient } from "@/api/api.ts"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
@@ -244,7 +244,7 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
         </CardContent>
       </Card>
 
-      <CreateComposeProjectDialog
+      <AddComposeProjectDialog
         open={newProjectDialogOpen}
         onOpenChange={setNewProjectDialogOpen}
         onSave={handleNewProject}

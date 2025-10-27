@@ -4,14 +4,14 @@ import { Editor } from "@monaco-editor/react"
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 
-interface CreateComposeProjectDialogProps {
+interface AddComposeProjectDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onSave: (name: string, content: string) => Promise<boolean>
   isLoading?: boolean
 }
 
-interface CreateProjectFormData {
+interface AddProjectFormData {
   name: string
   content: string
 }
@@ -25,31 +25,31 @@ const DEFAULT_COMPOSE_PROJECT = `services:
   #     - "80:80"
 `
 
-export function CreateComposeProjectDialog({
+export function AddComposeProjectDialog({
   open,
   onOpenChange,
   onSave,
   isLoading = false
-}: CreateComposeProjectDialogProps) {
-  const buildInitialFormData = useCallback((): CreateProjectFormData => {
+}: AddComposeProjectDialogProps) {
+  const buildInitialFormData = useCallback((): AddProjectFormData => {
     return {
       name: "",
       content: DEFAULT_COMPOSE_PROJECT
     }
   }, [])
 
-  const handleSave = async (formData: CreateProjectFormData) => {
+  const handleSave = async (formData: AddProjectFormData) => {
     return await onSave(formData.name, formData.content)
   }
 
   return (
-    <SimpleFormDialog<CreateProjectFormData>
+    <SimpleFormDialog<AddProjectFormData>
       open={open}
       onOpenChange={onOpenChange}
-      title="Create New Compose Project"
+      title="Add New Compose Project"
       buildInitial={buildInitialFormData}
       onSave={handleSave}
-      saveText="Create Project"
+      saveText="Add Project"
       isLoading={isLoading}
       wide={true}
     >

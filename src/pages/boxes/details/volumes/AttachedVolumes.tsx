@@ -75,7 +75,7 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
         volumeId: selectedVolume.id,
         rootUid: 0,
         rootGid: 0,
-        rootMode: "0700"
+        rootMode: "0755"
       }
     }, {
       onSuccess: () => {

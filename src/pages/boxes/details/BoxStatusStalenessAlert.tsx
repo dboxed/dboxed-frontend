@@ -14,7 +14,7 @@ export function BoxStatusStalenessAlert({ box }: BoxStatusStalenessAlertProps) {
   const client = useDboxedQueryClient()
   const [elapsedSeconds, setElapsedSeconds] = useState<number>(0)
 
-  const { data: runStatus } = client.useQuery('get', "/v1/workspaces/{workspaceId}/boxes/{id}/run-status", {
+  const { data: sandboxStatus } = client.useQuery('get', "/v1/workspaces/{workspaceId}/boxes/{id}/sandbox-status", {
     params: {
       path: {
         workspaceId: workspaceId!,
@@ -27,13 +27,13 @@ export function BoxStatusStalenessAlert({ box }: BoxStatusStalenessAlertProps) {
 
   // Track staleness of status
   useEffect(() => {
-    if (!runStatus?.statusTime) {
+    if (!sandboxStatus?.statusTime) {
       setElapsedSeconds(0)
       return
     }
 
     const calculateElapsed = () => {
-      const statusTime = new Date(runStatus.statusTime!).getTime()
+      const statusTime = new Date(sandboxStatus.statusTime!).getTime()
       const now = Date.now()
       const elapsed = Math.floor((now - statusTime) / 1000)
       setElapsedSeconds(elapsed)
@@ -46,12 +46,12 @@ export function BoxStatusStalenessAlert({ box }: BoxStatusStalenessAlertProps) {
     const interval = setInterval(calculateElapsed, 1000)
 
     return () => clearInterval(interval)
-  }, [runStatus?.statusTime])
+  }, [sandboxStatus?.statusTime])
 
   const isStale = elapsedSeconds >= 60
 
   // Only show if status is stale and box should be up
-  if (!isStale || !runStatus?.statusTime || box.desiredState !== 'up') {
+  if (!isStale || !sandboxStatus?.statusTime || box.desiredState !== 'up') {
     return null
   }
 

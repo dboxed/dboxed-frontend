@@ -92,7 +92,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
   const [selectedContainerForLogs, setSelectedContainerForLogs] = useState<string | null>(null)
   const [showReconcileLogs, setShowReconcileLogs] = useState(false)
 
-  const { data: runStatus } = client.useQuery('get', "/v1/workspaces/{workspaceId}/boxes/{id}/run-status", {
+  const { data: sandboxStatus } = client.useQuery('get', "/v1/workspaces/{workspaceId}/boxes/{id}/sandbox-status", {
     params: {
       path: {
         workspaceId: workspaceId!,
@@ -104,12 +104,12 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
   })
 
   useEffect(() => {
-    if (runStatus?.dockerPs) {
-      decompressDockerPs(runStatus.dockerPs).then(setContainers)
+    if (sandboxStatus?.dockerPs) {
+      decompressDockerPs(sandboxStatus.dockerPs).then(setContainers)
     } else {
       setContainers([])
     }
-  }, [runStatus?.dockerPs])
+  }, [sandboxStatus?.dockerPs])
 
   return (
     <div className="space-y-6">
@@ -220,9 +220,9 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
               <div>
                 <div className="text-sm font-medium text-muted-foreground">Status</div>
                 <div className="text-lg">
-                  {runStatus?.runStatus ? (
-                    <Badge variant={runStatus.runStatus === 'running' ? 'success' : 'secondary'}>
-                      {runStatus.runStatus}
+                  {sandboxStatus?.runStatus ? (
+                    <Badge variant={sandboxStatus.runStatus === 'running' ? 'success' : 'secondary'}>
+                      {sandboxStatus.runStatus}
                     </Badge>
                   ) : (
                     <span className="text-muted-foreground">Unknown</span>
@@ -230,24 +230,24 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
                 </div>
               </div>
 
-              {runStatus?.startTime && (
+              {sandboxStatus?.startTime && (
                 <div>
                   <div className="text-sm font-medium text-muted-foreground">Start Time</div>
-                  <div className="text-lg">{new Date(runStatus.startTime).toLocaleString()}</div>
+                  <div className="text-lg">{new Date(sandboxStatus.startTime).toLocaleString()}</div>
                 </div>
               )}
 
-              {runStatus?.stopTime && (
+              {sandboxStatus?.stopTime && (
                 <div>
                   <div className="text-sm font-medium text-muted-foreground">Stop Time</div>
-                  <div className="text-lg">{new Date(runStatus.stopTime).toLocaleString()}</div>
+                  <div className="text-lg">{new Date(sandboxStatus.stopTime).toLocaleString()}</div>
                 </div>
               )}
 
-              {runStatus?.statusTime && (
+              {sandboxStatus?.statusTime && (
                 <div>
                   <div className="text-sm font-medium text-muted-foreground">Status Time</div>
-                  <div className="text-lg">{new Date(runStatus.statusTime).toLocaleString()}</div>
+                  <div className="text-lg">{new Date(sandboxStatus.statusTime).toLocaleString()}</div>
                 </div>
               )}
             </div>

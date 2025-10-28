@@ -368,22 +368,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/boxes/{id}/run-status": {
+    "/v1/workspaces/{workspaceId}/boxes/{id}/sandbox-status": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get v1 workspaces by workspace ID boxes by ID run status */
-        get: operations["get-v1-workspaces-by-workspace-id-boxes-by-id-run-status"];
+        /** Get v1 workspaces by workspace ID boxes by ID sandbox status */
+        get: operations["get-v1-workspaces-by-workspace-id-boxes-by-id-sandbox-status"];
         put?: never;
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        /** Patch v1 workspaces by workspace ID boxes by ID run status */
-        patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id-run-status"];
+        /** Patch v1 workspaces by workspace ID boxes by ID sandbox status */
+        patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id-sandbox-status"];
         trace?: never;
     };
     "/v1/workspaces/{workspaceId}/boxes/{id}/volumes": {
@@ -1012,7 +1012,7 @@ export interface components {
             composeProject: string;
             name: string;
         };
-        BoxRunStatus: {
+        BoxSandboxStatus: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
@@ -1024,13 +1024,6 @@ export interface components {
             startTime?: string;
             /** Format: date-time */
             statusTime?: string;
-            /** Format: date-time */
-            stopTime?: string;
-        };
-        BoxRunStatusInfo: {
-            runStatus?: string;
-            /** Format: date-time */
-            startTime?: string;
             /** Format: date-time */
             stopTime?: string;
         };
@@ -1754,14 +1747,21 @@ export interface components {
             readonly $schema?: string;
             composeProject: string;
         };
-        UpdateBoxRunStatus: {
+        UpdateBoxSandboxStatus: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             dockerPs?: string;
-            runStatus?: components["schemas"]["BoxRunStatusInfo"];
+            sandboxStatus?: components["schemas"]["UpdateBoxSandboxStatus2"];
+        };
+        UpdateBoxSandboxStatus2: {
+            runStatus?: string;
+            /** Format: date-time */
+            startTime?: string;
+            /** Format: date-time */
+            stopTime?: string;
         };
         UpdateMachine: {
             /**
@@ -3035,7 +3035,7 @@ export interface operations {
             };
         };
     };
-    "get-v1-workspaces-by-workspace-id-boxes-by-id-run-status": {
+    "get-v1-workspaces-by-workspace-id-boxes-by-id-sandbox-status": {
         parameters: {
             query?: never;
             header?: never;
@@ -3054,7 +3054,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BoxRunStatus"];
+                    "application/json": components["schemas"]["BoxSandboxStatus"];
                 };
             };
             /** @description Error */
@@ -3068,7 +3068,7 @@ export interface operations {
             };
         };
     };
-    "patch-v1-workspaces-by-workspace-id-boxes-by-id-run-status": {
+    "patch-v1-workspaces-by-workspace-id-boxes-by-id-sandbox-status": {
         parameters: {
             query?: never;
             header?: never;
@@ -3081,7 +3081,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateBoxRunStatus"];
+                "application/json": components["schemas"]["UpdateBoxSandboxStatus"];
             };
         };
         responses: {

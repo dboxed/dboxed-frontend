@@ -1,8 +1,9 @@
 import { useCallback } from "react"
 import { SimpleFormDialog } from "@/components/SimpleFormDialog.tsx"
 import { Editor } from "@monaco-editor/react"
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form.tsx"
+import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
+import { extractComposeProjectInfo } from "./project-info.ts"
 
 interface AddComposeProjectDialogProps {
   open: boolean
@@ -16,7 +17,9 @@ interface AddProjectFormData {
   content: string
 }
 
-const DEFAULT_COMPOSE_PROJECT = `services:
+const DEFAULT_COMPOSE_PROJECT = `name: my-project
+
+services:
   # Add your services here
   # Example:
   # web:
@@ -39,7 +42,15 @@ export function AddComposeProjectDialog({
   }, [])
 
   const handleSave = async (formData: AddProjectFormData) => {
-    return await onSave(formData.name, formData.content)
+    let name = formData.name.trim()
+
+    // If no name provided, extract it from the compose YAML
+    if (!name) {
+      const info = extractComposeProjectInfo(formData.content, 0)
+      name = info.name
+    }
+
+    return await onSave(name, formData.content)
   }
 
   return (
@@ -63,10 +74,13 @@ export function AddComposeProjectDialog({
                 <FormLabel>Project Name</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Enter project name"
+                    placeholder="Enter project name (optional)"
                     {...field}
                   />
                 </FormControl>
+                <FormDescription>
+                  If left empty, the name will be extracted from the "name:" field in your compose YAML
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}

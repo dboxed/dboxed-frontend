@@ -48,7 +48,7 @@ export function BoxStatusStalenessAlert({ box }: BoxStatusStalenessAlertProps) {
     return () => clearInterval(interval)
   }, [runStatus?.statusTime])
 
-  const isStale = elapsedSeconds >= 30
+  const isStale = elapsedSeconds >= 60
 
   // Only show if status is stale and box should be up
   if (!isStale || !runStatus?.statusTime || box.desiredState !== 'up') {

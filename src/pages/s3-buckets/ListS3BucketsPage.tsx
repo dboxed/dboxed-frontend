@@ -101,7 +101,7 @@ export function ListS3BucketsPage() {
           workspaceId: workspaceId,
         }
       }}
-      emptyStateMessage="No S3 buckets configured yet. Create your first S3 bucket to get started."
+      emptyStateMessage="No S3 buckets configured yet. Add your first S3 bucket to get started."
       searchColumn="bucket"
       searchPlaceholder="Search buckets..."
     />

@@ -849,6 +849,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/volumes/{id}/force-unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID volumes by ID force unlock */
+        post: operations["post-v1-workspaces-by-workspace-id-volumes-by-id-force-unlock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/volumes/{id}/lock": {
         parameters: {
             query?: never;
@@ -860,6 +877,23 @@ export interface paths {
         put?: never;
         /** Post v1 workspaces by workspace ID volumes by ID lock */
         post: operations["post-v1-workspaces-by-workspace-id-volumes-by-id-lock"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/volumes/{id}/refresh-lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID volumes by ID refresh lock */
+        post: operations["post-v1-workspaces-by-workspace-id-volumes-by-id-refresh-lock"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1872,7 +1906,6 @@ export interface components {
             readonly $schema?: string;
             /** Format: int64 */
             boxId?: number;
-            prevLockId?: string;
         };
         VolumeProvider: {
             /**
@@ -1896,6 +1929,14 @@ export interface components {
             s3BucketId: number | null;
             storagePrefix: string;
             storageType: string;
+        };
+        VolumeRefreshLockRequest: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            prevLockId: string;
         };
         VolumeReleaseRequest: {
             /**
@@ -4695,6 +4736,39 @@ export interface operations {
             };
         };
     };
+    "post-v1-workspaces-by-workspace-id-volumes-by-id-force-unlock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Volume"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "post-v1-workspaces-by-workspace-id-volumes-by-id-lock": {
         parameters: {
             query?: never;
@@ -4709,6 +4783,43 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["VolumeLockRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Volume"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-volumes-by-id-refresh-lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                /** @description The workspace id */
+                workspaceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VolumeRefreshLockRequest"];
             };
         };
         responses: {

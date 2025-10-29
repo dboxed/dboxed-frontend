@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { CreateBoxDialog } from "./create/CreateBoxDialog.tsx";
+import { ContainerStatusCell } from "./docker-utils.tsx";
 
 export function ListBoxesPage() {
   const navigate = useNavigate()
@@ -88,6 +89,27 @@ export function ListBoxesPage() {
             className="text-blue-600 hover:text-blue-800 underline text-sm"
           />
         )
+      },
+    },
+    {
+      id: "sandboxStatus",
+      header: "Sandbox Status",
+      cell: ({ row }) => {
+        const sandboxStatus = row.original.sandboxStatus
+
+        if (!sandboxStatus?.runStatus) {
+          return <span className="text-sm text-muted-foreground">N/A</span>
+        }
+
+        const variant = sandboxStatus.runStatus === 'running' ? 'success' : 'secondary'
+        return <Badge variant={variant}>{sandboxStatus.runStatus}</Badge>
+      },
+    },
+    {
+      id: "containers",
+      header: "Containers",
+      cell: ({ row }) => {
+        return <ContainerStatusCell box={row.original} />
       },
     },
     {

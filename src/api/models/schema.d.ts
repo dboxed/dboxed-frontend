@@ -1003,6 +1003,7 @@ export interface components {
             /** Format: int64 */
             network: number | null;
             networkType: string | null;
+            sandboxStatus?: components["schemas"]["BoxSandboxStatus"];
             status: string;
             uuid: string;
             /** Format: int64 */

@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge.tsx";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip.tsx";
 import { useEffect, useState } from "react";
 import type { components } from "@/api/models/schema";
+import { cn } from "@/lib/utils.ts";
 
 export interface DockerContainer {
   Command: string
@@ -76,14 +77,23 @@ export function ContainerStatusCell({ box }: { box: components["schemas"]["Box"]
   const totalCount = containers.length
   const allOk = runningCount === totalCount && totalCount > 0
 
-  const variant = allOk ? 'success' : totalCount > 0 ? 'secondary' : 'outline'
+  let containersColorClass = ""
+  if (box.sandboxStatus?.runStatus === "running") {
+    if (allOk) {
+      containersColorClass = 'bg-green-400'
+    } else if (totalCount === 0) {
+      containersColorClass = 'bg-red-500'
+    } else {
+      containersColorClass = 'bg-yellow-400'
+    }
+  }
 
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
           <div>
-            <Badge variant={variant} className="cursor-help">
+            <Badge variant={"secondary"} className={cn("cursor-help", containersColorClass)}>
               {runningCount}/{totalCount}
             </Badge>
           </div>

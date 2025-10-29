@@ -107,6 +107,18 @@ export function ListBoxesPage() {
       },
     },
     {
+      accessorKey: "desiredState",
+      header: "Desired State",
+      cell: ({ row }) => {
+        const desiredState = row.getValue("desiredState") as string
+        return (
+          <Badge variant={desiredState === 'up' ? 'default' : 'outline'} className="capitalize">
+            {desiredState}
+          </Badge>
+        )
+      },
+    },
+    {
       id: "sandboxStatus",
       header: "Sandbox Status",
       cell: ({ row }) => {

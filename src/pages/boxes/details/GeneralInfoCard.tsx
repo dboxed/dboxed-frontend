@@ -13,6 +13,7 @@ import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import { ContainerLogsDialog } from "./status/ContainerLogsDialog.tsx"
 import { ReconcileLogsDialog } from "./status/ReconcileLogsDialog.tsx"
 import { StatusBadge } from "@/components/StatusBadge.tsx"
+import { TimeAgo } from "@/components/TimeAgo.tsx"
 import type { components } from "@/api/models/schema"
 
 interface GeneralInfoCardProps {
@@ -185,6 +186,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
                 )
               }
             />
+
             <LabelAndValue
               label="Created At"
               textValue={new Date(data.createdAt).toLocaleString()}
@@ -196,7 +198,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Run Status</CardTitle>
+            <CardTitle>Sandbox Status</CardTitle>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -219,7 +221,16 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <div className="text-sm font-medium text-muted-foreground">Status</div>
+                <div className="text-sm font-medium text-muted-foreground">Desired State</div>
+                <div className="text-lg">
+                  <Badge variant={data.desiredState === 'up' ? 'default' : 'outline'} className="capitalize">
+                    {data.desiredState}
+                  </Badge>
+                </div>
+              </div>
+
+              <div>
+                <div className="text-sm font-medium text-muted-foreground">Actual Status</div>
                 <div className="text-lg">
                   {sandboxStatus?.runStatus ? (
                     <StatusBadge
@@ -233,6 +244,15 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
                 </div>
               </div>
 
+              {sandboxStatus?.statusTime && (
+                <div>
+                  <div className="text-sm font-medium text-muted-foreground">Status Time</div>
+                  <div className="text-lg">
+                    <TimeAgo date={sandboxStatus.statusTime} />
+                  </div>
+                </div>
+              )}
+
               {sandboxStatus?.startTime && (
                 <div>
                   <div className="text-sm font-medium text-muted-foreground">Start Time</div>
@@ -244,13 +264,6 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
                 <div>
                   <div className="text-sm font-medium text-muted-foreground">Stop Time</div>
                   <div className="text-lg">{new Date(sandboxStatus.stopTime).toLocaleString()}</div>
-                </div>
-              )}
-
-              {sandboxStatus?.statusTime && (
-                <div>
-                  <div className="text-sm font-medium text-muted-foreground">Status Time</div>
-                  <div className="text-lg">{new Date(sandboxStatus.statusTime).toLocaleString()}</div>
                 </div>
               )}
             </div>

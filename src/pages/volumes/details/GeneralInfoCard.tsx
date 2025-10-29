@@ -5,6 +5,7 @@ import { LabelAndValue } from "@/components/LabelAndValue.tsx";
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import { VolumeLockBadge } from "@/pages/volumes/details/VolumeLockBadge.tsx";
+import { TimeAgo } from "@/components/TimeAgo.tsx";
 import type { components } from "@/api/models/schema";
 
 interface GeneralInfoCardProps {
@@ -114,14 +115,14 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
               {data.lockTime && (
                 <LabelAndValue
                   label="Lock Time"
-                  textValue={new Date(data.lockTime).toLocaleString()}
+                  value={<TimeAgo date={data.lockTime} />}
                 />
               )}
             </>
           )}
           <LabelAndValue
             label="Created"
-            textValue={new Date(data.createdAt).toLocaleString()}
+            value={<TimeAgo date={data.createdAt} />}
           />
         </DetailsCardLayout>
       </CardContent>

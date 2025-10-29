@@ -4,6 +4,7 @@ import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import { StatusBadge } from "@/components/StatusBadge.tsx"
+import { TimeAgo } from "@/components/TimeAgo.tsx"
 import type { components } from "@/api/models/schema"
 
 interface GeneralInfoCardProps {
@@ -62,7 +63,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           
           <LabelAndValue
             label="Created At"
-            textValue={new Date(data.createdAt).toLocaleString()}
+            value={<TimeAgo date={data.createdAt} />}
           />
         </DetailsCardLayout>
       </CardContent>

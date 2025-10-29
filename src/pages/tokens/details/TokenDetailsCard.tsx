@@ -4,6 +4,7 @@ import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import { Key } from "lucide-react"
+import { TimeAgo } from "@/components/TimeAgo.tsx"
 import type { components } from "@/api/models/schema"
 
 interface TokenDetailsCardProps {
@@ -58,13 +59,7 @@ export function TokenDetailsCard({ token }: TokenDetailsCardProps) {
 
           <LabelAndValue
             label="Created At"
-            textValue={new Date(token.createdAt).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit'
-            })}
+            value={<TimeAgo date={token.createdAt} />}
           />
 
           <LabelAndValue

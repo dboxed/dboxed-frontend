@@ -189,7 +189,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
 
             <LabelAndValue
               label="Created At"
-              textValue={new Date(data.createdAt).toLocaleString()}
+              value={<TimeAgo date={data.createdAt} />}
             />
           </DetailsCardLayout>
         </CardContent>
@@ -246,7 +246,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
 
               {sandboxStatus?.statusTime && (
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground">Status Time</div>
+                  <div className="text-sm font-medium text-muted-foreground">Last Status Reported</div>
                   <div className="text-lg">
                     <TimeAgo date={sandboxStatus.statusTime} />
                   </div>
@@ -255,15 +255,19 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
 
               {sandboxStatus?.startTime && (
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground">Start Time</div>
-                  <div className="text-lg">{new Date(sandboxStatus.startTime).toLocaleString()}</div>
+                  <div className="text-sm font-medium text-muted-foreground">Started</div>
+                  <div className="text-lg">
+                    <TimeAgo date={sandboxStatus.startTime} />
+                  </div>
                 </div>
               )}
 
               {sandboxStatus?.stopTime && (
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground">Stop Time</div>
-                  <div className="text-lg">{new Date(sandboxStatus.stopTime).toLocaleString()}</div>
+                  <div className="text-sm font-medium text-muted-foreground">Stopped</div>
+                  <div className="text-lg">
+                    <TimeAgo date={sandboxStatus.stopTime} />
+                  </div>
                 </div>
               )}
             </div>

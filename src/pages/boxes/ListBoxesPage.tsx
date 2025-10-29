@@ -9,6 +9,7 @@ import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { CreateBoxDialog } from "./create/CreateBoxDialog.tsx";
 import { ContainerStatusCell } from "./docker-utils.tsx";
 import { StatusBadge } from "@/components/StatusBadge.tsx";
+import { TimeAgo } from "@/components/TimeAgo.tsx";
 
 export function ListBoxesPage() {
   const navigate = useNavigate()
@@ -160,17 +161,8 @@ export function ListBoxesPage() {
       accessorKey: "createdAt",
       header: "Created",
       cell: ({ row }) => {
-        const date = new Date(row.getValue("createdAt"))
-        const formattedDate = date.toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric'
-        })
-        return (
-          <div className="text-sm text-muted-foreground">
-            {formattedDate}
-          </div>
-        )
+        const createdAt = row.getValue("createdAt") as string
+        return <TimeAgo date={createdAt} className="text-sm" />
       },
     },
     {

@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
 import { CreateMachineProviderDialog } from "@/pages/machine-providers/create/CreateMachineProviderDialog.tsx";
 import { StatusBadge } from "@/components/StatusBadge.tsx";
+import { TimeAgo } from "@/components/TimeAgo.tsx";
 
 export function ListMachineProvidersPage() {
   const navigate = useNavigate()
@@ -60,17 +61,8 @@ export function ListMachineProvidersPage() {
       accessorKey: "createdAt",
       header: "Created",
       cell: ({ row }) => {
-        const date = new Date(row.getValue("createdAt"))
-        const formattedDate = date.toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric'
-        })
-        return (
-          <div className="text-sm text-muted-foreground">
-            {formattedDate}
-          </div>
-        )
+        const createdAt = row.getValue("createdAt") as string
+        return <TimeAgo date={createdAt} className="text-sm" />
       },
     },
     {

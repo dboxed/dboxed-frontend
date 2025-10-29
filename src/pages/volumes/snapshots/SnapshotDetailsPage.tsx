@@ -4,7 +4,8 @@ import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
-import { formatTimeAgo, formatDuration } from "@/utils/time.ts"
+import { formatDuration } from "@/utils/time.ts"
+import { TimeAgo } from "@/components/TimeAgo.tsx"
 import { formatSize } from "@/utils/size.ts"
 import type { components } from "@/api/models/schema"
 
@@ -47,14 +48,7 @@ export function SnapshotDetailsPage() {
                 />
                 <LabelAndValue
                   label="Created"
-                  value={
-                    <div className="flex flex-col">
-                      <span>{formatTimeAgo(data.createdAt)}</span>
-                      <span className="text-xs text-muted-foreground">
-                        {new Date(data.createdAt).toLocaleString()}
-                      </span>
-                    </div>
-                  }
+                  value={<TimeAgo date={data.createdAt} />}
                 />
                 <LabelAndValue
                   label="Lock ID"
@@ -89,14 +83,7 @@ export function SnapshotDetailsPage() {
                     />
                     <LabelAndValue
                       label="Snapshot Time"
-                      value={
-                        <div className="flex flex-col">
-                          <span>{formatTimeAgo(data.rustic.snapshotTime)}</span>
-                          <span className="text-xs text-muted-foreground">
-                            {new Date(data.rustic.snapshotTime).toLocaleString()}
-                          </span>
-                        </div>
-                      }
+                      value={<TimeAgo date={data.rustic.snapshotTime} />}
                     />
                   </DetailsCardLayout>
                 </CardContent>

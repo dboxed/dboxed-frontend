@@ -5,6 +5,7 @@ import type { components } from "@/api/models/schema"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx";
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx";
 import { StatusBadge } from "@/components/StatusBadge.tsx";
+import { TimeAgo } from "@/components/TimeAgo.tsx";
 
 interface GeneralInfoCardProps {
   data: components["schemas"]["MachineProvider"]
@@ -62,7 +63,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           
           <LabelAndValue
             label="Created At"
-            textValue={new Date(data.createdAt).toLocaleString()}
+            value={<TimeAgo date={data.createdAt} />}
           />
           <LabelAndValue
             label="SSH Key Fingerprint"

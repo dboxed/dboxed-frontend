@@ -4,6 +4,7 @@ import { AlertTriangle } from "lucide-react"
 import type { components } from "@/api/models/schema"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/api.ts"
+import { formatTimeAgo } from "@/utils/time.ts"
 
 interface BoxStatusStalenessAlertProps {
   box: components["schemas"]["Box"]
@@ -60,7 +61,7 @@ export function BoxStatusStalenessAlert({ box }: BoxStatusStalenessAlertProps) {
       <AlertTriangle className="h-4 w-4" />
       <AlertTitle>Stale Status</AlertTitle>
       <AlertDescription>
-        Box status has not updated for {elapsedSeconds} seconds.<br/>
+        Box status was updated {formatTimeAgo(sandboxStatus.statusTime)} and looks stale.<br/>
         <p>
           Automatic starting of sandboxes for the box is not implemented yet. This will come in a future release of dboxed.
         </p>

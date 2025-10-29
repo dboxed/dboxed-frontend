@@ -8,6 +8,7 @@ import { BaseListPage } from "@/pages/base";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { CreateMachineDialog } from "./create/CreateMachineDialog.tsx";
 import { StatusBadge } from "@/components/StatusBadge.tsx";
+import { TimeAgo } from "@/components/TimeAgo.tsx";
 
 export function ListMachinesPage() {
   const navigate = useNavigate()
@@ -99,17 +100,8 @@ export function ListMachinesPage() {
       accessorKey: "createdAt",
       header: "Created",
       cell: ({ row }) => {
-        const date = new Date(row.getValue("createdAt"))
-        const formattedDate = date.toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric'
-        })
-        return (
-          <div className="text-sm text-muted-foreground">
-            {formattedDate}
-          </div>
-        )
+        const createdAt = row.getValue("createdAt") as string
+        return <TimeAgo date={createdAt} className="text-sm" />
       },
     },
     {

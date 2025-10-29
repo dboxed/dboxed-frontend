@@ -3,6 +3,7 @@ import type { components } from "@/api/models/schema"
 import { Badge } from "@/components/ui/badge.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx";
 import { StatusBadge } from "@/components/StatusBadge.tsx";
+import { TimeAgo } from "@/components/TimeAgo.tsx";
 
 interface GeneralInfoCardProps {
   data: components["schemas"]["S3Bucket"]
@@ -30,13 +31,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
         />
         <LabelAndValue
           label="Created At"
-          value={new Date(data.createdAt).toLocaleString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit'
-          })}
+          value={<TimeAgo date={data.createdAt} />}
         />
         <LabelAndValue label="ID" value={data.id.toString()} />
       </CardContent>

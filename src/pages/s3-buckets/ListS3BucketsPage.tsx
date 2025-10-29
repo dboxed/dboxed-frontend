@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge.tsx"
 import { BaseListPage } from "@/pages/base"
 import { CreateS3BucketDialog } from "./create/CreateS3BucketDialog.tsx"
 import { StatusBadge } from "@/components/StatusBadge.tsx"
+import { TimeAgo } from "@/components/TimeAgo.tsx"
 
 export function ListS3BucketsPage() {
   const navigate = useNavigate()
@@ -60,17 +61,8 @@ export function ListS3BucketsPage() {
       accessorKey: "createdAt",
       header: "Created",
       cell: ({ row }) => {
-        const date = new Date(row.getValue("createdAt"))
-        const formattedDate = date.toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric'
-        })
-        return (
-          <div className="text-sm text-muted-foreground">
-            {formattedDate}
-          </div>
-        )
+        const createdAt = row.getValue("createdAt") as string
+        return <TimeAgo date={createdAt} className="text-sm" />
       },
     },
     {

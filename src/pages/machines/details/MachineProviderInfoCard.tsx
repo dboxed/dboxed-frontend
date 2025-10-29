@@ -4,6 +4,7 @@ import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import { useDboxedQueryClient } from "@/api/api"
 import { Link } from "react-router"
+import { TimeAgo } from "@/components/TimeAgo.tsx"
 
 interface MachineProviderInfoCardProps {
   machineProviderId: number | null
@@ -127,7 +128,7 @@ export function MachineProviderInfoCard({
           
           <LabelAndValue
             label="Created At"
-            textValue={new Date(machineProvider.createdAt).toLocaleString()}
+            value={<TimeAgo date={machineProvider.createdAt} />}
           />
         </DetailsCardLayout>
 

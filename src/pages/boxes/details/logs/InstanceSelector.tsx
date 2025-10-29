@@ -1,5 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
 import type { components } from "@/api/models/schema"
+import { formatTimeAgo } from "@/utils/time.ts"
 
 interface InstanceSelectorProps {
   selectedLogId: number | null
@@ -29,7 +30,7 @@ export function InstanceSelector({ selectedLogId, onLogIdChange, logFiles }: Ins
             }
             const containerId = containerInfo?.ID as string | undefined
             const shortId = containerId ? containerId.substring(0, 6) : 'N/A'
-            const createdAt = new Date(containerInfo.Created as string).toLocaleString()
+            const createdAt = formatTimeAgo(containerInfo.Created as string)
 
             return (
               <SelectItem key={logFile.id} value={logFile.id.toString()}>

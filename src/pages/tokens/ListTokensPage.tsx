@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { CreateTokenDialog } from "./create/CreateTokenDialog.tsx";
+import { TimeAgo } from "@/components/TimeAgo.tsx";
 
 export function ListTokensPage() {
   const navigate = useNavigate()
@@ -76,17 +77,8 @@ export function ListTokensPage() {
       accessorKey: "createdAt",
       header: "Created",
       cell: ({ row }) => {
-        const date = new Date(row.getValue("createdAt"))
-        const formattedDate = date.toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric'
-        })
-        return (
-          <div className="text-sm text-muted-foreground">
-            {formattedDate}
-          </div>
-        )
+        const createdAt = row.getValue("createdAt") as string
+        return <TimeAgo date={createdAt} className="text-sm" />
       },
     },
     {

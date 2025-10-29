@@ -4,7 +4,8 @@ import { DataTable } from "@/components/data-table.tsx"
 import { useDboxedQueryClient } from "@/api/api.ts"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useNavigate } from "react-router"
-import { formatTimeAgo, formatDuration } from "@/utils/time.ts"
+import { formatDuration } from "@/utils/time.ts"
+import { TimeAgo } from "@/components/TimeAgo.tsx"
 import type { components } from "@/api/models/schema"
 import type { ColumnDef } from "@tanstack/react-table"
 import { formatSize } from "@/utils/size.ts";
@@ -46,12 +47,7 @@ export function SnapshotsTab({ volumeId }: SnapshotsTabProps) {
       cell: ({ row }) => {
         const createdAt = row.getValue("createdAt") as string
         return (
-          <div className="flex flex-col">
-            <span className="text-sm">{formatTimeAgo(createdAt)}</span>
-            <span className="text-xs text-muted-foreground">
-              {new Date(createdAt).toLocaleString()}
-            </span>
-          </div>
+          <TimeAgo date={createdAt} className="text-sm" />
         )
       }
     },

@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import type { components } from "@/api/models/schema"
-import { Badge } from "@/components/ui/badge.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx";
 import { StatusBadge } from "@/components/StatusBadge.tsx";
 import { TimeAgo } from "@/components/TimeAgo.tsx";

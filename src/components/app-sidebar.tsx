@@ -41,7 +41,7 @@ const navMain = [
   /*{
     title: "Machines",
     navigate: "/workspaces/{workspaceId}/machines",
-    icon: <Monitor,
+    icon: <Monitor/>,
   },*/
 ]
 

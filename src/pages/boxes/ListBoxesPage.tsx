@@ -8,6 +8,7 @@ import { BaseListPage } from "@/pages/base";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { CreateBoxDialog } from "./create/CreateBoxDialog.tsx";
 import { ContainerStatusCell } from "./docker-utils.tsx";
+import { StatusBadge } from "@/components/StatusBadge.tsx";
 
 export function ListBoxesPage() {
   const navigate = useNavigate()
@@ -92,6 +93,20 @@ export function ListBoxesPage() {
       },
     },
     {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => {
+        return (
+          <StatusBadge
+            item={{
+              status: row.original.status,
+              statusDetails: row.original.statusDetails
+            }}
+          />
+        )
+      },
+    },
+    {
       id: "sandboxStatus",
       header: "Sandbox Status",
       cell: ({ row }) => {
@@ -101,8 +116,13 @@ export function ListBoxesPage() {
           return <span className="text-sm text-muted-foreground">N/A</span>
         }
 
-        const variant = sandboxStatus.runStatus === 'running' ? 'success' : 'secondary'
-        return <Badge variant={variant}>{sandboxStatus.runStatus}</Badge>
+        return (
+          <StatusBadge
+            item={{
+              status: sandboxStatus.runStatus,
+            }}
+          />
+        )
       },
     },
     {

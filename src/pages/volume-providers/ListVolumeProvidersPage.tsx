@@ -6,6 +6,7 @@ import type { components } from "@/api/models/schema";
 import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
 import { CreateVolumeProviderDialog } from "@/pages/volume-providers/create/CreateVolumeProviderDialog.tsx";
+import { StatusBadge } from "@/components/StatusBadge.tsx";
 
 export function ListVolumeProvidersPage() {
   const navigate = useNavigate()
@@ -45,23 +46,13 @@ export function ListVolumeProvidersPage() {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => {
-        const status = row.getValue("status") as string
-        const getStatusVariant = (status: string) => {
-          switch (status.toLowerCase()) {
-            case 'active':
-              return 'default'
-            case 'pending':
-              return 'secondary'
-            case 'error':
-              return 'destructive'
-            default:
-              return 'outline'
-          }
-        }
         return (
-          <Badge variant={getStatusVariant(status)} className="capitalize">
-            {status}
-          </Badge>
+          <StatusBadge
+            item={{
+              status: row.original.status,
+              statusDetails: row.original.statusDetails
+            }}
+          />
         )
       },
     },

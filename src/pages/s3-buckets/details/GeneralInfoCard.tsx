@@ -2,23 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.t
 import type { components } from "@/api/models/schema"
 import { Badge } from "@/components/ui/badge.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx";
+import { StatusBadge } from "@/components/StatusBadge.tsx";
 
 interface GeneralInfoCardProps {
   data: components["schemas"]["S3Bucket"]
 }
 
 export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
-  const getStatusVariant = (status: string) => {
-    switch (status) {
-      case "ok":
-        return "default"
-      case "error":
-        return "destructive"
-      default:
-        return "secondary"
-    }
-  }
-
   return (
     <Card>
       <CardHeader>
@@ -30,9 +20,12 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
         <LabelAndValue
           label="Status"
           value={
-            <Badge variant={getStatusVariant(data.status)}>
-              {data.status}
-            </Badge>
+            <StatusBadge
+              item={{
+                status: data.status,
+                statusDetails: data.statusDetails
+              }}
+            />
           }
         />
         <LabelAndValue

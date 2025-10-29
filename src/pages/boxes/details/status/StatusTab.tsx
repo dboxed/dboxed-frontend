@@ -10,6 +10,7 @@ import type { components } from "@/api/models/schema"
 import { useEffect, useState } from "react"
 import { ContainerLogsDialog } from "./ContainerLogsDialog.tsx"
 import { decompressDockerPs, type DockerContainer } from "../../docker-utils.tsx"
+import { StatusBadge } from "@/components/StatusBadge.tsx"
 
 interface StatusTabProps {
   box: components["schemas"]["Box"]
@@ -70,9 +71,11 @@ export function StatusTab({ box }: StatusTabProps) {
                 <div className="text-sm font-medium text-muted-foreground">Status</div>
                 <div className="text-lg">
                   {sandboxStatus?.runStatus ? (
-                    <Badge variant={sandboxStatus.runStatus === 'running' ? 'success' : 'secondary'}>
-                      {sandboxStatus.runStatus}
-                    </Badge>
+                    <StatusBadge
+                      item={{
+                        status: sandboxStatus.runStatus,
+                      }}
+                    />
                   ) : (
                     <span className="text-muted-foreground">Unknown</span>
                   )}

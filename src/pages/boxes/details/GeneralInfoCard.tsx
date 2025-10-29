@@ -12,6 +12,7 @@ import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import { ContainerLogsDialog } from "./status/ContainerLogsDialog.tsx"
 import { ReconcileLogsDialog } from "./status/ReconcileLogsDialog.tsx"
+import { StatusBadge } from "@/components/StatusBadge.tsx"
 import type { components } from "@/api/models/schema"
 
 interface GeneralInfoCardProps {
@@ -221,9 +222,11 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
                 <div className="text-sm font-medium text-muted-foreground">Status</div>
                 <div className="text-lg">
                   {sandboxStatus?.runStatus ? (
-                    <Badge variant={sandboxStatus.runStatus === 'running' ? 'success' : 'secondary'}>
-                      {sandboxStatus.runStatus}
-                    </Badge>
+                    <StatusBadge
+                      item={{
+                        status: sandboxStatus.runStatus,
+                      }}
+                    />
                   ) : (
                     <span className="text-muted-foreground">Unknown</span>
                   )}

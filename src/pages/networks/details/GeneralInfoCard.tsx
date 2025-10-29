@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
+import { StatusBadge } from "@/components/StatusBadge.tsx"
 import type { components } from "@/api/models/schema"
 
 interface GeneralInfoCardProps {
@@ -37,9 +38,12 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           <LabelAndValue
             label="Status"
             value={
-              <Badge variant={"outline"} className="w-fit capitalize">
-                {data.status}
-              </Badge>
+              <StatusBadge
+                item={{
+                  status: data.status,
+                  statusDetails: data.statusDetails
+                }}
+              />
             }
           />
           

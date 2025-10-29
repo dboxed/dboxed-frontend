@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { CreateMachineDialog } from "./create/CreateMachineDialog.tsx";
+import { StatusBadge } from "@/components/StatusBadge.tsx";
 
 export function ListMachinesPage() {
   const navigate = useNavigate()
@@ -77,6 +78,20 @@ export function ListMachinesPage() {
               {providerType}
             </Badge>
           </div>
+        )
+      },
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => {
+        return (
+          <StatusBadge
+            item={{
+              status: row.original.status,
+              statusDetails: row.original.statusDetails
+            }}
+          />
         )
       },
     },

@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
+import { StatusBadge } from "@/components/StatusBadge.tsx"
 import type { components } from "@/api/models/schema"
 
 interface GeneralInfoCardProps {
@@ -78,6 +79,19 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
               </Badge>
             }
           />
+
+          <LabelAndValue
+            label="Status"
+            value={
+              <StatusBadge
+                item={{
+                  status: data.status,
+                  statusDetails: data.statusDetails
+                }}
+              />
+            }
+          />
+
           <LabelAndValue
             label="Created At"
             textValue={new Date(data.createdAt).toLocaleString()}

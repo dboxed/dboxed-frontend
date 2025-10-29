@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge.tsx";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { LabelAndValue } from "@/components/LabelAndValue.tsx";
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx";
+import { StatusBadge } from "@/components/StatusBadge.tsx";
 import type { components } from "@/api/models/schema";
 
 interface GeneralInfoCardProps {
@@ -10,19 +11,6 @@ interface GeneralInfoCardProps {
 }
 
 export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
-  const getStatusVariant = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'active':
-        return 'default'
-      case 'pending':
-        return 'secondary'
-      case 'error':
-        return 'destructive'
-      default:
-        return 'outline'
-    }
-  }
-
   return (
     <Card>
       <CardHeader>
@@ -48,9 +36,12 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           <LabelAndValue
             label="Status"
             value={
-              <Badge variant={getStatusVariant(data.status)} className="capitalize">
-                {data.status}
-              </Badge>
+              <StatusBadge
+                item={{
+                  status: data.status,
+                  statusDetails: data.statusDetails
+                }}
+              />
             }
           />
           <LabelAndValue

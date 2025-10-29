@@ -6,6 +6,7 @@ import type { components } from "@/api/models/schema"
 import { Badge } from "@/components/ui/badge.tsx"
 import { BaseListPage } from "@/pages/base"
 import { CreateS3BucketDialog } from "./create/CreateS3BucketDialog.tsx"
+import { StatusBadge } from "@/components/StatusBadge.tsx"
 
 export function ListS3BucketsPage() {
   const navigate = useNavigate()
@@ -45,12 +46,13 @@ export function ListS3BucketsPage() {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => {
-        const status = row.getValue("status") as string
-        const variant = status === "ok" ? "default" : status === "error" ? "destructive" : "secondary"
         return (
-          <Badge variant={variant}>
-            {status}
-          </Badge>
+          <StatusBadge
+            item={{
+              status: row.original.status,
+              statusDetails: row.original.statusDetails
+            }}
+          />
         )
       },
     },

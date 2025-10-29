@@ -1005,6 +1005,7 @@ export interface components {
             networkType: string | null;
             sandboxStatus?: components["schemas"]["BoxSandboxStatus"];
             status: string;
+            statusDetails: string;
             uuid: string;
             /** Format: int64 */
             workspace: number;
@@ -1509,6 +1510,7 @@ export interface components {
             machineProviderType: string;
             name: string;
             status: string;
+            statusDetails: string;
             /** Format: int64 */
             workspace: number;
         };
@@ -1527,6 +1529,7 @@ export interface components {
             name: string;
             sshKeyFingerprint: string | null;
             status: string;
+            statusDetails: string;
             type: string;
             /** Format: int64 */
             workspace: number;
@@ -1571,6 +1574,7 @@ export interface components {
             name: string;
             netbird: components["schemas"]["NetworkNetbird"];
             status: string;
+            statusDetails: string;
             type: string;
             /** Format: int64 */
             workspace: number;
@@ -1607,6 +1611,7 @@ export interface components {
             /** Format: int64 */
             id: number;
             status: string;
+            statusDetails: string;
             /** Format: int64 */
             workspace: number;
         };
@@ -1921,6 +1926,7 @@ export interface components {
             name: string;
             rustic?: components["schemas"]["VolumeProviderRustic"];
             status: string;
+            statusDetails: string;
             type: string;
             /** Format: int64 */
             workspace: number;
@@ -2033,6 +2039,8 @@ export interface components {
             /** Format: int64 */
             id: number;
             name: string;
+            status: string;
+            statusDetails: string;
         };
         WorkspaceAccess: {
             user: components["schemas"]["User"];

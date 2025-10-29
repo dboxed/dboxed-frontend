@@ -4,6 +4,7 @@ import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import type { components } from "@/api/models/schema"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx";
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx";
+import { StatusBadge } from "@/components/StatusBadge.tsx";
 
 interface GeneralInfoCardProps {
   data: components["schemas"]["MachineProvider"]
@@ -37,9 +38,12 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           <LabelAndValue
             label="Status"
             value={
-              <Badge variant="outline" className="w-fit">
-                {data.status}
-              </Badge>
+              <StatusBadge
+                item={{
+                  status: data.status,
+                  statusDetails: data.statusDetails
+                }}
+              />
             }
           />
           

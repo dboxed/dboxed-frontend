@@ -43,7 +43,7 @@ export function AdminWorkspacesListPage() {
                     <Tooltip key={index}>
                       <TooltipTrigger asChild>
                         <Badge variant="secondary" className="text-xs cursor-help">
-                          {userAccess.user.name}
+                          {userAccess.user.username}
                         </Badge>
                       </TooltipTrigger>
                       <TooltipContent>

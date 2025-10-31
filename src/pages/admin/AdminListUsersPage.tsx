@@ -17,7 +17,7 @@ export function AdminListUsersPage() {
           <div className="flex items-center gap-3">
             <UserAvatar user={user} />
             <div>
-              <div className="font-medium">{user.name}</div>
+              <div className="font-medium">{user.fullName}</div>
               <div className="text-sm text-muted-foreground">{user.email}</div>
             </div>
           </div>

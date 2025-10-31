@@ -1853,11 +1853,12 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            avatar: string;
-            email: string;
+            avatar: string | null;
+            email: string | null;
+            fullName: string | null;
             id: string;
             isAdmin?: boolean;
-            name: string;
+            username: string;
         };
         Volume: {
             /**

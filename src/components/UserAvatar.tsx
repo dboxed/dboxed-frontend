@@ -21,7 +21,7 @@ const fallbackTextClasses = {
 
 export function UserAvatar({ user, size = "md", className = "" }: UserAvatarProps) {
   // Get initials from name for fallback
-  const initials = user.name
+  const initials = (user.fullName || user.username)
     .split(" ")
     .map((n) => n[0])
     .join("")
@@ -30,7 +30,7 @@ export function UserAvatar({ user, size = "md", className = "" }: UserAvatarProp
 
   return (
     <Avatar className={`${sizeClasses[size]} ${className}`}>
-      <AvatarImage src={user.avatar} alt={user.name} />
+      <AvatarImage src={user.avatar || undefined} alt={user.fullName || user.username} />
       <AvatarFallback className={fallbackTextClasses[size]}>
         {initials}
       </AvatarFallback>

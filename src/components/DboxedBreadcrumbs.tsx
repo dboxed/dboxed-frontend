@@ -190,6 +190,26 @@ function CreateBreadcrumb({ isCurrentPage }: CreateBreadcrumbProps) {
   )
 }
 
+interface NetworksBreadcrumbProps {
+  isCurrentPage?: boolean
+}
+
+function NetworksBreadcrumb({ isCurrentPage }: NetworksBreadcrumbProps) {
+  const navigate = useNavigate()
+  const { workspaceId } = useSelectedWorkspaceId()
+  const href = `/workspaces/${workspaceId}/networks`
+
+  return (
+    <BreadcrumbElement
+      href={href}
+      isCurrentPage={isCurrentPage}
+      onClick={() => navigate(href)}
+    >
+      <span>Networks</span>
+    </BreadcrumbElement>
+  )
+}
+
 interface NetworkBreadcrumbProps {
   networkId: number
   isCurrentPage?: boolean
@@ -575,9 +595,7 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
     breadcrumbElements.push(
       <BreadcrumbSeparator key="sep-workspace-networks"/>,
       <BreadcrumbItem key="networks">
-        <BreadcrumbElement isCurrentPage={isCurrentPage}>
-          <span>Networks</span>
-        </BreadcrumbElement>
+        <NetworksBreadcrumb isCurrentPage={isCurrentPage}/>
       </BreadcrumbItem>
     )
 

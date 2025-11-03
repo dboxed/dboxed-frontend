@@ -127,7 +127,7 @@ export function MachineProviderInfoCard({
           />
           
           <LabelAndValue
-            label="Created At"
+            label="Created"
             value={<TimeAgo date={machineProvider.createdAt} />}
           />
         </DetailsCardLayout>

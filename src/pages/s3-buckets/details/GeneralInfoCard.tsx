@@ -29,7 +29,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           }
         />
         <LabelAndValue
-          label="Created At"
+          label="Created"
           value={<TimeAgo date={data.createdAt} />}
         />
         <LabelAndValue label="ID" value={data.id.toString()} />

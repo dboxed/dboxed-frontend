@@ -58,7 +58,7 @@ export function TokenDetailsCard({ token }: TokenDetailsCardProps) {
           />
 
           <LabelAndValue
-            label="Created At"
+            label="Created"
             value={<TimeAgo date={token.createdAt} />}
           />
 

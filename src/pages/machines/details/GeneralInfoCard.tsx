@@ -94,7 +94,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           />
 
           <LabelAndValue
-            label="Created At"
+            label="Created"
             value={<TimeAgo date={data.createdAt} />}
           />
         </DetailsCardLayout>

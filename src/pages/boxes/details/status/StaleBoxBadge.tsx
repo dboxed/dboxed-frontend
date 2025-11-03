@@ -1,15 +1,22 @@
 import { Badge } from "@/components/ui/badge.tsx";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip.tsx";
 import { isStatusStale, formatTimeAgo } from "@/utils/time.ts";
+import type { components } from "@/api/models/schema";
 
-interface StaleBadgeProps {
-  statusTime: Date | string | null | undefined
+interface StaleBoxBadgeProps {
+  box: components["schemas"]["Box"]
   showOnlyWhenStale?: boolean
   size?: "default" | "sm" | "lg"
 }
 
-export function StaleBadge({ statusTime, showOnlyWhenStale = true, size = "default" }: StaleBadgeProps) {
+export function StaleBoxBadge({ box, showOnlyWhenStale = true, size = "default" }: StaleBoxBadgeProps) {
+  const statusTime = box.sandboxStatus?.statusTime
   const isStale = isStatusStale(statusTime)
+
+  // Don't render if box desired state is not 'up'
+  if (box.desiredState !== 'up') {
+    return null
+  }
 
   // Don't render if not stale and showOnlyWhenStale is true
   if (showOnlyWhenStale && !isStale) {
@@ -18,10 +25,7 @@ export function StaleBadge({ statusTime, showOnlyWhenStale = true, size = "defau
 
   const badge = (
     <Badge
-      variant="outline"
-      className={`cursor-help text-amber-600 border-amber-600 ${
-        size === 'sm' ? 'text-xs' : size === 'lg' ? 'text-base' : ''
-      }`}
+      variant="destructive"
     >
       Stale
     </Badge>

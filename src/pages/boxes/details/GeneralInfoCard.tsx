@@ -14,6 +14,7 @@ import { ContainerLogsDialog } from "./status/ContainerLogsDialog.tsx"
 import { ReconcileLogsDialog } from "./status/ReconcileLogsDialog.tsx"
 import { StatusBadge } from "@/components/StatusBadge.tsx"
 import { TimeAgo } from "@/components/TimeAgo.tsx"
+import { StaleBoxBadge } from "@/pages/boxes/details/status/StaleBoxBadge.tsx"
 import type { components } from "@/api/models/schema"
 
 interface GeneralInfoCardProps {
@@ -189,7 +190,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
               />
 
               <LabelAndValue
-                label="Created At"
+                label="Created"
                 value={<TimeAgo date={data.createdAt} />}
               />
             </DetailsCardLayout>
@@ -230,26 +231,22 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
               />
 
               <LabelAndValue
-                label="Actual Status"
+                label="Status"
                 value={
                   sandboxStatus?.runStatus ? (
-                    <StatusBadge
-                      item={{
-                        status: sandboxStatus.runStatus,
-                      }}
-                    />
+                    <div className="flex items-center gap-2">
+                      <StatusBadge
+                        item={{
+                          status: sandboxStatus.runStatus,
+                        }}
+                      />
+                      <StaleBoxBadge box={data} />
+                    </div>
                   ) : (
                     <span className="text-muted-foreground">Unknown</span>
                   )
                 }
               />
-
-              {sandboxStatus?.statusTime && (
-                <LabelAndValue
-                  label="Last Status Reported"
-                  value={<TimeAgo date={sandboxStatus.statusTime} />}
-                />
-              )}
 
               {sandboxStatus?.startTime && (
                 <LabelAndValue

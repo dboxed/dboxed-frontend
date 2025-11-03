@@ -61,10 +61,10 @@ export function WorkspaceDashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <BoxesOverview />
+          <NetworksOverview />
           {/*<MachineProvidersOverview />*/}
           <VolumeProvidersOverview />
-          <NetworksOverview />
-          <BoxesOverview />
           {/*<MachinesOverview />*/}
           <VolumesOverview />
         </div>

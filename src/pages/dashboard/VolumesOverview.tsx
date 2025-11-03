@@ -7,6 +7,7 @@ import type { components } from "@/api/models/schema"
 import { WorkspaceOverviewCard } from "@/pages/dashboard/WorkspaceOverviewCard.tsx"
 import { formatSize } from "@/utils/size.ts"
 import { CreateVolumeDialog } from "@/pages/volumes/create/CreateVolumeDialog.tsx"
+import { Badge } from "@/components/ui/badge.tsx"
 
 export function VolumesOverview() {
   const navigate = useNavigate()
@@ -42,9 +43,23 @@ export function VolumesOverview() {
 
   const items = recentVolumes.map((volume: components["schemas"]["Volume"]) => ({
     id: volume.id,
-    name: volume.name,
-    onClick: () => navigate(`/workspaces/${workspaceId}/volumes/${volume.id}`),
-    badges: volume.volumeProviderType === "rustic" && volume.rustic ? [{ text: formatSize(volume.rustic.fsSize) }] : undefined,
+    content: (
+      <div
+        className="flex items-center justify-between p-2 border rounded-md hover:bg-accent cursor-pointer"
+        onClick={() => navigate(`/workspaces/${workspaceId}/volumes/${volume.id}`)}
+      >
+        <div className="flex items-center gap-2">
+          <div className="text-sm font-medium">{volume.name}</div>
+        </div>
+        <div className="flex items-center gap-2">
+          {volume.volumeProviderType === "rustic" && volume.rustic && (
+            <Badge variant="outline" className="text-xs">
+              {formatSize(volume.rustic.fsSize)}
+            </Badge>
+          )}
+        </div>
+      </div>
+    ),
   }))
 
   return (

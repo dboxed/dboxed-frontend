@@ -6,6 +6,8 @@ import { Database } from "lucide-react"
 import type { components } from "@/api/models/schema"
 import { WorkspaceOverviewCard } from "@/pages/dashboard/WorkspaceOverviewCard.tsx"
 import { CreateVolumeProviderDialog } from "@/pages/volume-providers/create/CreateVolumeProviderDialog.tsx"
+import { StatusBadge } from "@/components/StatusBadge.tsx"
+import { Badge } from "@/components/ui/badge.tsx"
 
 export function VolumeProvidersOverview() {
   const navigate = useNavigate()
@@ -31,13 +33,27 @@ export function VolumeProvidersOverview() {
 
   const items = recentVolumeProviders.map((provider: components["schemas"]["VolumeProvider"]) => ({
     id: provider.id,
-    name: provider.name,
-    onClick: () => navigate(`/workspaces/${workspaceId}/volume-providers/${provider.id}`),
-    badges: [{ text: provider.type }],
-    statusBadge: { 
-      text: provider.status, 
-      variant: provider.status === 'active' ? 'default' as const : 'secondary' as const
-    },
+    content: (
+      <div
+        className="flex items-center justify-between p-2 border rounded-md hover:bg-accent cursor-pointer"
+        onClick={() => navigate(`/workspaces/${workspaceId}/volume-providers/${provider.id}`)}
+      >
+        <div className="flex items-center gap-2">
+          <div className="text-sm font-medium">{provider.name}</div>
+          <Badge variant="outline" className="text-xs capitalize">
+            {provider.type}
+          </Badge>
+        </div>
+        <div className="flex items-center gap-2">
+          <StatusBadge
+            item={{
+              status: provider.status,
+              statusDetails: provider.statusDetails,
+            }}
+          />
+        </div>
+      </div>
+    ),
   }))
 
   return (

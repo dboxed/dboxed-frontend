@@ -6,6 +6,7 @@ import { Monitor } from "lucide-react"
 import type { components } from "@/api/models/schema"
 import { WorkspaceOverviewCard } from "@/pages/dashboard/WorkspaceOverviewCard.tsx"
 import { CreateMachineDialog } from "@/pages/machines/create/CreateMachineDialog.tsx"
+import { Badge } from "@/components/ui/badge.tsx"
 
 export function MachinesOverview() {
   const navigate = useNavigate()
@@ -41,9 +42,21 @@ export function MachinesOverview() {
 
   const items = recentMachines.map((machine: components["schemas"]["Machine"]) => ({
     id: machine.id,
-    name: machine.name,
-    onClick: () => navigate(`/workspaces/${workspaceId}/machines/${machine.id}`),
-    badges: machine.machineProviderType ? [{ text: machine.machineProviderType }] : undefined,
+    content: (
+      <div
+        className="flex items-center justify-between p-2 border rounded-md hover:bg-accent cursor-pointer"
+        onClick={() => navigate(`/workspaces/${workspaceId}/machines/${machine.id}`)}
+      >
+        <div className="flex items-center gap-2">
+          <div className="text-sm font-medium">{machine.name}</div>
+          {machine.machineProviderType && (
+            <Badge variant="outline" className="text-xs capitalize">
+              {machine.machineProviderType}
+            </Badge>
+          )}
+        </div>
+      </div>
+    ),
   }))
 
   return (

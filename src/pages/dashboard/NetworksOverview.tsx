@@ -6,6 +6,8 @@ import { Network } from "lucide-react"
 import type { components } from "@/api/models/schema"
 import { WorkspaceOverviewCard } from "@/pages/dashboard/WorkspaceOverviewCard.tsx"
 import { CreateNetworkDialog } from "@/pages/networks/create/CreateNetworkDialog.tsx"
+import { StatusBadge } from "@/components/StatusBadge.tsx"
+import { Badge } from "@/components/ui/badge.tsx"
 
 export function NetworksOverview() {
   const navigate = useNavigate()
@@ -29,25 +31,29 @@ export function NetworksOverview() {
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 3)
 
-  const getStatusVariant = (status: string): "default" | "secondary" | "outline" | "destructive" => {
-    switch (status.toLowerCase()) {
-      case 'active':
-        return 'default'
-      case 'pending':
-        return 'secondary'
-      case 'error':
-        return 'destructive'
-      default:
-        return 'outline'
-    }
-  }
-
   const items = recentNetworks.map((network: components["schemas"]["Network"]) => ({
     id: network.id,
-    name: network.name,
-    onClick: () => navigate(`/workspaces/${workspaceId}/networks/${network.id}`),
-    badges: [{ text: network.type }],
-    statusBadge: { text: network.status, variant: getStatusVariant(network.status) },
+    content: (
+      <div
+        className="flex items-center justify-between p-2 border rounded-md hover:bg-accent cursor-pointer"
+        onClick={() => navigate(`/workspaces/${workspaceId}/networks/${network.id}`)}
+      >
+        <div className="flex items-center gap-2">
+          <div className="text-sm font-medium">{network.name}</div>
+          <Badge variant="outline" className="text-xs capitalize">
+            {network.type}
+          </Badge>
+        </div>
+        <div className="flex items-center gap-2">
+          <StatusBadge
+            item={{
+              status: network.status,
+              statusDetails: network.statusDetails,
+            }}
+          />
+        </div>
+      </div>
+    ),
   }))
 
   return (

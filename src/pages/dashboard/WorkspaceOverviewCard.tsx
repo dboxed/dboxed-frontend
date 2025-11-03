@@ -13,11 +13,7 @@ interface WorkspaceOverviewCardProps {
   error: boolean
   items: Array<{
     id: string | number
-    name: string
-    onClick: () => void
-    badges?: Array<{ text: string; variant?: "default" | "secondary" | "outline" | "destructive" }>
-    subtitle?: string
-    statusBadge?: { text: string; variant?: "default" | "secondary" | "outline" | "destructive" }
+    content: ReactNode
   }>
   emptyState: {
     message: string
@@ -95,38 +91,8 @@ export function WorkspaceOverviewCard({
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Recent {title}</div>
                   {items.slice(0, 2).map((item) => (
-                    <div
-                      key={item.id}
-                      className="flex items-center justify-between p-2 border rounded-md hover:bg-accent cursor-pointer"
-                      onClick={item.onClick}
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className="text-sm font-medium">{item.name}</div>
-                        {item.badges?.map((badge, index) => (
-                          <Badge 
-                            key={index} 
-                            variant={badge.variant || "outline"} 
-                            className="text-xs capitalize"
-                          >
-                            {badge.text}
-                          </Badge>
-                        ))}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {item.statusBadge && (
-                          <Badge 
-                            variant={item.statusBadge.variant || "outline"} 
-                            className="text-xs capitalize"
-                          >
-                            {item.statusBadge.text}
-                          </Badge>
-                        )}
-                        {item.subtitle && (
-                          <div className="text-xs text-muted-foreground">
-                            {item.subtitle}
-                          </div>
-                        )}
-                      </div>
+                    <div key={item.id}>
+                      {item.content}
                     </div>
                   ))}
                 </div>

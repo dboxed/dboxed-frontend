@@ -7,10 +7,10 @@ import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { CreateBoxDialog } from "./create/CreateBoxDialog.tsx";
-import { ContainerStatusCell } from "./docker-utils.tsx";
 import { StatusBadge } from "@/components/StatusBadge.tsx";
 import { TimeAgo } from "@/components/TimeAgo.tsx";
 import { StaleBoxBadge } from "@/pages/boxes/details/status/StaleBoxBadge.tsx";
+import { ContainerStatusBadge } from "@/pages/boxes/details/status/ContainerStatusBadge.tsx";
 
 export function ListBoxesPage() {
   const navigate = useNavigate()
@@ -147,7 +147,7 @@ export function ListBoxesPage() {
       id: "containers",
       header: "Containers",
       cell: ({ row }) => {
-        return <ContainerStatusCell box={row.original} />
+        return <ContainerStatusBadge box={row.original} />
       },
     },
     {

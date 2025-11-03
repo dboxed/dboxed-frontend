@@ -6,6 +6,10 @@ import { Package } from "lucide-react"
 import type { components } from "@/api/models/schema"
 import { WorkspaceOverviewCard } from "@/pages/dashboard/WorkspaceOverviewCard.tsx"
 import { CreateBoxDialog } from "@/pages/boxes/create/CreateBoxDialog.tsx"
+import { ContainerStatusBadge } from "@/pages/boxes/details/status/ContainerStatusBadge.tsx"
+import { StaleBoxBadge } from "@/pages/boxes/details/status/StaleBoxBadge.tsx"
+import { StatusBadge } from "@/components/StatusBadge.tsx"
+import { Badge } from "@/components/ui/badge.tsx"
 
 export function BoxesOverview() {
   const navigate = useNavigate()
@@ -31,10 +35,32 @@ export function BoxesOverview() {
 
   const items = recentBoxes.map((box: components["schemas"]["Box"]) => ({
     id: box.id,
-    name: box.name,
-    onClick: () => navigate(`/workspaces/${workspaceId}/boxes/${box.id}`),
-    badges: box.networkType ? [{ text: box.networkType }] : undefined,
-    subtitle: new Date(box.createdAt).toLocaleDateString(),
+    content: (
+      <div
+        className="flex items-center justify-between p-2 border rounded-md hover:bg-accent cursor-pointer"
+        onClick={() => navigate(`/workspaces/${workspaceId}/boxes/${box.id}`)}
+      >
+        <div className="flex items-center gap-2">
+          <div className="text-sm font-medium">{box.name}</div>
+          {box.networkType && (
+            <Badge variant="outline" className="text-xs capitalize">
+              {box.networkType}
+            </Badge>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          {box.sandboxStatus?.runStatus && (
+            <StatusBadge
+              item={{
+                status: box.sandboxStatus.runStatus,
+              }}
+            />
+          )}
+          <StaleBoxBadge box={box} />
+          <ContainerStatusBadge box={box} />
+        </div>
+      </div>
+    ),
   }))
 
   return (

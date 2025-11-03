@@ -10,6 +10,7 @@ import { CreateBoxDialog } from "./create/CreateBoxDialog.tsx";
 import { ContainerStatusCell } from "./docker-utils.tsx";
 import { StatusBadge } from "@/components/StatusBadge.tsx";
 import { TimeAgo } from "@/components/TimeAgo.tsx";
+import { StaleBadge } from "@/components/StaleBadge.tsx";
 
 export function ListBoxesPage() {
   const navigate = useNavigate()
@@ -124,17 +125,23 @@ export function ListBoxesPage() {
       header: "Sandbox Status",
       cell: ({ row }) => {
         const sandboxStatus = row.original.sandboxStatus
+        const box = row.original
 
         if (!sandboxStatus?.runStatus) {
           return <span className="text-sm text-muted-foreground">N/A</span>
         }
 
         return (
-          <StatusBadge
-            item={{
-              status: sandboxStatus.runStatus,
-            }}
-          />
+          <div className="flex items-center gap-2">
+            <StatusBadge
+              item={{
+                status: sandboxStatus.runStatus,
+              }}
+            />
+            {box.desiredState === 'up' && (
+              <StaleBadge statusTime={sandboxStatus.statusTime} />
+            )}
+          </div>
         )
       },
     },

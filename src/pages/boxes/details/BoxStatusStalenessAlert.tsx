@@ -4,7 +4,7 @@ import { AlertTriangle } from "lucide-react"
 import type { components } from "@/api/models/schema"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/api.ts"
-import { formatTimeAgo } from "@/utils/time.ts"
+import { formatTimeAgo, isStatusStale } from "@/utils/time.ts"
 
 interface BoxStatusStalenessAlertProps {
   box: components["schemas"]["Box"]
@@ -13,7 +13,7 @@ interface BoxStatusStalenessAlertProps {
 export function BoxStatusStalenessAlert({ box }: BoxStatusStalenessAlertProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [elapsedSeconds, setElapsedSeconds] = useState<number>(0)
+  const [tick, setTick] = useState<number>(0)
 
   const { data: sandboxStatus } = client.useQuery('get', "/v1/workspaces/{workspaceId}/boxes/{id}/sandbox-status", {
     params: {
@@ -26,30 +26,21 @@ export function BoxStatusStalenessAlert({ box }: BoxStatusStalenessAlertProps) {
     refetchInterval: 5000, // Refresh every 5 seconds
   })
 
-  // Track staleness of status
+  // Re-render every second to update staleness check
   useEffect(() => {
     if (!sandboxStatus?.statusTime) {
-      setElapsedSeconds(0)
       return
     }
 
-    const calculateElapsed = () => {
-      const statusTime = new Date(sandboxStatus.statusTime!).getTime()
-      const now = Date.now()
-      const elapsed = Math.floor((now - statusTime) / 1000)
-      setElapsedSeconds(elapsed)
-    }
-
-    // Calculate immediately
-    calculateElapsed()
-
-    // Update every second
-    const interval = setInterval(calculateElapsed, 1000)
+    // Update every second to keep staleness check current
+    const interval = setInterval(() => {
+      setTick(t => t + 1)
+    }, 1000)
 
     return () => clearInterval(interval)
   }, [sandboxStatus?.statusTime])
 
-  const isStale = elapsedSeconds >= 60
+  const isStale = isStatusStale(sandboxStatus?.statusTime)
 
   // Only show if status is stale and box should be up
   if (!isStale || !sandboxStatus?.statusTime || box.desiredState !== 'up') {

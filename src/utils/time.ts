@@ -55,3 +55,20 @@ export function formatDuration(seconds: number): string {
   // Show max 2 parts for readability
   return parts.slice(0, 2).join(' ')
 }
+
+/**
+ * Checks if a status timestamp is stale (older than 60 seconds).
+ * @param statusTime The timestamp of the last status update
+ * @returns true if the status is stale (>= 60 seconds old), false otherwise
+ */
+export function isStatusStale(statusTime: Date | string | null | undefined): boolean {
+  if (!statusTime) {
+    return false
+  }
+
+  const statusDate = typeof statusTime === 'string' ? new Date(statusTime) : statusTime
+  const now = Date.now()
+  const elapsed = Math.floor((now - statusDate.getTime()) / 1000)
+
+  return elapsed >= 60
+}

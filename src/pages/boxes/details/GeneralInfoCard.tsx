@@ -219,60 +219,52 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <div className="text-sm font-medium text-muted-foreground">Desired State</div>
-                  <div className="text-lg">
-                    <Badge variant={data.desiredState === 'up' ? 'default' : 'outline'} className="capitalize">
-                      {data.desiredState}
-                    </Badge>
-                  </div>
-                </div>
+            <DetailsCardLayout>
+              <LabelAndValue
+                label="Desired State"
+                value={
+                  <Badge variant={data.desiredState === 'up' ? 'default' : 'outline'} className="capitalize">
+                    {data.desiredState}
+                  </Badge>
+                }
+              />
 
-                <div>
-                  <div className="text-sm font-medium text-muted-foreground">Actual Status</div>
-                  <div className="text-lg">
-                    {sandboxStatus?.runStatus ? (
-                      <StatusBadge
-                        item={{
-                          status: sandboxStatus.runStatus,
-                        }}
-                      />
-                    ) : (
-                      <span className="text-muted-foreground">Unknown</span>
-                    )}
-                  </div>
-                </div>
+              <LabelAndValue
+                label="Actual Status"
+                value={
+                  sandboxStatus?.runStatus ? (
+                    <StatusBadge
+                      item={{
+                        status: sandboxStatus.runStatus,
+                      }}
+                    />
+                  ) : (
+                    <span className="text-muted-foreground">Unknown</span>
+                  )
+                }
+              />
 
-                {sandboxStatus?.statusTime && (
-                  <div>
-                    <div className="text-sm font-medium text-muted-foreground">Last Status Reported</div>
-                    <div className="text-lg">
-                      <TimeAgo date={sandboxStatus.statusTime} />
-                    </div>
-                  </div>
-                )}
+              {sandboxStatus?.statusTime && (
+                <LabelAndValue
+                  label="Last Status Reported"
+                  value={<TimeAgo date={sandboxStatus.statusTime} />}
+                />
+              )}
 
-                {sandboxStatus?.startTime && (
-                  <div>
-                    <div className="text-sm font-medium text-muted-foreground">Started</div>
-                    <div className="text-lg">
-                      <TimeAgo date={sandboxStatus.startTime} />
-                    </div>
-                  </div>
-                )}
+              {sandboxStatus?.startTime && (
+                <LabelAndValue
+                  label="Started"
+                  value={<TimeAgo date={sandboxStatus.startTime} />}
+                />
+              )}
 
-                {sandboxStatus?.stopTime && (
-                  <div>
-                    <div className="text-sm font-medium text-muted-foreground">Stopped</div>
-                    <div className="text-lg">
-                      <TimeAgo date={sandboxStatus.stopTime} />
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+              {sandboxStatus?.stopTime && (
+                <LabelAndValue
+                  label="Stopped"
+                  value={<TimeAgo date={sandboxStatus.stopTime} />}
+                />
+              )}
+            </DetailsCardLayout>
           </CardContent>
         </Card>
       </div>

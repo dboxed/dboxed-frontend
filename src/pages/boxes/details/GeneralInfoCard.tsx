@@ -115,165 +115,167 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>General Information</CardTitle>
-          <CardDescription>
-            Basic box details and configuration.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <DetailsCardLayout>
-            <LabelAndValue
-              label="Name"
-              textValue={data.name}
-            />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>General Information</CardTitle>
+            <CardDescription>
+              Basic box details and configuration.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <DetailsCardLayout>
+              <LabelAndValue
+                label="Name"
+                textValue={data.name}
+              />
 
-            <LabelAndValue
-              label="Workspace"
-              value={
-                <ReferenceLabel
-                  resourceId={data.workspace}
-                  resourcePath="/v1/workspaces/{workspaceId}"
-                  pathParams={{ workspaceId: data.workspace }}
-                  detailsUrl={`/workspaces/${data.workspace}`}
-                  fallbackLabel="Workspace"
-                />
-              }
-            />
-
-            <LabelAndValue
-              label="Dboxed Version"
-              value={
-                <Badge variant="outline" className="w-fit">
-                  {data.dboxedVersion}
-                </Badge>
-              }
-            />
-
-            <LabelAndValue
-              label="Network"
-              value={
-                <ReferenceLabel
-                  resourceId={data.network}
-                  resourcePath="/v1/workspaces/{workspaceId}/networks/{id}"
-                  pathParams={{
-                    workspaceId: data.workspace,
-                    id: data.network
-                  }}
-                  detailsUrl={`/workspaces/${data.workspace}/networks/${data.network}`}
-                  fallbackLabel="Network"
-                />
-              }
-            />
-
-            <LabelAndValue
-              label="Machine"
-              value={
-                data.machine ? (
+              <LabelAndValue
+                label="Workspace"
+                value={
                   <ReferenceLabel
-                    resourceId={data.machine}
-                    resourcePath="/v1/workspaces/{workspaceId}/machines/{id}"
+                    resourceId={data.workspace}
+                    resourcePath="/v1/workspaces/{workspaceId}"
+                    pathParams={{ workspaceId: data.workspace }}
+                    detailsUrl={`/workspaces/${data.workspace}`}
+                    fallbackLabel="Workspace"
+                  />
+                }
+              />
+
+              <LabelAndValue
+                label="Dboxed Version"
+                value={
+                  <Badge variant="outline" className="w-fit">
+                    {data.dboxedVersion}
+                  </Badge>
+                }
+              />
+
+              <LabelAndValue
+                label="Network"
+                value={
+                  <ReferenceLabel
+                    resourceId={data.network}
+                    resourcePath="/v1/workspaces/{workspaceId}/networks/{id}"
                     pathParams={{
                       workspaceId: data.workspace,
-                      id: data.machine
+                      id: data.network
                     }}
-                    detailsUrl={`/workspaces/${data.workspace}/machines/${data.machine}`}
-                    fallbackLabel="Machine"
+                    detailsUrl={`/workspaces/${data.workspace}/networks/${data.network}`}
+                    fallbackLabel="Network"
                   />
-                ) : (
-                  <span className="text-muted-foreground">No machine assigned</span>
-                )
-              }
-            />
+                }
+              />
 
-            <LabelAndValue
-              label="Created At"
-              value={<TimeAgo date={data.createdAt} />}
-            />
-          </DetailsCardLayout>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Sandbox Status</CardTitle>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowReconcileLogs(true)}
-                  >
-                    <ScrollText className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>View reconcile logs</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <div className="text-sm font-medium text-muted-foreground">Desired State</div>
-                <div className="text-lg">
-                  <Badge variant={data.desiredState === 'up' ? 'default' : 'outline'} className="capitalize">
-                    {data.desiredState}
-                  </Badge>
-                </div>
-              </div>
-
-              <div>
-                <div className="text-sm font-medium text-muted-foreground">Actual Status</div>
-                <div className="text-lg">
-                  {sandboxStatus?.runStatus ? (
-                    <StatusBadge
-                      item={{
-                        status: sandboxStatus.runStatus,
+              <LabelAndValue
+                label="Machine"
+                value={
+                  data.machine ? (
+                    <ReferenceLabel
+                      resourceId={data.machine}
+                      resourcePath="/v1/workspaces/{workspaceId}/machines/{id}"
+                      pathParams={{
+                        workspaceId: data.workspace,
+                        id: data.machine
                       }}
+                      detailsUrl={`/workspaces/${data.workspace}/machines/${data.machine}`}
+                      fallbackLabel="Machine"
                     />
                   ) : (
-                    <span className="text-muted-foreground">Unknown</span>
-                  )}
-                </div>
-              </div>
+                    <span className="text-muted-foreground">No machine assigned</span>
+                  )
+                }
+              />
 
-              {sandboxStatus?.statusTime && (
-                <div>
-                  <div className="text-sm font-medium text-muted-foreground">Last Status Reported</div>
-                  <div className="text-lg">
-                    <TimeAgo date={sandboxStatus.statusTime} />
-                  </div>
-                </div>
-              )}
+              <LabelAndValue
+                label="Created At"
+                value={<TimeAgo date={data.createdAt} />}
+              />
+            </DetailsCardLayout>
+          </CardContent>
+        </Card>
 
-              {sandboxStatus?.startTime && (
-                <div>
-                  <div className="text-sm font-medium text-muted-foreground">Started</div>
-                  <div className="text-lg">
-                    <TimeAgo date={sandboxStatus.startTime} />
-                  </div>
-                </div>
-              )}
-
-              {sandboxStatus?.stopTime && (
-                <div>
-                  <div className="text-sm font-medium text-muted-foreground">Stopped</div>
-                  <div className="text-lg">
-                    <TimeAgo date={sandboxStatus.stopTime} />
-                  </div>
-                </div>
-              )}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle>Sandbox Status</CardTitle>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowReconcileLogs(true)}
+                    >
+                      <ScrollText className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>View reconcile logs</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-sm font-medium text-muted-foreground">Desired State</div>
+                  <div className="text-lg">
+                    <Badge variant={data.desiredState === 'up' ? 'default' : 'outline'} className="capitalize">
+                      {data.desiredState}
+                    </Badge>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="text-sm font-medium text-muted-foreground">Actual Status</div>
+                  <div className="text-lg">
+                    {sandboxStatus?.runStatus ? (
+                      <StatusBadge
+                        item={{
+                          status: sandboxStatus.runStatus,
+                        }}
+                      />
+                    ) : (
+                      <span className="text-muted-foreground">Unknown</span>
+                    )}
+                  </div>
+                </div>
+
+                {sandboxStatus?.statusTime && (
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground">Last Status Reported</div>
+                    <div className="text-lg">
+                      <TimeAgo date={sandboxStatus.statusTime} />
+                    </div>
+                  </div>
+                )}
+
+                {sandboxStatus?.startTime && (
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground">Started</div>
+                    <div className="text-lg">
+                      <TimeAgo date={sandboxStatus.startTime} />
+                    </div>
+                  </div>
+                )}
+
+                {sandboxStatus?.stopTime && (
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground">Stopped</div>
+                    <div className="text-lg">
+                      <TimeAgo date={sandboxStatus.stopTime} />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       <Card>
         <CardHeader>

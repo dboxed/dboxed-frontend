@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx"
 import { AlertTriangle } from "lucide-react"
 import type { components } from "@/api/models/schema"
@@ -13,7 +12,6 @@ interface BoxStatusStalenessAlertProps {
 export function BoxStatusStalenessAlert({ box }: BoxStatusStalenessAlertProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [tick, setTick] = useState<number>(0)
 
   const { data: sandboxStatus } = client.useQuery('get', "/v1/workspaces/{workspaceId}/boxes/{id}/sandbox-status", {
     params: {
@@ -25,20 +23,6 @@ export function BoxStatusStalenessAlert({ box }: BoxStatusStalenessAlertProps) {
   }, {
     refetchInterval: 5000, // Refresh every 5 seconds
   })
-
-  // Re-render every second to update staleness check
-  useEffect(() => {
-    if (!sandboxStatus?.statusTime) {
-      return
-    }
-
-    // Update every second to keep staleness check current
-    const interval = setInterval(() => {
-      setTick(t => t + 1)
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [sandboxStatus?.statusTime])
 
   const isStale = isStatusStale(sandboxStatus?.statusTime)
 

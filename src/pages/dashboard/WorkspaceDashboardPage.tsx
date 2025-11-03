@@ -6,6 +6,7 @@ import { NetworksOverview } from "./NetworksOverview.tsx"
 import { BoxesOverview } from "./BoxesOverview.tsx"
 import { VolumeProvidersOverview } from "./VolumeProvidersOverview.tsx"
 import { VolumesOverview } from "./VolumesOverview.tsx"
+import { S3BucketsOverview } from "./S3BucketsOverview.tsx"
 import { DeleteButton } from "@/components/DeleteButton.tsx"
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -67,6 +68,7 @@ export function WorkspaceDashboardPage() {
           <VolumeProvidersOverview />
           {/*<MachinesOverview />*/}
           <VolumesOverview />
+          <S3BucketsOverview />
         </div>
       </div>
     </BasePage>

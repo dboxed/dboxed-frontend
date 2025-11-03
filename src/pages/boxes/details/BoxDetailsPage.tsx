@@ -11,14 +11,11 @@ import { BoxConnectCard } from "./BoxConnectCard.tsx"
 import { LogsPage } from "./logs/LogsPage.tsx"
 import { VolumesTab } from "./volumes/VolumesTab.tsx"
 import { ComposeProjects } from "./compose-projects/ComposeProjects.tsx"
-import { BoxStatusStalenessAlert } from "./BoxStatusStalenessAlert.tsx"
 import type { components } from "@/api/models/schema"
 
 function BoxDetailsContent({ data }: { data: components["schemas"]["Box"] }) {
   return (
     <div className="space-y-6">
-      <BoxStatusStalenessAlert box={data} />
-
       <Tabs defaultValue="general" className="space-y-6">
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="general">General</TabsTrigger>

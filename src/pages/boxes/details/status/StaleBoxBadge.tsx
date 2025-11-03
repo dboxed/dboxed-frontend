@@ -6,10 +6,9 @@ import type { components } from "@/api/models/schema";
 interface StaleBoxBadgeProps {
   box: components["schemas"]["Box"]
   showOnlyWhenStale?: boolean
-  size?: "default" | "sm" | "lg"
 }
 
-export function StaleBoxBadge({ box, showOnlyWhenStale = true, size = "default" }: StaleBoxBadgeProps) {
+export function StaleBoxBadge({ box, showOnlyWhenStale = true }: StaleBoxBadgeProps) {
   const statusTime = box.sandboxStatus?.statusTime
   const isStale = isStatusStale(statusTime)
 
@@ -41,9 +40,22 @@ export function StaleBoxBadge({ box, showOnlyWhenStale = true, size = "default" 
           </div>
         </TooltipTrigger>
         <TooltipContent className="max-w-md">
-          <div className="text-sm">
+          <div className="text-sm space-y-2">
             {statusTime ? (
-              <>Last updated {formatTimeAgo(statusTime)}</>
+              <>
+                <p>
+                  Box status was updated {formatTimeAgo(statusTime)} and looks stale.
+                </p>
+                <p>
+                  Automatic starting of sandboxes for the box is not implemented yet. This will come in a future release of dboxed.
+                </p>
+                <p>
+                  This means you might need to manually run <code className="px-1.5 py-0.5 rounded bg-gray-50/30 font-mono text-xs">dboxed sandbox run ...</code> yourself.
+                </p>
+                <p>
+                  Check the <strong>Connect Box</strong> tab for details.
+                </p>
+              </>
             ) : (
               <>Status hasn't been updated in over 60 seconds</>
             )}

@@ -2,11 +2,15 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { formatTimeAgo } from "@/utils/time.ts";
 
 interface TimeAgoProps {
-  date: Date | string
+  date?: Date | string
   className?: string
 }
 
 export function TimeAgo({ date, className }: TimeAgoProps) {
+  if (!date) {
+    return "N/A"
+  }
+
   const dateObj = typeof date === 'string' ? new Date(date) : date
   const formattedDate = dateObj.toLocaleString('en-US', {
     month: 'short',

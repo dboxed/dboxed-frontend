@@ -9,7 +9,7 @@ import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { CreateBoxDialog } from "./create/CreateBoxDialog.tsx";
 import { StatusBadge } from "@/components/StatusBadge.tsx";
 import { TimeAgo } from "@/components/TimeAgo.tsx";
-import { StaleBoxBadge } from "@/pages/boxes/details/status/StaleBoxBadge.tsx";
+import { SandboxStatusBadge } from "@/pages/boxes/details/status/SandboxStatusBadge.tsx";
 import { ContainerStatusBadge } from "@/pages/boxes/details/status/ContainerStatusBadge.tsx";
 
 export function ListBoxesPage() {
@@ -133,12 +133,7 @@ export function ListBoxesPage() {
 
         return (
           <div className="flex items-center gap-2">
-            <StatusBadge
-              item={{
-                status: sandboxStatus.runStatus,
-              }}
-            />
-            <StaleBoxBadge box={box} />
+            <SandboxStatusBadge box={box} />
           </div>
         )
       },

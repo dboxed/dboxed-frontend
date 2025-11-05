@@ -8,6 +8,7 @@ interface BaseResourceDetailsPageProps<T, U> extends BaseDetailsPagePropsBase<T,
   resourcePath: keyof paths
   apiParams?: Record<string, any>
   afterDeleteUrl?: string
+  refreshInterval?: number
 }
 
 export function BaseResourceDetailsPage<T, U>(props: BaseResourceDetailsPageProps<T, U>) {
@@ -15,8 +16,10 @@ export function BaseResourceDetailsPage<T, U>(props: BaseResourceDetailsPageProp
 
   // Fetch the resource
   const resourceQuery = client.useQuery('get', props.resourcePath as any, {
-    params: props.apiParams
-  })
+    params: props.apiParams,
+  }, props.refreshInterval ? {
+    refetchInterval: props.refreshInterval,
+  } : undefined)
 
   const deleteMutation = props.enableDelete ? client.useMutation('delete', props.resourcePath as any) : null
   const saveMutation = client.useMutation('patch', props.resourcePath as any)

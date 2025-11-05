@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react"
-import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useDboxedQueryClient } from "@/api/api.ts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
@@ -12,84 +10,18 @@ import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import { ContainerLogsDialog } from "./status/ContainerLogsDialog.tsx"
 import { ReconcileLogsDialog } from "./status/ReconcileLogsDialog.tsx"
-import { StatusBadge } from "@/components/StatusBadge.tsx"
 import { TimeAgo } from "@/components/TimeAgo.tsx"
-import { StaleBoxBadge } from "@/pages/boxes/details/status/StaleBoxBadge.tsx"
+import { SandboxStatusBadge } from "@/pages/boxes/details/status/SandboxStatusBadge.tsx"
+import { StatusBadge } from "@/components/StatusBadge.tsx"
 import type { components } from "@/api/models/schema"
+import { decompressDockerPs, type DockerContainer } from "@/pages/boxes/docker-utils.tsx";
+import { useDboxedQueryClient } from "@/api/api.ts";
 
 interface GeneralInfoCardProps {
-  data: components["schemas"]["Box"]
+  box: components["schemas"]["Box"]
 }
 
-interface DockerContainer {
-  Command: string
-  CreatedAt: string
-  ID: string
-  Image: string
-  Labels: string
-  Names: string
-  Networks: string
-  State: string
-  Status: string
-  Ports?: string
-  RunningFor?: string
-}
-
-async function decompressDockerPs(compressedData: string): Promise<DockerContainer[]> {
-  try {
-    // Decode base64
-    const binaryString = atob(compressedData)
-    const bytes = new Uint8Array(binaryString.length)
-    for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i)
-    }
-
-    // Decompress using DecompressionStream
-    const stream = new Response(bytes).body
-    if (!stream) {
-      return []
-    }
-
-    const decompressedStream = stream.pipeThrough(new DecompressionStream('gzip'))
-    const decompressedResponse = new Response(decompressedStream)
-    const decompressedText = await decompressedResponse.text()
-
-    // Parse JSON lines
-    const lines = decompressedText.trim().split('\n')
-    const containers: DockerContainer[] = []
-
-    for (const line of lines) {
-      if (line.trim()) {
-        try {
-          containers.push(JSON.parse(line))
-        } catch (e) {
-          console.error('Failed to parse container line:', e)
-        }
-      }
-    }
-
-    return containers
-  } catch (error) {
-    console.error('Failed to decompress docker ps data:', error)
-    return []
-  }
-}
-
-function getStateColor(state: string): "default" | "destructive" | "outline" | "secondary" | "success" {
-  switch (state.toLowerCase()) {
-    case 'running':
-      return 'success'
-    case 'exited':
-      return 'destructive'
-    case 'paused':
-      return 'secondary'
-    default:
-      return 'outline'
-  }
-}
-
-export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
-  const { workspaceId } = useSelectedWorkspaceId()
+export function GeneralInfoCard({ box }: GeneralInfoCardProps) {
   const client = useDboxedQueryClient()
   const [containers, setContainers] = useState<DockerContainer[]>([])
   const [selectedContainerForLogs, setSelectedContainerForLogs] = useState<string | null>(null)
@@ -98,8 +30,8 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
   const { data: sandboxStatus } = client.useQuery('get', "/v1/workspaces/{workspaceId}/boxes/{id}/sandbox-status", {
     params: {
       path: {
-        workspaceId: workspaceId!,
-        id: data.id,
+        workspaceId: box.workspace!,
+        id: box.id,
       }
     },
   }, {
@@ -128,17 +60,17 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
             <DetailsCardLayout>
               <LabelAndValue
                 label="Name"
-                textValue={data.name}
+                textValue={box.name}
               />
 
               <LabelAndValue
                 label="Workspace"
                 value={
                   <ReferenceLabel
-                    resourceId={data.workspace}
+                    resourceId={box.workspace}
                     resourcePath="/v1/workspaces/{workspaceId}"
-                    pathParams={{ workspaceId: data.workspace }}
-                    detailsUrl={`/workspaces/${data.workspace}`}
+                    pathParams={{ workspaceId: box.workspace }}
+                    detailsUrl={`/workspaces/${box.workspace}`}
                     fallbackLabel="Workspace"
                   />
                 }
@@ -148,7 +80,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
                 label="Dboxed Version"
                 value={
                   <Badge variant="outline" className="w-fit">
-                    {data.dboxedVersion}
+                    {box.dboxedVersion}
                   </Badge>
                 }
               />
@@ -157,13 +89,13 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
                 label="Network"
                 value={
                   <ReferenceLabel
-                    resourceId={data.network}
+                    resourceId={box.network}
                     resourcePath="/v1/workspaces/{workspaceId}/networks/{id}"
                     pathParams={{
-                      workspaceId: data.workspace,
-                      id: data.network
+                      workspaceId: box.workspace,
+                      id: box.network
                     }}
-                    detailsUrl={`/workspaces/${data.workspace}/networks/${data.network}`}
+                    detailsUrl={`/workspaces/${box.workspace}/networks/${box.network}`}
                     fallbackLabel="Network"
                   />
                 }
@@ -172,15 +104,15 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
               <LabelAndValue
                 label="Machine"
                 value={
-                  data.machine ? (
+                  box.machine ? (
                     <ReferenceLabel
-                      resourceId={data.machine}
+                      resourceId={box.machine}
                       resourcePath="/v1/workspaces/{workspaceId}/machines/{id}"
                       pathParams={{
-                        workspaceId: data.workspace,
-                        id: data.machine
+                        workspaceId: box.workspace,
+                        id: box.machine
                       }}
-                      detailsUrl={`/workspaces/${data.workspace}/machines/${data.machine}`}
+                      detailsUrl={`/workspaces/${box.workspace}/machines/${box.machine}`}
                       fallbackLabel="Machine"
                     />
                   ) : (
@@ -191,7 +123,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
 
               <LabelAndValue
                 label="Created"
-                value={<TimeAgo date={data.createdAt} />}
+                value={<TimeAgo date={box.createdAt} />}
               />
             </DetailsCardLayout>
           </CardContent>
@@ -224,8 +156,8 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
               <LabelAndValue
                 label="Desired State"
                 value={
-                  <Badge variant={data.desiredState === 'up' ? 'default' : 'outline'} className="capitalize">
-                    {data.desiredState}
+                  <Badge variant={box.desiredState === 'up' ? 'default' : 'outline'} className="capitalize">
+                    {box.desiredState}
                   </Badge>
                 }
               />
@@ -233,32 +165,23 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
               <LabelAndValue
                 label="Status"
                 value={
-                  sandboxStatus?.runStatus ? (
-                    <div className="flex items-center gap-2">
-                      <StatusBadge
-                        item={{
-                          status: sandboxStatus.runStatus,
-                        }}
-                      />
-                      <StaleBoxBadge box={data} />
-                    </div>
-                  ) : (
-                    <span className="text-muted-foreground">Unknown</span>
-                  )
+                  <div className="flex items-center gap-2">
+                    <SandboxStatusBadge sandboxStatus={sandboxStatus} />
+                  </div>
                 }
               />
 
               {sandboxStatus?.startTime && (
                 <LabelAndValue
                   label="Started"
-                  value={<TimeAgo date={sandboxStatus.startTime} />}
+                  value={<TimeAgo date={sandboxStatus?.startTime} />}
                 />
               )}
 
               {sandboxStatus?.stopTime && (
                 <LabelAndValue
                   label="Stopped"
-                  value={<TimeAgo date={sandboxStatus.stopTime} />}
+                  value={<TimeAgo date={sandboxStatus?.stopTime} />}
                 />
               )}
             </DetailsCardLayout>
@@ -290,9 +213,11 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
                     <TableCell className="font-medium">{container.Names}</TableCell>
                     <TableCell>{container.Image}</TableCell>
                     <TableCell>
-                      <Badge variant={getStateColor(container.State)}>
-                        {container.State}
-                      </Badge>
+                      <StatusBadge
+                        item={{
+                          status: container.State,
+                        }}
+                      />
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
                       {container.Status}
@@ -336,14 +261,14 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
       {selectedContainerForLogs && (
         <ContainerLogsDialog
           containerName={selectedContainerForLogs}
-          boxId={data.id}
+          boxId={box.id}
           open={!!selectedContainerForLogs}
           onOpenChange={(open) => !open && setSelectedContainerForLogs(null)}
         />
       )}
 
       <ReconcileLogsDialog
-        boxId={data.id}
+        boxId={box.id}
         open={showReconcileLogs}
         onOpenChange={setShowReconcileLogs}
       />

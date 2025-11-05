@@ -26,7 +26,7 @@ function BoxDetailsContent({ data }: { data: components["schemas"]["Box"] }) {
         </TabsList>
 
         <TabsContent value="general">
-          <GeneralInfoCard data={data} />
+          <GeneralInfoCard box={data} />
         </TabsContent>
 
         <TabsContent value="connect">

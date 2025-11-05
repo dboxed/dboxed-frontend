@@ -22,6 +22,8 @@ export function VolumesOverview() {
         workspaceId: workspaceId!,
       }
     }
+  }, {
+    refetchInterval: 10000,
   })
 
   // Fetch volumes

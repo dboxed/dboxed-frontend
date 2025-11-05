@@ -22,7 +22,9 @@ export function BoxesOverview() {
       path: {
         workspaceId: workspaceId!,
       }
-    }
+    },
+  }, {
+    refetchInterval: 10000,
   })
 
   const boxes = boxesQuery.data?.items || []

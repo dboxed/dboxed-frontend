@@ -22,6 +22,8 @@ export function NetworksOverview() {
         workspaceId: workspaceId!,
       }
     }
+  }, {
+    refetchInterval: 10000,
   })
 
   const networks = networksQuery.data?.items || []

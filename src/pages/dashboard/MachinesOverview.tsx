@@ -21,6 +21,8 @@ export function MachinesOverview() {
         workspaceId: workspaceId!,
       }
     }
+  }, {
+    refetchInterval: 10000,
   })
 
   // Fetch machines

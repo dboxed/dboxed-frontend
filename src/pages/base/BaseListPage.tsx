@@ -29,6 +29,7 @@ interface BaseListPageProps<TData extends FieldValues> {
   searchPlaceholder?: string
   allowCreate?: boolean
   createDisabledMessage?: string
+  refreshInterval?: number
 }
 
 export function BaseListPage<TData extends FieldValues>({
@@ -49,7 +50,8 @@ export function BaseListPage<TData extends FieldValues>({
   searchColumn,
   searchPlaceholder,
   allowCreate = true,
-  createDisabledMessage
+  createDisabledMessage,
+  refreshInterval = 5000,
 }: BaseListPageProps<TData>) {
   const client = useDboxedQueryClient()
   const navigate = useNavigate()
@@ -57,6 +59,8 @@ export function BaseListPage<TData extends FieldValues>({
 
   const query = client.useQuery('get', resourcePath as any, {
     params: Object.keys(apiParams).length > 0 ? { ...apiParams } : undefined
+  }, {
+    refetchInterval: refreshInterval,
   })
 
   const handleCreateClick = () => {

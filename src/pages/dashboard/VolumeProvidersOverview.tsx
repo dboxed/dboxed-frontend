@@ -22,6 +22,8 @@ export function VolumeProvidersOverview() {
         workspaceId: workspaceId!,
       }
     }
+  }, {
+    refetchInterval: 10000,
   })
 
   const volumeProviders = volumeProvidersQuery.data?.items || []

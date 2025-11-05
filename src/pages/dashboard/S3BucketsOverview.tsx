@@ -22,6 +22,8 @@ export function S3BucketsOverview() {
         workspaceId: workspaceId!,
       }
     }
+  }, {
+    refetchInterval: 10000,
   })
 
   const s3Buckets = s3BucketsQuery.data?.items || []

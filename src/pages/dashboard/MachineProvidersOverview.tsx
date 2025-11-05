@@ -22,6 +22,8 @@ export function MachineProvidersOverview() {
         workspaceId: workspaceId!,
       }
     }
+  }, {
+    refetchInterval: 10000,
   })
 
   const machineProviders = machineProvidersQuery.data?.items || []

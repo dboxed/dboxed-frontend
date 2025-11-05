@@ -2,10 +2,12 @@ FROM node:24-alpine AS build
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
-COPY . /app
-WORKDIR /app
 
+WORKDIR /app
+COPY *.json *.yaml /app/
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+COPY . /app
 RUN pnpm run build
 
 # nginx

@@ -4,19 +4,22 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Badge } from "@/components/ui/badge.tsx";
 import { cn } from "@/lib/utils.ts";
 import { decompressDockerPs, type DockerContainer } from "@/pages/boxes/docker-utils.tsx";
+import { isStatusStale } from "@/utils/time.ts";
 
-export function ContainerStatusBadge({ box }: { box: components["schemas"]["Box"] }) {
+export function ContainerStatusBadge({ sandboxStatus }: { sandboxStatus?: components["schemas"]["BoxSandboxStatus"] }) {
   const [containers, setContainers] = useState<DockerContainer[]>([])
+  const statusTime = sandboxStatus?.statusTime
+  const isStale = !statusTime || isStatusStale(statusTime)
 
   useEffect(() => {
-    if (box.sandboxStatus?.dockerPs) {
-      decompressDockerPs(box.sandboxStatus.dockerPs).then(setContainers)
+    if (sandboxStatus?.dockerPs) {
+      decompressDockerPs(sandboxStatus.dockerPs).then(setContainers)
     } else {
       setContainers([])
     }
-  }, [box.sandboxStatus?.dockerPs])
+  }, [sandboxStatus?.dockerPs])
 
-  if (!box.sandboxStatus?.dockerPs) {
+  if (!sandboxStatus?.dockerPs) {
     return <span className="text-sm text-muted-foreground">N/A</span>
   }
 
@@ -25,8 +28,10 @@ export function ContainerStatusBadge({ box }: { box: components["schemas"]["Box"
   const allOk = runningCount === totalCount && totalCount > 0
 
   let containersColorClass = ""
-  if (box.sandboxStatus?.runStatus === "running") {
-    if (allOk) {
+  if (sandboxStatus?.runStatus === "running") {
+    if (isStale) {
+      containersColorClass = 'bg-yellow-400'
+    } else if (allOk) {
       containersColorClass = 'bg-green-400'
     } else if (totalCount === 0) {
       containersColorClass = 'bg-red-500'
@@ -46,6 +51,7 @@ export function ContainerStatusBadge({ box }: { box: components["schemas"]["Box"
           </div>
         </TooltipTrigger>
         <TooltipContent className="max-w-md">
+          {isStale && <p className="text-red-500 font-semibold mb-2">Box status is stale, containers information is not up-to-date.</p>}
           {containers.length > 0 ? (
             <div className="space-y-1">
               {containers.map((container) => (

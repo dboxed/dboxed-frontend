@@ -142,7 +142,7 @@ export function ListBoxesPage() {
       id: "containers",
       header: "Containers",
       cell: ({ row }) => {
-        return <ContainerStatusBadge box={row.original} />
+        return <ContainerStatusBadge sandboxStatus={row.original.sandboxStatus} />
       },
     },
     {

@@ -49,7 +49,7 @@ export function BoxesOverview() {
         </div>
         <div className="flex items-center gap-2">
           <SandboxStatusBadge sandboxStatus={box.sandboxStatus} />
-          <ContainerStatusBadge box={box} />
+          <ContainerStatusBadge sandboxStatus={box.sandboxStatus} />
         </div>
       </div>
     ),

@@ -7,9 +7,10 @@ interface StatusComponentProps {
     statusDetails?: string
   }
   size?: "default" | "sm" | "lg"
+  variant?: "default" | "destructive" | "outline" | "secondary" | "warning" | "success"
 }
 
-function getStatusVariant(status: string): "default" | "destructive" | "outline" | "secondary" | "success" {
+function getStatusVariant(status: string): "default" | "destructive" | "outline" | "secondary" | "warning" | "success" {
   switch (status.toLowerCase()) {
     case 'ok':
     case 'active':
@@ -30,8 +31,8 @@ function getStatusVariant(status: string): "default" | "destructive" | "outline"
   }
 }
 
-export function StatusBadge({ item, size = "default" }: StatusComponentProps) {
-  const variant = getStatusVariant(item.status)
+export function StatusBadge({ item, size = "default", variant: overrideVariant }: StatusComponentProps) {
+  const variant = overrideVariant ?? getStatusVariant(item.status)
 
   const badge = (
     <Badge

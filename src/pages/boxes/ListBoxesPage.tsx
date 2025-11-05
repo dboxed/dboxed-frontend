@@ -133,7 +133,7 @@ export function ListBoxesPage() {
 
         return (
           <div className="flex items-center gap-2">
-            <SandboxStatusBadge box={box} />
+            <SandboxStatusBadge sandboxStatus={box.sandboxStatus} />
           </div>
         )
       },

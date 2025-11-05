@@ -48,7 +48,7 @@ export function BoxesOverview() {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <SandboxStatusBadge box={box} />
+          <SandboxStatusBadge sandboxStatus={box.sandboxStatus} />
           <ContainerStatusBadge box={box} />
         </div>
       </div>

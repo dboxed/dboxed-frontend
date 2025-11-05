@@ -13,11 +13,6 @@ export function SandboxStatusBadge({ sandboxStatus }: SandboxStatusBadgeProps) {
   const isStale = !statusTime || isStatusStale(statusTime)
   const runStatus = sandboxStatus?.runStatus
 
-  // Don't render if no status available
-  if (!runStatus) {
-    return null
-  }
-
   const badge = isStale ? (
     <Badge variant="destructive">
       Stale
@@ -25,7 +20,7 @@ export function SandboxStatusBadge({ sandboxStatus }: SandboxStatusBadgeProps) {
   ) : (
     <StatusBadge
       item={{
-        status: runStatus,
+        status: runStatus || "N/A",
       }}
     />
   )

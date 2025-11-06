@@ -4,7 +4,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Badge } from "@/components/ui/badge.tsx";
 import { cn } from "@/lib/utils.ts";
 import { decompressDockerPs, type DockerContainer } from "@/pages/boxes/docker-utils.tsx";
-import { isStatusStale } from "@/utils/time.ts";
+import { isStatusStale, formatTimeAgo } from "@/utils/time.ts";
 
 export function ContainerStatusBadge({ sandboxStatus }: { sandboxStatus?: components["schemas"]["BoxSandboxStatus"] }) {
   const [containers, setContainers] = useState<DockerContainer[]>([])
@@ -51,22 +51,29 @@ export function ContainerStatusBadge({ sandboxStatus }: { sandboxStatus?: compon
           </div>
         </TooltipTrigger>
         <TooltipContent className="max-w-md">
-          {isStale && <p className="text-red-500 font-semibold mb-2">Box status is stale, containers information is not up-to-date.</p>}
-          {containers.length > 0 ? (
-            <div className="space-y-1">
-              {containers.map((container) => (
-                <div key={container.ID} className="text-xs">
-                  <span className="font-semibold">{container.Names}</span>:{' '}
-                  <span className={container.State.toLowerCase() === 'running' ? 'text-green-400' : 'text-yellow-400'}>
-                    {container.State}
-                  </span>
-                  {' '}- {container.Status}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-xs">No containers</p>
-          )}
+          <div className="space-y-2">
+            {statusTime && (
+              <p className="text-xs text-muted-foreground">
+                Last updated {formatTimeAgo(statusTime)}
+              </p>
+            )}
+            {isStale && <p className="text-red-500 font-semibold">Box status is stale, containers information is not up-to-date.</p>}
+            {containers.length > 0 ? (
+              <div className="space-y-1">
+                {containers.map((container) => (
+                  <div key={container.ID} className="text-xs">
+                    <span className="font-semibold">{container.Names}</span>:{' '}
+                    <span className={container.State.toLowerCase() === 'running' ? 'text-green-400' : 'text-yellow-400'}>
+                      {container.State}
+                    </span>
+                    {' '}- {container.Status}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs">No containers</p>
+            )}
+          </div>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

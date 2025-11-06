@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip.tsx"
 import { FileText } from "lucide-react"
@@ -8,6 +7,8 @@ import { StatusBadge } from "@/components/StatusBadge.tsx"
 import type { components } from "@/api/models/schema"
 import { decompressDockerPs, type DockerContainer } from "@/pages/boxes/docker-utils.tsx"
 import { ContainerLogsDialog } from "./status/ContainerLogsDialog.tsx"
+import { DataTable } from "@/components/data-table.tsx"
+import type { ColumnDef } from "@tanstack/react-table"
 
 interface ContainersCardProps {
   sandboxStatus?: components["schemas"]["BoxSandboxStatus"]
@@ -26,6 +27,75 @@ export function ContainersCard({ sandboxStatus, boxId }: ContainersCardProps) {
     }
   }, [sandboxStatus?.dockerPs])
 
+  const columns = useMemo<ColumnDef<DockerContainer>[]>(() => [
+    {
+      accessorKey: "Names",
+      header: "Name",
+      cell: ({ row }) => (
+        <span className="font-medium">{row.getValue("Names")}</span>
+      ),
+    },
+    {
+      accessorKey: "Image",
+      header: "Image",
+    },
+    {
+      accessorKey: "State",
+      header: "State",
+      cell: ({ row }) => (
+        <StatusBadge
+          item={{
+            status: row.getValue("State"),
+          }}
+        />
+      ),
+    },
+    {
+      accessorKey: "Status",
+      header: "Status",
+      cell: ({ row }) => (
+        <span className="text-sm text-muted-foreground">{row.getValue("Status")}</span>
+      ),
+    },
+    {
+      accessorKey: "Ports",
+      header: "Ports",
+      cell: ({ row }) => (
+        <span className="text-sm">{row.getValue("Ports") || '-'}</span>
+      ),
+    },
+    {
+      accessorKey: "ID",
+      header: "ID",
+      cell: ({ row }) => {
+        const id = row.getValue("ID") as string
+        return <span className="font-mono text-xs">{id.substring(0, 12)}</span>
+      },
+    },
+    {
+      id: "actions",
+      header: "Logs",
+      cell: ({ row }) => (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedContainerForLogs(row.original.Names)}
+              >
+                <FileText className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>View logs</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      ),
+    },
+  ], [setSelectedContainerForLogs])
+
   return (
     <>
       <Card>
@@ -33,67 +103,7 @@ export function ContainersCard({ sandboxStatus, boxId }: ContainersCardProps) {
           <CardTitle>Docker Containers</CardTitle>
         </CardHeader>
         <CardContent>
-          {containers.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Image</TableHead>
-                  <TableHead>State</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Ports</TableHead>
-                  <TableHead>ID</TableHead>
-                  <TableHead className="w-24">Logs</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {containers.map((container) => (
-                  <TableRow key={container.ID}>
-                    <TableCell className="font-medium">{container.Names}</TableCell>
-                    <TableCell>{container.Image}</TableCell>
-                    <TableCell>
-                      <StatusBadge
-                        item={{
-                          status: container.State,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {container.Status}
-                    </TableCell>
-                    <TableCell className="text-sm">
-                      {container.Ports || '-'}
-                    </TableCell>
-                    <TableCell className="font-mono text-xs">
-                      {container.ID.substring(0, 12)}
-                    </TableCell>
-                    <TableCell>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => setSelectedContainerForLogs(container.Names)}
-                            >
-                              <FileText className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>View logs</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ) : (
-            <div className="flex items-center justify-center py-8 text-muted-foreground">
-              No containers running
-            </div>
-          )}
+          <DataTable columns={columns} data={containers} />
         </CardContent>
       </Card>
 

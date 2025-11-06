@@ -5,7 +5,7 @@ import { LogViewerWithControls } from "../logs/LogViewerWithControls.tsx"
 
 interface ContainerLogsDialogProps {
   containerName: string
-  boxId: number
+  boxId: string
   open: boolean
   onOpenChange: (open: boolean) => void
 }

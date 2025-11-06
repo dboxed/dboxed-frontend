@@ -5,8 +5,8 @@ import type { components } from "@/api/models/schema"
 import { StreamingLogViewer } from "@/pages/boxes/details/logs/StreamingLogViewer.tsx";
 
 interface LogViewerWithControlsProps {
-  workspaceId: number
-  boxId: number
+  workspaceId: string
+  boxId: string
   logFiles: components["schemas"]["LogMetadataModel"][]
 }
 
@@ -18,7 +18,7 @@ const getLogCreationDate = (f: components["schemas"]["LogMetadataModel"]) => {
 }
 
 export function LogViewerWithControls({ workspaceId, boxId, logFiles }: LogViewerWithControlsProps) {
-  const [selectedLogId, setSelectedLogId] = useState<number | null>(null)
+  const [selectedLogId, setSelectedLogId] = useState<string | null>(null)
   const [logsSince, setLogsSince] = useState<string>("1h")
 
   // Sort log files by creation date (newest first)

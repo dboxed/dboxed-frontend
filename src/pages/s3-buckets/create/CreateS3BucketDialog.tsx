@@ -23,7 +23,7 @@ export function CreateS3BucketDialog({ open, onOpenChange }: CreateS3BucketDialo
   const handleSubmit = (data: S3BucketFormData): components["schemas"]["CreateS3Bucket"] => {
     // Build endpoint based on provider type and region
     let endpoint = data.endpoint
-    if (data.providerType !== "generic" && data.region) {
+    if (data.providerType !== "generic") {
       endpoint = buildEndpoint(data.providerType, data.region)
     }
 

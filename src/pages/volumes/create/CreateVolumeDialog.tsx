@@ -41,7 +41,7 @@ export function CreateVolumeDialog({ open, onOpenChange }: CreateVolumeDialogPro
       onSubmit={onSubmit}
       defaultValues={{
         name: "",
-        volumeProvider: 1, // Will be overridden when user selects
+        volumeProvider: "", // Will be overridden when user selects
         rustic: {
           fsSize: 1024 * 1024 * 1024, // 1G
           fsType: "ext4",

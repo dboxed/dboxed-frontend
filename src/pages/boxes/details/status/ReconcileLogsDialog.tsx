@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { LogViewerWithControls } from "../logs/LogViewerWithControls.tsx"
 
 interface ReconcileLogsDialogProps {
-  boxId: number
+  boxId: string
   open: boolean
   onOpenChange: (open: boolean) => void
 }

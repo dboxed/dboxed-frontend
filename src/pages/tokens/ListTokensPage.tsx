@@ -47,7 +47,7 @@ export function ListTokensPage() {
       accessorKey: "boxId",
       header: "Box",
       cell: ({ row }) => {
-        const boxId = row.getValue("boxId") as number | null
+        const boxId = row.getValue("boxId") as string | null
         const workspaceId = row.original.workspace
 
         if (!boxId) {

@@ -38,7 +38,7 @@ export function ListBoxesPage() {
       accessorKey: "network",
       header: "Network",
       cell: ({ row }) => {
-        const networkId = row.getValue("network") as number | null
+        const networkId = row.getValue("network") as string | null
         const networkType = row.original.networkType
         const workspaceId = row.original.workspace
 
@@ -68,7 +68,7 @@ export function ListBoxesPage() {
       accessorKey: "machine",
       header: "Machine",
       cell: ({ row }) => {
-        const machineId = row.getValue("machine") as number | null
+        const machineId = row.getValue("machine") as string | null
         const workspaceId = row.original.workspace
 
         if (!machineId) {

@@ -245,23 +245,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/boxes/by-uuid/{uuid}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get v1 workspaces by workspace ID boxes by UUID by UUID */
-        get: operations["get-v1-workspaces-by-workspace-id-boxes-by-uuid-by-uuid"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/v1/workspaces/{workspaceId}/boxes/{id}": {
         parameters: {
             query?: never;
@@ -814,23 +797,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/volumes/by-uuid/{uuid}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get v1 workspaces by workspace ID volumes by UUID by UUID */
-        get: operations["get-v1-workspaces-by-workspace-id-volumes-by-uuid-by-uuid"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/v1/workspaces/{workspaceId}/volumes/{id}": {
         parameters: {
             query?: never;
@@ -968,8 +934,7 @@ export interface components {
             rootMode?: string;
             /** Format: int64 */
             rootUid?: number;
-            /** Format: int64 */
-            volumeId: number;
+            volumeId: string;
         };
         AuthInfo: {
             /**
@@ -995,20 +960,15 @@ export interface components {
             createdAt: string;
             dboxedVersion: string;
             desiredState: string;
-            /** Format: int64 */
-            id: number;
-            /** Format: int64 */
-            machine: number | null;
+            id: string;
+            machine: string | null;
             name: string;
-            /** Format: int64 */
-            network: number | null;
+            network: string | null;
             networkType: string | null;
             sandboxStatus?: components["schemas"]["BoxSandboxStatus"];
             status: string;
             statusDetails: string;
-            uuid: string;
-            /** Format: int64 */
-            workspace: number;
+            workspace: string;
         };
         BoxComposeProject: {
             composeProject: string;
@@ -1039,7 +999,7 @@ export interface components {
                 [key: string]: string;
             };
             desiredState: string;
-            uuid: string;
+            id: string;
             volumes?: components["schemas"]["DboxedVolume"][] | null;
         };
         CreateBox: {
@@ -1050,8 +1010,7 @@ export interface components {
             readonly $schema?: string;
             composeProjects?: components["schemas"]["CreateBoxComposeProject"][] | null;
             name: string;
-            /** Format: int64 */
-            network?: number;
+            network?: string;
             volumeAttachments?: components["schemas"]["AttachVolumeRequest"][] | null;
         };
         CreateBoxComposeProject: {
@@ -1070,11 +1029,9 @@ export interface components {
              */
             readonly $schema?: string;
             aws?: components["schemas"]["CreateMachineAws"];
-            /** Format: int64 */
-            box: number;
+            box: string;
             hetzner?: components["schemas"]["CreateMachineHetzner"];
-            /** Format: int64 */
-            machineProvider: number;
+            machineProvider: string;
             name: string;
         };
         CreateMachineAws: {
@@ -1143,8 +1100,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            /** Format: int64 */
-            boxId?: number;
+            boxId?: string;
             forWorkspace?: boolean;
             name: string;
         };
@@ -1156,8 +1112,7 @@ export interface components {
             readonly $schema?: string;
             name: string;
             rustic?: components["schemas"]["CreateVolumeRustic"];
-            /** Format: int64 */
-            volumeProvider: number;
+            volumeProvider: string;
         };
         CreateVolumeProvider: {
             /**
@@ -1171,8 +1126,7 @@ export interface components {
         };
         CreateVolumeProviderRustic: {
             password: string;
-            /** Format: int64 */
-            s3BucketId: number | null;
+            s3BucketId: string | null;
             storagePrefix: string;
             storageType: string;
         };
@@ -1200,15 +1154,13 @@ export interface components {
         };
         DboxedVolume: {
             backupInterval: string;
-            /** Format: int64 */
-            id: number;
+            id: string;
             name: string;
             /** Format: int32 */
             rootGid: number;
             rootMode: string;
             /** Format: int32 */
             rootUid: number;
-            uuid: string;
         };
         DeprecationInfo: {
             /** Format: date-time */
@@ -1470,15 +1422,13 @@ export interface components {
             createdAt: string;
             fileName: string;
             format: string;
-            /** Format: int64 */
-            id: number;
+            id: string;
             /** Format: date-time */
             lastLogTime: string | null;
             metadata?: {
                 [key: string]: unknown;
             };
-            /** Format: int64 */
-            workspace: number;
+            workspace: string;
         };
         LogsBatch: {
             lines: components["schemas"]["LogsLine"][] | null;
@@ -1499,20 +1449,16 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            /** Format: int64 */
-            box: number;
+            box: string;
             /** Format: date-time */
             createdAt: string;
-            /** Format: int64 */
-            id: number;
-            /** Format: int64 */
-            machineProvider: number;
+            id: string;
+            machineProvider: string;
             machineProviderType: string;
             name: string;
             status: string;
             statusDetails: string;
-            /** Format: int64 */
-            workspace: number;
+            workspace: string;
         };
         MachineProvider: {
             /**
@@ -1524,15 +1470,13 @@ export interface components {
             /** Format: date-time */
             createdAt: string;
             hetzner?: components["schemas"]["MachineProviderHetzner"];
-            /** Format: int64 */
-            id: number;
+            id: string;
             name: string;
             sshKeyFingerprint: string | null;
             status: string;
             statusDetails: string;
             type: string;
-            /** Format: int64 */
-            workspace: number;
+            workspace: string;
         };
         MachineProviderAws: {
             region: string;
@@ -1545,8 +1489,7 @@ export interface components {
         MachineProviderAwsSubnet: {
             availabilityZone: string;
             cidr: string;
-            /** Format: int64 */
-            machineProvider: number;
+            machineProvider: string;
             subnetId: string;
             subnetName: string | null;
         };
@@ -1569,15 +1512,13 @@ export interface components {
             readonly $schema?: string;
             /** Format: date-time */
             createdAt: string;
-            /** Format: int64 */
-            id: number;
+            id: string;
             name: string;
             netbird: components["schemas"]["NetworkNetbird"];
             status: string;
             statusDetails: string;
             type: string;
-            /** Format: int64 */
-            workspace: number;
+            workspace: string;
         };
         NetworkNetbird: {
             apiUrl: string;
@@ -1608,12 +1549,10 @@ export interface components {
             /** Format: date-time */
             createdAt: string;
             endpoint: string;
-            /** Format: int64 */
-            id: number;
+            id: string;
             status: string;
             statusDetails: string;
-            /** Format: int64 */
-            workspace: number;
+            workspace: string;
         };
         S3ObjectInfo: {
             /** Format: date-time */
@@ -1725,17 +1664,14 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            /** Format: int64 */
-            boxId?: number;
+            boxId?: string;
             /** Format: date-time */
             createdAt: string;
             forWorkspace: boolean;
-            /** Format: int64 */
-            id: number;
+            id: string;
             name: string;
             token?: string;
-            /** Format: int64 */
-            workspace: number;
+            workspace: string;
         };
         UpdateBox: {
             /**
@@ -1808,8 +1744,7 @@ export interface components {
             netbirdVersion?: string;
         };
         UpdateRepositoryStorageS3: {
-            /** Format: int64 */
-            s3BucketId: number | null;
+            s3BucketId: string | null;
             storagePrefix: string | null;
         };
         UpdateS3Bucket: {
@@ -1869,24 +1804,18 @@ export interface components {
             attachment?: components["schemas"]["VolumeAttachment"];
             /** Format: date-time */
             createdAt: string;
-            /** Format: int64 */
-            id: number;
-            /** Format: int64 */
-            latestSnapshotId?: number;
-            /** Format: int64 */
-            lockBoxId?: number;
+            id: string;
+            latestSnapshotId?: string;
+            lockBoxId?: string;
             lockId?: string;
             /** Format: date-time */
             lockTime?: string;
             name: string;
             rustic?: components["schemas"]["VolumeRustic"];
-            uuid: string;
             volumeProvider: components["schemas"]["VolumeProvider"];
-            /** Format: int64 */
-            volumeProviderId: number;
+            volumeProviderId: string;
             volumeProviderType: string;
-            /** Format: int64 */
-            workspace: number;
+            workspace: string;
         };
         VolumeAttachment: {
             /**
@@ -1894,16 +1823,14 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            /** Format: int64 */
-            boxId: number;
+            boxId: string;
             /** Format: int64 */
             rootGid: number;
             rootMode: string;
             /** Format: int64 */
             rootUid: number;
             volume?: components["schemas"]["Volume"];
-            /** Format: int64 */
-            volumeId: number;
+            volumeId: string;
         };
         VolumeLockRequest: {
             /**
@@ -1911,8 +1838,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            /** Format: int64 */
-            boxId?: number;
+            boxId?: string;
         };
         VolumeProvider: {
             /**
@@ -1922,19 +1848,16 @@ export interface components {
             readonly $schema?: string;
             /** Format: date-time */
             createdAt: string;
-            /** Format: int64 */
-            id: number;
+            id: string;
             name: string;
             rustic?: components["schemas"]["VolumeProviderRustic"];
             status: string;
             statusDetails: string;
             type: string;
-            /** Format: int64 */
-            workspace: number;
+            workspace: string;
         };
         VolumeProviderRustic: {
-            /** Format: int64 */
-            s3BucketId: number | null;
+            s3BucketId: string | null;
             storagePrefix: string;
             storageType: string;
         };
@@ -1968,14 +1891,11 @@ export interface components {
             readonly $schema?: string;
             /** Format: date-time */
             createdAt: string;
-            /** Format: int64 */
-            id: number;
+            id: string;
             lockId: string;
             rustic?: components["schemas"]["VolumeSnapshotRustic"];
-            /** Format: int64 */
-            volumeId: number;
-            /** Format: int64 */
-            workspace: number;
+            volumeId: string;
+            workspace: string;
         };
         VolumeSnapshotRustic: {
             /** Format: float */
@@ -2037,8 +1957,7 @@ export interface components {
             access: components["schemas"]["WorkspaceAccess"][] | null;
             /** Format: date-time */
             createdAt: string;
-            /** Format: int64 */
-            id: number;
+            id: string;
             name: string;
             status: string;
             statusDetails: string;
@@ -2414,7 +2333,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -2445,7 +2364,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -2479,7 +2398,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -2511,7 +2430,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -2548,40 +2467,7 @@ export interface operations {
             path: {
                 name: string;
                 /** @description The workspace id */
-                workspaceId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Box"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "get-v1-workspaces-by-workspace-id-boxes-by-uuid-by-uuid": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                uuid: string;
-                /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -2612,9 +2498,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -2645,9 +2531,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -2680,9 +2566,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -2717,9 +2603,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -2750,9 +2636,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -2783,9 +2669,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -2822,10 +2708,10 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 composeName: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -2858,10 +2744,10 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 composeName: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -2898,9 +2784,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -2931,9 +2817,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -2972,10 +2858,10 @@ export interface operations {
             };
             header?: never;
             path: {
-                id: number;
-                logId: number;
+                id: string;
+                logId: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3050,9 +2936,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3083,9 +2969,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3122,9 +3008,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3155,9 +3041,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3194,10 +3080,10 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
-                volumeId: number;
+                id: string;
+                volumeId: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3230,10 +3116,10 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
-                volumeId: number;
+                id: string;
+                volumeId: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3269,7 +3155,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3301,7 +3187,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3336,9 +3222,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3369,9 +3255,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3404,9 +3290,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3442,7 +3328,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3474,7 +3360,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3509,9 +3395,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3542,9 +3428,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3577,9 +3463,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3615,7 +3501,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3647,7 +3533,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3684,7 +3570,7 @@ export interface operations {
             path: {
                 name: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3715,9 +3601,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3748,9 +3634,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3783,9 +3669,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3821,7 +3707,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3853,7 +3739,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3890,7 +3776,7 @@ export interface operations {
             path: {
                 bucket: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3921,9 +3807,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3954,9 +3840,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -3989,9 +3875,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4026,9 +3912,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4063,9 +3949,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4100,9 +3986,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4137,9 +4023,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4175,7 +4061,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4207,7 +4093,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4244,7 +4130,7 @@ export interface operations {
             path: {
                 tokenName: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4275,9 +4161,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4308,9 +4194,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4344,7 +4230,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4376,7 +4262,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4413,7 +4299,7 @@ export interface operations {
             path: {
                 volumeProviderName: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4444,9 +4330,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4477,9 +4363,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4512,9 +4398,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4550,7 +4436,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4582,7 +4468,7 @@ export interface operations {
             header?: never;
             path: {
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4619,40 +4505,7 @@ export interface operations {
             path: {
                 name: string;
                 /** @description The workspace id */
-                workspaceId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Volume"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "get-v1-workspaces-by-workspace-id-volumes-by-uuid-by-uuid": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                uuid: string;
-                /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4683,9 +4536,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4716,9 +4569,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4751,9 +4604,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4784,9 +4637,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4821,9 +4674,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4858,9 +4711,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4895,9 +4748,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4928,9 +4781,9 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4965,10 +4818,10 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
-                snapshotId: number;
+                id: string;
+                snapshotId: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };
@@ -4999,10 +4852,10 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
-                snapshotId: number;
+                id: string;
+                snapshotId: string;
                 /** @description The workspace id */
-                workspaceId: number;
+                workspaceId: string;
             };
             cookie?: never;
         };

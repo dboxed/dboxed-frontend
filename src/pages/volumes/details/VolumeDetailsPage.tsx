@@ -34,7 +34,7 @@ export function VolumeDetailsPage() {
       params: {
         path: {
           workspaceId: workspaceId!,
-          id: parseInt(volumeId),
+          id: volumeId,
         }
       }
     }, {

@@ -13,7 +13,7 @@ import { isStatusStale, formatTimeAgo } from "@/utils/time.ts"
 
 interface ContainersCardProps {
   sandboxStatus?: components["schemas"]["BoxSandboxStatus"]
-  boxId: number
+  boxId: string
 }
 
 export function ContainersCard({ sandboxStatus, boxId }: ContainersCardProps) {

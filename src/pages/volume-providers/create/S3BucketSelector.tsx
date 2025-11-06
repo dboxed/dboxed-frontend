@@ -38,8 +38,8 @@ export function S3BucketSelector<TFieldValues extends FieldValues>({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <Select
-            value={field.value?.toString() || ""}
-            onValueChange={(value) => field.onChange(value ? parseInt(value) : null)}
+            value={field.value || ""}
+            onValueChange={(value) => field.onChange(value || null)}
           >
             <FormControl>
               <SelectTrigger>

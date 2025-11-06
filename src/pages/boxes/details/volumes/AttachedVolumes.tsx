@@ -89,7 +89,7 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
     })
   }
 
-  const handleDetachVolume = (volumeId: number) => {
+  const handleDetachVolume = (volumeId: string) => {
     detachVolumeMutation.mutate({
       params: {
         path: {

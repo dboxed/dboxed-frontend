@@ -26,7 +26,7 @@ export function CreateMachineDialog({ open, onOpenChange }: CreateMachineDialogP
     }
   })
 
-  const getMachineProvider = (id: number) => {
+  const getMachineProvider = (id: string) => {
     return machineProviders.data?.items?.find(x => x.id == id)
   }
 

@@ -31,8 +31,8 @@ export function BoxSelector({ form }: BoxSelectorProps) {
         <FormItem>
           <FormLabel>Box</FormLabel>
           <Select
-            onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)}
-            value={field.value?.toString()}
+            onValueChange={(value) => field.onChange(value || undefined)}
+            value={field.value}
           >
             <FormControl>
               <SelectTrigger>

@@ -5,9 +5,9 @@ import { useDboxedApiEventSource } from "@/api/api.ts"
 import { VirtualizedLogViewer } from "@/components/logs/VirtualizedLogViewer.tsx"
 
 interface StreamingLogViewerProps {
-  workspaceId: number
-  boxId: number
-  logId: number | null
+  workspaceId: string
+  boxId: string
+  logId: string | null
   since?: string
   follow?: boolean
   height?: string

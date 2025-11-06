@@ -88,7 +88,7 @@ function MachineProvidersBreadcrumb({ isCurrentPage }: MachineProvidersBreadcrum
 }
 
 interface MachineProviderBreadcrumbProps {
-  machineProviderId: number
+  machineProviderId: string
   isCurrentPage?: boolean
 }
 
@@ -143,7 +143,7 @@ function MachinesBreadcrumb({ isCurrentPage }: MachinesBreadcrumbProps) {
 }
 
 interface MachineBreadcrumbProps {
-  machineId: number
+  machineId: string
   isCurrentPage?: boolean
 }
 
@@ -211,7 +211,7 @@ function NetworksBreadcrumb({ isCurrentPage }: NetworksBreadcrumbProps) {
 }
 
 interface NetworkBreadcrumbProps {
-  networkId: number
+  networkId: string
   isCurrentPage?: boolean
 }
 
@@ -266,7 +266,7 @@ function BoxesBreadcrumb({ isCurrentPage }: BoxesBreadcrumbProps) {
 }
 
 interface BoxBreadcrumbProps {
-  boxId: number
+  boxId: string
   isCurrentPage?: boolean
 }
 
@@ -321,7 +321,7 @@ function VolumeProvidersBreadcrumb({ isCurrentPage }: VolumeProvidersBreadcrumbP
 }
 
 interface VolumeProviderBreadcrumbProps {
-  volumeProviderId: number
+  volumeProviderId: string
   isCurrentPage?: boolean
 }
 
@@ -376,7 +376,7 @@ function VolumesBreadcrumb({ isCurrentPage }: VolumesBreadcrumbProps) {
 }
 
 interface VolumeBreadcrumbProps {
-  volumeId: number
+  volumeId: string
   isCurrentPage?: boolean
 }
 
@@ -431,7 +431,7 @@ function S3BucketsBreadcrumb({ isCurrentPage }: S3BucketsBreadcrumbProps) {
 }
 
 interface S3BucketBreadcrumbProps {
-  s3BucketId: number
+  s3BucketId: string
   isCurrentPage?: boolean
 }
 
@@ -517,8 +517,8 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
 
     // Handle specific machine provider ID
     const machineProviderIdSegment = pathSegments[currentIndex]
-    if (machineProviderIdSegment && machineProviderIdSegment.match(/^\d+$/)) {
-      const machineProviderId = parseInt(machineProviderIdSegment)
+    if (machineProviderIdSegment && machineProviderIdSegment.match(/^[^/]+$/)) {
+      const machineProviderId = machineProviderIdSegment
       const isCurrentPage = pathSegments.length === currentIndex + 1
 
       breadcrumbElements.push(
@@ -560,8 +560,8 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
 
     // Handle specific machine ID
     const machineIdSegment = pathSegments[currentIndex]
-    if (machineIdSegment && machineIdSegment.match(/^\d+$/)) {
-      const machineId = parseInt(machineIdSegment)
+    if (machineIdSegment && machineIdSegment.match(/^[^/]+$/)) {
+      const machineId = machineIdSegment
       const isCurrentPage = pathSegments.length === currentIndex + 1
 
       breadcrumbElements.push(
@@ -603,8 +603,8 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
 
     // Handle specific network ID
     const networkIdSegment = pathSegments[currentIndex]
-    if (networkIdSegment && networkIdSegment.match(/^\d+$/)) {
-      const networkId = parseInt(networkIdSegment)
+    if (networkIdSegment && networkIdSegment.match(/^[^/]+$/)) {
+      const networkId = networkIdSegment
       const isCurrentPage = pathSegments.length === currentIndex + 1
 
       breadcrumbElements.push(
@@ -646,8 +646,8 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
 
     // Handle specific box ID
     const boxIdSegment = pathSegments[currentIndex]
-    if (boxIdSegment && boxIdSegment.match(/^\d+$/)) {
-      const boxId = parseInt(boxIdSegment)
+    if (boxIdSegment && boxIdSegment.match(/^[^/]+$/)) {
+      const boxId = boxIdSegment
       const isCurrentPage = pathSegments.length === currentIndex + 1
 
       breadcrumbElements.push(
@@ -689,8 +689,8 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
 
     // Handle specific volume provider ID
     const volumeProviderIdSegment = pathSegments[currentIndex]
-    if (volumeProviderIdSegment && volumeProviderIdSegment.match(/^\d+$/)) {
-      const volumeProviderId = parseInt(volumeProviderIdSegment)
+    if (volumeProviderIdSegment && volumeProviderIdSegment.match(/^[^/]+$/)) {
+      const volumeProviderId = volumeProviderIdSegment
       const isCurrentPage = pathSegments.length === currentIndex + 1
 
       breadcrumbElements.push(
@@ -732,8 +732,8 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
 
     // Handle specific volume ID
     const volumeIdSegment = pathSegments[currentIndex]
-    if (volumeIdSegment && volumeIdSegment.match(/^\d+$/)) {
-      const volumeId = parseInt(volumeIdSegment)
+    if (volumeIdSegment && volumeIdSegment.match(/^[^/]+$/)) {
+      const volumeId = volumeIdSegment
       const isCurrentPage = pathSegments.length === currentIndex + 1
 
       breadcrumbElements.push(
@@ -775,8 +775,8 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
 
     // Handle specific S3 bucket ID
     const s3BucketIdSegment = pathSegments[currentIndex]
-    if (s3BucketIdSegment && s3BucketIdSegment.match(/^\d+$/)) {
-      const s3BucketId = parseInt(s3BucketIdSegment)
+    if (s3BucketIdSegment && s3BucketIdSegment.match(/^[^/]+$/)) {
+      const s3BucketId = s3BucketIdSegment
       const isCurrentPage = pathSegments.length === currentIndex + 1
 
       breadcrumbElements.push(

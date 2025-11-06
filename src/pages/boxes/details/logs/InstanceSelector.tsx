@@ -3,8 +3,8 @@ import type { components } from "@/api/models/schema"
 import { formatTimeAgo } from "@/utils/time.ts"
 
 interface InstanceSelectorProps {
-  selectedLogId: number | null
-  onLogIdChange: (logId: number) => void
+  selectedLogId: string | null
+  onLogIdChange: (logId: string) => void
   logFiles: components["schemas"]["LogMetadataModel"][]
 }
 
@@ -13,8 +13,8 @@ export function InstanceSelector({ selectedLogId, onLogIdChange, logFiles }: Ins
     <div className="flex items-center gap-2">
       <span className="text-sm font-medium">Instance:</span>
       <Select
-        value={selectedLogId?.toString() || ""}
-        onValueChange={(value) => onLogIdChange(parseInt(value))}
+        value={selectedLogId || ""}
+        onValueChange={(value) => onLogIdChange(value)}
         disabled={!logFiles.length}
       >
         <SelectTrigger className="w-80">

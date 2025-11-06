@@ -23,23 +23,23 @@ export function useSelectedWorkspaceId() {
   if (!location.pathname.startsWith("/workspaces/")) {
     return {
       workspaceId: null,
-      setWorkspaceId: (id: number) => {
+      setWorkspaceId: (id: string) => {
         navigate(`/workspaces/${id}`)
       },
     }
   }
 
   const s = location.pathname.split("/")
-  const workspaceIdNum = parseInt(s[2]) || null
+  const workspaceId = s[2] || null
 
-  const setWorkspaceId = (id: number) => {
-    s[2] = id + ""
+  const setWorkspaceId = (id: string) => {
+    s[2] = id
     const newLocation = s.join("/")
     navigate(newLocation)
   }
 
   return {
-    workspaceId: workspaceIdNum,
+    workspaceId: workspaceId,
     setWorkspaceId: setWorkspaceId,
   }
 }

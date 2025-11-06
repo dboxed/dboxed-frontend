@@ -37,7 +37,7 @@ export function BoxSelector({ form }: BoxSelectorProps) {
 
   // Create a map of boxId -> machine for quick lookup
   const boxToMachineMap = useMemo(() => {
-    const map = new Map<number, components["schemas"]["Machine"]>()
+    const map = new Map<string, components["schemas"]["Machine"]>()
     machines.forEach(machine => {
       map.set(machine.box, machine)
     })

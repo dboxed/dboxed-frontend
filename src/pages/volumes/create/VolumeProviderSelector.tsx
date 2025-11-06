@@ -27,7 +27,7 @@ export function VolumeProviderSelector({ form, onProviderChange }: VolumeProvide
   useEffect(() => {
     if (volumeProvidersQuery.data?.items && volumeProvidersQuery.data.items.length > 0) {
       const currentValue = form.getValues('volumeProvider')
-      if (!currentValue || currentValue === 1) { // Only set if no value or default placeholder value
+      if (!currentValue) { // Only set if no value
         const firstProvider = volumeProvidersQuery.data.items[0]
         form.setValue('volumeProvider', firstProvider.id)
         onProviderChange?.(firstProvider)

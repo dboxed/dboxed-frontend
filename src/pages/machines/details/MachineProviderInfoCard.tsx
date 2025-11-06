@@ -7,9 +7,9 @@ import { Link } from "react-router"
 import { TimeAgo } from "@/components/TimeAgo.tsx"
 
 interface MachineProviderInfoCardProps {
-  machineProviderId: number | null
+  machineProviderId: string | null
   machineProviderType: string | null
-  workspaceId: number
+  workspaceId: string
 }
 
 export function MachineProviderInfoCard({

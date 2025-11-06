@@ -2,13 +2,14 @@ import { useEffect, useState, useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip.tsx"
-import { FileText } from "lucide-react"
+import { FileText, AlertTriangle } from "lucide-react"
 import { StatusBadge } from "@/components/StatusBadge.tsx"
 import type { components } from "@/api/models/schema"
 import { decompressDockerPs, type DockerContainer } from "@/pages/boxes/docker-utils.tsx"
 import { ContainerLogsDialog } from "./status/ContainerLogsDialog.tsx"
 import { DataTable } from "@/components/data-table.tsx"
 import type { ColumnDef } from "@tanstack/react-table"
+import { isStatusStale, formatTimeAgo } from "@/utils/time.ts"
 
 interface ContainersCardProps {
   sandboxStatus?: components["schemas"]["BoxSandboxStatus"]
@@ -18,6 +19,9 @@ interface ContainersCardProps {
 export function ContainersCard({ sandboxStatus, boxId }: ContainersCardProps) {
   const [containers, setContainers] = useState<DockerContainer[]>([])
   const [selectedContainerForLogs, setSelectedContainerForLogs] = useState<string | null>(null)
+
+  const statusTime = sandboxStatus?.statusTime
+  const isStale = !statusTime || isStatusStale(statusTime)
 
   useEffect(() => {
     if (sandboxStatus?.dockerPs) {
@@ -100,7 +104,18 @@ export function ContainersCard({ sandboxStatus, boxId }: ContainersCardProps) {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Docker Containers</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>Docker Containers</CardTitle>
+            {isStale && (
+              <div className="flex items-center gap-2 text-destructive">
+                <AlertTriangle className="h-4 w-4" />
+                <span className="text-sm font-medium">
+                  Container information is stale and may not be up-to-date.
+                  {statusTime && ` Last updated ${formatTimeAgo(statusTime)}.`}
+                </span>
+              </div>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           <DataTable columns={columns} data={containers} />

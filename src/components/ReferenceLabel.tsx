@@ -4,7 +4,7 @@ import type { paths } from "@/api/models/schema";
 
 interface ReferenceLabelProps<TResource extends { name: string }> {
   /** The ID of the resource to fetch and display */
-  resourceId: number | string | null
+  resourceId?: number | string | null
   /** The API path to fetch the resource (e.g., "/v1/workspaces/{workspaceId}") */
   resourcePath: keyof paths
   /** Parameters to substitute in the resource path */

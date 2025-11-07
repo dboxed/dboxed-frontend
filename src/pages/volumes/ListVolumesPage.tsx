@@ -87,7 +87,7 @@ export function ListVolumesPage() {
       accessorKey: "mountId",
       header: "Mount",
       cell: ({ row }) => {
-        return <VolumeMountBadge volume={row.original} />
+        return <VolumeMountBadge mountStatus={row.original.mountStatus} />
       },
     },
     {

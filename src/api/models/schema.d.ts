@@ -849,6 +849,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/volumes/{id}/mount-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID volumes by ID mount status */
+        get: operations["get-v1-workspaces-by-workspace-id-volumes-by-id-mount-status"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/volumes/{id}/refresh-mount": {
         parameters: {
             query?: never;
@@ -1839,6 +1856,11 @@ export interface components {
             boxId?: string;
         };
         VolumeMountStatus: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
             boxId?: string;
             forceReleased: boolean;
             lastFinishedSnapshotId?: string;
@@ -1853,11 +1875,11 @@ export interface components {
             snapshotStartTime?: string;
             /** Format: date-time */
             statusTime: string;
+            /** Format: int64 */
+            volumeFreeSize?: number;
             volumeId: string;
             /** Format: int64 */
             volumeTotalSize?: number;
-            /** Format: int64 */
-            volumeUsedSize?: number;
         };
         VolumeProvider: {
             /**
@@ -1893,9 +1915,9 @@ export interface components {
             /** Format: date-time */
             snapshotStartTime?: string;
             /** Format: int64 */
-            volumeTotalSize: number;
+            volumeFreeSize: number;
             /** Format: int64 */
-            volumeUsedSize: number;
+            volumeTotalSize: number;
         };
         VolumeReleaseRequest: {
             /**
@@ -4684,6 +4706,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Volume"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-volumes-by-id-mount-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VolumeMountStatus"];
                 };
             };
             /** @description Error */

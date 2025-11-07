@@ -4,40 +4,77 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import { formatTimeAgo } from "@/utils/time.ts";
 import type { components } from "@/api/models/schema";
+import { useEffect, useState } from "react";
 
 interface VolumeMountBadgeProps {
-  volume: components["schemas"]["Volume"]
+  mountStatus?: components["schemas"]["VolumeMountStatus"]
 }
 
-export function VolumeMountBadge({ volume }: VolumeMountBadgeProps) {
+export function VolumeMountBadge({ mountStatus }: VolumeMountBadgeProps) {
   const { workspaceId } = useSelectedWorkspaceId()
-  const isMounted = !!volume.mountId
+  const [ ticker, setTicker ] = useState(0)
 
-  if (!isMounted) {
+  useEffect(() => {
+    const t = setInterval(() => {
+      setTicker(x => x + 1)
+    }, 1000)
+    return () => clearTimeout(t)
+  }, []);
+  useEffect(() => {
+    // just a dummy to force re-render
+  }, [ticker]);
+
+  // No mount status - volume was never mounted
+  if (!mountStatus) {
     return (
       <Badge variant="outline">
-        N/A
+        Never Mounted
       </Badge>
     )
   }
 
+  // Volume was released
+  if (mountStatus.releaseTime) {
+    const badgeVariant = mountStatus.forceReleased ? "destructive" : "outline"
+    const badgeText = mountStatus.forceReleased ? "Force Released" : "Released"
+
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Badge variant={badgeVariant}>
+              {badgeText}
+            </Badge>
+          </TooltipTrigger>
+          <TooltipContent>
+            <div className="space-y-1">
+              <p>Released {formatTimeAgo(mountStatus.releaseTime)}</p>
+              {mountStatus.forceReleased && (
+                <p className="text-red-400 font-semibold">This mount was force released</p>
+              )}
+            </div>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    )
+  }
+
+  // Volume is currently mounted
   // Calculate mount age in minutes
   let badgeColor = "bg-green-500 text-white hover:bg-green-600"
   let timePassedText = ""
 
-  if (volume.mountStatus) {
-    const statusTime = new Date(volume.mountStatus.statusTime)
-    const now = new Date()
-    const minutesAgo = (now.getTime() - statusTime.getTime()) / 1000 / 60
+  const statusTime = new Date(mountStatus.statusTime)
+  const now = new Date()
+  const minutesAgo = (now.getTime() - statusTime.getTime()) / 1000 / 60
 
-    if (minutesAgo > 5) {
-      badgeColor = "bg-red-500 text-white hover:bg-red-600"
-    } else if (minutesAgo > 2) {
-      badgeColor = "bg-yellow-500 text-white hover:bg-yellow-600"
-    }
-
-    timePassedText = formatTimeAgo(volume.mountStatus.statusTime)
+  if (minutesAgo > 5) {
+    badgeColor = "bg-red-500 text-white hover:bg-red-600"
+  } else if (minutesAgo > 2) {
+    badgeColor = "bg-yellow-500 text-white hover:bg-yellow-600"
   }
+
+  timePassedText = formatTimeAgo(mountStatus.statusTime)
 
   return (
     <TooltipProvider>
@@ -52,14 +89,14 @@ export function VolumeMountBadge({ volume }: VolumeMountBadgeProps) {
             {timePassedText && (
               <p>Mount status refreshed {timePassedText}</p>
             )}
-            {volume.mountStatus?.boxId && <div className="flex items-center gap-1">
+            {mountStatus?.boxId && <div className="flex items-center gap-1">
               <span>Mounted by box:</span>
               <ReferenceLabel<components["schemas"]["Box"]>
-                resourceId={volume.mountStatus.boxId}
+                resourceId={mountStatus.boxId}
                 resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
                 pathParams={{
                   workspaceId: workspaceId,
-                  id: volume.mountStatus.boxId
+                  id: mountStatus.boxId
                 }}
                 detailsUrl={(box) => `/workspaces/${workspaceId}/boxes/${box.id}`}
                 fallbackLabel="Box"

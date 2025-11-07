@@ -4,7 +4,6 @@ import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { LabelAndValue } from "@/components/LabelAndValue.tsx";
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
-import { VolumeMountBadge } from "@/pages/volumes/details/VolumeMountBadge.tsx";
 import { TimeAgo } from "@/components/TimeAgo.tsx";
 import type { components } from "@/api/models/schema";
 
@@ -85,40 +84,6 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
                 />
               }
             />
-          )}
-          <LabelAndValue
-            label="Mount Status"
-            value={<VolumeMountBadge volume={data} />}
-          />
-          {data.mountStatus && data.mountStatus.boxId && (
-            <>
-              <LabelAndValue
-                label="Mounted By"
-                value={
-                  <ReferenceLabel<components["schemas"]["Box"]>
-                    resourceId={data.mountStatus.boxId}
-                    resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
-                    pathParams={{
-                      workspaceId: workspaceId,
-                      id: data.mountStatus.boxId
-                    }}
-                    detailsUrl={(box) => `/workspaces/${workspaceId}/boxes/${box.id}`}
-                    fallbackLabel="Box"
-                    className="text-blue-600 hover:text-blue-800 underline"
-                  />
-                }
-              />
-              <LabelAndValue
-                label="Mount ID"
-                textValue={data.mountId}
-              />
-              {data.mountStatus.mountTime && (
-                <LabelAndValue
-                  label="Mount Time"
-                  value={<TimeAgo date={data.mountStatus.mountTime} />}
-                />
-              )}
-            </>
           )}
           <LabelAndValue
             label="Created"

@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.t
 import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard.tsx"
+import { MountStatusCard } from "./MountStatusCard.tsx"
 import { RusticVolumeInfo } from "./RusticVolumeInfo.tsx"
 import { SnapshotsTab } from "./SnapshotsTab.tsx"
 import { Button } from "@/components/ui/button.tsx"
@@ -111,7 +112,10 @@ export function VolumeDetailsPage() {
 
           <TabsContent value="general">
             <div className="space-y-6">
-              <GeneralInfoCard data={data} />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <GeneralInfoCard data={data} />
+                <MountStatusCard volumeId={volumeId} />
+              </div>
               {data.volumeProviderType === "rustic" && data.rustic && (
                 <RusticVolumeInfo data={data} />
               )}

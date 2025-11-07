@@ -3,7 +3,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
-import { SimpleSelectDialog } from "@/components/SimpleSelectDialog.tsx"
 import { DataTable } from "@/components/data-table.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/api.ts"
@@ -14,7 +13,9 @@ import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip.tsx"
 import { formatSize } from "@/utils/size.ts"
 import { FileModeDialog } from "@/pages/boxes/details/volumes/FileModeDialog.tsx"
-import { toast } from "sonner";
+import { VolumeMountBadge } from "@/pages/volumes/details/VolumeMountBadge.tsx"
+import { AttachVolumeDialog } from "@/pages/boxes/details/volumes/AttachVolumeDialog.tsx"
+import { toast } from "sonner"
 
 interface AttachedVolumesProps {
   box: components["schemas"]["Box"]
@@ -32,62 +33,21 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
         id: box.id
       }
     }
-  })
-
-  const allVolumesQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/volumes', {
-    params: {
-      path: {
-        workspaceId: workspaceId!
-      }
-    }
-  })
-
-  const attachVolumeMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/volumes', {
-    onSuccess: () => {
-      allVolumesQuery.refetch()
-      attachedVolumesQuery.refetch()
-    }
+  },{
+    refetchInterval: 5000,
   })
 
   const detachVolumeMutation = client.useMutation('delete', '/v1/workspaces/{workspaceId}/boxes/{id}/volumes/{volumeId}', {
     onSuccess: () => {
-      allVolumesQuery.refetch()
       attachedVolumesQuery.refetch()
     }
   })
 
   const updateAttachmentMutation = client.useMutation('patch', '/v1/workspaces/{workspaceId}/boxes/{id}/volumes/{volumeId}', {
     onSuccess: () => {
-      allVolumesQuery.refetch()
       attachedVolumesQuery.refetch()
     }
   })
-
-  const handleAttachVolume = (selectedVolume: components["schemas"]["Volume"]) => {
-    attachVolumeMutation.mutate({
-      params: {
-        path: {
-          workspaceId: workspaceId!,
-          id: box.id
-        }
-      },
-      body: {
-        volumeId: selectedVolume.id,
-        rootUid: 0,
-        rootGid: 0,
-        rootMode: "0755"
-      }
-    }, {
-      onSuccess: () => {
-        toast.success("Volume attached successfully!")
-      },
-      onError: (error) => {
-        toast.error("Failed to attach volume", {
-          description: error.detail || "An error occurred while attaching the volume."
-        })
-      }
-    })
-  }
 
   const handleDetachVolume = (volumeId: string) => {
     detachVolumeMutation.mutate({
@@ -111,7 +71,6 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
   }
 
   const attachedVolumeAttachments = attachedVolumesQuery.data?.items || []
-  const availableVolumes = allVolumesQuery.data?.items?.filter(v => !v.attachment) || []
 
   // Define columns for the DataTable
   const columns: ColumnDef<components["schemas"]["VolumeAttachment"]>[] = [
@@ -142,12 +101,22 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
       cell: ({ row }) => {
         const attachment = row.original
         const volume = attachment.volume!
-        
+
         return (
           <Badge variant="secondary" className="capitalize">
             {volume.volumeProviderType}
           </Badge>
         )
+      }
+    },
+    {
+      accessorKey: "volume.mountStatus",
+      header: "Mount Status",
+      cell: ({ row }) => {
+        const attachment = row.original
+        const volume = attachment.volume!
+
+        return <VolumeMountBadge mountStatus={volume.mountStatus} />
       }
     },
     {
@@ -278,7 +247,6 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
               onClick={() => {
                 setAttachDialogOpen(true)
               }}
-              disabled={availableVolumes.length === 0}
               size="sm"
             >
               <Plus className="w-4 h-4 mr-2" />
@@ -296,16 +264,13 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
         </CardContent>
       </Card>
 
-      <SimpleSelectDialog<components["schemas"]["Volume"]>
+      <AttachVolumeDialog
+        boxId={box.id}
         open={attachDialogOpen}
         onOpenChange={setAttachDialogOpen}
-        title="Attach Volume"
-        fieldLabel="Select Volume"
-        placeholder="Choose a volume to attach..."
-        options={availableVolumes}
-        optionKey="id"
-        optionLabel="name"
-        onOk={handleAttachVolume}
+        onSuccess={() => {
+          attachedVolumesQuery.refetch()
+        }}
       />
     </>
   )

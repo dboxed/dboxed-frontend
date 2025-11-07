@@ -51,8 +51,8 @@ export function SnapshotDetailsPage() {
                   value={<TimeAgo date={data.createdAt} />}
                 />
                 <LabelAndValue
-                  label="Lock ID"
-                  textValue={data.lockId}
+                  label="Mount ID"
+                  textValue={data.mountId}
                 />
               </DetailsCardLayout>
             </CardContent>

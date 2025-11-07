@@ -4,7 +4,7 @@ import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { LabelAndValue } from "@/components/LabelAndValue.tsx";
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
-import { VolumeLockBadge } from "@/pages/volumes/details/VolumeLockBadge.tsx";
+import { VolumeMountBadge } from "@/pages/volumes/details/VolumeMountBadge.tsx";
 import { TimeAgo } from "@/components/TimeAgo.tsx";
 import type { components } from "@/api/models/schema";
 
@@ -87,20 +87,20 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
             />
           )}
           <LabelAndValue
-            label="Lock Status"
-            value={<VolumeLockBadge volume={data} />}
+            label="Mount Status"
+            value={<VolumeMountBadge volume={data} />}
           />
-          {data.lockId && data.lockBoxId && (
+          {data.mountStatus && data.mountStatus.boxId && (
             <>
               <LabelAndValue
-                label="Locked By"
+                label="Mounted By"
                 value={
                   <ReferenceLabel<components["schemas"]["Box"]>
-                    resourceId={data.lockBoxId}
+                    resourceId={data.mountStatus.boxId}
                     resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
                     pathParams={{
                       workspaceId: workspaceId,
-                      id: data.lockBoxId
+                      id: data.mountStatus.boxId
                     }}
                     detailsUrl={(box) => `/workspaces/${workspaceId}/boxes/${box.id}`}
                     fallbackLabel="Box"
@@ -109,13 +109,13 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
                 }
               />
               <LabelAndValue
-                label="Lock ID"
-                textValue={data.lockId}
+                label="Mount ID"
+                textValue={data.mountId}
               />
-              {data.lockTime && (
+              {data.mountStatus.mountTime && (
                 <LabelAndValue
-                  label="Lock Time"
-                  value={<TimeAgo date={data.lockTime} />}
+                  label="Mount Time"
+                  value={<TimeAgo date={data.mountStatus.mountTime} />}
                 />
               )}
             </>

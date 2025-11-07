@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { CreateVolumeDialog } from "./create/CreateVolumeDialog.tsx";
-import { VolumeLockBadge } from "./details/VolumeLockBadge.tsx";
+import { VolumeMountBadge } from "./details/VolumeMountBadge.tsx";
 import { useDboxedQueryClient } from "@/api/api.ts";
 import { TimeAgo } from "@/components/TimeAgo.tsx";
 
@@ -84,10 +84,10 @@ export function ListVolumesPage() {
       },
     },
     {
-      accessorKey: "lockId",
-      header: "Lock",
+      accessorKey: "mountId",
+      header: "Mount",
       cell: ({ row }) => {
-        return <VolumeLockBadge volume={row.original} />
+        return <VolumeMountBadge volume={row.original} />
       },
     },
     {

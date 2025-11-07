@@ -5,38 +5,30 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import { formatTimeAgo } from "@/utils/time.ts";
 import type { components } from "@/api/models/schema";
 
-interface VolumeLockBadgeProps {
+interface VolumeMountBadgeProps {
   volume: components["schemas"]["Volume"]
 }
 
-/**
- * Displays a colored badge indicating the lock status of a volume.
- * - Gray: Not locked
- * - Green: Locked less than 2 minutes ago
- * - Yellow: Locked 2-5 minutes ago
- * - Red: Locked more than 5 minutes ago
- * When locked, shows the box that locked the volume and a tooltip with lock time.
- */
-export function VolumeLockBadge({ volume }: VolumeLockBadgeProps) {
+export function VolumeMountBadge({ volume }: VolumeMountBadgeProps) {
   const { workspaceId } = useSelectedWorkspaceId()
-  const isLocked = volume.lockId
+  const isMounted = !!volume.mountId
 
-  if (!isLocked) {
+  if (!isMounted) {
     return (
       <Badge variant="outline">
-        Unlocked
+        N/A
       </Badge>
     )
   }
 
-  // Calculate lock age in minutes
+  // Calculate mount age in minutes
   let badgeColor = "bg-green-500 text-white hover:bg-green-600"
   let timePassedText = ""
 
-  if (volume.lockTime) {
-    const lockTime = new Date(volume.lockTime)
+  if (volume.mountStatus) {
+    const statusTime = new Date(volume.mountStatus.statusTime)
     const now = new Date()
-    const minutesAgo = (now.getTime() - lockTime.getTime()) / 1000 / 60
+    const minutesAgo = (now.getTime() - statusTime.getTime()) / 1000 / 60
 
     if (minutesAgo > 5) {
       badgeColor = "bg-red-500 text-white hover:bg-red-600"
@@ -44,32 +36,30 @@ export function VolumeLockBadge({ volume }: VolumeLockBadgeProps) {
       badgeColor = "bg-yellow-500 text-white hover:bg-yellow-600"
     }
 
-    timePassedText = formatTimeAgo(volume.lockTime)
+    timePassedText = formatTimeAgo(volume.mountStatus.statusTime)
   }
 
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div>
-            <Badge variant="secondary" className={badgeColor}>
-              Locked
-            </Badge>
-          </div>
+          <Badge variant="secondary" className={badgeColor}>
+            Mounted
+          </Badge>
         </TooltipTrigger>
         <TooltipContent>
           <div className="space-y-1">
             {timePassedText && (
-              <p>Lock refreshed {timePassedText}</p>
+              <p>Mount status refreshed {timePassedText}</p>
             )}
-            {volume.lockBoxId && <div className="flex items-center gap-1">
-              <span>Locked by box:</span>
+            {volume.mountStatus?.boxId && <div className="flex items-center gap-1">
+              <span>Mounted by box:</span>
               <ReferenceLabel<components["schemas"]["Box"]>
-                resourceId={volume.lockBoxId}
+                resourceId={volume.mountStatus.boxId}
                 resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
                 pathParams={{
                   workspaceId: workspaceId,
-                  id: volume.lockBoxId
+                  id: volume.mountStatus.boxId
                 }}
                 detailsUrl={(box) => `/workspaces/${workspaceId}/boxes/${box.id}`}
                 fallbackLabel="Box"

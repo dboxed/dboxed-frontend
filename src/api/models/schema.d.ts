@@ -815,7 +815,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/volumes/{id}/force-unlock": {
+    "/v1/workspaces/{workspaceId}/volumes/{id}/force-release-mount": {
         parameters: {
             query?: never;
             header?: never;
@@ -824,15 +824,15 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Post v1 workspaces by workspace ID volumes by ID force unlock */
-        post: operations["post-v1-workspaces-by-workspace-id-volumes-by-id-force-unlock"];
+        /** Post v1 workspaces by workspace ID volumes by ID force release mount */
+        post: operations["post-v1-workspaces-by-workspace-id-volumes-by-id-force-release-mount"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/volumes/{id}/lock": {
+    "/v1/workspaces/{workspaceId}/volumes/{id}/mount": {
         parameters: {
             query?: never;
             header?: never;
@@ -841,15 +841,15 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Post v1 workspaces by workspace ID volumes by ID lock */
-        post: operations["post-v1-workspaces-by-workspace-id-volumes-by-id-lock"];
+        /** Post v1 workspaces by workspace ID volumes by ID mount */
+        post: operations["post-v1-workspaces-by-workspace-id-volumes-by-id-mount"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/volumes/{id}/refresh-lock": {
+    "/v1/workspaces/{workspaceId}/volumes/{id}/refresh-mount": {
         parameters: {
             query?: never;
             header?: never;
@@ -858,15 +858,15 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Post v1 workspaces by workspace ID volumes by ID refresh lock */
-        post: operations["post-v1-workspaces-by-workspace-id-volumes-by-id-refresh-lock"];
+        /** Post v1 workspaces by workspace ID volumes by ID refresh mount */
+        post: operations["post-v1-workspaces-by-workspace-id-volumes-by-id-refresh-mount"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/volumes/{id}/release": {
+    "/v1/workspaces/{workspaceId}/volumes/{id}/release-mount": {
         parameters: {
             query?: never;
             header?: never;
@@ -875,8 +875,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Post v1 workspaces by workspace ID volumes by ID release */
-        post: operations["post-v1-workspaces-by-workspace-id-volumes-by-id-release"];
+        /** Post v1 workspaces by workspace ID volumes by ID release mount */
+        post: operations["post-v1-workspaces-by-workspace-id-volumes-by-id-release-mount"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1141,7 +1141,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            lockId: string;
+            mountId: string;
             rustic?: components["schemas"]["VolumeSnapshotRustic"];
         };
         CreateWorkspace: {
@@ -1806,10 +1806,8 @@ export interface components {
             createdAt: string;
             id: string;
             latestSnapshotId?: string;
-            lockBoxId?: string;
-            lockId?: string;
-            /** Format: date-time */
-            lockTime?: string;
+            mountId?: string;
+            mountStatus?: components["schemas"]["VolumeMountStatus"];
             name: string;
             rustic?: components["schemas"]["VolumeRustic"];
             volumeProvider: components["schemas"]["VolumeProvider"];
@@ -1832,13 +1830,34 @@ export interface components {
             volume?: components["schemas"]["Volume"];
             volumeId: string;
         };
-        VolumeLockRequest: {
+        VolumeMountRequest: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
             boxId?: string;
+        };
+        VolumeMountStatus: {
+            boxId?: string;
+            forceReleased: boolean;
+            lastFinishedSnapshotId?: string;
+            mountId: string;
+            /** Format: date-time */
+            mountTime: string;
+            /** Format: date-time */
+            releaseTime?: string;
+            /** Format: date-time */
+            snapshotEndTime?: string;
+            /** Format: date-time */
+            snapshotStartTime?: string;
+            /** Format: date-time */
+            statusTime: string;
+            volumeId: string;
+            /** Format: int64 */
+            volumeTotalSize?: number;
+            /** Format: int64 */
+            volumeUsedSize?: number;
         };
         VolumeProvider: {
             /**
@@ -1861,13 +1880,22 @@ export interface components {
             storagePrefix: string;
             storageType: string;
         };
-        VolumeRefreshLockRequest: {
+        VolumeRefreshMountRequest: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            prevLockId: string;
+            lastFinishedSnapshotId?: string;
+            mountId: string;
+            /** Format: date-time */
+            snapshotEndTime?: string;
+            /** Format: date-time */
+            snapshotStartTime?: string;
+            /** Format: int64 */
+            volumeTotalSize: number;
+            /** Format: int64 */
+            volumeUsedSize: number;
         };
         VolumeReleaseRequest: {
             /**
@@ -1875,7 +1903,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            lockId: string;
+            mountId: string;
         };
         VolumeRustic: {
             /** Format: int64 */
@@ -1892,7 +1920,7 @@ export interface components {
             /** Format: date-time */
             createdAt: string;
             id: string;
-            lockId: string;
+            mountId: string;
             rustic?: components["schemas"]["VolumeSnapshotRustic"];
             volumeId: string;
             workspace: string;
@@ -4599,7 +4627,7 @@ export interface operations {
             };
         };
     };
-    "post-v1-workspaces-by-workspace-id-volumes-by-id-force-unlock": {
+    "post-v1-workspaces-by-workspace-id-volumes-by-id-force-release-mount": {
         parameters: {
             query?: never;
             header?: never;
@@ -4632,7 +4660,7 @@ export interface operations {
             };
         };
     };
-    "post-v1-workspaces-by-workspace-id-volumes-by-id-lock": {
+    "post-v1-workspaces-by-workspace-id-volumes-by-id-mount": {
         parameters: {
             query?: never;
             header?: never;
@@ -4645,7 +4673,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["VolumeLockRequest"];
+                "application/json": components["schemas"]["VolumeMountRequest"];
             };
         };
         responses: {
@@ -4669,7 +4697,7 @@ export interface operations {
             };
         };
     };
-    "post-v1-workspaces-by-workspace-id-volumes-by-id-refresh-lock": {
+    "post-v1-workspaces-by-workspace-id-volumes-by-id-refresh-mount": {
         parameters: {
             query?: never;
             header?: never;
@@ -4682,7 +4710,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["VolumeRefreshLockRequest"];
+                "application/json": components["schemas"]["VolumeRefreshMountRequest"];
             };
         };
         responses: {
@@ -4706,7 +4734,7 @@ export interface operations {
             };
         };
     };
-    "post-v1-workspaces-by-workspace-id-volumes-by-id-release": {
+    "post-v1-workspaces-by-workspace-id-volumes-by-id-release-mount": {
         parameters: {
             query?: never;
             header?: never;

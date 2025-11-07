@@ -24,13 +24,13 @@ export function VolumeDetailsPage() {
     return <div>Invalid volume ID</div>
   }
 
-  const forceUnlockMutation = client.useMutation(
+  const forceReleaseMountMutation = client.useMutation(
     'post',
-    '/v1/workspaces/{workspaceId}/volumes/{id}/force-unlock'
+    '/v1/workspaces/{workspaceId}/volumes/{id}/force-release-mount'
   )
 
-  const handleForceUnlock = async () => {
-    forceUnlockMutation.mutate({
+  const handleForceRelease = async () => {
+    forceReleaseMountMutation.mutate({
       params: {
         path: {
           workspaceId: workspaceId!,
@@ -39,7 +39,7 @@ export function VolumeDetailsPage() {
       }
     }, {
       onSuccess: () => {
-        toast.success("Volume has been unlocked!")
+        toast.success("Volume has been released!")
         queryClient.invalidateQueries({ queryKey: ['get', '/v1/workspaces/{workspaceId}/volumes/{id}'] })
       },
       onError: (error) => {
@@ -64,34 +64,34 @@ export function VolumeDetailsPage() {
       }}
       customButtons={(data) => (
         <>
-          {data.lockId && (
+          {data.mountId && (
             <ConfirmationDialog
               trigger={
                 <Button variant="outline">
                   <Unlock className="h-4 w-4 mr-2" />
-                  Force Unlock
+                  Force Release Mount
                 </Button>
               }
-              title="Force Unlock Volume?"
-              description="This will forcefully unlock the volume."
-              confirmText="Force Unlock"
-              onConfirm={handleForceUnlock}
+              title="Force release mounted Volume?"
+              description="This will forcefully release the mounted volume."
+              confirmText="Force Release"
+              onConfirm={handleForceRelease}
               destructive
             >
               <Alert variant="destructive">
                 <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>Warning: Force Unlock</AlertTitle>
+                <AlertTitle>Warning</AlertTitle>
                 <AlertDescription>
                   <div className="space-y-2">
                     <p>
-                      <strong>Force unlocking a volume can be dangerous if it is actively in use.</strong>
+                      <strong>Force releasing a mounted volume can be dangerous if it is actively in use.</strong>
                     </p>
                     <p>
-                      Only use this option if you are certain the volume is not being used, or if the lock is stale due to a crashed machine/server.
+                      Only use this option if you are certain the volume is not being used, or if the mount is stale due to a crashed machine/server.
                     </p>
                     <p>
-                      {data.lockBoxId && (
-                        <>Currently locked by Box ID: <strong>{data.lockBoxId}</strong></>
+                      {data.mountStatus?.boxId && (
+                        <>Currently mounted by Box ID: <strong>{data.mountStatus.boxId}</strong></>
                       )}
                     </p>
                   </div>

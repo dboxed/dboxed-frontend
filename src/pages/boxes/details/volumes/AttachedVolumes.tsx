@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
-import { Badge } from "@/components/ui/badge.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import { DataTable } from "@/components/data-table.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
@@ -92,20 +91,6 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
             fallbackLabel={volume.name}
             className="text-blue-600 hover:text-blue-800 underline"
           />
-        )
-      }
-    },
-    {
-      accessorKey: "volume.volumeProviderType",
-      header: "Provider Type",
-      cell: ({ row }) => {
-        const attachment = row.original
-        const volume = attachment.volume!
-
-        return (
-          <Badge variant="secondary" className="capitalize">
-            {volume.volumeProviderType}
-          </Badge>
         )
       }
     },

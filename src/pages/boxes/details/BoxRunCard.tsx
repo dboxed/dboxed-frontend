@@ -14,7 +14,7 @@ interface BoxTokenCardProps {
   box: components["schemas"]["Box"]
 }
 
-export function BoxConnectCard({ box }: BoxTokenCardProps) {
+export function BoxRunCard({ box }: BoxTokenCardProps) {
   const client = useDboxedQueryClient()
   const [cliCommand, setCliCommand] = useState<string>("")
 
@@ -73,10 +73,10 @@ export function BoxConnectCard({ box }: BoxTokenCardProps) {
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <Key className="h-5 w-5" />
-          <span>Connect to Box</span>
+          <span>Run box</span>
         </CardTitle>
         <CardDescription>
-          Generate a CLI command to connect to this box with the dboxed CLI.
+          Generate a CLI command which allows you to run the box.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">

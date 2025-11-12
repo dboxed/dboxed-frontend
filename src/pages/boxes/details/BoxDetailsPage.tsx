@@ -7,21 +7,19 @@ import { Button } from "@/components/ui/button.tsx"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
 import { AlertTriangle, Play, StopCircle } from "lucide-react"
 import { GeneralInfoCard } from "./GeneralInfoCard"
-import { BoxConnectCard } from "./BoxConnectCard.tsx"
+import { BoxRunCard } from "./BoxRunCard.tsx"
 import { LogsPage } from "./logs/LogsPage.tsx"
-import { VolumesTab } from "./volumes/VolumesTab.tsx"
-import { ComposeProjects } from "./compose-projects/ComposeProjects.tsx"
+import { BoxConfigTab } from "./BoxConfigTab.tsx"
 import type { components } from "@/api/models/schema"
 
 function BoxDetailsContent({ data }: { data: components["schemas"]["Box"] }) {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="general" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="general">General</TabsTrigger>
-          <TabsTrigger value="connect">Connect</TabsTrigger>
-          <TabsTrigger value="volumes">Volumes</TabsTrigger>
-          <TabsTrigger value="compose">Compose Projects</TabsTrigger>
+          <TabsTrigger value="run">Run</TabsTrigger>
+          <TabsTrigger value="box-config">Config</TabsTrigger>
           <TabsTrigger value="logs">Logs</TabsTrigger>
         </TabsList>
 
@@ -29,16 +27,12 @@ function BoxDetailsContent({ data }: { data: components["schemas"]["Box"] }) {
           <GeneralInfoCard box={data} />
         </TabsContent>
 
-        <TabsContent value="connect">
-          <BoxConnectCard box={data} />
+        <TabsContent value="run">
+          <BoxRunCard box={data} />
         </TabsContent>
 
-        <TabsContent value="volumes">
-          <VolumesTab box={data} />
-        </TabsContent>
-
-        <TabsContent value="compose">
-          <ComposeProjects box={data} />
+        <TabsContent value="box-config">
+          <BoxConfigTab box={data} />
         </TabsContent>
 
         <TabsContent value="logs">

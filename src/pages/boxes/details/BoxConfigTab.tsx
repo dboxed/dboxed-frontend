@@ -1,6 +1,7 @@
 import { AttachedVolumes } from "./volumes/AttachedVolumes.tsx"
 import { ComposeProjects } from "./compose-projects/ComposeProjects.tsx"
 import { PortForwardings } from "./port-forwards/PortForwardings.tsx"
+import { BoxIngresses } from "./ingresses/BoxIngresses.tsx"
 import type { components } from "@/api/models/schema"
 
 interface VolumesAndProjectsTabProps {
@@ -14,7 +15,10 @@ export function BoxConfigTab({ box }: VolumesAndProjectsTabProps) {
         <AttachedVolumes box={box} />
         <ComposeProjects box={box} />
       </div>
-      <PortForwardings box={box} />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <PortForwardings box={box} />
+        <BoxIngresses box={box} />
+      </div>
     </div>
   )
 }

@@ -22,6 +22,8 @@ import { ListS3BucketsPage } from "@/pages/s3-buckets/ListS3BucketsPage.tsx";
 import { S3BucketDetailsPage } from "@/pages/s3-buckets/details/S3BucketDetailsPage.tsx";
 import { AdminWorkspacesListPage } from "@/pages/admin/AdminWorkspacesListPage.tsx";
 import { AdminListUsersPage } from "@/pages/admin/AdminListUsersPage.tsx";
+import { ListIngressProxiesPage } from "@/pages/ingress-proxies/ListIngressProxiesPage.tsx";
+import { IngressProxyDetailsPage } from "@/pages/ingress-proxies/details/IngressProxyDetailsPage.tsx";
 import { ThemeProvider } from "@/components/theme-provider";
 import CookieConsentComponent from "@/components/cookie-consent/CookieConsent.tsx";
 import { envVars } from "@/env.ts";
@@ -107,6 +109,8 @@ function AuthenticatedApp() {
           <Route path="/workspaces/:workspaceId/tokens/:tokenId" element={<TokenDetailsPage/>}/>
           <Route path="/workspaces/:workspaceId/s3-buckets" element={<ListS3BucketsPage/>}/>
           <Route path="/workspaces/:workspaceId/s3-buckets/:s3BucketId" element={<S3BucketDetailsPage/>}/>
+          <Route path="/workspaces/:workspaceId/ingress-proxies" element={<ListIngressProxiesPage/>}/>
+          <Route path="/workspaces/:workspaceId/ingress-proxies/:proxyId" element={<IngressProxyDetailsPage/>}/>
           {isAdminQuery.isAdmin && (
             <>
               <Route path="/admin/workspaces" element={<AdminWorkspacesListPage/>}/>

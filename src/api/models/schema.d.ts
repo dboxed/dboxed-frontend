@@ -317,6 +317,42 @@ export interface paths {
         patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id-compose-projects-by-compose-name"];
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/boxes/{id}/ingresses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID boxes by ID ingresses */
+        get: operations["get-v1-workspaces-by-workspace-id-boxes-by-id-ingresses"];
+        put?: never;
+        /** Post v1 workspaces by workspace ID boxes by ID ingresses */
+        post: operations["post-v1-workspaces-by-workspace-id-boxes-by-id-ingresses"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/boxes/{id}/ingresses/{ingressId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete v1 workspaces by workspace ID boxes by ID ingresses by ingress ID */
+        delete: operations["delete-v1-workspaces-by-workspace-id-boxes-by-id-ingresses-by-ingress-id"];
+        options?: never;
+        head?: never;
+        /** Patch v1 workspaces by workspace ID boxes by ID ingresses by ingress ID */
+        patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id-ingresses-by-ingress-id"];
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/boxes/{id}/logs": {
         parameters: {
             query?: never;
@@ -439,6 +475,42 @@ export interface paths {
         head?: never;
         /** Patch v1 workspaces by workspace ID boxes by ID volumes by volume ID */
         patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id-volumes-by-volume-id"];
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/ingress-proxies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID ingress proxies */
+        get: operations["get-v1-workspaces-by-workspace-id-ingress-proxies"];
+        put?: never;
+        /** Post v1 workspaces by workspace ID ingress proxies */
+        post: operations["post-v1-workspaces-by-workspace-id-ingress-proxies"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/ingress-proxies/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID ingress proxies by ID */
+        get: operations["get-v1-workspaces-by-workspace-id-ingress-proxies-by-id"];
+        put?: never;
+        post?: never;
+        /** Delete v1 workspaces by workspace ID ingress proxies by ID */
+        delete: operations["delete-v1-workspaces-by-workspace-id-ingress-proxies-by-id"];
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/v1/workspaces/{workspaceId}/machine-providers": {
@@ -1009,6 +1081,7 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            boxType: string;
             /** Format: date-time */
             createdAt: string;
             dboxedVersion: string;
@@ -1026,6 +1099,23 @@ export interface components {
         BoxComposeProject: {
             composeProject: string;
             name: string;
+        };
+        BoxIngress: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            boxId: string;
+            /** Format: date-time */
+            createdAt: string;
+            description?: string;
+            hostname: string;
+            id: string;
+            pathPrefix: string;
+            /** Format: int64 */
+            port: number;
+            proxyId: string;
         };
         BoxNetwork: {
             netbird?: components["schemas"]["BoxNetworkNetbird"];
@@ -1104,6 +1194,19 @@ export interface components {
             composeProject: string;
             name: string;
         };
+        CreateBoxIngress: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            description?: string;
+            hostname: string;
+            pathPrefix: string;
+            /** Format: int64 */
+            port: number;
+            proxyId: string;
+        };
         CreateBoxPortForward: {
             /**
              * Format: uri
@@ -1118,6 +1221,20 @@ export interface components {
             protocol: string;
             /** Format: int64 */
             sandboxPort: number;
+        };
+        CreateIngressProxy: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            httpPort: number;
+            /** Format: int64 */
+            httpsPort: number;
+            name: string;
+            network: string;
+            proxyType: string;
         };
         CreateMachine: {
             /**
@@ -1324,6 +1441,26 @@ export interface components {
             name: string;
             network_zone: string;
         };
+        IngressProxy: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            boxId: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: int64 */
+            httpPort: number;
+            /** Format: int64 */
+            httpsPort: number;
+            id: string;
+            name: string;
+            proxyType: string;
+            status: string;
+            statusDetails: string;
+            workspace: string;
+        };
         ListBodyAwsRegion: {
             /**
              * Format: uri
@@ -1354,6 +1491,16 @@ export interface components {
             /** Format: int64 */
             total_count: number;
         };
+        ListBodyBoxIngress: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["BoxIngress"][] | null;
+            /** Format: int64 */
+            total_count: number;
+        };
         ListBodyBoxPortForward: {
             /**
              * Format: uri
@@ -1371,6 +1518,16 @@ export interface components {
              */
             readonly $schema?: string;
             items: components["schemas"]["HetznerLocation"][] | null;
+            /** Format: int64 */
+            total_count: number;
+        };
+        ListBodyIngressProxy: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["IngressProxy"][] | null;
             /** Format: int64 */
             total_count: number;
         };
@@ -1804,6 +1961,18 @@ export interface components {
              */
             readonly $schema?: string;
             composeProject: string;
+        };
+        UpdateBoxIngress: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            description?: string;
+            hostname?: string;
+            pathPrefix?: string;
+            /** Format: int64 */
+            port?: number;
         };
         UpdateBoxPortForward: {
             /**
@@ -2943,6 +3112,150 @@ export interface operations {
             };
         };
     };
+    "get-v1-workspaces-by-workspace-id-boxes-by-id-ingresses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListBodyBoxIngress"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-boxes-by-id-ingresses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateBoxIngress"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BoxIngress"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-v1-workspaces-by-workspace-id-boxes-by-id-ingresses-by-ingress-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                ingressId: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "patch-v1-workspaces-by-workspace-id-boxes-by-id-ingresses-by-ingress-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                ingressId: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateBoxIngress"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BoxIngress"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-v1-workspaces-by-workspace-id-boxes-by-id-logs": {
         parameters: {
             query?: never;
@@ -3444,6 +3757,142 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["VolumeAttachment"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-ingress-proxies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListBodyIngressProxy"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-ingress-proxies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateIngressProxy"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IngressProxy"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-ingress-proxies-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IngressProxy"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-v1-workspaces-by-workspace-id-ingress-proxies-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
             /** @description Error */

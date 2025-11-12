@@ -1,4 +1,4 @@
-import { Box, LayoutDashboard, Network, Users, HardDrive, Key, BookOpen, Database } from "lucide-react"
+import { Box, LayoutDashboard, Network, Users, HardDrive, Key, BookOpen, Database, Globe } from "lucide-react"
 
 import { NavItems } from "@/components/nav-items.tsx"
 import { NavUser } from "@/components/nav-user"
@@ -22,6 +22,11 @@ const navMain = [
     title: "Networks",
     navigate: "/workspaces/{workspaceId}/networks",
     icon: <Network/>,
+  },
+  {
+    title: "Ingress Proxies",
+    navigate: "/workspaces/{workspaceId}/ingress-proxies",
+    icon: <Globe/>,
   },
   {
     title: "S3 Buckets",

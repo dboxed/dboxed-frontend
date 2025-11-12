@@ -44,7 +44,7 @@ export function AttachVolumeDialog({ boxId, open, onOpenChange, onSuccess }: Att
         volumeId: selectedVolume.id,
         rootUid: 0,
         rootGid: 0,
-        rootMode: "0755"
+        rootMode: "0777"
       }
     }, {
       onSuccess: () => {

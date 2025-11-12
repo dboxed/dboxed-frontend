@@ -351,6 +351,42 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/boxes/{id}/port-forwards": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID boxes by ID port forwards */
+        get: operations["get-v1-workspaces-by-workspace-id-boxes-by-id-port-forwards"];
+        put?: never;
+        /** Post v1 workspaces by workspace ID boxes by ID port forwards */
+        post: operations["post-v1-workspaces-by-workspace-id-boxes-by-id-port-forwards"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/boxes/{id}/port-forwards/{portForwardId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete v1 workspaces by workspace ID boxes by ID port forwards by port forward ID */
+        delete: operations["delete-v1-workspaces-by-workspace-id-boxes-by-id-port-forwards-by-port-forward-id"];
+        options?: never;
+        head?: never;
+        /** Patch v1 workspaces by workspace ID boxes by ID port forwards by port forward ID */
+        patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id-port-forwards-by-port-forward-id"];
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/boxes/{id}/sandbox-status": {
         parameters: {
             query?: never;
@@ -991,6 +1027,34 @@ export interface components {
             composeProject: string;
             name: string;
         };
+        BoxNetwork: {
+            netbird?: components["schemas"]["BoxNetworkNetbird"];
+            portForwards?: components["schemas"]["PortForward"][] | null;
+        };
+        BoxNetworkNetbird: {
+            hostname: string;
+            managementUrl: string;
+            setupKey: string;
+        };
+        BoxPortForward: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            boxId: string;
+            /** Format: date-time */
+            createdAt: string;
+            description?: string;
+            /** Format: int64 */
+            hostPortFirst: number;
+            /** Format: int64 */
+            hostPortLast: number;
+            id: string;
+            protocol: string;
+            /** Format: int64 */
+            sandboxPort: number;
+        };
         BoxSandboxStatus: {
             /**
              * Format: uri
@@ -1017,6 +1081,7 @@ export interface components {
             };
             desiredState: string;
             id: string;
+            network?: components["schemas"]["BoxNetwork"];
             volumes?: components["schemas"]["DboxedVolume"][] | null;
         };
         CreateBox: {
@@ -1038,6 +1103,21 @@ export interface components {
             readonly $schema?: string;
             composeProject: string;
             name: string;
+        };
+        CreateBoxPortForward: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            description?: string;
+            /** Format: int64 */
+            hostPortFirst: number;
+            /** Format: int64 */
+            hostPortLast: number;
+            protocol: string;
+            /** Format: int64 */
+            sandboxPort: number;
         };
         CreateMachine: {
             /**
@@ -1271,6 +1351,16 @@ export interface components {
              */
             readonly $schema?: string;
             items: components["schemas"]["BoxComposeProject"][] | null;
+            /** Format: int64 */
+            total_count: number;
+        };
+        ListBodyBoxPortForward: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["BoxPortForward"][] | null;
             /** Format: int64 */
             total_count: number;
         };
@@ -1541,6 +1631,15 @@ export interface components {
             apiUrl: string;
             netbirdVersion: string;
         };
+        PortForward: {
+            /** Format: int64 */
+            hostFirstPort: number;
+            /** Format: int64 */
+            hostLastPort: number;
+            protocol: string;
+            /** Format: int64 */
+            sandboxPort: number;
+        };
         PostLogs: {
             /**
              * Format: uri
@@ -1705,6 +1804,21 @@ export interface components {
              */
             readonly $schema?: string;
             composeProject: string;
+        };
+        UpdateBoxPortForward: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            description?: string;
+            /** Format: int64 */
+            hostPortFirst?: number;
+            /** Format: int64 */
+            hostPortLast?: number;
+            protocol?: string;
+            /** Format: int64 */
+            sandboxPort?: number;
         };
         UpdateBoxSandboxStatus: {
             /**
@@ -2968,6 +3082,150 @@ export interface operations {
                         /** @description The retry time in milliseconds. */
                         retry?: number;
                     })[];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-boxes-by-id-port-forwards": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListBodyBoxPortForward"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-boxes-by-id-port-forwards": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateBoxPortForward"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BoxPortForward"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-v1-workspaces-by-workspace-id-boxes-by-id-port-forwards-by-port-forward-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                portForwardId: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "patch-v1-workspaces-by-workspace-id-boxes-by-id-port-forwards-by-port-forward-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                portForwardId: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateBoxPortForward"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BoxPortForward"];
                 };
             };
             /** @description Error */

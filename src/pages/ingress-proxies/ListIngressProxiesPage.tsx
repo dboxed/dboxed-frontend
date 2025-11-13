@@ -43,6 +43,26 @@ export function ListIngressProxiesPage() {
       }
     },
     {
+      accessorKey: "network",
+      header: "Network",
+      cell: ({ row }) => {
+        const proxy = row.original
+        return (
+          <ReferenceLabel
+            resourceId={proxy.network}
+            resourcePath="/v1/workspaces/{workspaceId}/networks/{id}"
+            pathParams={{
+              workspaceId: workspaceId!,
+              id: proxy.network
+            }}
+            detailsUrl={`/workspaces/${workspaceId}/networks/${proxy.network}`}
+            fallbackLabel={proxy.network}
+            className="text-blue-600 hover:text-blue-800 underline"
+          />
+        )
+      }
+    },
+    {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => {

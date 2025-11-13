@@ -17,6 +17,7 @@ interface ProxyConfigCardProps {
 interface PortFormData {
   httpPort: number
   httpsPort: number
+  replicas: number
 }
 
 export function ProxyConfigCard({ data, save }: ProxyConfigCardProps) {
@@ -25,13 +26,15 @@ export function ProxyConfigCard({ data, save }: ProxyConfigCardProps) {
 
   const buildInitial = (): PortFormData => ({
     httpPort: data.httpPort,
-    httpsPort: data.httpsPort
+    httpsPort: data.httpsPort,
+    replicas: data.replicas
   })
 
   const handleSave = async (values: PortFormData): Promise<boolean> => {
     return await save({
       httpPort: values.httpPort,
-      httpsPort: values.httpsPort
+      httpsPort: values.httpsPort,
+      replicas: values.replicas
     })
   }
 
@@ -39,47 +42,67 @@ export function ProxyConfigCard({ data, save }: ProxyConfigCardProps) {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Proxy Configuration</CardTitle>
-          <CardDescription>
-            Network and protocol configuration for this ingress proxy
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>Proxy Configuration</CardTitle>
+              <CardDescription>
+                Network and protocol configuration for this ingress proxy
+              </CardDescription>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setEditDialogOpen(true)}
+            >
+              <Edit className="w-4 h-4 mr-2" />
+              Edit
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            {/* Box Information Section */}
+            {/* Box and Network Information Section */}
             <div>
-              <h3 className="text-sm font-semibold mb-3">Box</h3>
-              <div>
-                <dt className="text-sm font-medium text-muted-foreground">Running On</dt>
-                <dd className="mt-1">
-                  <ReferenceLabel
-                    resourceId={data.boxId}
-                    resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
-                    pathParams={{
-                      workspaceId: workspaceId!,
-                      id: data.boxId
-                    }}
-                    detailsUrl={`/workspaces/${workspaceId}/boxes/${data.boxId}`}
-                    fallbackLabel={data.boxId}
-                    className="text-blue-600 hover:text-blue-800 underline"
-                  />
-                </dd>
-              </div>
+              <h3 className="text-sm font-semibold mb-3">Resources</h3>
+              <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                  <dt className="text-sm font-medium text-muted-foreground">Box</dt>
+                  <dd className="mt-1">
+                    <ReferenceLabel
+                      resourceId={data.boxId}
+                      resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
+                      pathParams={{
+                        workspaceId: workspaceId!,
+                        id: data.boxId
+                      }}
+                      detailsUrl={`/workspaces/${workspaceId}/boxes/${data.boxId}`}
+                      fallbackLabel={data.boxId}
+                      className="text-blue-600 hover:text-blue-800 underline"
+                    />
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-sm font-medium text-muted-foreground">Network</dt>
+                  <dd className="mt-1">
+                    <ReferenceLabel
+                      resourceId={data.network}
+                      resourcePath="/v1/workspaces/{workspaceId}/networks/{id}"
+                      pathParams={{
+                        workspaceId: workspaceId!,
+                        id: data.network
+                      }}
+                      detailsUrl={`/workspaces/${workspaceId}/networks/${data.network}`}
+                      fallbackLabel={data.network}
+                      className="text-blue-600 hover:text-blue-800 underline"
+                    />
+                  </dd>
+                </div>
+              </dl>
             </div>
 
             {/* Port Configuration Section */}
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold">Port Configuration</h3>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setEditDialogOpen(true)}
-                >
-                  <Edit className="w-4 h-4 mr-2" />
-                  Edit Ports
-                </Button>
-              </div>
+              <h3 className="text-sm font-semibold mb-3">Configuration</h3>
               <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <dt className="text-sm font-medium text-muted-foreground">HTTP Port</dt>
@@ -102,6 +125,18 @@ export function ProxyConfigCard({ data, save }: ProxyConfigCardProps) {
                   </dd>
                   <p className="mt-1 text-xs text-muted-foreground">
                     Port for HTTPS traffic (typically 443)
+                  </p>
+                </div>
+
+                <div>
+                  <dt className="text-sm font-medium text-muted-foreground">Replicas</dt>
+                  <dd className="mt-1">
+                    <code className="text-sm bg-muted px-1 py-0.5 rounded">
+                      {data.replicas}
+                    </code>
+                  </dd>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Number of proxy instances
                   </p>
                 </div>
               </dl>
@@ -140,46 +175,69 @@ export function ProxyConfigCard({ data, save }: ProxyConfigCardProps) {
       <SimpleFormDialog<PortFormData>
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
-        title="Edit Ports"
+        title="Edit Configuration"
         buildInitial={buildInitial}
         onSave={handleSave}
         saveText="Save Changes"
       >
         {(form) => (
-          <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="httpPort"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>HTTP Port</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      min="1"
-                      max="65535"
-                      placeholder="80"
-                      {...field}
-                      onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="httpPort"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>HTTP Port</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min="1"
+                        max="65535"
+                        placeholder="80"
+                        {...field}
+                        onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="httpsPort"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>HTTPS Port</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min="1"
+                        max="65535"
+                        placeholder="443"
+                        {...field}
+                        onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}
-              name="httpsPort"
+              name="replicas"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>HTTPS Port</FormLabel>
+                  <FormLabel>Replicas</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       min="1"
-                      max="65535"
-                      placeholder="443"
+                      max="100"
+                      placeholder="1"
                       {...field}
                       onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
                     />

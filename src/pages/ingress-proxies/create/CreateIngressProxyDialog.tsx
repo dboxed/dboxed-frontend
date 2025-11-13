@@ -45,6 +45,7 @@ export function CreateIngressProxyDialog({ open, onOpenChange }: CreateIngressPr
         network: "",
         httpPort: 80,
         httpsPort: 443,
+        replicas: 1,
       }}
     >
       {(form) => (
@@ -152,6 +153,27 @@ export function CreateIngressProxyDialog({ open, onOpenChange }: CreateIngressPr
               )}
             />
           </div>
+
+          <FormField
+            control={form.control}
+            name="replicas"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Replicas</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    min="1"
+                    max="100"
+                    placeholder="1"
+                    {...field}
+                    onChange={(e) => field.onChange(parseInt(e.target.value, 10))}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
       )}
     </BaseCreateDialog>

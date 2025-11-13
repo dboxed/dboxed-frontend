@@ -64,6 +64,17 @@ export function PortForwardings({ box }: PortForwardingsProps) {
 
   const columns: ColumnDef<components["schemas"]["BoxPortForward"]>[] = [
     {
+      accessorKey: "description",
+      header: "Description",
+      cell: ({ row }) => {
+        return (
+          <span className="text-sm text-muted-foreground">
+            {row.original.description || "-"}
+          </span>
+        )
+      }
+    },
+    {
       accessorKey: "protocol",
       header: "Protocol",
       cell: ({ row }) => {
@@ -71,17 +82,6 @@ export function PortForwardings({ box }: PortForwardingsProps) {
           <Badge variant="secondary" className="uppercase">
             {row.original.protocol}
           </Badge>
-        )
-      }
-    },
-    {
-      accessorKey: "sandboxPort",
-      header: "Sandbox Port",
-      cell: ({ row }) => {
-        return (
-          <code className="text-sm bg-muted px-1 py-0.5 rounded">
-            {row.original.sandboxPort}
-          </code>
         )
       }
     },
@@ -102,13 +102,13 @@ export function PortForwardings({ box }: PortForwardingsProps) {
       }
     },
     {
-      accessorKey: "description",
-      header: "Description",
+      accessorKey: "sandboxPort",
+      header: "Sandbox Port",
       cell: ({ row }) => {
         return (
-          <span className="text-sm text-muted-foreground">
-            {row.original.description || "-"}
-          </span>
+          <code className="text-sm bg-muted px-1 py-0.5 rounded">
+            {row.original.sandboxPort}
+          </code>
         )
       }
     },

@@ -1241,6 +1241,8 @@ export interface components {
             name: string;
             network: string;
             proxyType: string;
+            /** Format: int64 */
+            replicas?: number;
         };
         CreateMachine: {
             /**
@@ -1453,7 +1455,6 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            boxId: string;
             /** Format: date-time */
             createdAt: string;
             /** Format: int64 */
@@ -1462,7 +1463,10 @@ export interface components {
             httpsPort: number;
             id: string;
             name: string;
+            network: string;
             proxyType: string;
+            /** Format: int64 */
+            replicas: number;
             status: string;
             statusDetails: string;
             workspace: string;
@@ -2026,6 +2030,8 @@ export interface components {
             httpPort?: number;
             /** Format: int64 */
             httpsPort?: number;
+            /** Format: int64 */
+            replicas?: number;
         };
         UpdateMachine: {
             /**

@@ -1,3 +1,4 @@
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx"
 import { AttachedVolumes } from "./volumes/AttachedVolumes.tsx"
 import { ComposeProjects } from "./compose-projects/ComposeProjects.tsx"
 import { PortForwardings } from "./port-forwards/PortForwardings.tsx"
@@ -10,15 +11,39 @@ interface VolumesAndProjectsTabProps {
 
 export function BoxConfigTab({ box }: VolumesAndProjectsTabProps) {
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <AttachedVolumes box={box} />
-        <ComposeProjects box={box} />
+    <Tabs defaultValue="compose" orientation="vertical" className="flex flex-row gap-6">
+      <TabsList className="flex flex-col h-fit w-48 items-stretch shrink-0">
+        <TabsTrigger value="compose" className="justify-start">
+          Compose Projects
+        </TabsTrigger>
+        <TabsTrigger value="volumes" className="justify-start">
+          Volumes
+        </TabsTrigger>
+        <TabsTrigger value="port-forwards" className="justify-start">
+          Port Forwards
+        </TabsTrigger>
+        <TabsTrigger value="ingresses" className="justify-start">
+          Ingresses
+        </TabsTrigger>
+      </TabsList>
+
+      <div className="flex-1 min-w-0">
+        <TabsContent value="compose" className="m-0">
+          <ComposeProjects box={box} />
+        </TabsContent>
+
+        <TabsContent value="volumes" className="m-0">
+          <AttachedVolumes box={box} />
+        </TabsContent>
+
+        <TabsContent value="port-forwards" className="m-0">
+          <PortForwardings box={box} />
+        </TabsContent>
+
+        <TabsContent value="ingresses" className="m-0">
+          <BoxIngresses box={box} />
+        </TabsContent>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <PortForwardings box={box} />
-        <BoxIngresses box={box} />
-      </div>
-    </div>
+    </Tabs>
   )
 }

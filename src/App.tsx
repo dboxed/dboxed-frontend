@@ -11,7 +11,7 @@ import { Toaster } from "sonner";
 import { MachineProviderDetailsPage } from "@/pages/machine-providers";
 import { MachineDetailsPage, MachinesPage } from "@/pages/machines";
 import { WorkspaceDashboardPage } from "@/pages/dashboard/WorkspaceDashboardPage.tsx";
-import { ListNetworksPage, NetworkDetailsPage } from "@/pages/networks";
+import { NetworkDetailsPage } from "@/pages/networks";
 import { BoxDetailsPage } from "@/pages/boxes/details";
 import { ListBoxesPage } from "@/pages/boxes";
 import { VolumeProviderDetailsPage } from "@/pages/volume-providers";
@@ -22,11 +22,11 @@ import { ListS3BucketsPage } from "@/pages/s3-buckets/ListS3BucketsPage.tsx";
 import { S3BucketDetailsPage } from "@/pages/s3-buckets/details/S3BucketDetailsPage.tsx";
 import { AdminWorkspacesListPage } from "@/pages/admin/AdminWorkspacesListPage.tsx";
 import { AdminListUsersPage } from "@/pages/admin/AdminListUsersPage.tsx";
-import { ListIngressProxiesPage } from "@/pages/ingress-proxies/ListIngressProxiesPage.tsx";
 import { IngressProxyDetailsPage } from "@/pages/ingress-proxies/details/IngressProxyDetailsPage.tsx";
 import { ThemeProvider } from "@/components/theme-provider";
 import CookieConsentComponent from "@/components/cookie-consent/CookieConsent.tsx";
 import { envVars } from "@/env.ts";
+import { NetworkingPage } from "@/pages/networking/NetworkingPage.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -103,14 +103,14 @@ function AuthenticatedApp() {
           <Route path="/workspaces/:workspaceId/volumes/:volumeId/snapshots/:snapshotId" element={<SnapshotDetailsPage />}/>
           <Route path="/workspaces/:workspaceId/boxes" element={<ListBoxesPage/>}/>
           <Route path="/workspaces/:workspaceId/boxes/:boxId" element={<BoxDetailsPage/>}/>
-          <Route path="/workspaces/:workspaceId/networks" element={<ListNetworksPage/>}/>
+          <Route path="/workspaces/:workspaceId/networks" element={<NetworkingPage/>}/>
+          <Route path="/workspaces/:workspaceId/ingress-proxies" element={<NetworkingPage/>}/>
           <Route path="/workspaces/:workspaceId/networks/:networkId" element={<NetworkDetailsPage/>}/>
+          <Route path="/workspaces/:workspaceId/ingress-proxies/:proxyId" element={<IngressProxyDetailsPage/>}/>
           <Route path="/workspaces/:workspaceId/tokens" element={<ListTokensPage/>}/>
           <Route path="/workspaces/:workspaceId/tokens/:tokenId" element={<TokenDetailsPage/>}/>
           <Route path="/workspaces/:workspaceId/s3-buckets" element={<ListS3BucketsPage/>}/>
           <Route path="/workspaces/:workspaceId/s3-buckets/:s3BucketId" element={<S3BucketDetailsPage/>}/>
-          <Route path="/workspaces/:workspaceId/ingress-proxies" element={<ListIngressProxiesPage/>}/>
-          <Route path="/workspaces/:workspaceId/ingress-proxies/:proxyId" element={<IngressProxyDetailsPage/>}/>
           {isAdminQuery.isAdmin && (
             <>
               <Route path="/admin/workspaces" element={<AdminWorkspacesListPage/>}/>

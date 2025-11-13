@@ -52,21 +52,6 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
               />
             }
           />
-          <LabelAndValue
-            label="Workspace"
-            value={
-              <ReferenceLabel
-                resourceId={data.workspace}
-                resourcePath="/v1/workspaces/{workspaceId}"
-                pathParams={{
-                  workspaceId: data.workspace
-                }}
-                detailsUrl={`/workspaces/${data.workspace}`}
-                fallbackLabel="Workspace"
-                className="text-blue-600 hover:text-blue-800 underline"
-              />
-            }
-          />
           {data.attachment && (
             <LabelAndValue
               label="Attached To"

@@ -1,6 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
-import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import { StatusBadge } from "@/components/StatusBadge.tsx"
@@ -26,7 +25,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
             label="Name"
             textValue={data.name}
           />
-          
+
           <LabelAndValue
             label="Type"
             value={
@@ -35,7 +34,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
               </Badge>
             }
           />
-          
+
           <LabelAndValue
             label="Status"
             value={
@@ -47,20 +46,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
               />
             }
           />
-          
-          <LabelAndValue
-            label="Workspace"
-            value={
-              <ReferenceLabel
-                resourceId={data.workspace}
-                resourcePath="/v1/workspaces/{workspaceId}"
-                pathParams={{ workspaceId: data.workspace }}
-                detailsUrl={`/workspaces/${data.workspace}`}
-                fallbackLabel="Workspace"
-              />
-            }
-          />
-          
+
           <LabelAndValue
             label="Created"
             value={<TimeAgo date={data.createdAt} />}

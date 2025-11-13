@@ -51,19 +51,6 @@ export function GeneralInfoCard({ box }: GeneralInfoCardProps) {
               />
 
               <LabelAndValue
-                label="Workspace"
-                value={
-                  <ReferenceLabel
-                    resourceId={box.workspace}
-                    resourcePath="/v1/workspaces/{workspaceId}"
-                    pathParams={{ workspaceId: box.workspace }}
-                    detailsUrl={`/workspaces/${box.workspace}`}
-                    fallbackLabel="Workspace"
-                  />
-                }
-              />
-
-              <LabelAndValue
                 label="Dboxed Version"
                 value={
                   <Badge variant="outline" className="w-fit">

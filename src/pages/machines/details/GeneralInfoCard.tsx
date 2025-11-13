@@ -84,12 +84,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           <LabelAndValue
             label="Status"
             value={
-              <StatusBadge
-                item={{
-                  status: data.status,
-                  statusDetails: data.statusDetails
-                }}
-              />
+              <StatusBadge item={data}/>
             }
           />
 

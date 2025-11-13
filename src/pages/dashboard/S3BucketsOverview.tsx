@@ -49,12 +49,7 @@ export function S3BucketsOverview() {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <StatusBadge
-            item={{
-              status: bucket.status,
-              statusDetails: bucket.statusDetails,
-            }}
-          />
+          <StatusBadge item={bucket}/>
         </div>
       </div>
     ),

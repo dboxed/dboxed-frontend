@@ -47,12 +47,7 @@ export function NetworksOverview() {
           </Badge>
         </div>
         <div className="flex items-center gap-2">
-          <StatusBadge
-            item={{
-              status: network.status,
-              statusDetails: network.statusDetails,
-            }}
-          />
+          <StatusBadge item={network}/>
         </div>
       </div>
     ),

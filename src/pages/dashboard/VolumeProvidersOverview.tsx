@@ -47,12 +47,7 @@ export function VolumeProvidersOverview() {
           </Badge>
         </div>
         <div className="flex items-center gap-2">
-          <StatusBadge
-            item={{
-              status: provider.status,
-              statusDetails: provider.statusDetails,
-            }}
-          />
+          <StatusBadge item={provider}/>
         </div>
       </div>
     ),

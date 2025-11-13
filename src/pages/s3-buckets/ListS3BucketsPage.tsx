@@ -47,12 +47,7 @@ export function ListS3BucketsPage() {
       header: "Status",
       cell: ({ row }) => {
         return (
-          <StatusBadge
-            item={{
-              status: row.original.status,
-              statusDetails: row.original.statusDetails
-            }}
-          />
+          <StatusBadge item={row.original}/>
         )
       },
     },

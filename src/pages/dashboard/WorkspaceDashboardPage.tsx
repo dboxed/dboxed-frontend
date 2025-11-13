@@ -7,6 +7,7 @@ import { BoxesOverview } from "./BoxesOverview.tsx"
 import { VolumeProvidersOverview } from "./VolumeProvidersOverview.tsx"
 import { VolumesOverview } from "./VolumesOverview.tsx"
 import { S3BucketsOverview } from "./S3BucketsOverview.tsx"
+import { IngressProxiesOverview } from "./IngressProxiesOverview.tsx"
 import { DeleteButton } from "@/components/DeleteButton.tsx"
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -64,6 +65,7 @@ export function WorkspaceDashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           <BoxesOverview />
           <NetworksOverview />
+          <IngressProxiesOverview />
           {/*<MachineProvidersOverview />*/}
           <VolumeProvidersOverview />
           {/*<MachinesOverview />*/}

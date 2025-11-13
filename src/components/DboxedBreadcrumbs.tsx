@@ -465,6 +465,61 @@ function S3BucketBreadcrumb({ s3BucketId, isCurrentPage }: S3BucketBreadcrumbPro
   )
 }
 
+interface IngressProxiesBreadcrumbProps {
+  isCurrentPage?: boolean
+}
+
+function IngressProxiesBreadcrumb({ isCurrentPage }: IngressProxiesBreadcrumbProps) {
+  const navigate = useNavigate()
+  const { workspaceId } = useSelectedWorkspaceId()
+  const href = `/workspaces/${workspaceId}/ingress-proxies`
+
+  return (
+    <BreadcrumbElement
+      href={href}
+      isCurrentPage={isCurrentPage}
+      onClick={() => navigate(href)}
+    >
+      <span>Ingress Proxies</span>
+    </BreadcrumbElement>
+  )
+}
+
+interface IngressProxyBreadcrumbProps {
+  proxyId: string
+  isCurrentPage?: boolean
+}
+
+function IngressProxyBreadcrumb({ proxyId, isCurrentPage }: IngressProxyBreadcrumbProps) {
+  const navigate = useNavigate()
+  const { workspaceId } = useSelectedWorkspaceId()
+  const client = useDboxedQueryClient()
+
+  const ingressProxy = client.useQuery('get', '/v1/workspaces/{workspaceId}/ingress-proxies/{id}', {
+    params: {
+      path: {
+        workspaceId: workspaceId!,
+        id: proxyId
+      }
+    },
+  }, {
+    enabled: !!workspaceId && !!proxyId
+  })
+
+  const href = `/workspaces/${workspaceId}/ingress-proxies/${proxyId}`
+  const label = ingressProxy.data?.name || 'Ingress Proxy'
+
+  return (
+    <BreadcrumbElement
+      href={href}
+      isCurrentPage={isCurrentPage}
+      onClick={() => navigate(href)}
+    >
+      <span>{label}</span>
+    </BreadcrumbElement>
+  )
+}
+
 interface DboxedBreadcrumbsProps {
   className?: string
 }
@@ -796,6 +851,49 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
     if (pathSegments[currentIndex] === 'create') {
       breadcrumbElements.push(
         <BreadcrumbSeparator key="sep-create-s3-bucket"/>,
+        <BreadcrumbItem key="create">
+          <CreateBreadcrumb isCurrentPage={true}/>
+        </BreadcrumbItem>
+      )
+    }
+  }
+
+  // Handle ingress-proxies path
+  if (pathSegments[currentIndex] === 'ingress-proxies') {
+    const isCurrentPage = pathSegments.length === currentIndex + 1
+
+    breadcrumbElements.push(
+      <BreadcrumbSeparator key="sep-workspace-ingress-proxies"/>,
+      <BreadcrumbItem key="ingress-proxies">
+        <IngressProxiesBreadcrumb isCurrentPage={isCurrentPage}/>
+      </BreadcrumbItem>
+    )
+
+    currentIndex++
+
+    // Handle specific ingress proxy ID
+    const proxyIdSegment = pathSegments[currentIndex]
+    if (proxyIdSegment && proxyIdSegment.match(/^[^/]+$/)) {
+      const proxyId = proxyIdSegment
+      const isCurrentPage = pathSegments.length === currentIndex + 1
+
+      breadcrumbElements.push(
+        <BreadcrumbSeparator key="sep-ingress-proxies"/>,
+        <BreadcrumbItem key="ingress-proxy">
+          <IngressProxyBreadcrumb
+            proxyId={proxyId}
+            isCurrentPage={isCurrentPage}
+          />
+        </BreadcrumbItem>
+      )
+
+      currentIndex++
+    }
+
+    // Handle create path
+    if (pathSegments[currentIndex] === 'create') {
+      breadcrumbElements.push(
+        <BreadcrumbSeparator key="sep-create-ingress-proxy"/>,
         <BreadcrumbItem key="create">
           <CreateBreadcrumb isCurrentPage={true}/>
         </BreadcrumbItem>

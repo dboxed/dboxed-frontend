@@ -10,10 +10,10 @@ import type { ColumnDef } from "@tanstack/react-table"
 import { Plus, Trash2, Edit } from "lucide-react"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip.tsx"
-import { IngressProxyStatusBadge } from "@/pages/ingress-proxies/IngressProxyStatusBadge.tsx"
 import { AddIngressDialog } from "./AddIngressDialog.tsx"
 import { EditIngressDialog } from "./EditIngressDialog.tsx"
 import { toast } from "sonner"
+import { StatusBadge } from "@/components/StatusBadge.tsx";
 
 interface BoxIngressesProps {
   box: components["schemas"]["Box"]
@@ -138,7 +138,7 @@ export function BoxIngresses({ box }: BoxIngressesProps) {
               fallbackLabel={proxy.name}
               className="text-blue-600 hover:text-blue-800 underline"
             />
-            <IngressProxyStatusBadge status={proxy.status} />
+            <StatusBadge item={proxy}/>
           </div>
         )
       }

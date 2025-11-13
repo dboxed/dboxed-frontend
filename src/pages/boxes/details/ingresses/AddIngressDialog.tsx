@@ -7,8 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/api.ts"
-import { IngressProxyStatusBadge } from "@/pages/ingress-proxies/IngressProxyStatusBadge.tsx"
 import { toast } from "sonner"
+import { StatusBadge } from "@/components/StatusBadge.tsx";
 
 interface AddIngressDialogProps {
   boxId: string
@@ -113,7 +113,7 @@ export function AddIngressDialog({ boxId, open, onOpenChange, onSuccess }: AddIn
                     <SelectItem key={proxy.id} value={proxy.id}>
                       <div className="flex items-center gap-2">
                         <span>{proxy.name}</span>
-                        <IngressProxyStatusBadge status={proxy.status} />
+                        <StatusBadge item={proxy}/>
                       </div>
                     </SelectItem>
                   ))}

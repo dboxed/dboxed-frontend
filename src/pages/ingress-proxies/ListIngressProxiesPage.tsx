@@ -3,9 +3,9 @@ import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/schema"
 import type { ColumnDef } from "@tanstack/react-table"
-import { IngressProxyStatusBadge } from "./IngressProxyStatusBadge.tsx"
 import { CreateIngressProxyDialog } from "./create/CreateIngressProxyDialog.tsx"
 import { BaseListPage } from "@/pages/base";
+import { StatusBadge } from "@/components/StatusBadge.tsx";
 
 export function ListIngressProxiesPage() {
   const { workspaceId } = useSelectedWorkspaceId()
@@ -46,8 +46,10 @@ export function ListIngressProxiesPage() {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => {
-        return <IngressProxyStatusBadge status={row.original.status} />
-      }
+        return (
+          <StatusBadge item={row.original}/>
+        )
+      },
     },
     {
       accessorKey: "httpPort",

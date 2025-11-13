@@ -510,7 +510,8 @@ export interface paths {
         delete: operations["delete-v1-workspaces-by-workspace-id-ingress-proxies-by-id"];
         options?: never;
         head?: never;
-        patch?: never;
+        /** Patch v1 workspaces by workspace ID ingress proxies by ID */
+        patch: operations["patch-v1-workspaces-by-workspace-id-ingress-proxies-by-id"];
         trace?: never;
     };
     "/v1/workspaces/{workspaceId}/machine-providers": {
@@ -1118,7 +1119,10 @@ export interface components {
             proxyId: string;
         };
         BoxNetwork: {
+            ID: string | null;
+            name?: string;
             netbird?: components["schemas"]["BoxNetworkNetbird"];
+            networkHosts?: components["schemas"]["NetworkHost"][] | null;
             portForwards?: components["schemas"]["PortForward"][] | null;
         };
         BoxNetworkNetbird: {
@@ -1152,6 +1156,7 @@ export interface components {
              */
             readonly $schema?: string;
             dockerPs?: string;
+            networkIp4?: string;
             runStatus?: string;
             /** Format: date-time */
             startTime?: string;
@@ -1171,6 +1176,7 @@ export interface components {
             };
             desiredState: string;
             id: string;
+            name: string;
             network?: components["schemas"]["BoxNetwork"];
             volumes?: components["schemas"]["DboxedVolume"][] | null;
         };
@@ -1784,6 +1790,10 @@ export interface components {
             type: string;
             workspace: string;
         };
+        NetworkHost: {
+            ip4: string;
+            name: string;
+        };
         NetworkNetbird: {
             apiUrl: string;
             netbirdVersion: string;
@@ -1999,11 +2009,23 @@ export interface components {
             sandboxStatus?: components["schemas"]["UpdateBoxSandboxStatus2"];
         };
         UpdateBoxSandboxStatus2: {
+            networkIp4?: string;
             runStatus?: string;
             /** Format: date-time */
             startTime?: string;
             /** Format: date-time */
             stopTime?: string;
+        };
+        UpdateIngressProxy: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: int64 */
+            httpPort?: number;
+            /** Format: int64 */
+            httpsPort?: number;
         };
         UpdateMachine: {
             /**
@@ -3893,6 +3915,43 @@ export interface operations {
                     "application/json": {
                         [key: string]: unknown;
                     };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "patch-v1-workspaces-by-workspace-id-ingress-proxies-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateIngressProxy"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IngressProxy"];
                 };
             };
             /** @description Error */

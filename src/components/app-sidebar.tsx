@@ -1,4 +1,4 @@
-import { Box, LayoutDashboard, Users, HardDrive, Key, BookOpen, Database, Globe } from "lucide-react"
+import { Box, LayoutDashboard, Users, HardDrive, Key, BookOpen, Globe } from "lucide-react"
 
 import { NavItems } from "@/components/nav-items.tsx"
 import { NavUser } from "@/components/nav-user"
@@ -24,12 +24,7 @@ const navMain = [
     icon: <Globe/>,
   },
   {
-    title: "S3 Buckets",
-    navigate: "/workspaces/{workspaceId}/s3-buckets",
-    icon: <Database/>,
-  },
-  {
-    title: "Volumes",
+    title: "Storage",
     navigate: "/workspaces/{workspaceId}/volumes",
     icon: <HardDrive/>,
   },

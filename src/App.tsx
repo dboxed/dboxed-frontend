@@ -18,7 +18,6 @@ import { VolumeProviderDetailsPage } from "@/pages/volume-providers";
 import { VolumeDetailsPage, VolumesPage } from "@/pages/volumes";
 import { SnapshotDetailsPage } from "@/pages/volumes/snapshots/SnapshotDetailsPage.tsx";
 import { ListTokensPage, TokenDetailsPage } from "@/pages/tokens";
-import { ListS3BucketsPage } from "@/pages/s3-buckets/ListS3BucketsPage.tsx";
 import { S3BucketDetailsPage } from "@/pages/s3-buckets/details/S3BucketDetailsPage.tsx";
 import { AdminWorkspacesListPage } from "@/pages/admin/AdminWorkspacesListPage.tsx";
 import { AdminListUsersPage } from "@/pages/admin/AdminListUsersPage.tsx";
@@ -109,7 +108,7 @@ function AuthenticatedApp() {
           <Route path="/workspaces/:workspaceId/ingress-proxies/:proxyId" element={<IngressProxyDetailsPage/>}/>
           <Route path="/workspaces/:workspaceId/tokens" element={<ListTokensPage/>}/>
           <Route path="/workspaces/:workspaceId/tokens/:tokenId" element={<TokenDetailsPage/>}/>
-          <Route path="/workspaces/:workspaceId/s3-buckets" element={<ListS3BucketsPage/>}/>
+          <Route path="/workspaces/:workspaceId/s3-buckets" element={<VolumesPage/>}/>
           <Route path="/workspaces/:workspaceId/s3-buckets/:s3BucketId" element={<S3BucketDetailsPage/>}/>
           {isAdminQuery.isAdmin && (
             <>

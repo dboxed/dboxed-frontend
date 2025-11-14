@@ -2,7 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.t
 import { AttachedVolumes } from "./volumes/AttachedVolumes.tsx"
 import { ComposeProjects } from "./compose-projects/ComposeProjects.tsx"
 import { PortForwardings } from "./port-forwards/PortForwardings.tsx"
-import { BoxIngresses } from "./ingresses/BoxIngresses.tsx"
+import { BoxLoadBalancerServices } from "./load-balancer-services/BoxLoadBalancerServices.tsx"
 import type { components } from "@/api/models/schema"
 
 interface VolumesAndProjectsTabProps {
@@ -22,8 +22,8 @@ export function BoxConfigTab({ box }: VolumesAndProjectsTabProps) {
         <TabsTrigger value="port-forwards" className="justify-start">
           Port Forwards
         </TabsTrigger>
-        <TabsTrigger value="ingresses" className="justify-start">
-          Ingresses
+        <TabsTrigger value="load-balancer-services" className="justify-start">
+          Load Balancer Services
         </TabsTrigger>
       </TabsList>
 
@@ -40,8 +40,8 @@ export function BoxConfigTab({ box }: VolumesAndProjectsTabProps) {
           <PortForwardings box={box} />
         </TabsContent>
 
-        <TabsContent value="ingresses" className="m-0">
-          <BoxIngresses box={box} />
+        <TabsContent value="load-balancer-services" className="m-0">
+          <BoxLoadBalancerServices box={box} />
         </TabsContent>
       </div>
     </Tabs>

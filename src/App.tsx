@@ -21,7 +21,7 @@ import { ListTokensPage, TokenDetailsPage } from "@/pages/tokens";
 import { S3BucketDetailsPage } from "@/pages/s3-buckets/details/S3BucketDetailsPage.tsx";
 import { AdminWorkspacesListPage } from "@/pages/admin/AdminWorkspacesListPage.tsx";
 import { AdminListUsersPage } from "@/pages/admin/AdminListUsersPage.tsx";
-import { IngressProxyDetailsPage } from "@/pages/ingress-proxies/details/IngressProxyDetailsPage.tsx";
+import { LoadBalancerDetailsPage } from "@/pages/load-balancers/details/LoadBalancerDetailsPage.tsx";
 import { ThemeProvider } from "@/components/theme-provider";
 import CookieConsentComponent from "@/components/cookie-consent/CookieConsent.tsx";
 import { envVars } from "@/env.ts";
@@ -103,9 +103,9 @@ function AuthenticatedApp() {
           <Route path="/workspaces/:workspaceId/boxes" element={<ListBoxesPage/>}/>
           <Route path="/workspaces/:workspaceId/boxes/:boxId" element={<BoxDetailsPage/>}/>
           <Route path="/workspaces/:workspaceId/networks" element={<NetworkingPage/>}/>
-          <Route path="/workspaces/:workspaceId/ingress-proxies" element={<NetworkingPage/>}/>
+          <Route path="/workspaces/:workspaceId/load-balancers" element={<NetworkingPage/>}/>
           <Route path="/workspaces/:workspaceId/networks/:networkId" element={<NetworkDetailsPage/>}/>
-          <Route path="/workspaces/:workspaceId/ingress-proxies/:proxyId" element={<IngressProxyDetailsPage/>}/>
+          <Route path="/workspaces/:workspaceId/load-balancers/:loadBalancerId" element={<LoadBalancerDetailsPage/>}/>
           <Route path="/workspaces/:workspaceId/tokens" element={<ListTokensPage/>}/>
           <Route path="/workspaces/:workspaceId/tokens/:tokenId" element={<TokenDetailsPage/>}/>
           <Route path="/workspaces/:workspaceId/s3-buckets" element={<VolumesPage/>}/>

@@ -7,7 +7,7 @@ import { TimeAgo } from "@/components/TimeAgo.tsx";
 import type { components } from "@/api/models/schema";
 
 interface GeneralInfoCardProps {
-  data: components["schemas"]["IngressProxy"]
+  data: components["schemas"]["LoadBalancer"]
 }
 
 export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
@@ -16,7 +16,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
       <CardHeader>
         <CardTitle>General Information</CardTitle>
         <CardDescription>
-          Basic information about this ingress proxy.
+          Basic information about this load balancer.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -29,7 +29,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
             label="Type"
             value={
               <Badge variant="secondary" className="capitalize">
-                {data.proxyType}
+                {data.loadBalancerType}
               </Badge>
             }
           />

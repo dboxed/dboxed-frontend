@@ -9,9 +9,9 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/schema"
 import { Edit } from "lucide-react"
 
-interface ProxyConfigCardProps {
-  data: components["schemas"]["IngressProxy"]
-  save: (data: components["schemas"]["UpdateIngressProxy"]) => Promise<boolean>
+interface LoadBalancerConfigCardProps {
+  data: components["schemas"]["LoadBalancer"]
+  save: (data: components["schemas"]["UpdateLoadBalancer"]) => Promise<boolean>
 }
 
 interface PortFormData {
@@ -20,7 +20,7 @@ interface PortFormData {
   replicas: number
 }
 
-export function ProxyConfigCard({ data, save }: ProxyConfigCardProps) {
+export function LoadBalancerConfigCard({ data, save }: LoadBalancerConfigCardProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const [editDialogOpen, setEditDialogOpen] = useState(false)
 
@@ -44,9 +44,9 @@ export function ProxyConfigCard({ data, save }: ProxyConfigCardProps) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Proxy Configuration</CardTitle>
+              <CardTitle>Load Balancer Configuration</CardTitle>
               <CardDescription>
-                Network and protocol configuration for this ingress proxy
+                Network and protocol configuration for this load balancer
               </CardDescription>
             </div>
             <Button
@@ -136,7 +136,7 @@ export function ProxyConfigCard({ data, save }: ProxyConfigCardProps) {
                     </code>
                   </dd>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Number of proxy instances
+                    Number of loadBalancer instances
                   </p>
                 </div>
               </dl>
@@ -165,7 +165,7 @@ export function ProxyConfigCard({ data, save }: ProxyConfigCardProps) {
             {/* <div>
               <h3 className="text-sm font-semibold mb-3">Advanced Settings</h3>
               <p className="text-sm text-muted-foreground">
-                Additional proxy configuration options will be displayed here.
+                Additional loadBalancer configuration options will be displayed here.
               </p>
             </div> */}
           </div>

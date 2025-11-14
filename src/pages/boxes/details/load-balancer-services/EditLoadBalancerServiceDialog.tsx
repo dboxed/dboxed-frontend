@@ -9,30 +9,30 @@ import { useDboxedQueryClient } from "@/api/api.ts"
 import type { components } from "@/api/models/schema"
 import { toast } from "sonner"
 
-interface EditIngressDialogProps {
+interface EditLoadBalancerServiceDialogProps {
   boxId: string
-  ingress: components["schemas"]["BoxIngress"]
+  loadBalancerService: components["schemas"]["LoadBalancerService"]
   open: boolean
   onOpenChange: (open: boolean) => void
   onSuccess: () => void
 }
 
-export function EditIngressDialog({ boxId, ingress, open, onOpenChange, onSuccess }: EditIngressDialogProps) {
+export function EditLoadBalancerServiceDialog({ boxId, loadBalancerService, open, onOpenChange, onSuccess }: EditLoadBalancerServiceDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [hostname, setHostname] = useState<string>(ingress.hostname)
-  const [pathPrefix, setPathPrefix] = useState<string>(ingress.pathPrefix)
-  const [port, setPort] = useState<string>(ingress.port.toString())
-  const [description, setDescription] = useState<string>(ingress.description || "")
+  const [hostname, setHostname] = useState<string>(loadBalancerService.hostname)
+  const [pathPrefix, setPathPrefix] = useState<string>(loadBalancerService.pathPrefix)
+  const [port, setPort] = useState<string>(loadBalancerService.port.toString())
+  const [description, setDescription] = useState<string>(loadBalancerService.description || "")
 
   useEffect(() => {
-    setHostname(ingress.hostname)
-    setPathPrefix(ingress.pathPrefix)
-    setPort(ingress.port.toString())
-    setDescription(ingress.description || "")
-  }, [ingress])
+    setHostname(loadBalancerService.hostname)
+    setPathPrefix(loadBalancerService.pathPrefix)
+    setPort(loadBalancerService.port.toString())
+    setDescription(loadBalancerService.description || "")
+  }, [loadBalancerService])
 
-  const updateIngressMutation = client.useMutation('patch', '/v1/workspaces/{workspaceId}/boxes/{id}/ingresses/{ingressId}')
+  const updateLoadBalancerServiceMutation = client.useMutation('patch', '/v1/workspaces/{workspaceId}/boxes/{id}/load-balancer-services/{loadBalancerServiceId}')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -44,12 +44,12 @@ export function EditIngressDialog({ boxId, ingress, open, onOpenChange, onSucces
       return
     }
 
-    updateIngressMutation.mutate({
+    updateLoadBalancerServiceMutation.mutate({
       params: {
         path: {
           workspaceId: workspaceId!,
           id: boxId,
-          ingressId: ingress.id
+          loadBalancerServiceId: loadBalancerService.id
         }
       },
       body: {
@@ -60,13 +60,13 @@ export function EditIngressDialog({ boxId, ingress, open, onOpenChange, onSucces
       }
     }, {
       onSuccess: () => {
-        toast.success("Ingress updated successfully!")
+        toast.success("LoadBalancerService updated successfully!")
         onSuccess()
         onOpenChange(false)
       },
       onError: (error) => {
-        toast.error("Failed to update ingress", {
-          description: error.detail || "An error occurred while updating the ingress."
+        toast.error("Failed to update loadBalancerService", {
+          description: error.detail || "An error occurred while updating the loadBalancerService."
         })
       }
     })
@@ -77,9 +77,9 @@ export function EditIngressDialog({ boxId, ingress, open, onOpenChange, onSucces
       <DialogContent>
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Edit Ingress</DialogTitle>
+            <DialogTitle>Edit LoadBalancerService</DialogTitle>
             <DialogDescription>
-              Update the HTTP ingress rule for this box
+              Update the HTTP loadBalancerService rule for this box
             </DialogDescription>
           </DialogHeader>
 
@@ -123,7 +123,7 @@ export function EditIngressDialog({ boxId, ingress, open, onOpenChange, onSucces
               <Label htmlFor="description">Description (Optional)</Label>
               <Textarea
                 id="description"
-                placeholder="Web application ingress"
+                placeholder="Web application loadBalancerService"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={2}
@@ -135,8 +135,8 @@ export function EditIngressDialog({ boxId, ingress, open, onOpenChange, onSucces
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={updateIngressMutation.isPending}>
-              {updateIngressMutation.isPending ? "Saving..." : "Save Changes"}
+            <Button type="submit" disabled={updateLoadBalancerServiceMutation.isPending}>
+              {updateLoadBalancerServiceMutation.isPending ? "Saving..." : "Save Changes"}
             </Button>
           </DialogFooter>
         </form>

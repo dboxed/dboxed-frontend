@@ -317,25 +317,25 @@ export interface paths {
         patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id-compose-projects-by-compose-name"];
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/boxes/{id}/ingresses": {
+    "/v1/workspaces/{workspaceId}/boxes/{id}/load-balancer-services": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get v1 workspaces by workspace ID boxes by ID ingresses */
-        get: operations["get-v1-workspaces-by-workspace-id-boxes-by-id-ingresses"];
+        /** Get v1 workspaces by workspace ID boxes by ID load balancer services */
+        get: operations["get-v1-workspaces-by-workspace-id-boxes-by-id-load-balancer-services"];
         put?: never;
-        /** Post v1 workspaces by workspace ID boxes by ID ingresses */
-        post: operations["post-v1-workspaces-by-workspace-id-boxes-by-id-ingresses"];
+        /** Post v1 workspaces by workspace ID boxes by ID load balancer services */
+        post: operations["post-v1-workspaces-by-workspace-id-boxes-by-id-load-balancer-services"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/boxes/{id}/ingresses/{ingressId}": {
+    "/v1/workspaces/{workspaceId}/boxes/{id}/load-balancer-services/{loadBalancerServiceId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -345,12 +345,12 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** Delete v1 workspaces by workspace ID boxes by ID ingresses by ingress ID */
-        delete: operations["delete-v1-workspaces-by-workspace-id-boxes-by-id-ingresses-by-ingress-id"];
+        /** Delete v1 workspaces by workspace ID boxes by ID load balancer services by load balancer service ID */
+        delete: operations["delete-v1-workspaces-by-workspace-id-boxes-by-id-load-balancer-services-by-load-balancer-service-id"];
         options?: never;
         head?: never;
-        /** Patch v1 workspaces by workspace ID boxes by ID ingresses by ingress ID */
-        patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id-ingresses-by-ingress-id"];
+        /** Patch v1 workspaces by workspace ID boxes by ID load balancer services by load balancer service ID */
+        patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id-load-balancer-services-by-load-balancer-service-id"];
         trace?: never;
     };
     "/v1/workspaces/{workspaceId}/boxes/{id}/logs": {
@@ -477,41 +477,41 @@ export interface paths {
         patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id-volumes-by-volume-id"];
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/ingress-proxies": {
+    "/v1/workspaces/{workspaceId}/load-balancers": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get v1 workspaces by workspace ID ingress proxies */
-        get: operations["get-v1-workspaces-by-workspace-id-ingress-proxies"];
+        /** Get v1 workspaces by workspace ID load balancers */
+        get: operations["get-v1-workspaces-by-workspace-id-load-balancers"];
         put?: never;
-        /** Post v1 workspaces by workspace ID ingress proxies */
-        post: operations["post-v1-workspaces-by-workspace-id-ingress-proxies"];
+        /** Post v1 workspaces by workspace ID load balancers */
+        post: operations["post-v1-workspaces-by-workspace-id-load-balancers"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/ingress-proxies/{id}": {
+    "/v1/workspaces/{workspaceId}/load-balancers/{id}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get v1 workspaces by workspace ID ingress proxies by ID */
-        get: operations["get-v1-workspaces-by-workspace-id-ingress-proxies-by-id"];
+        /** Get v1 workspaces by workspace ID load balancers by ID */
+        get: operations["get-v1-workspaces-by-workspace-id-load-balancers-by-id"];
         put?: never;
         post?: never;
-        /** Delete v1 workspaces by workspace ID ingress proxies by ID */
-        delete: operations["delete-v1-workspaces-by-workspace-id-ingress-proxies-by-id"];
+        /** Delete v1 workspaces by workspace ID load balancers by ID */
+        delete: operations["delete-v1-workspaces-by-workspace-id-load-balancers-by-id"];
         options?: never;
         head?: never;
-        /** Patch v1 workspaces by workspace ID ingress proxies by ID */
-        patch: operations["patch-v1-workspaces-by-workspace-id-ingress-proxies-by-id"];
+        /** Patch v1 workspaces by workspace ID load balancers by ID */
+        patch: operations["patch-v1-workspaces-by-workspace-id-load-balancers-by-id"];
         trace?: never;
     };
     "/v1/workspaces/{workspaceId}/machine-providers": {
@@ -1101,23 +1101,6 @@ export interface components {
             composeProject: string;
             name: string;
         };
-        BoxIngress: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            boxId: string;
-            /** Format: date-time */
-            createdAt: string;
-            description?: string;
-            hostname: string;
-            id: string;
-            pathPrefix: string;
-            /** Format: int64 */
-            port: number;
-            proxyId: string;
-        };
         BoxNetwork: {
             ID: string | null;
             name?: string;
@@ -1200,19 +1183,6 @@ export interface components {
             composeProject: string;
             name: string;
         };
-        CreateBoxIngress: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            description?: string;
-            hostname: string;
-            pathPrefix: string;
-            /** Format: int64 */
-            port: number;
-            proxyId: string;
-        };
         CreateBoxPortForward: {
             /**
              * Format: uri
@@ -1228,7 +1198,7 @@ export interface components {
             /** Format: int64 */
             sandboxPort: number;
         };
-        CreateIngressProxy: {
+        CreateLoadBalancer: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
@@ -1238,11 +1208,24 @@ export interface components {
             httpPort: number;
             /** Format: int64 */
             httpsPort: number;
+            loadBalancerType: string;
             name: string;
             network: string;
-            proxyType: string;
             /** Format: int64 */
             replicas?: number;
+        };
+        CreateLoadBalancerService: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            description?: string;
+            hostname: string;
+            loadBalancerId: string;
+            pathPrefix: string;
+            /** Format: int64 */
+            port: number;
         };
         CreateMachine: {
             /**
@@ -1449,28 +1432,6 @@ export interface components {
             name: string;
             network_zone: string;
         };
-        IngressProxy: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: int64 */
-            httpPort: number;
-            /** Format: int64 */
-            httpsPort: number;
-            id: string;
-            name: string;
-            network: string;
-            proxyType: string;
-            /** Format: int64 */
-            replicas: number;
-            status: string;
-            statusDetails: string;
-            workspace: string;
-        };
         ListBodyAwsRegion: {
             /**
              * Format: uri
@@ -1501,16 +1462,6 @@ export interface components {
             /** Format: int64 */
             total_count: number;
         };
-        ListBodyBoxIngress: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            items: components["schemas"]["BoxIngress"][] | null;
-            /** Format: int64 */
-            total_count: number;
-        };
         ListBodyBoxPortForward: {
             /**
              * Format: uri
@@ -1531,13 +1482,23 @@ export interface components {
             /** Format: int64 */
             total_count: number;
         };
-        ListBodyIngressProxy: {
+        ListBodyLoadBalancer: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            items: components["schemas"]["IngressProxy"][] | null;
+            items: components["schemas"]["LoadBalancer"][] | null;
+            /** Format: int64 */
+            total_count: number;
+        };
+        ListBodyLoadBalancerService: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["LoadBalancerService"][] | null;
             /** Format: int64 */
             total_count: number;
         };
@@ -1670,6 +1631,45 @@ export interface components {
             items: components["schemas"]["Workspace"][] | null;
             /** Format: int64 */
             total_count: number;
+        };
+        LoadBalancer: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: int64 */
+            httpPort: number;
+            /** Format: int64 */
+            httpsPort: number;
+            id: string;
+            loadBalancerType: string;
+            name: string;
+            network: string;
+            /** Format: int64 */
+            replicas: number;
+            status: string;
+            statusDetails: string;
+            workspace: string;
+        };
+        LoadBalancerService: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            boxId: string;
+            /** Format: date-time */
+            createdAt: string;
+            description?: string;
+            hostname: string;
+            id: string;
+            loadBalancerId: string;
+            pathPrefix: string;
+            /** Format: int64 */
+            port: number;
         };
         Location: {
             City: string;
@@ -1976,18 +1976,6 @@ export interface components {
             readonly $schema?: string;
             composeProject: string;
         };
-        UpdateBoxIngress: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            description?: string;
-            hostname?: string;
-            pathPrefix?: string;
-            /** Format: int64 */
-            port?: number;
-        };
         UpdateBoxPortForward: {
             /**
              * Format: uri
@@ -2020,7 +2008,7 @@ export interface components {
             /** Format: date-time */
             stopTime?: string;
         };
-        UpdateIngressProxy: {
+        UpdateLoadBalancer: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
@@ -2032,6 +2020,18 @@ export interface components {
             httpsPort?: number;
             /** Format: int64 */
             replicas?: number;
+        };
+        UpdateLoadBalancerService: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            description?: string;
+            hostname?: string;
+            pathPrefix?: string;
+            /** Format: int64 */
+            port?: number;
         };
         UpdateMachine: {
             /**
@@ -3140,7 +3140,7 @@ export interface operations {
             };
         };
     };
-    "get-v1-workspaces-by-workspace-id-boxes-by-id-ingresses": {
+    "get-v1-workspaces-by-workspace-id-boxes-by-id-load-balancer-services": {
         parameters: {
             query?: never;
             header?: never;
@@ -3159,7 +3159,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ListBodyBoxIngress"];
+                    "application/json": components["schemas"]["ListBodyLoadBalancerService"];
                 };
             };
             /** @description Error */
@@ -3173,7 +3173,7 @@ export interface operations {
             };
         };
     };
-    "post-v1-workspaces-by-workspace-id-boxes-by-id-ingresses": {
+    "post-v1-workspaces-by-workspace-id-boxes-by-id-load-balancer-services": {
         parameters: {
             query?: never;
             header?: never;
@@ -3186,7 +3186,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateBoxIngress"];
+                "application/json": components["schemas"]["CreateLoadBalancerService"];
             };
         };
         responses: {
@@ -3196,7 +3196,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BoxIngress"];
+                    "application/json": components["schemas"]["LoadBalancerService"];
                 };
             };
             /** @description Error */
@@ -3210,13 +3210,13 @@ export interface operations {
             };
         };
     };
-    "delete-v1-workspaces-by-workspace-id-boxes-by-id-ingresses-by-ingress-id": {
+    "delete-v1-workspaces-by-workspace-id-boxes-by-id-load-balancer-services-by-load-balancer-service-id": {
         parameters: {
             query?: never;
             header?: never;
             path: {
                 id: string;
-                ingressId: string;
+                loadBalancerServiceId: string;
                 /** @description The workspace id */
                 workspaceId: string;
             };
@@ -3246,13 +3246,13 @@ export interface operations {
             };
         };
     };
-    "patch-v1-workspaces-by-workspace-id-boxes-by-id-ingresses-by-ingress-id": {
+    "patch-v1-workspaces-by-workspace-id-boxes-by-id-load-balancer-services-by-load-balancer-service-id": {
         parameters: {
             query?: never;
             header?: never;
             path: {
                 id: string;
-                ingressId: string;
+                loadBalancerServiceId: string;
                 /** @description The workspace id */
                 workspaceId: string;
             };
@@ -3260,7 +3260,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateBoxIngress"];
+                "application/json": components["schemas"]["UpdateLoadBalancerService"];
             };
         };
         responses: {
@@ -3270,7 +3270,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BoxIngress"];
+                    "application/json": components["schemas"]["LoadBalancerService"];
                 };
             };
             /** @description Error */
@@ -3798,7 +3798,7 @@ export interface operations {
             };
         };
     };
-    "get-v1-workspaces-by-workspace-id-ingress-proxies": {
+    "get-v1-workspaces-by-workspace-id-load-balancers": {
         parameters: {
             query?: never;
             header?: never;
@@ -3816,7 +3816,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ListBodyIngressProxy"];
+                    "application/json": components["schemas"]["ListBodyLoadBalancer"];
                 };
             };
             /** @description Error */
@@ -3830,7 +3830,7 @@ export interface operations {
             };
         };
     };
-    "post-v1-workspaces-by-workspace-id-ingress-proxies": {
+    "post-v1-workspaces-by-workspace-id-load-balancers": {
         parameters: {
             query?: never;
             header?: never;
@@ -3842,7 +3842,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateIngressProxy"];
+                "application/json": components["schemas"]["CreateLoadBalancer"];
             };
         };
         responses: {
@@ -3852,7 +3852,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["IngressProxy"];
+                    "application/json": components["schemas"]["LoadBalancer"];
                 };
             };
             /** @description Error */
@@ -3866,7 +3866,7 @@ export interface operations {
             };
         };
     };
-    "get-v1-workspaces-by-workspace-id-ingress-proxies-by-id": {
+    "get-v1-workspaces-by-workspace-id-load-balancers-by-id": {
         parameters: {
             query?: never;
             header?: never;
@@ -3885,7 +3885,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["IngressProxy"];
+                    "application/json": components["schemas"]["LoadBalancer"];
                 };
             };
             /** @description Error */
@@ -3899,7 +3899,7 @@ export interface operations {
             };
         };
     };
-    "delete-v1-workspaces-by-workspace-id-ingress-proxies-by-id": {
+    "delete-v1-workspaces-by-workspace-id-load-balancers-by-id": {
         parameters: {
             query?: never;
             header?: never;
@@ -3934,7 +3934,7 @@ export interface operations {
             };
         };
     };
-    "patch-v1-workspaces-by-workspace-id-ingress-proxies-by-id": {
+    "patch-v1-workspaces-by-workspace-id-load-balancers-by-id": {
         parameters: {
             query?: never;
             header?: never;
@@ -3947,7 +3947,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateIngressProxy"];
+                "application/json": components["schemas"]["UpdateLoadBalancer"];
             };
         };
         responses: {
@@ -3957,7 +3957,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["IngressProxy"];
+                    "application/json": components["schemas"]["LoadBalancer"];
                 };
             };
             /** @description Error */

@@ -6,12 +6,12 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/api.ts"
 import type { components } from "@/api/models/schema"
 
-interface CreateIngressProxyDialogProps {
+interface CreateLoadBalancerDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function CreateIngressProxyDialog({ open, onOpenChange }: CreateIngressProxyDialogProps) {
+export function CreateLoadBalancerDialog({ open, onOpenChange }: CreateLoadBalancerDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
 
@@ -29,11 +29,11 @@ export function CreateIngressProxyDialog({ open, onOpenChange }: CreateIngressPr
   const networks = networksQuery.data?.items || []
 
   return (
-    <BaseCreateDialog<components["schemas"]["CreateIngressProxy"]>
+    <BaseCreateDialog<components["schemas"]["CreateLoadBalancer"]>
       open={open}
       onOpenChange={onOpenChange}
-      title="Create Ingress Proxy"
-      apiRoute="/v1/workspaces/{workspaceId}/ingress-proxies"
+      title="Create Load Balancer"
+      apiRoute="/v1/workspaces/{workspaceId}/load-balancers"
       apiParams={{
         path: {
           workspaceId: workspaceId,
@@ -41,7 +41,7 @@ export function CreateIngressProxyDialog({ open, onOpenChange }: CreateIngressPr
       }}
       defaultValues={{
         name: "",
-        proxyType: "caddy",
+        loadBalancerType: "caddy",
         network: "",
         httpPort: 80,
         httpsPort: 443,
@@ -57,7 +57,7 @@ export function CreateIngressProxyDialog({ open, onOpenChange }: CreateIngressPr
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="my-ingress-proxy" autoCapitalize="off" {...field} />
+                  <Input placeholder="my-load-balancer" autoCapitalize="off" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -66,14 +66,14 @@ export function CreateIngressProxyDialog({ open, onOpenChange }: CreateIngressPr
 
           <FormField
             control={form.control}
-            name="proxyType"
+            name="loadBalancerType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Proxy Type</FormLabel>
+                <FormLabel>Load Balancer Type</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a proxy type" />
+                      <SelectValue placeholder="Select a load balancer type" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>

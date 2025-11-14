@@ -5,18 +5,17 @@ import { useDboxedQueryClient } from "@/api/api.ts"
 import { Globe } from "lucide-react"
 import type { components } from "@/api/models/schema"
 import { WorkspaceOverviewCard } from "@/pages/dashboard/WorkspaceOverviewCard.tsx"
-import { CreateIngressProxyDialog } from "@/pages/ingress-proxies/create/CreateIngressProxyDialog.tsx"
+import { CreateLoadBalancerDialog } from "@/pages/load-balancers/create/CreateLoadBalancerDialog.tsx"
 import { StatusBadge } from "@/components/StatusBadge.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
 
-export function IngressProxiesOverview() {
+export function LoadBalancersOverview() {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
-  // Fetch ingress proxies
-  const proxiesQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/ingress-proxies', {
+  const loadBalancersQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/load-balancers', {
     params: {
       path: {
         workspaceId: workspaceId!,
@@ -26,28 +25,28 @@ export function IngressProxiesOverview() {
     refetchInterval: 10000,
   })
 
-  const proxies = proxiesQuery.data?.items || []
+  const loadBalancers = loadBalancersQuery.data?.items || []
 
   // Get recent items (last 3)
-  const recentProxies = proxies
+  const recentProxies = loadBalancers
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 3)
 
-  const items = recentProxies.map((proxy: components["schemas"]["IngressProxy"]) => ({
-    id: proxy.id,
+  const items = recentProxies.map((loadBalancer: components["schemas"]["LoadBalancer"]) => ({
+    id: loadBalancer.id,
     content: (
       <div
         className="flex items-center justify-between p-2 border rounded-md hover:bg-accent cursor-pointer"
-        onClick={() => navigate(`/workspaces/${workspaceId}/ingress-proxies/${proxy.id}`)}
+        onClick={() => navigate(`/workspaces/${workspaceId}/load-balancers/${loadBalancer.id}`)}
       >
         <div className="flex items-center gap-2">
-          <div className="text-sm font-medium">{proxy.name}</div>
+          <div className="text-sm font-medium">{loadBalancer.name}</div>
           <Badge variant="secondary" className="text-xs capitalize">
-            {proxy.proxyType}
+            {loadBalancer.loadBalancerType}
           </Badge>
         </div>
         <div className="flex items-center gap-2">
-          <StatusBadge item={proxy}/>
+          <StatusBadge item={loadBalancer}/>
         </div>
       </div>
     ),
@@ -57,25 +56,25 @@ export function IngressProxiesOverview() {
     <>
       <WorkspaceOverviewCard
         icon={<Globe className="h-5 w-5" />}
-        title="Ingress Proxies"
-        description="Manage your ingress proxy configurations"
-        count={proxies.length}
-        isLoading={proxiesQuery.isLoading}
-        error={!!proxiesQuery.error}
+        title="Load Balancers"
+        description="Manage your load balancer configurations"
+        count={loadBalancers.length}
+        isLoading={loadBalancersQuery.isLoading}
+        error={!!loadBalancersQuery.error}
         items={items}
         emptyState={{
-          message: "No ingress proxies configured yet",
-          createButtonText: "Create First Proxy",
+          message: "No Load Balancers configured yet",
+          createButtonText: "Create First Load Balancer",
           onCreateClick: () => setCreateDialogOpen(true),
         }}
         actions={{
           viewAllText: "View All",
-          onViewAllClick: () => navigate(`/workspaces/${workspaceId}/ingress-proxies`),
+          onViewAllClick: () => navigate(`/workspaces/${workspaceId}/load-balancers`),
           addNewText: "Add New",
           onAddNewClick: () => setCreateDialogOpen(true),
         }}
       />
-      <CreateIngressProxyDialog
+      <CreateLoadBalancerDialog
         open={createDialogOpen}
         onOpenChange={setCreateDialogOpen}
       />

@@ -3,41 +3,41 @@ import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/schema"
 import type { ColumnDef } from "@tanstack/react-table"
-import { CreateIngressProxyDialog } from "./create/CreateIngressProxyDialog.tsx"
+import { CreateLoadBalancerDialog } from "./create/CreateLoadBalancerDialog.tsx"
 import { BaseListPage } from "@/pages/base";
 import { StatusBadge } from "@/components/StatusBadge.tsx";
 
-export function ListIngressProxiesPage() {
+export function ListLoadBalancersPage() {
   const { workspaceId } = useSelectedWorkspaceId()
 
-  const columns: ColumnDef<components["schemas"]["IngressProxy"]>[] = [
+  const columns: ColumnDef<components["schemas"]["LoadBalancer"]>[] = [
     {
       accessorKey: "name",
       header: "Name",
       cell: ({ row }) => {
-        const proxy = row.original
+        const loadBalancer = row.original
         return (
           <ReferenceLabel
-            resourceId={proxy.id}
-            resourcePath="/v1/workspaces/{workspaceId}/ingress-proxies/{id}"
+            resourceId={loadBalancer.id}
+            resourcePath="/v1/workspaces/{workspaceId}/load-balancers/{id}"
             pathParams={{
               workspaceId: workspaceId!,
-              id: proxy.id
+              id: loadBalancer.id
             }}
-            detailsUrl={`/workspaces/${workspaceId}/ingress-proxies/${proxy.id}`}
-            fallbackLabel={proxy.name}
+            detailsUrl={`/workspaces/${workspaceId}/load-balancers/${loadBalancer.id}`}
+            fallbackLabel={loadBalancer.name}
             className="text-blue-600 hover:text-blue-800 underline"
           />
         )
       }
     },
     {
-      accessorKey: "proxyType",
-      header: "Proxy Type",
+      accessorKey: "loadBalancerType",
+      header: "Type",
       cell: ({ row }) => {
         return (
           <Badge variant="secondary" className="capitalize">
-            {row.original.proxyType}
+            {row.original.loadBalancerType}
           </Badge>
         )
       }
@@ -46,17 +46,17 @@ export function ListIngressProxiesPage() {
       accessorKey: "network",
       header: "Network",
       cell: ({ row }) => {
-        const proxy = row.original
+        const loadBalancer = row.original
         return (
           <ReferenceLabel
-            resourceId={proxy.network}
+            resourceId={loadBalancer.network}
             resourcePath="/v1/workspaces/{workspaceId}/networks/{id}"
             pathParams={{
               workspaceId: workspaceId!,
-              id: proxy.network
+              id: loadBalancer.network
             }}
-            detailsUrl={`/workspaces/${workspaceId}/networks/${proxy.network}`}
-            fallbackLabel={proxy.network}
+            detailsUrl={`/workspaces/${workspaceId}/networks/${loadBalancer.network}`}
+            fallbackLabel={loadBalancer.network}
             className="text-blue-600 hover:text-blue-800 underline"
           />
         )
@@ -92,45 +92,25 @@ export function ListIngressProxiesPage() {
           </code>
         )
       }
-    },
-    {
-      accessorKey: "boxId",
-      header: "Box",
-      cell: ({ row }) => {
-        const proxy = row.original
-        return (
-          <ReferenceLabel
-            resourceId={proxy.boxId}
-            resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
-            pathParams={{
-              workspaceId: workspaceId!,
-              id: proxy.boxId
-            }}
-            detailsUrl={`/workspaces/${workspaceId}/boxes/${proxy.boxId}`}
-            fallbackLabel={proxy.boxId}
-            className="text-blue-600 hover:text-blue-800 underline"
-          />
-        )
-      }
     }
   ]
 
   return (
     <>
-      <BaseListPage<components["schemas"]["IngressProxy"]>
-        title="Ingress Proxies"
-        resourcePath="/v1/workspaces/{workspaceId}/ingress-proxies"
-        createDialog={CreateIngressProxyDialog}
-        createButtonText="New Ingress Proxy"
+      <BaseListPage<components["schemas"]["LoadBalancer"]>
+        title="Load Balancers"
+        resourcePath="/v1/workspaces/{workspaceId}/load-balancers"
+        createDialog={CreateLoadBalancerDialog}
+        createButtonText="New Load Balancer"
         columns={columns}
         apiParams={{
           path: {
             workspaceId: workspaceId
           }
         }}
-        emptyStateMessage="No ingress proxies created yet. Create your first proxy to get started."
+        emptyStateMessage="No load balancers created yet. Create your first load balancer to get started."
         searchColumn="name"
-        searchPlaceholder="Search proxies..."
+        searchPlaceholder="Search load balancers..."
       />
     </>
   )

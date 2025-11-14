@@ -10,22 +10,22 @@ import type { ColumnDef } from "@tanstack/react-table"
 import { Plus, Trash2, Edit } from "lucide-react"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip.tsx"
-import { AddIngressDialog } from "./AddIngressDialog.tsx"
-import { EditIngressDialog } from "./EditIngressDialog.tsx"
+import { AddLoadBalancerServiceDialog } from "./AddLoadBalancerServiceDialog.tsx"
+import { EditLoadBalancerServiceDialog } from "./EditLoadBalancerServiceDialog.tsx"
 import { toast } from "sonner"
 import { StatusBadge } from "@/components/StatusBadge.tsx";
 
-interface BoxIngressesProps {
+interface BoxLoadBalancerServicesProps {
   box: components["schemas"]["Box"]
 }
 
-export function BoxIngresses({ box }: BoxIngressesProps) {
+export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
   const [addDialogOpen, setAddDialogOpen] = useState(false)
-  const [editingIngress, setEditingIngress] = useState<components["schemas"]["BoxIngress"] | null>(null)
+  const [editingLoadBalancerService, setEditingLoadBalancerService] = useState<components["schemas"]["LoadBalancerService"] | null>(null)
 
-  const ingressesQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/boxes/{id}/ingresses', {
+  const loadBalancerServicesQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/boxes/{id}/load-balancer-services', {
     params: {
       path: {
         workspaceId: workspaceId!,
@@ -34,8 +34,8 @@ export function BoxIngresses({ box }: BoxIngressesProps) {
     }
   })
 
-  // Fetch all ingress proxies to get their status and details
-  const proxiesQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/ingress-proxies', {
+  // Fetch all loadBalancerService proxies to get their status and details
+  const proxiesQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/load-balancers', {
     params: {
       path: {
         workspaceId: workspaceId!
@@ -43,40 +43,38 @@ export function BoxIngresses({ box }: BoxIngressesProps) {
     }
   })
 
-  const deleteIngressMutation = client.useMutation('delete', '/v1/workspaces/{workspaceId}/boxes/{id}/ingresses/{ingressId}', {
+  const deleteLoadBalancerServiceMutation = client.useMutation('delete', '/v1/workspaces/{workspaceId}/boxes/{id}/load-balancer-services/{loadBalancerServiceId}', {
     onSuccess: () => {
-      ingressesQuery.refetch()
+      loadBalancerServicesQuery.refetch()
     }
   })
 
-  const handleDeleteIngress = (ingressId: string) => {
-    deleteIngressMutation.mutate({
+  const handleDeleteLoadBalancerService = (loadBalancerServiceId: string) => {
+    deleteLoadBalancerServiceMutation.mutate({
       params: {
         path: {
           workspaceId: workspaceId!,
           id: box.id,
-          ingressId: ingressId
+          loadBalancerServiceId: loadBalancerServiceId
         }
       }
     }, {
       onSuccess: () => {
-        toast.success("Ingress deleted successfully!")
+        toast.success("LoadBalancerService deleted successfully!")
       },
       onError: (error) => {
-        toast.error("Failed to delete ingress", {
-          description: error.detail || "An error occurred while deleting the ingress."
+        toast.error("Failed to delete loadBalancerService", {
+          description: error.detail || "An error occurred while deleting the loadBalancerService."
         })
       }
     })
   }
 
-  const ingresses = ingressesQuery.data?.items || []
-  const proxies = proxiesQuery.data?.items || []
+  const loadBalancerServices = loadBalancerServicesQuery.data?.items || []
+  const lbs = proxiesQuery.data?.items || []
+  const lbMap = new Map(lbs.map(p => [p.id, p]))
 
-  // Create a map of proxy ID to proxy for quick lookup
-  const proxyMap = new Map(proxies.map(p => [p.id, p]))
-
-  const columns: ColumnDef<components["schemas"]["BoxIngress"]>[] = [
+  const columns: ColumnDef<components["schemas"]["LoadBalancerService"]>[] = [
     {
       accessorKey: "hostname",
       header: "Hostname",
@@ -111,16 +109,16 @@ export function BoxIngresses({ box }: BoxIngressesProps) {
       }
     },
     {
-      accessorKey: "proxyId",
-      header: "Proxy",
+      accessorKey: "loadBalancerId",
+      header: "Load Balancer",
       cell: ({ row }) => {
-        const ingress = row.original
-        const proxy = proxyMap.get(ingress.proxyId)
+        const loadBalancerService = row.original
+        const lb = lbMap.get(loadBalancerService.loadBalancerId)
 
-        if (!proxy) {
+        if (!lb) {
           return (
             <span className="text-sm text-muted-foreground">
-              Unknown Proxy
+              Unknown Load Balancer
             </span>
           )
         }
@@ -128,17 +126,17 @@ export function BoxIngresses({ box }: BoxIngressesProps) {
         return (
           <div className="flex items-center gap-2">
             <ReferenceLabel
-              resourceId={proxy.id}
-              resourcePath="/v1/workspaces/{workspaceId}/ingress-proxies/{id}"
+              resourceId={lb.id}
+              resourcePath="/v1/workspaces/{workspaceId}/load-balancers/{id}"
               pathParams={{
                 workspaceId: workspaceId!,
-                id: proxy.id
+                id: lb.id
               }}
-              detailsUrl={`/workspaces/${workspaceId}/ingress-proxies/${proxy.id}`}
-              fallbackLabel={proxy.name}
+              detailsUrl={`/workspaces/${workspaceId}/load-balancers/${lb.id}`}
+              fallbackLabel={lb.name}
               className="text-blue-600 hover:text-blue-800 underline"
             />
-            <StatusBadge item={proxy}/>
+            <StatusBadge item={lb}/>
           </div>
         )
       }
@@ -165,13 +163,13 @@ export function BoxIngresses({ box }: BoxIngressesProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setEditingIngress(row.original)}
+                  onClick={() => setEditingLoadBalancerService(row.original)}
                 >
                   <Edit className="w-4 h-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Edit ingress</p>
+                <p>Edit loadBalancerService</p>
               </TooltipContent>
             </Tooltip>
             <Tooltip>
@@ -182,21 +180,21 @@ export function BoxIngresses({ box }: BoxIngressesProps) {
                       <Button
                         variant="outline"
                         size="sm"
-                        disabled={deleteIngressMutation.isPending}
+                        disabled={deleteLoadBalancerServiceMutation.isPending}
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     }
-                    title="Delete Ingress"
-                    description={`Are you sure you want to delete the ingress for ${row.original.hostname}${row.original.pathPrefix}?`}
+                    title="Delete LoadBalancerService"
+                    description={`Are you sure you want to delete the loadBalancerService for ${row.original.hostname}${row.original.pathPrefix}?`}
                     confirmText="Delete"
-                    onConfirm={() => handleDeleteIngress(row.original.id)}
+                    onConfirm={() => handleDeleteLoadBalancerService(row.original.id)}
                     destructive
                   />
                 </div>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Delete ingress</p>
+                <p>Delete loadBalancerService</p>
               </TooltipContent>
             </Tooltip>
           </div>
@@ -211,9 +209,9 @@ export function BoxIngresses({ box }: BoxIngressesProps) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Ingresses</CardTitle>
+              <CardTitle>BoxLoadBalancerServices</CardTitle>
               <CardDescription>
-                HTTP ingress rules for accessing this box
+                HTTP loadBalancerService rules for accessing this box
               </CardDescription>
             </div>
             <Button
@@ -223,38 +221,38 @@ export function BoxIngresses({ box }: BoxIngressesProps) {
               onClick={() => setAddDialogOpen(true)}
             >
               <Plus className="w-4 h-4 mr-2" />
-              New Ingress
+              New Load Balancer Service
             </Button>
           </div>
         </CardHeader>
         <CardContent>
           <DataTable
             columns={columns}
-            data={ingresses}
+            data={loadBalancerServices}
             searchColumn="hostname"
-            searchPlaceholder="Search ingresses..."
+            searchPlaceholder="Search loadBalancerServices..."
           />
         </CardContent>
       </Card>
 
-      <AddIngressDialog
+      <AddLoadBalancerServiceDialog
         boxId={box.id}
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
-        onSuccess={() => ingressesQuery.refetch()}
+        onSuccess={() => loadBalancerServicesQuery.refetch()}
       />
 
-      {editingIngress && (
-        <EditIngressDialog
+      {editingLoadBalancerService && (
+        <EditLoadBalancerServiceDialog
           boxId={box.id}
-          ingress={editingIngress}
+          loadBalancerService={editingLoadBalancerService}
           open={true}
           onOpenChange={(open) => {
             if (!open) {
-              setEditingIngress(null)
+              setEditingLoadBalancerService(null)
             }
           }}
-          onSuccess={() => ingressesQuery.refetch()}
+          onSuccess={() => loadBalancerServicesQuery.refetch()}
         />
       )}
     </>

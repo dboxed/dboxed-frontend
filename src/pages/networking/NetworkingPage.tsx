@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { ListNetworksPage } from "@/pages/networks/ListNetworksPage.tsx"
-import { ListIngressProxiesPage } from "@/pages/ingress-proxies/ListIngressProxiesPage.tsx"
+import { ListLoadBalancersPage } from "@/pages/load-balancers/ListLoadBalancersPage.tsx"
 
 export function NetworkingPage() {
   const location = useLocation()
@@ -10,13 +10,13 @@ export function NetworkingPage() {
   const { workspaceId } = useSelectedWorkspaceId()
 
   // Determine active tab from URL path
-  const activeTab = location.pathname.includes('/ingress-proxies') ? 'ingress-proxies' : 'networks'
+  const activeTab = location.pathname.includes('/load-balancers') ? 'load-balancers' : 'networks'
 
   const handleTabChange = (value: string) => {
     if (value === 'networks') {
       navigate(`/workspaces/${workspaceId}/networks`, { replace: true })
     } else {
-      navigate(`/workspaces/${workspaceId}/ingress-proxies`, { replace: true })
+      navigate(`/workspaces/${workspaceId}/load-balancers`, { replace: true })
     }
   }
 
@@ -25,15 +25,15 @@ export function NetworkingPage() {
       <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="networks">Networks</TabsTrigger>
-          <TabsTrigger value="ingress-proxies">Ingress Proxies</TabsTrigger>
+          <TabsTrigger value="load-balancers">Load Balancers</TabsTrigger>
         </TabsList>
 
         <TabsContent value="networks">
           <ListNetworksPage />
         </TabsContent>
 
-        <TabsContent value="ingress-proxies">
-          <ListIngressProxiesPage />
+        <TabsContent value="load-balancers">
+          <ListLoadBalancersPage />
         </TabsContent>
       </Tabs>
     </div>

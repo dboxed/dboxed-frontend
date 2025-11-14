@@ -465,14 +465,14 @@ function S3BucketBreadcrumb({ s3BucketId, isCurrentPage }: S3BucketBreadcrumbPro
   )
 }
 
-interface IngressProxiesBreadcrumbProps {
+interface LoadBalancersBreadcrumbProps {
   isCurrentPage?: boolean
 }
 
-function IngressProxiesBreadcrumb({ isCurrentPage }: IngressProxiesBreadcrumbProps) {
+function LoadBalancersBreadcrumb({ isCurrentPage }: LoadBalancersBreadcrumbProps) {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
-  const href = `/workspaces/${workspaceId}/ingress-proxies`
+  const href = `/workspaces/${workspaceId}/load-balancers`
 
   return (
     <BreadcrumbElement
@@ -480,34 +480,34 @@ function IngressProxiesBreadcrumb({ isCurrentPage }: IngressProxiesBreadcrumbPro
       isCurrentPage={isCurrentPage}
       onClick={() => navigate(href)}
     >
-      <span>Ingress Proxies</span>
+      <span>Load Balancers</span>
     </BreadcrumbElement>
   )
 }
 
-interface IngressProxyBreadcrumbProps {
-  proxyId: string
+interface LoadBalancerBreadcrumbProps {
+  loadBalancerId: string
   isCurrentPage?: boolean
 }
 
-function IngressProxyBreadcrumb({ proxyId, isCurrentPage }: IngressProxyBreadcrumbProps) {
+function LoadBalancerBreadcrumb({ loadBalancerId, isCurrentPage }: LoadBalancerBreadcrumbProps) {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
 
-  const ingressProxy = client.useQuery('get', '/v1/workspaces/{workspaceId}/ingress-proxies/{id}', {
+  const loadBalancer = client.useQuery('get', '/v1/workspaces/{workspaceId}/load-balancers/{id}', {
     params: {
       path: {
         workspaceId: workspaceId!,
-        id: proxyId
+        id: loadBalancerId
       }
     },
   }, {
-    enabled: !!workspaceId && !!proxyId
+    enabled: !!workspaceId && !!loadBalancerId
   })
 
-  const href = `/workspaces/${workspaceId}/ingress-proxies/${proxyId}`
-  const label = ingressProxy.data?.name || 'Ingress Proxy'
+  const href = `/workspaces/${workspaceId}/load-balancers/${loadBalancerId}`
+  const label = loadBalancer.data?.name || 'Load Balancer'
 
   return (
     <BreadcrumbElement
@@ -858,30 +858,30 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
     }
   }
 
-  // Handle ingress-proxies path
-  if (pathSegments[currentIndex] === 'ingress-proxies') {
+  // Handle load-balancers path
+  if (pathSegments[currentIndex] === 'load-balancers') {
     const isCurrentPage = pathSegments.length === currentIndex + 1
 
     breadcrumbElements.push(
-      <BreadcrumbSeparator key="sep-workspace-ingress-proxies"/>,
-      <BreadcrumbItem key="ingress-proxies">
-        <IngressProxiesBreadcrumb isCurrentPage={isCurrentPage}/>
+      <BreadcrumbSeparator key="sep-workspace-load-balancers"/>,
+      <BreadcrumbItem key="load-balancers">
+        <LoadBalancersBreadcrumb isCurrentPage={isCurrentPage}/>
       </BreadcrumbItem>
     )
 
     currentIndex++
 
-    // Handle specific ingress proxy ID
-    const proxyIdSegment = pathSegments[currentIndex]
-    if (proxyIdSegment && proxyIdSegment.match(/^[^/]+$/)) {
-      const proxyId = proxyIdSegment
+    // Handle specific load balancer ID
+    const loadBalancerIdSegment = pathSegments[currentIndex]
+    if (loadBalancerIdSegment && loadBalancerIdSegment.match(/^[^/]+$/)) {
+      const loadBalancerId = loadBalancerIdSegment
       const isCurrentPage = pathSegments.length === currentIndex + 1
 
       breadcrumbElements.push(
-        <BreadcrumbSeparator key="sep-ingress-proxies"/>,
-        <BreadcrumbItem key="ingress-proxy">
-          <IngressProxyBreadcrumb
-            proxyId={proxyId}
+        <BreadcrumbSeparator key="sep-load-balancers"/>,
+        <BreadcrumbItem key="load-balancer">
+          <LoadBalancerBreadcrumb
+            loadBalancerId={loadBalancerId}
             isCurrentPage={isCurrentPage}
           />
         </BreadcrumbItem>
@@ -893,7 +893,7 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
     // Handle create path
     if (pathSegments[currentIndex] === 'create') {
       breadcrumbElements.push(
-        <BreadcrumbSeparator key="sep-create-ingress-proxy"/>,
+        <BreadcrumbSeparator key="sep-create-load-balancer"/>,
         <BreadcrumbItem key="create">
           <CreateBreadcrumb isCurrentPage={true}/>
         </BreadcrumbItem>

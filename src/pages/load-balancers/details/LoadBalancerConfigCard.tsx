@@ -66,22 +66,6 @@ export function LoadBalancerConfigCard({ data, save }: LoadBalancerConfigCardPro
               <h3 className="text-sm font-semibold mb-3">Resources</h3>
               <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <dt className="text-sm font-medium text-muted-foreground">Box</dt>
-                  <dd className="mt-1">
-                    <ReferenceLabel
-                      resourceId={data.boxId}
-                      resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
-                      pathParams={{
-                        workspaceId: workspaceId!,
-                        id: data.boxId
-                      }}
-                      detailsUrl={`/workspaces/${workspaceId}/boxes/${data.boxId}`}
-                      fallbackLabel={data.boxId}
-                      className="text-blue-600 hover:text-blue-800 underline"
-                    />
-                  </dd>
-                </div>
-                <div>
                   <dt className="text-sm font-medium text-muted-foreground">Network</dt>
                   <dd className="mt-1">
                     <ReferenceLabel

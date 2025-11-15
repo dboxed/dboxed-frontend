@@ -2,6 +2,8 @@ import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
+import { LabelAndValue } from "@/components/LabelAndValue.tsx"
+import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import { SimpleFormDialog } from "@/components/SimpleFormDialog.tsx"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
@@ -61,13 +63,11 @@ export function LoadBalancerConfigCard({ data, save }: LoadBalancerConfigCardPro
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            {/* Box and Network Information Section */}
             <div>
-              <h3 className="text-sm font-semibold mb-3">Resources</h3>
-              <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <dt className="text-sm font-medium text-muted-foreground">Network</dt>
-                  <dd className="mt-1">
+              <DetailsCardLayout>
+                <LabelAndValue
+                  label="Network"
+                  value={
                     <ReferenceLabel
                       resourceId={data.network}
                       resourcePath="/v1/workspaces/{workspaceId}/networks/{id}"
@@ -77,81 +77,32 @@ export function LoadBalancerConfigCard({ data, save }: LoadBalancerConfigCardPro
                       }}
                       detailsUrl={`/workspaces/${workspaceId}/networks/${data.network}`}
                       fallbackLabel={data.network}
-                      className="text-blue-600 hover:text-blue-800 underline"
                     />
-                  </dd>
-                </div>
-              </dl>
+                  }
+                />
+              </DetailsCardLayout>
             </div>
 
-            {/* Port Configuration Section */}
+            {/* Configuration Section */}
             <div>
               <h3 className="text-sm font-semibold mb-3">Configuration</h3>
-              <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <dt className="text-sm font-medium text-muted-foreground">HTTP Port</dt>
-                  <dd className="mt-1">
-                    <code className="text-sm bg-muted px-1 py-0.5 rounded">
-                      {data.httpPort}
-                    </code>
-                  </dd>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Port for HTTP traffic (typically 80)
-                  </p>
-                </div>
+              <DetailsCardLayout>
+                <LabelAndValue
+                  label="HTTP Port"
+                  value={data.httpPort}
+                />
 
-                <div>
-                  <dt className="text-sm font-medium text-muted-foreground">HTTPS Port</dt>
-                  <dd className="mt-1">
-                    <code className="text-sm bg-muted px-1 py-0.5 rounded">
-                      {data.httpsPort}
-                    </code>
-                  </dd>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Port for HTTPS traffic (typically 443)
-                  </p>
-                </div>
+                <LabelAndValue
+                  label="HTTPS Port"
+                  value={data.httpsPort}
+                />
 
-                <div>
-                  <dt className="text-sm font-medium text-muted-foreground">Replicas</dt>
-                  <dd className="mt-1">
-                    <code className="text-sm bg-muted px-1 py-0.5 rounded">
-                      {data.replicas}
-                    </code>
-                  </dd>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Number of loadBalancer instances
-                  </p>
-                </div>
-              </dl>
+                <LabelAndValue
+                  label="Replicas"
+                  value={data.replicas}
+                />
+              </DetailsCardLayout>
             </div>
-
-            {/* Placeholder sections for future configuration */}
-            {/* Uncomment and expand as new configuration options are added to the API */}
-
-            {/* SSL/TLS Configuration Section */}
-            {/* <div>
-              <h3 className="text-sm font-semibold mb-3">SSL/TLS Configuration</h3>
-              <p className="text-sm text-muted-foreground">
-                SSL certificate and TLS settings will be displayed here.
-              </p>
-            </div> */}
-
-            {/* Routing Configuration Section */}
-            {/* <div>
-              <h3 className="text-sm font-semibold mb-3">Routing Configuration</h3>
-              <p className="text-sm text-muted-foreground">
-                Default routing rules and middleware configuration will be displayed here.
-              </p>
-            </div> */}
-
-            {/* Advanced Settings Section */}
-            {/* <div>
-              <h3 className="text-sm font-semibold mb-3">Advanced Settings</h3>
-              <p className="text-sm text-muted-foreground">
-                Additional loadBalancer configuration options will be displayed here.
-              </p>
-            </div> */}
           </div>
         </CardContent>
       </Card>

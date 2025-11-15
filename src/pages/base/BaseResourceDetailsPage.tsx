@@ -1,7 +1,7 @@
 import { useDboxedQueryClient } from "@/api/api"
 import type { paths } from "@/api/models/schema"
 import { BaseDetailsPage, type BaseDetailsPagePropsBase } from "./BaseDetailsPage"
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface BaseResourceDetailsPageProps<T, U> extends BaseDetailsPagePropsBase<T, U> {
   title: string | ((data?: T) => string)
@@ -9,6 +9,7 @@ interface BaseResourceDetailsPageProps<T, U> extends BaseDetailsPagePropsBase<T,
   apiParams?: Record<string, any>
   afterDeleteUrl?: string
   refreshInterval?: number
+  refreshTrigger?: number
 }
 
 export function BaseResourceDetailsPage<T, U>(props: BaseResourceDetailsPageProps<T, U>) {
@@ -20,6 +21,15 @@ export function BaseResourceDetailsPage<T, U>(props: BaseResourceDetailsPageProp
   }, props.refreshInterval ? {
     refetchInterval: props.refreshInterval,
   } : undefined)
+
+  const [lastRefreshTrigger, setLastRefreshTrigger] = useState(props.refreshTrigger)
+  useEffect(() => {
+    if (props.refreshTrigger === lastRefreshTrigger) {
+      return
+    }
+    setLastRefreshTrigger(props.refreshTrigger)
+    resourceQuery.refetch()
+  }, [resourceQuery, lastRefreshTrigger, props.refreshTrigger]);
 
   const deleteMutation = props.enableDelete ? client.useMutation('delete', props.resourcePath as any) : null
   const saveMutation = client.useMutation('patch', props.resourcePath as any)

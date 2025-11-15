@@ -260,8 +260,7 @@ export interface paths {
         delete: operations["delete-v1-workspaces-by-workspace-id-boxes-by-id"];
         options?: never;
         head?: never;
-        /** Patch v1 workspaces by workspace ID boxes by ID */
-        patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id"];
+        patch?: never;
         trace?: never;
     };
     "/v1/workspaces/{workspaceId}/boxes/{id}/box-spec": {
@@ -441,6 +440,40 @@ export interface paths {
         patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id-sandbox-status"];
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/boxes/{id}/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID boxes by ID start */
+        post: operations["post-v1-workspaces-by-workspace-id-boxes-by-id-start"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/boxes/{id}/stop": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID boxes by ID stop */
+        post: operations["post-v1-workspaces-by-workspace-id-boxes-by-id-stop"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/boxes/{id}/volumes": {
         parameters: {
             query?: never;
@@ -512,6 +545,44 @@ export interface paths {
         head?: never;
         /** Patch v1 workspaces by workspace ID load balancers by ID */
         patch: operations["patch-v1-workspaces-by-workspace-id-load-balancers-by-id"];
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/load-balancers/{id}/certmagic/locks/*key": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Put v1 workspaces by workspace ID load balancers by ID certmagic locks key */
+        put: operations["put-v1-workspaces-by-workspace-id-load-balancers-by-id-certmagic-locks-key"];
+        post?: never;
+        /** Delete v1 workspaces by workspace ID load balancers by ID certmagic locks key */
+        delete: operations["delete-v1-workspaces-by-workspace-id-load-balancers-by-id-certmagic-locks-key"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/load-balancers/{id}/certmagic/objects/*key": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID load balancers by ID certmagic objects key */
+        get: operations["get-v1-workspaces-by-workspace-id-load-balancers-by-id-certmagic-objects-key"];
+        /** Put v1 workspaces by workspace ID load balancers by ID certmagic objects key */
+        put: operations["put-v1-workspaces-by-workspace-id-load-balancers-by-id-certmagic-objects-key"];
+        post?: never;
+        /** Delete v1 workspaces by workspace ID load balancers by ID certmagic objects key */
+        delete: operations["delete-v1-workspaces-by-workspace-id-load-balancers-by-id-certmagic-objects-key"];
+        options?: never;
+        /** Head v1 workspaces by workspace ID load balancers by ID certmagic objects key */
+        head: operations["head-v1-workspaces-by-workspace-id-load-balancers-by-id-certmagic-objects-key"];
+        patch?: never;
         trace?: never;
     };
     "/v1/workspaces/{workspaceId}/machine-providers": {
@@ -1307,6 +1378,7 @@ export interface components {
             readonly $schema?: string;
             boxId?: string;
             forWorkspace?: boolean;
+            loadBalancerId?: string;
             name: string;
         };
         CreateVolume: {
@@ -1956,17 +2028,10 @@ export interface components {
             createdAt: string;
             forWorkspace: boolean;
             id: string;
+            loadBalancerId?: string;
             name: string;
             token?: string;
             workspace: string;
-        };
-        UpdateBox: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            desiredState?: string;
         };
         UpdateBoxComposeProject: {
             /**
@@ -2922,43 +2987,6 @@ export interface operations {
             };
         };
     };
-    "patch-v1-workspaces-by-workspace-id-boxes-by-id": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-                /** @description The workspace id */
-                workspaceId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateBox"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Box"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
     "get-v1-workspaces-by-workspace-id-boxes-by-id-box-spec": {
         parameters: {
             query?: never;
@@ -3652,6 +3680,72 @@ export interface operations {
             };
         };
     };
+    "post-v1-workspaces-by-workspace-id-boxes-by-id-start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Box"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-boxes-by-id-stop": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Box"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-v1-workspaces-by-workspace-id-boxes-by-id-volumes": {
         parameters: {
             query?: never;
@@ -3959,6 +4053,220 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["LoadBalancer"];
                 };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "put-v1-workspaces-by-workspace-id-load-balancers-by-id-certmagic-locks-key": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-v1-workspaces-by-workspace-id-load-balancers-by-id-certmagic-locks-key": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-load-balancers-by-id-certmagic-objects-key": {
+        parameters: {
+            query?: {
+                recursive?: boolean;
+                list?: boolean;
+            };
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "put-v1-workspaces-by-workspace-id-load-balancers-by-id-certmagic-objects-key": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/octet-stream": string;
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-v1-workspaces-by-workspace-id-load-balancers-by-id-certmagic-objects-key": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "head-v1-workspaces-by-workspace-id-load-balancers-by-id-certmagic-objects-key": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    "X-Key"?: string;
+                    "X-Last-Modified"?: string;
+                    "X-Size"?: string;
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Error */
             default: {

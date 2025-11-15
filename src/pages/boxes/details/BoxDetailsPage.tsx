@@ -11,6 +11,9 @@ import { BoxRunCard } from "./BoxRunCard.tsx"
 import { LogsPage } from "./logs/LogsPage.tsx"
 import { BoxConfigTab } from "./BoxConfigTab.tsx"
 import type { components } from "@/api/models/schema"
+import { useDboxedQueryClient } from "@/api/api.ts"
+import { toast } from "sonner"
+import { useState } from "react";
 
 function BoxDetailsContent({ data }: { data: components["schemas"]["Box"] }) {
   return (
@@ -46,13 +49,54 @@ function BoxDetailsContent({ data }: { data: components["schemas"]["Box"] }) {
 export function BoxDetailsPage() {
   const { workspaceId } = useSelectedWorkspaceId()
   const { boxId } = useParams<{ boxId: string }>()
+  const client = useDboxedQueryClient()
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
 
   if (!boxId) {
     return <div>Invalid box ID</div>
   }
 
+  const startBoxMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/start')
+  const stopBoxMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/stop')
+
+  const handleStart = async () => {
+    try {
+      await startBoxMutation.mutateAsync({
+        params: {
+          path: {
+            workspaceId: workspaceId!,
+            id: boxId,
+          }
+        }
+      })
+      toast.success('Box started successfully')
+      setRefreshTrigger(x => x + 1)
+    } catch (error) {
+      toast.error('Failed to start box')
+      console.error('Failed to start box:', error)
+    }
+  }
+
+  const handleStop = async () => {
+    try {
+      await stopBoxMutation.mutateAsync({
+        params: {
+          path: {
+            workspaceId: workspaceId!,
+            id: boxId,
+          }
+        }
+      })
+      toast.success('Box stopped successfully')
+      setRefreshTrigger(x => x + 1)
+    } catch (error) {
+      toast.error('Failed to stop box')
+      console.error('Failed to stop box:', error)
+    }
+  }
+
   return (
-    <BaseResourceDetailsPage<components["schemas"]["Box"], components["schemas"]["UpdateBox"]>
+    <BaseResourceDetailsPage<components["schemas"]["Box"], any>
       title={data => {
         if (!data) {
           return "Box"
@@ -60,6 +104,7 @@ export function BoxDetailsPage() {
         return `Box ${data.name}`
       }}
       resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
+      refreshTrigger={refreshTrigger}
       enableDelete={true}
       afterDeleteUrl={`/workspaces/${workspaceId}/boxes`}
       apiParams={{
@@ -92,24 +137,22 @@ export function BoxDetailsPage() {
         }
         return null
       }}
-      customButtons={(data, save) => (
+      customButtons={(data, _save) => (
         <>
           <ConfirmationDialog
             trigger={
               <Button
                 variant="outline"
-                disabled={data.desiredState === 'up'}
+                disabled={data.desiredState === 'up' || startBoxMutation.isPending}
               >
                 <Play className="h-4 w-4 mr-2" />
-                Start
+                {startBoxMutation.isPending ? 'Starting...' : 'Start'}
               </Button>
             }
             title="Start Box?"
             description="This will start the box and all configured containers."
             confirmText="Start"
-            onConfirm={async () => {
-              await save({ desiredState: 'up' })
-            }}
+            onConfirm={handleStart}
           >
             <Alert variant="destructive">
               <AlertTriangle className="h-4 w-4" />
@@ -133,18 +176,16 @@ export function BoxDetailsPage() {
             trigger={
               <Button
                 variant="outline"
-                disabled={data.desiredState !== 'up'}
+                disabled={data.desiredState !== 'up' || stopBoxMutation.isPending}
               >
                 <StopCircle className="h-4 w-4 mr-2" />
-                Stop
+                {stopBoxMutation.isPending ? 'Stopping...' : 'Stop'}
               </Button>
             }
             title="Stop Box?"
             description="This will stop the box and all running containers."
             confirmText="Stop"
-            onConfirm={async () => {
-              await save({ desiredState: 'down' })
-            }}
+            onConfirm={handleStop}
             destructive
           />
         </>
@@ -153,4 +194,4 @@ export function BoxDetailsPage() {
       {(data, _save) => <BoxDetailsContent data={data} />}
     </BaseResourceDetailsPage>
   )
-} 
+}

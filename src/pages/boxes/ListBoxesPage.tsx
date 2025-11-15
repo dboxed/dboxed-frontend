@@ -35,6 +35,18 @@ export function ListBoxesPage() {
       },
     },
     {
+      accessorKey: "boxType",
+      header: "Type",
+      cell: ({ row }) => {
+        const boxType = row.getValue("boxType") as string
+        return (
+          <Badge variant="secondary">
+            {boxType}
+          </Badge>
+        )
+      },
+    },
+    {
       accessorKey: "network",
       header: "Network",
       cell: ({ row }) => {

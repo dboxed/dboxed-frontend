@@ -51,6 +51,15 @@ export function GeneralInfoCard({ box }: GeneralInfoCardProps) {
               />
 
               <LabelAndValue
+                label="Type"
+                value={
+                  <Badge variant="secondary" className="capitalize">
+                    {box.boxType}
+                  </Badge>
+                }
+              />
+
+              <LabelAndValue
                 label="Dboxed Version"
                 value={
                   <Badge variant="outline" className="w-fit">

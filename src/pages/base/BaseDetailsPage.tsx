@@ -5,7 +5,7 @@ import { DeleteButton } from "@/components/DeleteButton"
 
 export interface BaseDetailsPagePropsBase<T, U> {
   children: (data: T, save: (data: U) => Promise<boolean>) => React.ReactNode
-  enableDelete?: boolean
+  enableDelete?: boolean | ((data: T) => boolean)
   deleteButtonText?: string
   deleteConfirmationChildren?: (data: T) => React.ReactNode
   customButtons?: (data: T, save: (data: U) => Promise<boolean>) => React.ReactNode
@@ -90,6 +90,8 @@ export function BaseDetailsPage<T, U>(props: BaseDetailsPageProps<T, U>) {
     )
   }
 
+  const enableDelete = props.enableDelete !== undefined && (typeof props.enableDelete === "boolean" ? props.enableDelete : props.enableDelete(props.resourceData))
+
   return (
     <div className="min-h-screen flex items-start justify-center p-4 w-full overflow-y-auto">
       <Card className="w-full max-w-7xl my-8">
@@ -101,7 +103,7 @@ export function BaseDetailsPage<T, U>(props: BaseDetailsPageProps<T, U>) {
         </CardContent>
         <CardFooter className="flex justify-between space-x-2">
           <div className="flex items-center space-x-2">
-            {props.enableDelete && (
+            {enableDelete && (
               <DeleteButton
                 onDelete={handleDelete}
                 resourceName={props.title}

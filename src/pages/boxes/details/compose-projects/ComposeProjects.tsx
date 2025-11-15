@@ -27,6 +27,8 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
   const [newProjectDialogOpen, setNewProjectDialogOpen] = useState(false)
   const [editingProject, setEditingProject] = useState<ComposeProjectInfo | null>(null)
 
+  const allowEditing = box.boxType === "normal"
+
   // Fetch compose projects from the API
   const composeProjectsQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects', {
     params: {
@@ -182,7 +184,7 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
                 <p>Edit project</p>
               </TooltipContent>
             </Tooltip>
-            <Tooltip>
+            {allowEditing && <Tooltip>
               <TooltipTrigger asChild>
                 <div>
                   <ConfirmationDialog
@@ -205,7 +207,7 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
               <TooltipContent>
                 <p>Delete project</p>
               </TooltipContent>
-            </Tooltip>
+            </Tooltip>}
           </div>
         )
       }
@@ -223,7 +225,7 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
                 Docker Compose projects for this box
               </CardDescription>
             </div>
-            <Button
+            {allowEditing && <Button
               type={"button"}
               variant="outline"
               size="sm"
@@ -231,7 +233,7 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
             >
               <Plus className="w-4 h-4 mr-2" />
               New Project
-            </Button>
+            </Button>}
           </div>
         </CardHeader>
         <CardContent>

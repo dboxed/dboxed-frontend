@@ -25,6 +25,8 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
   const client = useDboxedQueryClient()
   const [attachDialogOpen, setAttachDialogOpen] = useState(false)
 
+  const allowEditing = box.boxType === "normal"
+
   const attachedVolumesQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/boxes/{id}/volumes', {
     params: {
       path: {
@@ -32,7 +34,7 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
         id: box.id
       }
     }
-  },{
+  }, {
     refetchInterval: 5000,
   })
 
@@ -57,7 +59,7 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
           volumeId: volumeId
         }
       }
-    },  {
+    }, {
       onSuccess: () => {
         toast.success("Volume deattached successfully!")
       },
@@ -101,7 +103,7 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
         const attachment = row.original
         const volume = attachment.volume!
 
-        return <VolumeMountBadge mountStatus={volume.mountStatus} />
+        return <VolumeMountBadge mountStatus={volume.mountStatus}/>
       }
     },
     {
@@ -145,75 +147,77 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
         )
       }
     },
-    {
+  ]
+  if (allowEditing) {
+    columns.push({
       id: "actions",
       header: "Actions",
       cell: ({ row }) => {
-        const attachment = row.original
-        const volume = attachment.volume!
-        return (
-          <div className="flex space-x-2">
-            <Tooltip>
-              <TooltipTrigger>
-                <div>
-                  <FileModeDialog
-                    uid={attachment.rootUid}
-                    gid={attachment.rootGid}
-                    mode={attachment.rootMode}
-                    onUpdate={(uid, gid, mode) => {
-                      updateAttachmentMutation.mutate({
-                        params: {
-                          path: {
-                            workspaceId: workspaceId!,
-                            id: box.id,
-                            volumeId: attachment.volumeId
+          const attachment = row.original
+          const volume = attachment.volume!
+          return (
+            <div className="flex space-x-2">
+              <Tooltip>
+                <TooltipTrigger>
+                  <div>
+                    <FileModeDialog
+                      uid={attachment.rootUid}
+                      gid={attachment.rootGid}
+                      mode={attachment.rootMode}
+                      onUpdate={(uid, gid, mode) => {
+                        updateAttachmentMutation.mutate({
+                          params: {
+                            path: {
+                              workspaceId: workspaceId!,
+                              id: box.id,
+                              volumeId: attachment.volumeId
+                            }
+                          },
+                          body: {
+                            rootUid: uid,
+                            rootGid: gid,
+                            rootMode: mode
                           }
-                        },
-                        body: {
-                          rootUid: uid,
-                          rootGid: gid,
-                          rootMode: mode
-                        }
-                      })
-                    }}
-                    onSuccess={() => attachedVolumesQuery.refetch()}
-                  />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Edit permissions</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div>
-                  <ConfirmationDialog
-                    trigger={
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={detachVolumeMutation.isPending}
-                      >
-                        <Unplug className="w-4 h-4" />
-                      </Button>
-                    }
-                    title="Detach Volume"
-                    description={`Are you sure you want to detach volume "${volume.name}"?`}
-                    confirmText="Detach"
-                    onConfirm={() => handleDetachVolume(attachment.volumeId)}
-                    destructive
-                  />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Detach volume</p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
-        )
-      }
-    }
-  ]
+                        })
+                      }}
+                      onSuccess={() => attachedVolumesQuery.refetch()}
+                    />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Edit permissions</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div>
+                    <ConfirmationDialog
+                      trigger={
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={detachVolumeMutation.isPending}
+                        >
+                          <Unplug className="w-4 h-4"/>
+                        </Button>
+                      }
+                      title="Detach Volume"
+                      description={`Are you sure you want to detach volume "${volume.name}"?`}
+                      confirmText="Detach"
+                      onConfirm={() => handleDetachVolume(attachment.volumeId)}
+                      destructive
+                    />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Detach volume</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          )
+        }
+    })
+  }
 
   return (
     <>
@@ -226,17 +230,17 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
                 Volumes currently attached to this box
               </CardDescription>
             </div>
-            <Button
-              type={"button"}
-              variant={"outline"}
-              onClick={() => {
-                setAttachDialogOpen(true)
-              }}
-              size="sm"
+            {allowEditing && <Button
+                type={"button"}
+                variant={"outline"}
+                onClick={() => {
+                  setAttachDialogOpen(true)
+                }}
+                size="sm"
             >
-              <Plus className="w-4 h-4 mr-2" />
-              Attach Volume
-            </Button>
+                <Plus className="w-4 h-4 mr-2"/>
+                Attach Volume
+            </Button>}
           </div>
         </CardHeader>
         <CardContent>

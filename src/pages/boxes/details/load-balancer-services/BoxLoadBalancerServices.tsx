@@ -25,6 +25,8 @@ export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
   const [addDialogOpen, setAddDialogOpen] = useState(false)
   const [editingLoadBalancerService, setEditingLoadBalancerService] = useState<components["schemas"]["LoadBalancerService"] | null>(null)
 
+  const allowEditing = box.boxType === "normal"
+
   const loadBalancerServicesQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/boxes/{id}/load-balancer-services', {
     params: {
       path: {
@@ -152,7 +154,9 @@ export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
         )
       }
     },
-    {
+  ]
+  if (allowEditing) {
+    columns.push({
       id: "actions",
       header: "Actions",
       cell: ({ row }) => {
@@ -165,7 +169,7 @@ export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
                   size="sm"
                   onClick={() => setEditingLoadBalancerService(row.original)}
                 >
-                  <Edit className="w-4 h-4" />
+                  <Edit className="w-4 h-4"/>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
@@ -182,7 +186,7 @@ export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
                         size="sm"
                         disabled={deleteLoadBalancerServiceMutation.isPending}
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-4 h-4"/>
                       </Button>
                     }
                     title="Delete LoadBalancerService"
@@ -200,8 +204,8 @@ export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
           </div>
         )
       }
-    }
-  ]
+    })
+  }
 
   return (
     <>
@@ -214,7 +218,7 @@ export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
                 HTTP loadBalancerService rules for accessing this box
               </CardDescription>
             </div>
-            <Button
+            {allowEditing && <Button
               type="button"
               variant="outline"
               size="sm"
@@ -222,7 +226,7 @@ export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
             >
               <Plus className="w-4 h-4 mr-2" />
               New Load Balancer Service
-            </Button>
+            </Button>}
           </div>
         </CardHeader>
         <CardContent>

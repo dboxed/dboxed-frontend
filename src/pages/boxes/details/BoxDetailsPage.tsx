@@ -105,7 +105,7 @@ export function BoxDetailsPage() {
       }}
       resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
       refreshTrigger={refreshTrigger}
-      enableDelete={true}
+      enableDelete={data => data.boxType === "normal"}
       afterDeleteUrl={`/workspaces/${workspaceId}/boxes`}
       apiParams={{
         path: {

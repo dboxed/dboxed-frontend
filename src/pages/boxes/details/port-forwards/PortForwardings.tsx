@@ -24,6 +24,8 @@ export function PortForwardings({ box }: PortForwardingsProps) {
   const [addDialogOpen, setAddDialogOpen] = useState(false)
   const [editingPortForward, setEditingPortForward] = useState<components["schemas"]["BoxPortForward"] | null>(null)
 
+  const allowEditing = box.boxType === "normal"
+
   const portForwardsQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/boxes/{id}/port-forwards', {
     params: {
       path: {
@@ -112,7 +114,9 @@ export function PortForwardings({ box }: PortForwardingsProps) {
         )
       }
     },
-    {
+  ]
+  if (allowEditing) {
+    columns.push({
       id: "actions",
       header: "Actions",
       cell: ({ row }) => {
@@ -125,7 +129,7 @@ export function PortForwardings({ box }: PortForwardingsProps) {
                   size="sm"
                   onClick={() => setEditingPortForward(row.original)}
                 >
-                  <Edit className="w-4 h-4" />
+                  <Edit className="w-4 h-4"/>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
@@ -142,7 +146,7 @@ export function PortForwardings({ box }: PortForwardingsProps) {
                         size="sm"
                         disabled={deletePortForwardMutation.isPending}
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-4 h-4"/>
                       </Button>
                     }
                     title="Delete Port Forward"
@@ -160,8 +164,8 @@ export function PortForwardings({ box }: PortForwardingsProps) {
           </div>
         )
       }
-    }
-  ]
+    })
+  }
 
   return (
     <>
@@ -174,7 +178,7 @@ export function PortForwardings({ box }: PortForwardingsProps) {
                 Port forwarding rules for this box
               </CardDescription>
             </div>
-            <Button
+            {allowEditing && <Button
               type="button"
               variant="outline"
               size="sm"
@@ -182,7 +186,7 @@ export function PortForwardings({ box }: PortForwardingsProps) {
             >
               <Plus className="w-4 h-4 mr-2" />
               New Port Forward
-            </Button>
+            </Button>}
           </div>
         </CardHeader>
         <CardContent>

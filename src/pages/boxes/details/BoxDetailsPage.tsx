@@ -5,7 +5,7 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
-import { AlertTriangle, Play, StopCircle } from "lucide-react"
+import { AlertTriangle, Play, StopCircle, RefreshCw } from "lucide-react"
 import { GeneralInfoCard } from "./GeneralInfoCard"
 import { BoxRunCard } from "./BoxRunCard.tsx"
 import { LogsPage } from "./logs/LogsPage.tsx"
@@ -58,6 +58,7 @@ export function BoxDetailsPage() {
 
   const startBoxMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/start')
   const stopBoxMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/stop')
+  const reconcileBoxMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/reconcile')
 
   const handleStart = async () => {
     try {
@@ -92,6 +93,24 @@ export function BoxDetailsPage() {
     } catch (error) {
       toast.error('Failed to stop box')
       console.error('Failed to stop box:', error)
+    }
+  }
+
+  const handleReconcile = async () => {
+    try {
+      await reconcileBoxMutation.mutateAsync({
+        params: {
+          path: {
+            workspaceId: workspaceId!,
+            id: boxId,
+          }
+        }
+      })
+      toast.success('Box reconcile triggered successfully')
+      setRefreshTrigger(x => x + 1)
+    } catch (error) {
+      toast.error('Failed to reconcile box')
+      console.error('Failed to reconcile box:', error)
     }
   }
 
@@ -187,6 +206,20 @@ export function BoxDetailsPage() {
             confirmText="Stop"
             onConfirm={handleStop}
             destructive
+          />
+          <ConfirmationDialog
+            trigger={
+              <Button
+                variant="outline"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Reconcile
+              </Button>
+            }
+            title="Reconcile Box?"
+            description="This will trigger a reconciliation of the box state with the desired configuration."
+            confirmText="Reconcile"
+            onConfirm={handleReconcile}
           />
         </>
       )}

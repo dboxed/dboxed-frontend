@@ -422,6 +422,23 @@ export interface paths {
         patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id-port-forwards-by-port-forward-id"];
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/boxes/{id}/reconcile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID boxes by ID reconcile */
+        post: operations["post-v1-workspaces-by-workspace-id-boxes-by-id-reconcile"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/boxes/{id}/sandbox-status": {
         parameters: {
             query?: never;
@@ -1232,6 +1249,8 @@ export interface components {
             id: string;
             name: string;
             network?: components["schemas"]["BoxNetwork"];
+            /** Format: date-time */
+            reconcileRequestedAt?: string;
             volumes?: components["schemas"]["DboxedVolume"][] | null;
         };
         CreateBox: {
@@ -3595,6 +3614,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["BoxPortForward"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-boxes-by-id-reconcile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Box"];
                 };
             };
             /** @description Error */

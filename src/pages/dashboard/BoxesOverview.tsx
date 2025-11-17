@@ -7,7 +7,7 @@ import type { components } from "@/api/models/schema"
 import { WorkspaceOverviewCard } from "@/pages/dashboard/WorkspaceOverviewCard.tsx"
 import { CreateBoxDialog } from "@/pages/boxes/create/CreateBoxDialog.tsx"
 import { ContainerStatusBadge } from "@/pages/boxes/details/status/ContainerStatusBadge.tsx"
-import { SandboxStatusBadge } from "@/pages/boxes/details/status/SandboxStatusBadge.tsx"
+import { BoxStatusBadge } from "@/pages/boxes/details/status/BoxStatusBadge.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
 
 export function BoxesOverview() {
@@ -50,8 +50,8 @@ export function BoxesOverview() {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <SandboxStatusBadge sandboxStatus={box.sandboxStatus} />
-          <ContainerStatusBadge sandboxStatus={box.sandboxStatus} />
+          <BoxStatusBadge box={box} />
+          <ContainerStatusBadge box={box} />
         </div>
       </div>
     ),

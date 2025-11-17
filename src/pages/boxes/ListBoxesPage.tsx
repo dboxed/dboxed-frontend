@@ -7,9 +7,8 @@ import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { CreateBoxDialog } from "./create/CreateBoxDialog.tsx";
-import { StatusBadge } from "@/components/StatusBadge.tsx";
 import { TimeAgo } from "@/components/TimeAgo.tsx";
-import { SandboxStatusBadge } from "@/pages/boxes/details/status/SandboxStatusBadge.tsx";
+import { BoxStatusBadge } from "@/pages/boxes/details/status/BoxStatusBadge.tsx";
 import { ContainerStatusBadge } from "@/pages/boxes/details/status/ContainerStatusBadge.tsx";
 
 export function ListBoxesPage() {
@@ -111,7 +110,7 @@ export function ListBoxesPage() {
       header: "Status",
       cell: ({ row }) => {
         return (
-          <StatusBadge item={row.original}/>
+          <BoxStatusBadge box={row.original}/>
         )
       },
     },
@@ -128,28 +127,10 @@ export function ListBoxesPage() {
       },
     },
     {
-      id: "sandboxStatus",
-      header: "Sandbox Status",
-      cell: ({ row }) => {
-        const sandboxStatus = row.original.sandboxStatus
-        const box = row.original
-
-        if (!sandboxStatus?.runStatus) {
-          return <span className="text-sm text-muted-foreground">N/A</span>
-        }
-
-        return (
-          <div className="flex items-center gap-2">
-            <SandboxStatusBadge sandboxStatus={box.sandboxStatus} />
-          </div>
-        )
-      },
-    },
-    {
       id: "containers",
       header: "Containers",
       cell: ({ row }) => {
-        return <ContainerStatusBadge sandboxStatus={row.original.sandboxStatus} />
+        return <ContainerStatusBadge box={row.original} />
       },
     },
     {

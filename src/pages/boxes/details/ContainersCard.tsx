@@ -9,19 +9,18 @@ import { decompressDockerPs, type DockerContainer } from "@/pages/boxes/docker-u
 import { ContainerLogsDialog } from "./status/ContainerLogsDialog.tsx"
 import { DataTable } from "@/components/data-table.tsx"
 import type { ColumnDef } from "@tanstack/react-table"
-import { isStatusStale, formatTimeAgo } from "@/utils/time.ts"
+import { formatTimeAgo } from "@/utils/time.ts"
 
 interface ContainersCardProps {
   sandboxStatus?: components["schemas"]["BoxSandboxStatus"]
-  boxId: string
+  box: components["schemas"]["Box"]
 }
 
-export function ContainersCard({ sandboxStatus, boxId }: ContainersCardProps) {
+export function ContainersCard({ sandboxStatus, box }: ContainersCardProps) {
   const [containers, setContainers] = useState<DockerContainer[]>([])
   const [selectedContainerForLogs, setSelectedContainerForLogs] = useState<string | null>(null)
 
-  const statusTime = sandboxStatus?.statusTime
-  const isStale = !statusTime || isStatusStale(statusTime)
+  const isStale = box.status === "Stale"
 
   useEffect(() => {
     if (sandboxStatus?.dockerPs) {
@@ -111,7 +110,7 @@ export function ContainersCard({ sandboxStatus, boxId }: ContainersCardProps) {
                 <AlertTriangle className="h-4 w-4" />
                 <span className="text-sm font-medium">
                   Container information is stale and may not be up-to-date.
-                  {statusTime && ` Last updated ${formatTimeAgo(statusTime)}.`}
+                  {box.sandboxStatus?.statusTime && ` Last updated ${formatTimeAgo(box.sandboxStatus.statusTime)}.`}
                 </span>
               </div>
             )}
@@ -125,7 +124,7 @@ export function ContainersCard({ sandboxStatus, boxId }: ContainersCardProps) {
       {selectedContainerForLogs && (
         <ContainerLogsDialog
           containerName={selectedContainerForLogs}
-          boxId={boxId}
+          boxId={box.id}
           open={!!selectedContainerForLogs}
           onOpenChange={(open) => !open && setSelectedContainerForLogs(null)}
         />

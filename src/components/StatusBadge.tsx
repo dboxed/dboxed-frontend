@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge.tsx";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip.tsx";
+import type { ReactElement } from "react";
 
 interface StatusComponentProps {
   item: {
@@ -8,6 +9,7 @@ interface StatusComponentProps {
   }
   size?: "default" | "sm" | "lg"
   variant?: "default" | "destructive" | "outline" | "secondary" | "warning" | "success"
+  tooltip?: ReactElement
 }
 
 function getStatusVariant(status: string): "default" | "destructive" | "outline" | "secondary" | "warning" | "success" {
@@ -15,10 +17,15 @@ function getStatusVariant(status: string): "default" | "destructive" | "outline"
     case 'ok':
     case 'active':
     case 'running':
+    case 'ready':
+    case 'new':
       return 'success'
     case 'pending':
     case 'starting':
       return 'secondary'
+    case 'degraded':
+    case 'stale':
+      return 'warning'
     case 'error':
     case 'failed':
     case 'exited':
@@ -31,7 +38,7 @@ function getStatusVariant(status: string): "default" | "destructive" | "outline"
   }
 }
 
-export function StatusBadge({ item, size = "default", variant: overrideVariant }: StatusComponentProps) {
+export function StatusBadge({ item, size = "default", variant: overrideVariant, tooltip }: StatusComponentProps) {
   const variant = overrideVariant ?? getStatusVariant(item.status)
 
   const badge = (
@@ -61,7 +68,7 @@ export function StatusBadge({ item, size = "default", variant: overrideVariant }
         </TooltipTrigger>
         <TooltipContent className="max-w-md">
           <div className="text-sm whitespace-pre-wrap">
-            {item.statusDetails}
+            {tooltip || item.statusDetails}
           </div>
         </TooltipContent>
       </Tooltip>

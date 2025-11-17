@@ -9,9 +9,8 @@ import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import { ReconcileLogsDialog } from "./status/ReconcileLogsDialog.tsx"
 import { TimeAgo } from "@/components/TimeAgo.tsx"
-import { SandboxStatusBadge } from "@/pages/boxes/details/status/SandboxStatusBadge.tsx"
+import { BoxStatusBadge } from "@/pages/boxes/details/status/BoxStatusBadge.tsx"
 import type { components } from "@/api/models/schema"
-import { useDboxedQueryClient } from "@/api/api.ts"
 import { ContainersCard } from "./ContainersCard.tsx"
 
 interface GeneralInfoCardProps {
@@ -19,19 +18,7 @@ interface GeneralInfoCardProps {
 }
 
 export function GeneralInfoCard({ box }: GeneralInfoCardProps) {
-  const client = useDboxedQueryClient()
   const [showReconcileLogs, setShowReconcileLogs] = useState(false)
-
-  const { data: sandboxStatus } = client.useQuery('get', "/v1/workspaces/{workspaceId}/boxes/{id}/sandbox-status", {
-    params: {
-      path: {
-        workspaceId: box.workspace!,
-        id: box.id,
-      }
-    },
-  }, {
-    refetchInterval: 5000, // Refresh every 5 seconds
-  })
 
   return (
     <div className="space-y-6">
@@ -149,22 +136,22 @@ export function GeneralInfoCard({ box }: GeneralInfoCardProps) {
                 label="Status"
                 value={
                   <div className="flex items-center gap-2">
-                    <SandboxStatusBadge sandboxStatus={sandboxStatus} />
+                    <BoxStatusBadge box={box} />
                   </div>
                 }
               />
 
-              {sandboxStatus?.startTime && (
+              {box.sandboxStatus?.startTime && (
                 <LabelAndValue
                   label="Started"
-                  value={<TimeAgo date={sandboxStatus?.startTime} />}
+                  value={<TimeAgo date={box.sandboxStatus?.startTime} />}
                 />
               )}
 
-              {sandboxStatus?.stopTime && (
+              {box.sandboxStatus?.stopTime && (
                 <LabelAndValue
                   label="Stopped"
-                  value={<TimeAgo date={sandboxStatus?.stopTime} />}
+                  value={<TimeAgo date={box.sandboxStatus?.stopTime} />}
                 />
               )}
             </DetailsCardLayout>
@@ -172,7 +159,7 @@ export function GeneralInfoCard({ box }: GeneralInfoCardProps) {
         </Card>
       </div>
 
-      <ContainersCard sandboxStatus={sandboxStatus} boxId={box.id} />
+      <ContainersCard box={box} />
 
       <ReconcileLogsDialog
         boxId={box.id}

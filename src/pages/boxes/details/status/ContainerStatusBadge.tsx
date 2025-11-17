@@ -6,20 +6,20 @@ import { cn } from "@/lib/utils.ts";
 import { decompressDockerPs, type DockerContainer } from "@/pages/boxes/docker-utils.tsx";
 import { isStatusStale, formatTimeAgo } from "@/utils/time.ts";
 
-export function ContainerStatusBadge({ sandboxStatus }: { sandboxStatus?: components["schemas"]["BoxSandboxStatus"] }) {
+export function ContainerStatusBadge({ box }: { box: components["schemas"]["Box"] }) {
   const [containers, setContainers] = useState<DockerContainer[]>([])
-  const statusTime = sandboxStatus?.statusTime
+  const statusTime = box.sandboxStatus?.statusTime
   const isStale = !statusTime || isStatusStale(statusTime)
 
   useEffect(() => {
-    if (sandboxStatus?.dockerPs) {
-      decompressDockerPs(sandboxStatus.dockerPs).then(setContainers)
+    if (box.sandboxStatus?.dockerPs) {
+      decompressDockerPs(box.sandboxStatus.dockerPs).then(setContainers)
     } else {
       setContainers([])
     }
-  }, [sandboxStatus?.dockerPs])
+  }, [box.sandboxStatus?.dockerPs])
 
-  if (!sandboxStatus?.dockerPs) {
+  if (!box.sandboxStatus?.dockerPs) {
     return <span className="text-sm text-muted-foreground">N/A</span>
   }
 
@@ -28,7 +28,7 @@ export function ContainerStatusBadge({ sandboxStatus }: { sandboxStatus?: compon
   const allOk = runningCount === totalCount && totalCount > 0
 
   let containersColorClass = ""
-  if (sandboxStatus?.runStatus === "running") {
+  if (box.sandboxStatus?.runStatus === "running") {
     if (isStale) {
       containersColorClass = 'bg-yellow-400'
     } else if (allOk) {

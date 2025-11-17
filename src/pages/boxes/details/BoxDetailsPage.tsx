@@ -113,6 +113,7 @@ export function BoxDetailsPage() {
           id: boxId,
         }
       }}
+      refreshInterval={5000}
       deleteConfirmationChildren={(data) => {
         if (data.desiredState === 'up') {
           return (

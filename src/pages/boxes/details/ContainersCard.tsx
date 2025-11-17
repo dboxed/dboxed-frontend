@@ -12,23 +12,22 @@ import type { ColumnDef } from "@tanstack/react-table"
 import { formatTimeAgo } from "@/utils/time.ts"
 
 interface ContainersCardProps {
-  sandboxStatus?: components["schemas"]["BoxSandboxStatus"]
   box: components["schemas"]["Box"]
 }
 
-export function ContainersCard({ sandboxStatus, box }: ContainersCardProps) {
+export function ContainersCard({ box }: ContainersCardProps) {
   const [containers, setContainers] = useState<DockerContainer[]>([])
   const [selectedContainerForLogs, setSelectedContainerForLogs] = useState<string | null>(null)
 
   const isStale = box.status === "Stale"
 
   useEffect(() => {
-    if (sandboxStatus?.dockerPs) {
-      decompressDockerPs(sandboxStatus.dockerPs).then(setContainers)
+    if (box.sandboxStatus?.dockerPs) {
+      decompressDockerPs(box.sandboxStatus.dockerPs).then(setContainers)
     } else {
       setContainers([])
     }
-  }, [sandboxStatus?.dockerPs])
+  }, [box.sandboxStatus?.dockerPs])
 
   const columns = useMemo<ColumnDef<DockerContainer>[]>(() => [
     {

@@ -1,10 +1,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
-import { Badge } from "@/components/ui/badge.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx"
-import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import { Key } from "lucide-react"
 import { TimeAgo } from "@/components/TimeAgo.tsx"
+import { TokenScopeBadge } from "../TokenScopeBadge.tsx"
 import type { components } from "@/api/models/schema"
 
 interface TokenDetailsCardProps {
@@ -32,29 +31,7 @@ export function TokenDetailsCard({ token }: TokenDetailsCardProps) {
 
           <LabelAndValue
             label="Scope"
-            value={
-              <Badge variant={token.forWorkspace ? "default" : "secondary"}>
-                {token.forWorkspace ? "Workspace" : (
-                  <>
-                    Box {token.boxId && (
-                      <>
-                        (<ReferenceLabel
-                          resourceId={token.boxId}
-                          resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
-                          pathParams={{
-                            workspaceId: token.workspace,
-                            id: token.boxId
-                          }}
-                          detailsUrl={`/workspaces/${token.workspace}/boxes/${token.boxId}`}
-                          fallbackLabel="Box"
-                          className="text-blue-600 hover:text-blue-800 underline text-sm"
-                        />)
-                      </>
-                    )}
-                  </>
-                )}
-              </Badge>
-            }
+            value={<TokenScopeBadge token={token} />}
           />
 
           <LabelAndValue

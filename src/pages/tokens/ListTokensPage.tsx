@@ -3,11 +3,10 @@ import { useNavigate } from "react-router"
 import type { ColumnDef } from "@tanstack/react-table"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import type { components } from "@/api/models/schema";
-import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
-import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { CreateTokenDialog } from "./create/CreateTokenDialog.tsx";
 import { TimeAgo } from "@/components/TimeAgo.tsx";
+import { TokenScopeBadge } from "./TokenScopeBadge.tsx";
 
 export function ListTokensPage() {
   const navigate = useNavigate()
@@ -32,45 +31,10 @@ export function ListTokensPage() {
       },
     },
     {
-      accessorKey: "forWorkspace",
+      id: "scope",
       header: "Scope",
       cell: ({ row }) => {
-        const forWorkspace = row.getValue("forWorkspace") as boolean
-        return (
-          <Badge variant={forWorkspace ? "default" : "secondary"}>
-            {forWorkspace ? "Workspace" : "Box"}
-          </Badge>
-        )
-      },
-    },
-    {
-      accessorKey: "boxId",
-      header: "Box",
-      cell: ({ row }) => {
-        const boxId = row.getValue("boxId") as string | null
-        const workspaceId = row.original.workspace
-
-        if (!boxId) {
-          return (
-            <div className="text-sm text-muted-foreground">
-              N/A
-            </div>
-          )
-        }
-
-        return (
-          <ReferenceLabel
-            resourceId={boxId}
-            resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
-            pathParams={{
-              workspaceId: workspaceId,
-              id: boxId
-            }}
-            detailsUrl={`/workspaces/${workspaceId}/boxes/${boxId}`}
-            fallbackLabel="Box"
-            className="text-blue-600 hover:text-blue-800 underline text-sm"
-          />
-        )
+        return <TokenScopeBadge token={row.original} />
       },
     },
     {

@@ -15,12 +15,14 @@ interface BaseResourceDetailsPageProps<T, U> extends BaseDetailsPagePropsBase<T,
 export function BaseResourceDetailsPage<T, U>(props: BaseResourceDetailsPageProps<T, U>) {
   const client = useDboxedQueryClient()
 
+  const refreshInterval = props.refreshInterval !== undefined ? props.refreshInterval : 5000
+
   // Fetch the resource
   const resourceQuery = client.useQuery('get', props.resourcePath as any, {
     params: props.apiParams,
-  }, props.refreshInterval ? {
-    refetchInterval: props.refreshInterval,
-  } : undefined)
+  }, {
+    refetchInterval: refreshInterval,
+  })
 
   const [lastRefreshTrigger, setLastRefreshTrigger] = useState(props.refreshTrigger)
   useEffect(() => {

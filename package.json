@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate-types": "openapi-typescript http://localhost:5001/openapi.json --output src/api/models/dboxed-schema.d.ts"
+    "generate-types": "openapi-typescript http://localhost:5001/openapi.json --output src/api/models/dboxed-schema.d.ts && openapi-typescript http://localhost:5101/openapi.json --output src/api/models/dboxed-cloud-schema.d.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",

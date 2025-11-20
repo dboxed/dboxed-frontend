@@ -5,15 +5,7 @@ import { useAuth } from "react-oidc-context";
 import { useEffect, useMemo } from "react";
 import { type EventSourceMessage, fetchEventSource } from "@microsoft/fetch-event-source";
 import { envVars } from "@/env.ts";
-
-const buildAuthHeaders = (token?: string) => {
-    // eslint-disable-next-line
-    const headers: any = {}
-    if (token) {
-        headers["Authorization"] =`Bearer ${token}`
-    }
-    return headers
-}
+import { buildAuthHeaders } from "@/api/auth.ts";
 
 const createDboxedFetchClient = (token?: string) => {
     return createFetchClient<paths>({

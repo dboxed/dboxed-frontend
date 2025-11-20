@@ -39,3 +39,12 @@ export const useIsAdmin = () => {
     error: userQuery.error,
   }
 }
+
+export const buildAuthHeaders = (token?: string) => {
+  // eslint-disable-next-line
+  const headers: any = {}
+  if (token) {
+    headers["Authorization"] =`Bearer ${token}`
+  }
+  return headers
+}

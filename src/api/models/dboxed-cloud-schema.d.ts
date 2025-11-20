@@ -73,7 +73,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/billing/stripe-checkout": {
+    "/v1/workspaces/{workspaceId}/billing/stripe-checkout-session": {
         parameters: {
             query?: never;
             header?: never;
@@ -82,25 +82,25 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Post v1 workspaces by workspace ID billing stripe checkout */
-        post: operations["post-v1-workspaces-by-workspace-id-billing-stripe-checkout"];
+        /** Post v1 workspaces by workspace ID billing stripe checkout session */
+        post: operations["post-v1-workspaces-by-workspace-id-billing-stripe-checkout-session"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/billing/stripe-checkout-done": {
+    "/v1/workspaces/{workspaceId}/billing/stripe-checkout-session/{id}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Get v1 workspaces by workspace ID billing stripe checkout session by ID */
+        get: operations["get-v1-workspaces-by-workspace-id-billing-stripe-checkout-session-by-id"];
         put?: never;
-        /** Post v1 workspaces by workspace ID billing stripe checkout done */
-        post: operations["post-v1-workspaces-by-workspace-id-billing-stripe-checkout-done"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -126,6 +126,7 @@ export interface components {
              */
             readonly $schema?: string;
             address: components["schemas"]["Address"];
+            defaultPaymentMethod?: string;
             email: string;
             name: string;
         };
@@ -251,13 +252,13 @@ export interface components {
             wechat_pay: components["schemas"]["StripePaymentMethodWeChatPay"];
             zip: components["schemas"]["StripePaymentMethodZip"];
         };
-        RestStripeCheckoutDoneInputBody: {
+        RestStripeCheckoutInputBody: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            sessionId: string;
+            returnUrl: string;
         };
         StripeAccount: {
             business_profile: components["schemas"]["StripeAccountBusinessProfile"];
@@ -2102,11 +2103,6 @@ export interface components {
             amount_off: number;
         };
         StripeCustomer: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
             address: components["schemas"]["StripeAddress"];
             /** Format: int64 */
             balance: number;
@@ -6219,6 +6215,7 @@ export interface components {
              */
             readonly $schema?: string;
             address?: components["schemas"]["Address"];
+            defaultPaymentMethod?: string;
             name?: string;
         };
     };
@@ -6394,7 +6391,7 @@ export interface operations {
             };
         };
     };
-    "post-v1-workspaces-by-workspace-id-billing-stripe-checkout": {
+    "post-v1-workspaces-by-workspace-id-billing-stripe-checkout-session": {
         parameters: {
             query?: never;
             header?: never;
@@ -6404,7 +6401,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RestStripeCheckoutInputBody"];
+            };
+        };
         responses: {
             /** @description OK */
             200: {
@@ -6426,21 +6427,18 @@ export interface operations {
             };
         };
     };
-    "post-v1-workspaces-by-workspace-id-billing-stripe-checkout-done": {
+    "get-v1-workspaces-by-workspace-id-billing-stripe-checkout-session-by-id": {
         parameters: {
             query?: never;
             header?: never;
             path: {
+                id: string;
                 /** @description The workspace id */
                 workspaceId: string;
             };
             cookie?: never;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RestStripeCheckoutDoneInputBody"];
-            };
-        };
+        requestBody?: never;
         responses: {
             /** @description OK */
             200: {
@@ -6448,7 +6446,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["StripeCustomer"];
+                    "application/json": components["schemas"]["StripeCheckoutSession"];
                 };
             };
             /** @description Error */

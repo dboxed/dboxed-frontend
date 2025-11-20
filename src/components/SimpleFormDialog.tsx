@@ -1,10 +1,9 @@
 import { type ReactNode, useCallback, useState } from "react"
 import { useEffect } from "react"
 import { useForm, type UseFormReturn, type FieldValues, type DefaultValues } from "react-hook-form"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form.tsx";
-import { deepClone } from "@/utils/clone.ts";
+import { deepClone } from "@/utils/utils.ts";
+import { SimpleDialog } from "@/components/SimpleDialog";
 
 interface SimpleFormDialogProps<T extends FieldValues = FieldValues> {
   open: boolean
@@ -59,13 +58,6 @@ export function SimpleFormDialog<T extends FieldValues = FieldValues>({
     setOldOpen(open)
   }, [doBuildInitial, form, open, oldOpen])
 
-  const handleCancel = () => {
-    if (onCancel) {
-      onCancel()
-    }
-    onOpenChange(false)
-  }
-
   const handleSave = async () => {
     const formData = form.getValues()
     const ret = await onSave(formData)
@@ -75,38 +67,22 @@ export function SimpleFormDialog<T extends FieldValues = FieldValues>({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={wide ? "max-w-[95vw] min-w-[80vw] max-h-[90vh] min-h-[70vh] flex flex-col h-full" : "max-w-md"}>
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-        </DialogHeader>
-
-        <Form {...form}>
-          <div className={wide ? "flex-1 min-h-0" : "py-4"}>
-            {children(form)}
-          </div>
-        </Form>
-
-        <DialogFooter>
-          {showCancel && (
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleCancel}
-              disabled={isLoading}
-            >
-              {cancelText}
-            </Button>
-          )}
-          <Button
-            type="button"
-            onClick={handleSave}
-            disabled={saveDisabled || isLoading}
-          >
-            {isLoading ? "Saving..." : saveText}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <SimpleDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title={title}
+      onSave={handleSave}
+      onCancel={onCancel}
+      saveText={saveText}
+      cancelText={cancelText}
+      saveDisabled={saveDisabled}
+      isLoading={isLoading}
+      showCancel={showCancel}
+      wide={wide}
+    >
+      <Form {...form}>
+        {children(form)}
+      </Form>
+    </SimpleDialog>
   )
 }

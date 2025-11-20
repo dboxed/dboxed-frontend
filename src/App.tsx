@@ -24,8 +24,11 @@ import { AdminListUsersPage } from "@/pages/admin/AdminListUsersPage.tsx";
 import { LoadBalancerDetailsPage } from "@/pages/load-balancers/details/LoadBalancerDetailsPage.tsx";
 import { ThemeProvider } from "@/components/theme-provider";
 import CookieConsentComponent from "@/components/cookie-consent/CookieConsent.tsx";
-import { envVars } from "@/env.ts";
+import { envVars, isDboxedCloud } from "@/env.ts";
 import { NetworkingPage } from "@/pages/networking/NetworkingPage.tsx";
+import { BillingPage } from "@/pages/billing/BillingPage.tsx";
+import {loadStripe} from '@stripe/stripe-js';
+import { StripeCheckoutReturn } from "@/pages/billing/stripe/StripeCheckoutReturn.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,6 +37,8 @@ const queryClient = new QueryClient({
     }
   }
 });
+
+export const stripe = loadStripe(envVars.VITE_STRIPE_PUBLISHABLE_KEY, {});
 
 export default function App() {
   return (
@@ -110,6 +115,12 @@ function AuthenticatedApp() {
           <Route path="/workspaces/:workspaceId/tokens/:tokenId" element={<TokenDetailsPage/>}/>
           <Route path="/workspaces/:workspaceId/s3-buckets" element={<VolumesPage/>}/>
           <Route path="/workspaces/:workspaceId/s3-buckets/:s3BucketId" element={<S3BucketDetailsPage/>}/>
+          {isDboxedCloud() &&
+              <>
+                <Route path="/workspaces/:workspaceId/billing" element={<BillingPage/>}/>
+                <Route path="/workspaces/:workspaceId/billing/checkout-return" element={<StripeCheckoutReturn/>}/>
+              </>
+          }
           {isAdminQuery.isAdmin && (
             <>
               <Route path="/admin/workspaces" element={<AdminWorkspacesListPage/>}/>

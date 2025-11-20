@@ -5,7 +5,8 @@ import { NavUser } from "@/components/nav-user"
 import { WorkspaceSwitcher } from "@/components/workspace-switcher.tsx"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail, SidebarSeparator } from "@/components/ui/sidebar"
 import { useCurrentUser } from "@/api/auth.ts";
-import { FaXTwitter, FaGithub } from 'react-icons/fa6';
+import { FaXTwitter, FaGithub, FaMoneyBills } from 'react-icons/fa6';
+import { isDboxedCloud } from "@/env.ts";
 
 const navMain = [
   {
@@ -38,6 +39,14 @@ const navMain = [
     navigate: "/workspaces/{workspaceId}/machines",
     icon: <Monitor/>,
   },*/
+]
+
+const navWorkspace = [
+  {
+    title: "Billing",
+    navigate: "/workspaces/{workspaceId}/billing",
+    icon: <FaMoneyBills/>,
+  },
 ]
 
 const navAdmin = [
@@ -86,11 +95,14 @@ export function AppSidebar({ isAdmin }: AppSidebarProps) {
       <SidebarContent>
         <NavItems title={"DBoxed"} items={navMain}/>
       </SidebarContent>
-      {isAdmin && <SidebarContent>
-        <NavItems title={"Admin"} items={navAdmin}/>
-      </SidebarContent>}
       <SidebarFooter>
         <SidebarContent>
+          {isDboxedCloud() &&
+              <NavItems title={"Workspace"} items={navWorkspace}/>
+          }
+          {isAdmin &&
+            <NavItems title={"Admin"} items={navAdmin}/>
+          }
           <NavItems title={"Resources"} items={navResources}/>
         </SidebarContent>
         <SidebarSeparator />

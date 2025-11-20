@@ -4,7 +4,7 @@ import type { DefaultValues, FieldValues, UseFormReturn } from "react-hook-form"
 import type { paths } from "@/api/models/dboxed-schema"
 import { useQueryClient } from "@tanstack/react-query"
 import { SimpleFormDialog } from "./SimpleFormDialog.tsx"
-import { deepClone } from "@/utils/clone.ts";
+import { deepClone } from "@/utils/utils.ts";
 
 interface BaseCreateDialogProps<F extends FieldValues = FieldValues, C extends FieldValues = F, R extends FieldValues = FieldValues> {
   open: boolean

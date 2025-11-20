@@ -10,6 +10,9 @@ const initialEnvVars = {
   VITE_OIDC_CLIENT_ID: '${VITE_OIDC_CLIENT_ID}',
   VITE_OIDC_SCOPE: '${VITE_OIDC_SCOPE}',
 
+  VITE_IS_CLOUD: '${VITE_IS_CLOUD}',
+  VITE_STRIPE_PUBLISHABLE_KEY: '${VITE_STRIPE_PUBLISHABLE_KEY}',
+
   VITE_MATOMO_TAG_MANAGER: '${VITE_MATOMO_TAG_MANAGER}',
 }
 
@@ -27,3 +30,7 @@ export const buildEnvVars = (): typeof initialEnvVars => {
 }
 
 export const envVars = buildEnvVars()
+
+export const isDboxedCloud = () => {
+  return envVars.VITE_IS_CLOUD === "true" || envVars.VITE_IS_CLOUD === "1"
+}

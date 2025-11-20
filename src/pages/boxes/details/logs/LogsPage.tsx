@@ -1,11 +1,11 @@
 import { useState } from "react"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useDboxedQueryClient } from "@/api/api.ts"
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 import { Card, CardContent } from "@/components/ui/card.tsx"
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table.tsx"
 import { HardDrive } from "lucide-react"
 import { FaDocker } from "react-icons/fa";
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 import { LogViewerWithControls } from "./LogViewerWithControls.tsx"
 
 import DBoxedIcon from "/public/dboxed-icon.svg?react";

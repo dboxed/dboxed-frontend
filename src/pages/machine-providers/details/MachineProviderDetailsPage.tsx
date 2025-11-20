@@ -7,7 +7,7 @@ import { GeneralInfoCard } from "./GeneralInfoCard.tsx"
 import { AwsDetailsCard, AwsSubnetsCard } from "./AwsDetailsCard.tsx"
 import { HetznerDetailsCard } from "./HetznerDetailsCard.tsx"
 import { SshConfigCard } from "./SshConfigCard.tsx"
-import type { components } from "@/api/models/schema";
+import type { components } from "@/api/models/dboxed-schema";
 
 export function MachineProviderDetailsPage() {
   const { workspaceId } = useSelectedWorkspaceId()

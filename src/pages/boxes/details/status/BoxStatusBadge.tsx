@@ -1,6 +1,6 @@
 import { formatTimeAgo } from "@/utils/time.ts";
 import { StatusBadge } from "@/components/StatusBadge.tsx";
-import type { components } from "@/api/models/schema";
+import type { components } from "@/api/models/dboxed-schema";
 
 interface SandboxStatusBadgeProps {
   box: components["schemas"]["Box"]

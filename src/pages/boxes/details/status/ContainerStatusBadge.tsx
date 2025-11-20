@@ -1,4 +1,4 @@
-import type { components } from "@/api/models/schema";
+import type { components } from "@/api/models/dboxed-schema";
 import { useEffect, useState } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip.tsx";
 import { Badge } from "@/components/ui/badge.tsx";

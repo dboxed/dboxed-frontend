@@ -3,8 +3,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Cloud, Server } from "lucide-react"
 import type { UseFormReturn } from "react-hook-form"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useDboxedQueryClient } from "@/api/api"
-import type { components } from "@/api/models/schema"
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import type { components } from "@/api/models/dboxed-schema"
 
 interface MachineProviderSelectorProps {
   form: UseFormReturn<components["schemas"]["CreateMachine"]>

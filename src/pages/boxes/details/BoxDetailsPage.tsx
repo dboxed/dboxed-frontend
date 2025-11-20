@@ -10,8 +10,8 @@ import { GeneralInfoCard } from "./GeneralInfoCard"
 import { BoxRunCard } from "./BoxRunCard.tsx"
 import { LogsPage } from "./logs/LogsPage.tsx"
 import { BoxConfigTab } from "./BoxConfigTab.tsx"
-import type { components } from "@/api/models/schema"
-import { useDboxedQueryClient } from "@/api/api.ts"
+import type { components } from "@/api/models/dboxed-schema"
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 import { toast } from "sonner"
 import { useState } from "react";
 

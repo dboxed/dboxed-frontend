@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar, } from "@/components/ui/sidebar"
 import { UserAvatar } from "@/components/UserAvatar"
-import type { components } from "@/api/models/schema";
+import type { components } from "@/api/models/dboxed-schema";
 import { useAuth } from "react-oidc-context";
 
 export function NavUser({

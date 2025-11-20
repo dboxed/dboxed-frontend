@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge.tsx"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip.tsx"
 import { useNavigate } from "react-router"
 import type { ColumnDef } from "@tanstack/react-table"
-import type { components } from "@/api/models/schema";
+import type { components } from "@/api/models/dboxed-schema";
 import { BaseListPage } from "@/pages/base";
 
 export function AdminWorkspacesListPage() {

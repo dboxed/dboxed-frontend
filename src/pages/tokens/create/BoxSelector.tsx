@@ -2,8 +2,8 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { UseFormReturn } from "react-hook-form"
-import type { components } from "@/api/models/schema"
-import { useDboxedQueryClient } from "@/api/api.ts"
+import type { components } from "@/api/models/dboxed-schema"
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 
 interface BoxSelectorProps {
   form: UseFormReturn<components["schemas"]["CreateToken"]>

@@ -1,6 +1,6 @@
 import { BaseCreateDialog } from "@/components/BaseCreateDialog.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 import { S3BucketForm, buildEndpoint, type ProviderType } from "@/pages/s3-buckets/details/S3BucketForm.tsx"
 
 interface CreateS3BucketDialogProps {

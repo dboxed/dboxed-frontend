@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.t
 import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 
 export function S3BucketDetailsPage() {
   const { workspaceId } = useSelectedWorkspaceId()

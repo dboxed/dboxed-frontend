@@ -4,7 +4,7 @@ import { Link } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { TimeAgo } from "@/components/TimeAgo.tsx"
 import { Loader2, CheckCircle, XCircle } from "lucide-react"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 
 interface SnapshotStatusCellProps {
   mountStatus?: components["schemas"]["VolumeMountStatus"]

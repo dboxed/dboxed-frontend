@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import { parseSize } from "@/utils/size.ts"
 import { useState } from "react"
-import type { components } from "@/api/models/schema";
+import type { components } from "@/api/models/dboxed-schema";
 
 
 interface CreateVolumeDialogProps {

@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 import type { ColumnDef } from "@tanstack/react-table"
 import { CreateLoadBalancerDialog } from "./create/CreateLoadBalancerDialog.tsx"
 import { BaseListPage } from "@/pages/base";

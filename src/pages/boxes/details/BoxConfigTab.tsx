@@ -3,7 +3,7 @@ import { AttachedVolumes } from "./volumes/AttachedVolumes.tsx"
 import { ComposeProjects } from "./compose-projects/ComposeProjects.tsx"
 import { PortForwardings } from "./port-forwards/PortForwardings.tsx"
 import { BoxLoadBalancerServices } from "./load-balancer-services/BoxLoadBalancerServices.tsx"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 
 interface VolumesAndProjectsTabProps {
   box: components["schemas"]["Box"]

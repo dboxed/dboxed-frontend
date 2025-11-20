@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { SimpleFormDialog } from "@/components/SimpleFormDialog.tsx"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx";
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx";
 import { OpenDialogButton } from "@/components/OpenDialogButton.tsx";

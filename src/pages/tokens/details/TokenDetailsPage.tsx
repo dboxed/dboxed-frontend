@@ -2,7 +2,7 @@ import { BaseResourceDetailsPage } from "@/pages/base/BaseResourceDetailsPage.ts
 import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { TokenDetailsCard } from "./TokenDetailsCard.tsx"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 
 export function TokenDetailsPage() {
   const { workspaceId } = useSelectedWorkspaceId()

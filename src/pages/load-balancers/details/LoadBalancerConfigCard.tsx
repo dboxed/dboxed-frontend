@@ -8,7 +8,7 @@ import { SimpleFormDialog } from "@/components/SimpleFormDialog.tsx"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 import { Edit } from "lucide-react"
 
 interface LoadBalancerConfigCardProps {

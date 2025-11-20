@@ -1,12 +1,12 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { DataTable } from "@/components/data-table.tsx"
-import { useDboxedQueryClient } from "@/api/api.ts"
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useNavigate } from "react-router"
 import { formatDuration } from "@/utils/time.ts"
 import { TimeAgo } from "@/components/TimeAgo.tsx"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 import type { ColumnDef } from "@tanstack/react-table"
 import { formatSize } from "@/utils/size.ts";
 

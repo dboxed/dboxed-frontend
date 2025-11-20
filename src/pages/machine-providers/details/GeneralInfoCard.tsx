@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx";
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx";
 import { StatusBadge } from "@/components/StatusBadge.tsx";

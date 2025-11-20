@@ -5,7 +5,7 @@ import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard.tsx"
 import { NetbirdDetailsCard } from "./NetbirdDetailsCard.tsx"
-import type { components } from "@/api/models/schema";
+import type { components } from "@/api/models/dboxed-schema";
 
 export function NetworkDetailsPage() {
   const { workspaceId } = useSelectedWorkspaceId()

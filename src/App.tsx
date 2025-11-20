@@ -6,7 +6,7 @@ import MainLayout from "@/layouts/MainLayout.tsx";
 import { AuthProvider } from "react-oidc-context";
 import { NoWorkspaceScreen } from "@/components/NoWorkspaceScreen.tsx";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
-import { useDboxedQueryClient } from "@/api/api.ts";
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts";
 import { Toaster } from "sonner";
 import { MachineProviderDetailsPage } from "@/pages/machine-providers";
 import { MachineDetailsPage, MachinesPage } from "@/pages/machines";

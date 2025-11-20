@@ -1,7 +1,7 @@
-import { useDboxedQueryClient } from "@/api/api"
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 import { toast } from "sonner"
 import type { DefaultValues, FieldValues, UseFormReturn } from "react-hook-form"
-import type { paths } from "@/api/models/schema"
+import type { paths } from "@/api/models/dboxed-schema"
 import { useQueryClient } from "@tanstack/react-query"
 import { SimpleFormDialog } from "./SimpleFormDialog.tsx"
 import { deepClone } from "@/utils/clone.ts";

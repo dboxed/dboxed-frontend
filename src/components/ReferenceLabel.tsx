@@ -1,6 +1,6 @@
 import { Link } from "react-router"
-import { useDboxedQueryClient } from "@/api/api.ts"
-import type { paths } from "@/api/models/schema";
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import type { paths } from "@/api/models/dboxed-schema";
 
 interface ReferenceLabelProps<TResource extends { name: string }> {
   /** The ID of the resource to fetch and display */

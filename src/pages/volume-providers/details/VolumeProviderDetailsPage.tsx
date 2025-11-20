@@ -5,7 +5,7 @@ import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard.tsx"
 import { RusticDetailsCard } from "./RusticDetailsCard.tsx"
-import type { components } from "@/api/models/schema";
+import type { components } from "@/api/models/dboxed-schema";
 
 export function VolumeProviderDetailsPage() {
   const { workspaceId } = useSelectedWorkspaceId()

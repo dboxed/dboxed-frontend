@@ -1,10 +1,10 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
-import { useDboxedQueryClient } from "@/api/api.ts";
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts";
 import { useEffect } from "react"
 import type { UseFormReturn } from "react-hook-form"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 
 interface VolumeProviderSelectorProps {
   form: UseFormReturn<components["schemas"]["CreateVolume"]>

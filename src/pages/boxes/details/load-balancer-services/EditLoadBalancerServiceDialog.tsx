@@ -5,8 +5,8 @@ import { Input } from "@/components/ui/input.tsx"
 import { Label } from "@/components/ui/label.tsx"
 import { Textarea } from "@/components/ui/textarea.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useDboxedQueryClient } from "@/api/api.ts"
-import type { components } from "@/api/models/schema"
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import type { components } from "@/api/models/dboxed-schema"
 import { toast } from "sonner"
 
 interface EditLoadBalancerServiceDialogProps {

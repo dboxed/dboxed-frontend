@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge"
 import { UserAvatar } from "@/components/UserAvatar"
 import type { ColumnDef } from "@tanstack/react-table"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 import { BaseListPage } from "@/pages/base"
 
 export function AdminListUsersPage() {

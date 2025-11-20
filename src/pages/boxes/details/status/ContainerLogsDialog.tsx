@@ -1,5 +1,5 @@
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useDboxedQueryClient } from "@/api/api.ts"
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog.tsx"
 import { LogViewerWithControls } from "../logs/LogViewerWithControls.tsx"
 

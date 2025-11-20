@@ -3,7 +3,7 @@ import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip.tsx";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import { formatTimeAgo } from "@/utils/time.ts";
-import type { components } from "@/api/models/schema";
+import type { components } from "@/api/models/dboxed-schema";
 import { useEffect, useState } from "react";
 
 interface VolumeMountBadgeProps {

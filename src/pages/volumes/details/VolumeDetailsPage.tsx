@@ -10,8 +10,8 @@ import { Button } from "@/components/ui/button.tsx"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx"
 import { AlertTriangle, Unlock } from "lucide-react"
-import { useDboxedQueryClient } from "@/api/api.ts"
-import type { components } from "@/api/models/schema";
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import type { components } from "@/api/models/dboxed-schema";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 

@@ -5,7 +5,7 @@ import { LabelAndValue } from "@/components/LabelAndValue.tsx";
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import { TimeAgo } from "@/components/TimeAgo.tsx";
-import type { components } from "@/api/models/schema";
+import type { components } from "@/api/models/dboxed-schema";
 
 interface GeneralInfoCardProps {
   data: components["schemas"]["Volume"]

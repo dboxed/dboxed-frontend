@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
 import { Network } from "lucide-react"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
-import type { components } from "@/api/models/schema";
+import type { components } from "@/api/models/dboxed-schema";
 
 
 interface CreateNetworkDialogProps {

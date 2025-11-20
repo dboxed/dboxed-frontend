@@ -2,13 +2,13 @@ import { Button } from "@/components/ui/button"
 import { useNavigate } from "react-router"
 import type { ColumnDef } from "@tanstack/react-table"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
-import type { components } from "@/api/models/schema";
+import type { components } from "@/api/models/dboxed-schema";
 import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { CreateVolumeDialog } from "./create/CreateVolumeDialog.tsx";
 import { VolumeMountBadge } from "./details/VolumeMountBadge.tsx";
-import { useDboxedQueryClient } from "@/api/api.ts";
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts";
 import { TimeAgo } from "@/components/TimeAgo.tsx";
 
 export function ListVolumesPage() {

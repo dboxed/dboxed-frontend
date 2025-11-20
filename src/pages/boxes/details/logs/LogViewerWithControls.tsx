@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
 import { InstanceSelector } from "./InstanceSelector.tsx"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 import { StreamingLogViewer } from "@/pages/boxes/details/logs/StreamingLogViewer.tsx";
 
 interface LogViewerWithControlsProps {

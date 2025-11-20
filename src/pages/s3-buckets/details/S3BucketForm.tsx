@@ -1,8 +1,8 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
-import { useDboxedQueryClient } from "@/api/api.ts"
-import type { components } from "@/api/models/schema"
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import type { components } from "@/api/models/dboxed-schema"
 import type { UseFormReturn, FieldValues, Path } from "react-hook-form"
 
 export type ProviderType = "amazon-s3" | "hetzner" | "generic"

@@ -10,7 +10,7 @@ import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import { ReconcileLogsDialog } from "./status/ReconcileLogsDialog.tsx"
 import { TimeAgo } from "@/components/TimeAgo.tsx"
 import { BoxStatusBadge } from "@/pages/boxes/details/status/BoxStatusBadge.tsx"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 import { ContainersCard } from "./ContainersCard.tsx"
 
 interface GeneralInfoCardProps {

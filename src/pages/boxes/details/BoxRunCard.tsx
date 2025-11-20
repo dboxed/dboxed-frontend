@@ -2,13 +2,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Label } from "@/components/ui/label.tsx"
-import { useDboxedQueryClient } from "@/api/api"
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 import { useState } from "react"
 import { toast } from "sonner"
 import { Copy, Key, RefreshCw } from "lucide-react"
 import { envVars, DEFAULT_API_URL } from "@/env.ts"
 import { randomString } from "@/utils/random.ts"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 
 interface BoxTokenCardProps {
   box: components["schemas"]["Box"]

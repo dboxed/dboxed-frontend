@@ -1,5 +1,5 @@
-import { useDboxedQueryClient } from "@/api/api"
-import type { paths } from "@/api/models/schema"
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import type { paths } from "@/api/models/dboxed-schema"
 import { BaseDetailsPage, type BaseDetailsPagePropsBase } from "./BaseDetailsPage"
 import { useEffect, useMemo, useState } from "react";
 

@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 
 interface TokenScopeBadgeProps {
   token: components["schemas"]["Token"]

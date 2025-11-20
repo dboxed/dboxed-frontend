@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useDboxedQueryClient } from "@/api/api.ts"
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 import { BasePage } from "@/pages/base/BasePage.tsx"
 import { NetworksOverview } from "./NetworksOverview.tsx"
 import { BoxesOverview } from "./BoxesOverview.tsx"

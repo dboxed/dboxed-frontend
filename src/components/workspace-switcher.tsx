@@ -10,9 +10,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar, } from "@/components/ui/sidebar"
-import type { components } from "@/api/models/schema";
+import type { components } from "@/api/models/dboxed-schema";
 import { useLocation, useNavigate } from "react-router";
-import { useDboxedQueryClient } from "@/api/api.ts";
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts";
 import { useIsAdmin } from "@/api/auth.ts";
 import { CreateWorkspaceDialog } from "@/pages/workspaces/CreateWorkspaceDialog.tsx";
 

@@ -6,7 +6,7 @@ import { SimpleFormDialog } from "@/components/SimpleFormDialog.tsx"
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Network } from "lucide-react"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 
 interface NetbirdFormData {
   netbirdVersion: string

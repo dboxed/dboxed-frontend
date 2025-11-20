@@ -1,7 +1,7 @@
 import { BaseResourceDetailsPage } from "@/pages/base/BaseResourceDetailsPage.tsx"
 import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 import { GeneralInfoCard } from "./GeneralInfoCard.tsx"
 import { LoadBalancerConfigCard } from "./LoadBalancerConfigCard.tsx"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx"

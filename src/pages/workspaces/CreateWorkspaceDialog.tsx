@@ -2,7 +2,7 @@ import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessa
 import { Input } from "@/components/ui/input"
 import { BaseCreateDialog } from "@/components/BaseCreateDialog"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 
 interface CreateWorkspaceDialogProps {
   open: boolean

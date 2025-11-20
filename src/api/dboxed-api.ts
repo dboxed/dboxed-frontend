@@ -1,6 +1,6 @@
 import createFetchClient from "openapi-fetch";
 import createClient from "openapi-react-query";
-import type { paths } from "./models/schema";
+import type { paths } from "./models/dboxed-schema";
 import { useAuth } from "react-oidc-context";
 import { useEffect, useMemo } from "react";
 import { type EventSourceMessage, fetchEventSource } from "@microsoft/fetch-event-source";

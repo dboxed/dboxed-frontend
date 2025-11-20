@@ -4,7 +4,7 @@ import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import { Key } from "lucide-react"
 import { TimeAgo } from "@/components/TimeAgo.tsx"
 import { TokenScopeBadge } from "../TokenScopeBadge.tsx"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 
 interface TokenDetailsCardProps {
   token: components["schemas"]["Token"]

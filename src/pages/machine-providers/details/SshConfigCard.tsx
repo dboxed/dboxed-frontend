@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { SimpleInputDialog } from "@/components/SimpleInputDialog.tsx"
-import type { components } from "@/api/models/schema"
+import type { components } from "@/api/models/dboxed-schema"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx";
 
 interface SshConfigCardProps {

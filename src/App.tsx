@@ -38,7 +38,11 @@ const queryClient = new QueryClient({
   }
 });
 
-export const stripe = loadStripe(envVars.VITE_STRIPE_PUBLISHABLE_KEY, {});
+export const stripe = loadStripe(envVars.VITE_STRIPE_PUBLISHABLE_KEY, {
+  betas: [
+    'custom_checkout_tax_id_1',
+  ],
+});
 
 export default function App() {
   return (

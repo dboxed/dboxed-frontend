@@ -27,7 +27,8 @@ import CookieConsentComponent from "@/components/cookie-consent/CookieConsent.ts
 import { envVars, isDboxedCloud } from "@/env.ts";
 import { NetworkingPage } from "@/pages/networking/NetworkingPage.tsx";
 import { BillingPage } from "@/pages/billing/BillingPage.tsx";
-import {loadStripe} from '@stripe/stripe-js';
+import {loadStripe} from '@stripe/stripe-js/pure';
+import {type Stripe} from '@stripe/stripe-js';
 import { StripeCheckoutReturn } from "@/pages/billing/stripe/StripeCheckoutReturn.tsx";
 
 const queryClient = new QueryClient({
@@ -38,11 +39,14 @@ const queryClient = new QueryClient({
   }
 });
 
-export const stripe = loadStripe(envVars.VITE_STRIPE_PUBLISHABLE_KEY, {
+// we only load stripe when a VITE_STRIPE_PUBLISHABLE_KEY is available, as otherwise open source users would be quite
+// annoyed by stripe constantly calling home
+// eslint-disable-next-line react-refresh/only-export-components
+export const stripe: Promise<Stripe | null> = (envVars.VITE_STRIPE_PUBLISHABLE_KEY ? loadStripe(envVars.VITE_STRIPE_PUBLISHABLE_KEY, {
   betas: [
     'custom_checkout_tax_id_1',
   ],
-});
+}) : null)!;
 
 export default function App() {
   return (

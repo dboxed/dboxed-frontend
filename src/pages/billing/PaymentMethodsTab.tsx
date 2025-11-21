@@ -180,7 +180,7 @@ export function PaymentMethodsTab() {
                 <Button
                   variant="outline"
                   size="sm"
-                  disabled={deletePaymentMethodMutation.isPending || isDefault}
+                  disabled={deletePaymentMethodMutation.isPending}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>

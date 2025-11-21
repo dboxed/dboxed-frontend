@@ -39,6 +39,40 @@ export interface paths {
         patch: operations["patch-v1-workspaces-by-workspace-id-billing-customer"];
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/billing/customer/tax-ids": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID billing customer tax ids */
+        post: operations["post-v1-workspaces-by-workspace-id-billing-customer-tax-ids"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/billing/customer/tax-ids/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete v1 workspaces by workspace ID billing customer tax ids by ID */
+        delete: operations["delete-v1-workspaces-by-workspace-id-billing-customer-tax-ids-by-id"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/billing/payment-methods": {
         parameters: {
             query?: never;
@@ -119,6 +153,15 @@ export interface components {
             postalCode?: string;
             state?: string;
         };
+        CreateTaxId: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            type: string;
+            value: string;
+        };
         Customer: {
             /**
              * Format: uri
@@ -129,6 +172,7 @@ export interface components {
             defaultPaymentMethod?: string;
             email: string;
             name: string;
+            taxIds: components["schemas"]["TaxId"][] | null;
         };
         ErrorDetail: {
             /** @description Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id' */
@@ -6208,6 +6252,11 @@ export interface components {
             total_count: number;
             url: string;
         };
+        TaxId: {
+            id: string;
+            type: string;
+            value: string;
+        };
         UpdateCustomer: {
             /**
              * Format: uri
@@ -6311,6 +6360,79 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Customer"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-billing-customer-tax-ids": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateTaxId"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-v1-workspaces-by-workspace-id-billing-customer-tax-ids-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
             /** @description Error */

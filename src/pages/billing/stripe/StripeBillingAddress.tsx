@@ -8,6 +8,11 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button.tsx";
 import type { components } from "@/api/models/dboxed-cloud-schema";
 import { deepClone, deepEqual } from "@/utils/utils.ts";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
+import { Plus, Trash2 } from "lucide-react";
+import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx";
+import { AddTaxIdDialog } from "./AddTaxIdDialog";
+import { getTaxIdByCountryAndEnum } from "./taxIdTypes";
 
 interface Props {
   allowIncomplete?: boolean
@@ -18,6 +23,8 @@ export const StripeBillingAddress = (props: Props) => {
   const { workspaceId } = useSelectedWorkspaceId()
 
   const [formCustomer, setFormCustomer] = useState<any>({})
+  const [formCustomerComplete, setFormCustomerComplete] = useState(false)
+  const [isAddTaxIdDialogOpen, setIsAddTaxIdDialogOpen] = useState(false)
 
   const client = useDboxedCloudQueryClient();
   const customerQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/billing/customer', {
@@ -29,6 +36,8 @@ export const StripeBillingAddress = (props: Props) => {
   })
 
   const mutation = client.useMutation("patch", "/v1/workspaces/{workspaceId}/billing/customer");
+  const addTaxIdMutation = client.useMutation("post", "/v1/workspaces/{workspaceId}/billing/customer/tax-ids");
+  const deleteTaxIdMutation = client.useMutation("delete", "/v1/workspaces/{workspaceId}/billing/customer/tax-ids/{id}");
 
   const buildUpdateCustomer = () => {
     if (!customerQuery.data) {
@@ -94,18 +103,63 @@ export const StripeBillingAddress = (props: Props) => {
   }
 
   const handleChange = useCallback((event: StripeAddressElementChangeEvent) => {
-    if (event.value.name && (props.allowIncomplete || event.complete)) {
-      setFormCustomer(event.value)
-    } else {
-      setFormCustomer({})
-    }
-  }, [])
+    setFormCustomer(event.value)
+    setFormCustomerComplete(event.complete)
+   }, [])
+
+  const handleDeleteTaxId = async (taxIdId: string) => {
+    deleteTaxIdMutation.mutate({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+          id: taxIdId,
+        }
+      },
+    }, {
+      onSuccess: () => {
+        toast.success("Tax ID deleted successfully!");
+        customerQuery.refetch();
+      },
+      onError: (error) => {
+        toast.error("Failed to delete tax ID", {
+          description: error.detail || "An error occurred while deleting the tax ID."
+        })
+      }
+    })
+  };
+
+  const handleAddTaxId = async (formData: { type: string; value: string }) => {
+    addTaxIdMutation.mutate({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+        }
+      },
+      body: {
+        type: formData.type,
+        value: formData.value,
+      },
+    }, {
+      onSuccess: () => {
+        toast.success("Tax ID added successfully!");
+        customerQuery.refetch();
+        setIsAddTaxIdDialogOpen(false);
+      },
+      onError: (error) => {
+        toast.error("Failed to add tax ID", {
+          description: error.detail || "An error occurred while adding the tax ID."
+        })
+      }
+    })
+
+    return true;
+  };
 
   if (customerQuery.isLoading || customerQuery.isFetching) {
     return <div>Loading...</div>
   }
 
-  let defaultValues: any = {
+  const defaultValues: any = {
     name: undefined,
   }
   if (customerQuery.data) {
@@ -122,19 +176,94 @@ export const StripeBillingAddress = (props: Props) => {
     }
   }
 
+  const taxIds = customerQuery.data?.taxIds || [];
+
   return <Elements stripe={stripe}>
-    <div className="max-w-lg mx-auto mt-6">
-      <div className="bg-white border border-gray-200 rounded-lg shadow p-6">
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <AddressElement onChange={handleChange} options={{
-              mode: 'billing',
-              defaultValues: defaultValues,
-            }}/>
-          </div>
-          <Button disabled={!modified || mutation.isPending} className={"w-full"} >{mutation.isPending ? "Saving..." : "Save"}</Button>
-        </form>
+    <div className="max-w-6xl mx-auto mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Billing Address</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <AddressElement onChange={handleChange} options={{
+                  mode: 'billing',
+                  defaultValues: defaultValues,
+                }}/>
+              </div>
+              <Button disabled={!modified || mutation.isPending || !formCustomerComplete} className={"w-full"} >{mutation.isPending ? "Saving..." : "Save"}</Button>
+            </form>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle>Tax IDs</CardTitle>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsAddTaxIdDialogOpen(true)}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Tax ID
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {taxIds.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-4">
+                No tax IDs configured. Add a tax ID for your business.
+              </p>
+            ) : (
+              <div className="space-y-2">
+                {taxIds.map((taxId) => {
+                  const taxIdType = getTaxIdByCountryAndEnum(customerQuery.data?.address?.country, taxId.type)
+                  const displayName = taxIdType?.label || taxId.type;
+
+                  return (
+                    <div
+                      key={taxId.id}
+                      className="flex items-center justify-between p-3 border rounded-lg"
+                    >
+                      <div>
+                        <p className="text-sm font-medium">{displayName}</p>
+                        <p className="text-sm text-muted-foreground">{taxId.value}</p>
+                      </div>
+                      <ConfirmationDialog
+                        trigger={
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={deleteTaxIdMutation.isPending}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        }
+                        title="Delete Tax ID"
+                        description="Are you sure you want to delete this tax ID? This action cannot be undone."
+                        confirmText="Delete"
+                        onConfirm={() => handleDeleteTaxId(taxId.id)}
+                        destructive
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
+
+      <AddTaxIdDialog
+        open={isAddTaxIdDialogOpen}
+        onOpenChange={setIsAddTaxIdDialogOpen}
+        onSave={handleAddTaxId}
+        isLoading={addTaxIdMutation.isPending}
+        country={formCustomer.address?.country}
+      />
     </div>
   </Elements>
 }

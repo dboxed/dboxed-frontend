@@ -12,6 +12,8 @@ import { toast } from "sonner";
 import type { components } from "@/api/models/dboxed-cloud-schema";
 import { SimpleDialog } from "@/components/SimpleDialog";
 import { StripeCheckout } from "@/pages/billing/stripe/StripeCheckout";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { isDboxedCloudTestInstance } from "@/env";
 
 type StripePaymentMethod = components["schemas"]["StripePaymentMethod"];
 
@@ -270,6 +272,29 @@ export function PaymentMethodsTab() {
           Add Payment Method
         </Button> : null}
       </div>
+
+      {isDboxedCloudTestInstance() && (
+        <Alert className="mb-6" variant={"destructive"}>
+          <CreditCard className="h-4 w-4" />
+          <AlertTitle>Dboxed Test Instance</AlertTitle>
+          <AlertDescription>
+            <p>
+              This is a test environment for Dboxed Cloud. Payments will only be simulated.<br/>
+              You can use Stripe test cards to add payment methods.
+              Visit{" "}
+              <a
+                href="https://docs.stripe.com/testing#cards"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-primary"
+              >
+                Stripe's testing documentation
+              </a>{" "}
+              for a list of test card numbers.
+            </p>
+          </AlertDescription>
+        </Alert>
+      )}
 
       {data.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-center">

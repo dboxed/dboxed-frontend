@@ -11,6 +11,7 @@ const initialEnvVars = {
   VITE_OIDC_SCOPE: '${VITE_OIDC_SCOPE}',
 
   VITE_IS_CLOUD: '${VITE_IS_CLOUD}',
+  VITE_IS_CLOUD_TEST_INSTANCE: '${VITE_IS_CLOUD_TEST_INSTANCE}',
   VITE_STRIPE_PUBLISHABLE_KEY: '${VITE_STRIPE_PUBLISHABLE_KEY}',
 
   VITE_MATOMO_TAG_MANAGER: '${VITE_MATOMO_TAG_MANAGER}',
@@ -33,4 +34,8 @@ export const envVars = buildEnvVars()
 
 export const isDboxedCloud = () => {
   return envVars.VITE_IS_CLOUD === "true" || envVars.VITE_IS_CLOUD === "1"
+}
+
+  export const isDboxedCloudTestInstance = () => {
+  return envVars.VITE_IS_CLOUD_TEST_INSTANCE === "true" || envVars.VITE_IS_CLOUD_TEST_INSTANCE === "1"
 }

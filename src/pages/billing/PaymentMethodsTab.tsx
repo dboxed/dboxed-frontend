@@ -22,7 +22,7 @@ export function PaymentMethodsTab() {
   const client = useDboxedCloudQueryClient();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
-  const customer = client.useQuery("get", "/v1/workspaces/{workspaceId}/billing/customer", {
+  const customer = client.useQuery("get", "/v1/cloud/workspaces/{workspaceId}/billing/customer", {
     params: {
       path: {
         workspaceId: workspaceId!
@@ -30,7 +30,7 @@ export function PaymentMethodsTab() {
     }
   });
 
-  const paymentMethods = client.useQuery("get", "/v1/workspaces/{workspaceId}/billing/payment-methods", {
+  const paymentMethods = client.useQuery("get", "/v1/cloud/workspaces/{workspaceId}/billing/payment-methods", {
     params: {
       path: {
         workspaceId: workspaceId!
@@ -38,8 +38,8 @@ export function PaymentMethodsTab() {
     }
   });
 
-  const deletePaymentMethodMutation = client.useMutation("delete", "/v1/workspaces/{workspaceId}/billing/payment-methods/{id}");
-  const updateCustomerMutation = client.useMutation("patch", "/v1/workspaces/{workspaceId}/billing/customer");
+  const deletePaymentMethodMutation = client.useMutation("delete", "/v1/cloud/workspaces/{workspaceId}/billing/payment-methods/{id}");
+  const updateCustomerMutation = client.useMutation("patch", "/v1/cloud/workspaces/{workspaceId}/billing/customer");
 
   const handleDeletePaymentMethod = async (paymentMethodId: string) => {
     try {

@@ -21,25 +21,25 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/billing/customer": {
+    "/v1/cloud/workspaces/{workspaceId}/billing/customer": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get v1 workspaces by workspace ID billing customer */
-        get: operations["get-v1-workspaces-by-workspace-id-billing-customer"];
+        /** Get v1 cloud workspaces by workspace ID billing customer */
+        get: operations["get-v1-cloud-workspaces-by-workspace-id-billing-customer"];
         put?: never;
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        /** Patch v1 workspaces by workspace ID billing customer */
-        patch: operations["patch-v1-workspaces-by-workspace-id-billing-customer"];
+        /** Patch v1 cloud workspaces by workspace ID billing customer */
+        patch: operations["patch-v1-cloud-workspaces-by-workspace-id-billing-customer"];
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/billing/customer/tax-ids": {
+    "/v1/cloud/workspaces/{workspaceId}/billing/customer/tax-ids": {
         parameters: {
             query?: never;
             header?: never;
@@ -48,49 +48,15 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Post v1 workspaces by workspace ID billing customer tax ids */
-        post: operations["post-v1-workspaces-by-workspace-id-billing-customer-tax-ids"];
+        /** Post v1 cloud workspaces by workspace ID billing customer tax ids */
+        post: operations["post-v1-cloud-workspaces-by-workspace-id-billing-customer-tax-ids"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/billing/customer/tax-ids/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Delete v1 workspaces by workspace ID billing customer tax ids by ID */
-        delete: operations["delete-v1-workspaces-by-workspace-id-billing-customer-tax-ids-by-id"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/workspaces/{workspaceId}/billing/payment-methods": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get v1 workspaces by workspace ID billing payment methods */
-        get: operations["get-v1-workspaces-by-workspace-id-billing-payment-methods"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/workspaces/{workspaceId}/billing/payment-methods/{id}": {
+    "/v1/cloud/workspaces/{workspaceId}/billing/customer/tax-ids/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -100,14 +66,31 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** Delete v1 workspaces by workspace ID billing payment methods by ID */
-        delete: operations["delete-v1-workspaces-by-workspace-id-billing-payment-methods-by-id"];
+        /** Delete v1 cloud workspaces by workspace ID billing customer tax ids by ID */
+        delete: operations["delete-v1-cloud-workspaces-by-workspace-id-billing-customer-tax-ids-by-id"];
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/billing/stripe-checkout-session": {
+    "/v1/cloud/workspaces/{workspaceId}/billing/payment-methods": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 cloud workspaces by workspace ID billing payment methods */
+        get: operations["get-v1-cloud-workspaces-by-workspace-id-billing-payment-methods"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/cloud/workspaces/{workspaceId}/billing/payment-methods/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -116,23 +99,40 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Post v1 workspaces by workspace ID billing stripe checkout session */
-        post: operations["post-v1-workspaces-by-workspace-id-billing-stripe-checkout-session"];
-        delete?: never;
+        post?: never;
+        /** Delete v1 cloud workspaces by workspace ID billing payment methods by ID */
+        delete: operations["delete-v1-cloud-workspaces-by-workspace-id-billing-payment-methods-by-id"];
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/billing/stripe-checkout-session/{id}": {
+    "/v1/cloud/workspaces/{workspaceId}/billing/stripe-checkout-session": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get v1 workspaces by workspace ID billing stripe checkout session by ID */
-        get: operations["get-v1-workspaces-by-workspace-id-billing-stripe-checkout-session-by-id"];
+        get?: never;
+        put?: never;
+        /** Post v1 cloud workspaces by workspace ID billing stripe checkout session */
+        post: operations["post-v1-cloud-workspaces-by-workspace-id-billing-stripe-checkout-session"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/cloud/workspaces/{workspaceId}/billing/stripe-checkout-session/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 cloud workspaces by workspace ID billing stripe checkout session by ID */
+        get: operations["get-v1-cloud-workspaces-by-workspace-id-billing-stripe-checkout-session-by-id"];
         put?: never;
         post?: never;
         delete?: never;
@@ -6305,7 +6305,7 @@ export interface operations {
             };
         };
     };
-    "get-v1-workspaces-by-workspace-id-billing-customer": {
+    "get-v1-cloud-workspaces-by-workspace-id-billing-customer": {
         parameters: {
             query?: never;
             header?: never;
@@ -6337,7 +6337,7 @@ export interface operations {
             };
         };
     };
-    "patch-v1-workspaces-by-workspace-id-billing-customer": {
+    "patch-v1-cloud-workspaces-by-workspace-id-billing-customer": {
         parameters: {
             query?: never;
             header?: never;
@@ -6373,7 +6373,7 @@ export interface operations {
             };
         };
     };
-    "post-v1-workspaces-by-workspace-id-billing-customer-tax-ids": {
+    "post-v1-cloud-workspaces-by-workspace-id-billing-customer-tax-ids": {
         parameters: {
             query?: never;
             header?: never;
@@ -6411,7 +6411,7 @@ export interface operations {
             };
         };
     };
-    "delete-v1-workspaces-by-workspace-id-billing-customer-tax-ids-by-id": {
+    "delete-v1-cloud-workspaces-by-workspace-id-billing-customer-tax-ids-by-id": {
         parameters: {
             query?: never;
             header?: never;
@@ -6446,7 +6446,7 @@ export interface operations {
             };
         };
     };
-    "get-v1-workspaces-by-workspace-id-billing-payment-methods": {
+    "get-v1-cloud-workspaces-by-workspace-id-billing-payment-methods": {
         parameters: {
             query?: never;
             header?: never;
@@ -6478,7 +6478,7 @@ export interface operations {
             };
         };
     };
-    "delete-v1-workspaces-by-workspace-id-billing-payment-methods-by-id": {
+    "delete-v1-cloud-workspaces-by-workspace-id-billing-payment-methods-by-id": {
         parameters: {
             query?: never;
             header?: never;
@@ -6513,7 +6513,7 @@ export interface operations {
             };
         };
     };
-    "post-v1-workspaces-by-workspace-id-billing-stripe-checkout-session": {
+    "post-v1-cloud-workspaces-by-workspace-id-billing-stripe-checkout-session": {
         parameters: {
             query?: never;
             header?: never;
@@ -6549,7 +6549,7 @@ export interface operations {
             };
         };
     };
-    "get-v1-workspaces-by-workspace-id-billing-stripe-checkout-session-by-id": {
+    "get-v1-cloud-workspaces-by-workspace-id-billing-stripe-checkout-session-by-id": {
         parameters: {
             query?: never;
             header?: never;

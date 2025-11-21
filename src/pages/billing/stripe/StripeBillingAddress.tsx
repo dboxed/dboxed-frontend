@@ -27,7 +27,7 @@ export const StripeBillingAddress = (props: Props) => {
   const [isAddTaxIdDialogOpen, setIsAddTaxIdDialogOpen] = useState(false)
 
   const client = useDboxedCloudQueryClient();
-  const customerQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/billing/customer', {
+  const customerQuery = client.useQuery('get', '/v1/cloud/workspaces/{workspaceId}/billing/customer', {
     params: {
       path: {
         workspaceId: workspaceId!
@@ -35,9 +35,9 @@ export const StripeBillingAddress = (props: Props) => {
     }
   })
 
-  const mutation = client.useMutation("patch", "/v1/workspaces/{workspaceId}/billing/customer");
-  const addTaxIdMutation = client.useMutation("post", "/v1/workspaces/{workspaceId}/billing/customer/tax-ids");
-  const deleteTaxIdMutation = client.useMutation("delete", "/v1/workspaces/{workspaceId}/billing/customer/tax-ids/{id}");
+  const mutation = client.useMutation("patch", "/v1/cloud/workspaces/{workspaceId}/billing/customer");
+  const addTaxIdMutation = client.useMutation("post", "/v1/cloud/workspaces/{workspaceId}/billing/customer/tax-ids");
+  const deleteTaxIdMutation = client.useMutation("delete", "/v1/cloud/workspaces/{workspaceId}/billing/customer/tax-ids/{id}");
 
   const buildUpdateCustomer = () => {
     if (!customerQuery.data) {

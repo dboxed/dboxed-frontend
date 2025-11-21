@@ -11,7 +11,7 @@ export const StripeCheckout = () => {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedCloudQueryClient();
 
-  const checkoutMutation = client.useMutation("post", "/v1/workspaces/{workspaceId}/billing/stripe-checkout-session");
+  const checkoutMutation = client.useMutation("post", "/v1/cloud/workspaces/{workspaceId}/billing/stripe-checkout-session");
   const [checkoutSession, setCheckoutSession] = useState<components["schemas"]["StripeCheckoutSession"]>()
 
   const returnUrl = window.location.protocol + "//" + window.location.host + `/workspaces/${workspaceId}/billing/checkout-return?session_id={CHECKOUT_SESSION_ID}`

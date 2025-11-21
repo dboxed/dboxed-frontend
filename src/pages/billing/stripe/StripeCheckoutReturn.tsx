@@ -13,7 +13,7 @@ export const StripeCheckoutReturn = () => {
   const navigate = useNavigate()
 
   const sessionId = params.get("session_id") || "";
-  const checkoutSession = client.useQuery("get", "/v1/workspaces/{workspaceId}/billing/stripe-checkout-session/{id}", {
+  const checkoutSession = client.useQuery("get", "/v1/cloud/workspaces/{workspaceId}/billing/stripe-checkout-session/{id}", {
     params: {
       path: {
         workspaceId: workspaceId!,
@@ -24,7 +24,7 @@ export const StripeCheckoutReturn = () => {
     enabled: auth.isAuthenticated,
   });
 
-  const updateCustomerMutation = client.useMutation("patch", "/v1/workspaces/{workspaceId}/billing/customer");
+  const updateCustomerMutation = client.useMutation("patch", "/v1/cloud/workspaces/{workspaceId}/billing/customer");
   const [didUpdate, setDidUpdate] = useState(false)
 
   useEffect(() => {

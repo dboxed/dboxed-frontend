@@ -73,6 +73,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/cloud/workspaces/{workspaceId}/billing/invoices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 cloud workspaces by workspace ID billing invoices */
+        get: operations["get-v1-cloud-workspaces-by-workspace-id-billing-invoices"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/cloud/workspaces/{workspaceId}/billing/payment-methods": {
         parameters: {
             query?: never;
@@ -135,6 +152,23 @@ export interface paths {
         get: operations["get-v1-cloud-workspaces-by-workspace-id-billing-stripe-checkout-session-by-id"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/stripe/webhook": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 stripe webhook */
+        post: operations["post-v1-stripe-webhook"];
         delete?: never;
         options?: never;
         head?: never;
@@ -218,6 +252,25 @@ export interface components {
              */
             readonly $schema?: string;
             Ok: boolean;
+        };
+        Invoice: {
+            /** Format: date-time */
+            createdTime: string;
+            id: string;
+            invoiceNumber: string;
+            pdfUrl: string | null;
+            status: string;
+            totalAmount: string;
+        };
+        ListBodyInvoice: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["Invoice"][] | null;
+            /** Format: int64 */
+            total_count: number;
         };
         ListBodyPaymentMethod: {
             /**
@@ -6446,6 +6499,38 @@ export interface operations {
             };
         };
     };
+    "get-v1-cloud-workspaces-by-workspace-id-billing-invoices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListBodyInvoice"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-v1-cloud-workspaces-by-workspace-id-billing-payment-methods": {
         parameters: {
             query?: never;
@@ -6569,6 +6654,43 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["StripeCheckoutSession"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-stripe-webhook": {
+        parameters: {
+            query?: never;
+            header?: {
+                "Stripe-Signature"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/octet-stream": string;
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
             /** @description Error */

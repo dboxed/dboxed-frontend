@@ -2,6 +2,7 @@ import { BasePage } from "@/pages/base/BasePage.tsx"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx"
 import { PaymentMethodsTab } from "./PaymentMethodsTab"
 import { BillingAddressTab } from "./BillingAddressTab"
+import { InvoicesTab } from "./InvoicesTab"
 
 export function BillingPage() {
   return (
@@ -14,11 +15,16 @@ export function BillingPage() {
           </p>
         </div>
 
-        <Tabs defaultValue="payment-methods" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
+        <Tabs defaultValue="invoices" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="invoices">Invoices</TabsTrigger>
             <TabsTrigger value="payment-methods">Payment Methods</TabsTrigger>
             <TabsTrigger value="billing-address">Billing Address</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="invoices">
+            <InvoicesTab />
+          </TabsContent>
 
           <TabsContent value="payment-methods">
             <PaymentMethodsTab />

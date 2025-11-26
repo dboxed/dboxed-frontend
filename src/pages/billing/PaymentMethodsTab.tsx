@@ -5,14 +5,13 @@ import { Badge } from "@/components/ui/badge.tsx";
 import { useDboxedCloudQueryClient } from "@/api/dboxed-cloud-api.ts";
 import { DataTable } from "@/components/data-table.tsx";
 import { BasePage } from "@/pages/base/BasePage.tsx";
-import { CreditCard, Plus, Trash2 } from "lucide-react";
+import { CreditCard, Trash2 } from "lucide-react";
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx";
 import { toast } from "sonner";
 import type { components } from "@/api/models/dboxed-cloud-schema";
-import { SimpleDialog } from "@/components/SimpleDialog";
-import { StripeCheckout } from "@/pages/billing/stripe/StripeCheckout";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { isDboxedCloudTestInstance } from "@/env";
+import { AddPaymentMethodDialog } from "@/pages/billing/stripe/AddPaymentMethodDialog.tsx";
 
 type StripePaymentMethod = components["schemas"]["StripePaymentMethod"];
 
@@ -52,8 +51,10 @@ export function PaymentMethodsTab() {
       toast.success("Payment method deleted successfully");
       paymentMethods.refetch();
       return true
-    } catch (error) {
-      toast.error("Failed to delete payment method");
+    } catch (error: any) {
+      toast.error("Failed to delete payment method", {
+        description: error.detail || "An error occurred while deleting the payment method."
+      });
       console.error("Failed to delete payment method:", error);
       return false
     }
@@ -302,20 +303,4 @@ export function PaymentMethodsTab() {
       )}
     </BasePage>
   );
-}
-
-export function AddPaymentMethodDialog() {
-  return <SimpleDialog
-    trigger={<Button className="mt-4">
-      <Plus className="mr-2 h-4 w-4"/>
-      Add Your First Payment Method
-    </Button>}
-    //onOpenChange={setIsAddDialogOpen}
-    title="Add Payment Method"
-    showSave={false}
-    showCancel={false}
-    wide={true}
-  >
-    <StripeCheckout/>
-  </SimpleDialog>
 }

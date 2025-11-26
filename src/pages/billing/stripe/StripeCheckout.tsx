@@ -2,12 +2,16 @@ import { useDboxedCloudQueryClient } from "@/api/dboxed-cloud-api.ts";
 import { CheckoutProvider } from '@stripe/react-stripe-js/checkout';
 import { stripe } from "@/App.tsx";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
-import { useEffect, useState } from "react";
+import { type RefObject, useEffect, useState } from "react";
 import type { components } from "@/api/models/dboxed-cloud-schema";
 import { toast } from "sonner";
 import { StripeCheckoutForm } from "@/pages/billing/stripe/StripeCheckoutForm.tsx";
 
-export const StripeCheckout = () => {
+interface StripeCheckoutProps {
+  handleSaveRef: RefObject<() => Promise<boolean>>
+}
+
+export const StripeCheckout = ({handleSaveRef}: StripeCheckoutProps) => {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedCloudQueryClient();
 
@@ -59,8 +63,7 @@ export const StripeCheckout = () => {
       stripe={stripe}
       options={options}
     >
-      <StripeCheckoutForm/>
+      <StripeCheckoutForm handleSaveRef={handleSaveRef}/>
     </CheckoutProvider>
   );
 }
-

@@ -23,7 +23,6 @@ export function AddPaymentMethodDialog() {
     showSave={true}
     showCancel={true}
     onSave={handleSave}
-    wide={true}
   >
     <StripeCheckout handleSaveRef={ref}/>
   </SimpleDialog>

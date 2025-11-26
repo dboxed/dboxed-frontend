@@ -74,22 +74,24 @@ export function SimpleDialog({
 
   const realOpen = open !== undefined ? open : managedOpen
 
+  const widthClass = wide ? "sm:max-w-[95vw] w-[80vw]" : "sm:max-w-lg"
+
   return <Dialog open={realOpen} onOpenChange={handleOpenChange}>
     <DialogTrigger asChild>
       {trigger}
     </DialogTrigger>
-    <DialogContent className="p-0 sm:max-w-lg max-h-[90vh] flex flex-col">
+    <DialogContent className={`p-0 ${widthClass} max-h-[90vh] flex flex-col`}>
       <DialogHeader className="border-b px-6 pt-6 pb-4 flex-shrink-0">
         <DialogTitle>{title}</DialogTitle>
         {description && <DialogDescription>
           {description}
         </DialogDescription>}
       </DialogHeader>
-      <div className="overflow-y-auto flex-shrink">
+      <ScrollArea className="overflow-y-auto flex-shrink">
         <div className="px-6 py-4">
           {children}
         </div>
-      </div>
+      </ScrollArea>
       <DialogFooter className="px-6 pt-4 pb-6 border-t flex-shrink-0">
         {showCancel && (
           <Button

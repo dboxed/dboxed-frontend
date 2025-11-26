@@ -62,7 +62,7 @@ export const StripeCheckoutForm = ({handleSaveRef}: StripeCheckoutFormProps) => 
     <div>
       <PaymentElement id="payment-element"/>
 
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2 mt-6 mb-6">
         <Checkbox
           id="business-purchase"
           checked={isPurchasingAsBusiness}

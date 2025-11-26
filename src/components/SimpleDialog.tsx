@@ -78,19 +78,19 @@ export function SimpleDialog({
     <DialogTrigger asChild>
       {trigger}
     </DialogTrigger>
-    <DialogContent className="p-0 sm:max-w-lg">
-      <DialogHeader className="sticky top-0 z-10 border-b px-6 pt-6 pb-4">
+    <DialogContent className="p-0 sm:max-w-lg max-h-[90vh] flex flex-col">
+      <DialogHeader className="border-b px-6 pt-6 pb-4 flex-shrink-0">
         <DialogTitle>{title}</DialogTitle>
         {description && <DialogDescription>
           {description}
         </DialogDescription>}
       </DialogHeader>
-      <div className={wide ? "flex-1 min-h-0" : "py-4"}>
-        <ScrollArea className="h-[400px] px-6">
+      <div className="overflow-y-auto flex-shrink">
+        <div className="px-6 py-4">
           {children}
-        </ScrollArea>
+        </div>
       </div>
-      <DialogFooter className="px-6 pt-4 pb-6">
+      <DialogFooter className="px-6 pt-4 pb-6 border-t flex-shrink-0">
         {showCancel && (
           <Button
             type="button"

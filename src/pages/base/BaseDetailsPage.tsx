@@ -26,19 +26,21 @@ export function BaseDetailsPage<T, U>(props: BaseDetailsPageProps<T, U>) {
   const navigate = useNavigate()
 
   const handleDelete = async () => {
-    if (props.onDelete) {
-      try {
-        await props.onDelete()
-        toast.success(`${props.title} deleted successfully!`)
-      } catch (error: any) {
-        toast.error(`Failed to delete ${props.title.toLowerCase()}`, {
-          description: error.detail || `An error occurred while deleting the ${props.title.toLowerCase()}.`
-        })
-        return
-      }
+    if (!props.onDelete) {
+      return true
     }
-    if (props.afterDeleteUrl) {
-      navigate(props.afterDeleteUrl)
+    try {
+      await props.onDelete()
+      toast.success(`${props.title} deleted successfully!`)
+      if (props.afterDeleteUrl) {
+        navigate(props.afterDeleteUrl)
+      }
+      return true
+    } catch (error: any) {
+      toast.error(`Failed to delete ${props.title.toLowerCase()}`, {
+        description: error.detail || `An error occurred while deleting the ${props.title.toLowerCase()}.`
+      })
+      return false
     }
   }
 

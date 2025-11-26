@@ -1,173 +1,216 @@
-import { useState } from "react"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog.tsx"
-import { Button } from "@/components/ui/button.tsx"
-import { Input } from "@/components/ui/input.tsx"
-import { Label } from "@/components/ui/label.tsx"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
-import { Textarea } from "@/components/ui/textarea.tsx"
+import { SimpleFormDialog } from "@/components/SimpleFormDialog"
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 import { toast } from "sonner"
+import type { ReactNode } from "react"
 
 interface AddPortForwardDialogProps {
   boxId: string
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  trigger: ReactNode
   onSuccess: () => void
 }
 
-export function AddPortForwardDialog({ boxId, open, onOpenChange, onSuccess }: AddPortForwardDialogProps) {
+interface FormData {
+  protocol: string
+  sandboxPort: string
+  hostPortFirst: string
+  hostPortLast: string
+  description: string
+}
+
+export function AddPortForwardDialog({ boxId, trigger, onSuccess }: AddPortForwardDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [protocol, setProtocol] = useState<string>("tcp")
-  const [sandboxPort, setSandboxPort] = useState<string>("")
-  const [hostPortFirst, setHostPortFirst] = useState<string>("")
-  const [hostPortLast, setHostPortLast] = useState<string>("")
-  const [description, setDescription] = useState<string>("")
-
   const createPortForwardMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/port-forwards')
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    const sandboxPortNum = parseInt(sandboxPort, 10)
-    const hostPortFirstNum = parseInt(hostPortFirst, 10)
-    const hostPortLastNum = hostPortLast ? parseInt(hostPortLast, 10) : hostPortFirstNum
+  const handleSave = async (formData: FormData) => {
+    const sandboxPortNum = parseInt(formData.sandboxPort, 10)
+    const hostPortFirstNum = parseInt(formData.hostPortFirst, 10)
+    const hostPortLastNum = formData.hostPortLast ? parseInt(formData.hostPortLast, 10) : hostPortFirstNum
 
     if (isNaN(sandboxPortNum) || isNaN(hostPortFirstNum) || isNaN(hostPortLastNum)) {
       toast.error("Invalid port numbers")
-      return
+      return false
     }
 
     if (hostPortLastNum < hostPortFirstNum) {
       toast.error("Host port last must be greater than or equal to host port first")
-      return
+      return false
     }
 
-    createPortForwardMutation.mutate({
-      params: {
-        path: {
-          workspaceId: workspaceId!,
-          id: boxId
+    try {
+      await createPortForwardMutation.mutateAsync({
+        params: {
+          path: {
+            workspaceId: workspaceId!,
+            id: boxId
+          }
+        },
+        body: {
+          protocol: formData.protocol,
+          sandboxPort: sandboxPortNum,
+          hostPortFirst: hostPortFirstNum,
+          hostPortLast: hostPortLastNum,
+          description: formData.description || undefined
         }
-      },
-      body: {
-        protocol,
-        sandboxPort: sandboxPortNum,
-        hostPortFirst: hostPortFirstNum,
-        hostPortLast: hostPortLastNum,
-        description: description || undefined
-      }
-    }, {
-      onSuccess: () => {
-        toast.success("Port forward created successfully!")
-        onSuccess()
-        onOpenChange(false)
-        // Reset form
-        setProtocol("tcp")
-        setSandboxPort("")
-        setHostPortFirst("")
-        setHostPortLast("")
-        setDescription("")
-      },
-      onError: (error) => {
-        toast.error("Failed to create port forward", {
-          description: error.detail || "An error occurred while creating the port forward."
-        })
-      }
-    })
+      })
+
+      toast.success("Port forward created successfully!")
+      onSuccess()
+      return true
+    } catch (error: any) {
+      toast.error("Failed to create port forward", {
+        description: error.detail || "An error occurred while creating the port forward."
+      })
+      return false
+    }
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <form onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle>Add Port Forward</DialogTitle>
-            <DialogDescription>
-              Create a new port forwarding rule for this box
-            </DialogDescription>
-          </DialogHeader>
+    <SimpleFormDialog<FormData>
+      trigger={trigger}
+      title="Add Port Forward"
+      description="Create a new port forwarding rule for this box"
+      buildInitial={() => ({
+        protocol: "tcp",
+        sandboxPort: "",
+        hostPortFirst: "",
+        hostPortLast: "",
+        description: ""
+      })}
+      onSave={handleSave}
+      saveText="Create"
+    >
+      {(form) => (
+        <div className="grid gap-4">
+          <FormField
+            control={form.control}
+            name="protocol"
+            rules={{ required: "Protocol is required" }}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Protocol</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="tcp">TCP</SelectItem>
+                    <SelectItem value="udp">UDP</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="protocol">Protocol</Label>
-              <Select value={protocol} onValueChange={setProtocol}>
-                <SelectTrigger id="protocol">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="tcp">TCP</SelectItem>
-                  <SelectItem value="udp">UDP</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="hostPortFirst"
+              rules={{
+                required: "Host port is required",
+                pattern: {
+                  value: /^[0-9]+$/,
+                  message: "Must be a valid port number"
+                }
+              }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Host Port First</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      min="1"
+                      max="65535"
+                      placeholder="8080"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="hostPortFirst">Host Port First</Label>
-                <Input
-                  id="hostPortFirst"
-                  type="number"
-                  min="1"
-                  max="65535"
-                  placeholder="8080"
-                  value={hostPortFirst}
-                  onChange={(e) => setHostPortFirst(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="hostPortLast">Host Port Last (Optional)</Label>
-                <Input
-                  id="hostPortLast"
-                  type="number"
-                  min="1"
-                  max="65535"
-                  placeholder="8080"
-                  value={hostPortLast}
-                  onChange={(e) => setHostPortLast(e.target.value)}
-                />
-              </div>
-            </div>
-            
-            <div className="grid gap-2">
-              <Label htmlFor="sandboxPort">Sandbox Port</Label>
-              <Input
-                id="sandboxPort"
-                type="number"
-                min="1"
-                max="65535"
-                placeholder="8080"
-                value={sandboxPort}
-                onChange={(e) => setSandboxPort(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="grid gap-2">
-              <Label htmlFor="description">Description (Optional)</Label>
-              <Textarea
-                id="description"
-                placeholder="Web server port"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={2}
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name="hostPortLast"
+              rules={{
+                pattern: {
+                  value: /^[0-9]*$/,
+                  message: "Must be a valid port number"
+                }
+              }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Host Port Last (Optional)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      min="1"
+                      max="65535"
+                      placeholder="8080"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={createPortForwardMutation.isPending}>
-              {createPortForwardMutation.isPending ? "Creating..." : "Create"}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+          <FormField
+            control={form.control}
+            name="sandboxPort"
+            rules={{
+              required: "Sandbox port is required",
+              pattern: {
+                value: /^[0-9]+$/,
+                message: "Must be a valid port number"
+              }
+            }}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Sandbox Port</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    min="1"
+                    max="65535"
+                    placeholder="8080"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description (Optional)</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Web server port"
+                    rows={2}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      )}
+    </SimpleFormDialog>
   )
 }

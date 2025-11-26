@@ -3,7 +3,7 @@ import { ConfirmationDialog } from "@/components/ConfirmationDialog"
 import { Trash2 } from "lucide-react"
 
 interface DeleteButtonProps {
-  onDelete: () => void
+  onDelete: () => Promise<boolean>
   resourceName?: string
   disabled?: boolean
   isLoading?: boolean

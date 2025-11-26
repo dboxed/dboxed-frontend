@@ -31,24 +31,24 @@ export function VolumeDetailsPage() {
   )
 
   const handleForceRelease = async () => {
-    forceReleaseMountMutation.mutate({
-      params: {
-        path: {
-          workspaceId: workspaceId!,
-          id: volumeId,
+    try {
+      await forceReleaseMountMutation.mutateAsync({
+        params: {
+          path: {
+            workspaceId: workspaceId!,
+            id: volumeId,
+          }
         }
-      }
-    }, {
-      onSuccess: () => {
-        toast.success("Volume has been released!")
-        queryClient.invalidateQueries({ queryKey: ['get', '/v1/workspaces/{workspaceId}/volumes/{id}'] })
-      },
-      onError: (error) => {
-        toast.error("Failed to delete compose project", {
-          description: error.detail || "An error occurred while deleting the compose project."
-        })
-      }
-    })
+      })
+      toast.success("Volume has been released!")
+      queryClient.invalidateQueries({ queryKey: ['get', '/v1/workspaces/{workspaceId}/volumes/{id}'] })
+      return true
+    } catch (error: any) {
+      toast.error("Failed to delete compose project", {
+        description: error.detail || "An error occurred while deleting the compose project."
+      })
+      return false
+    }
   }
 
   return (

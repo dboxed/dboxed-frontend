@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { SimpleInputDialog } from "@/components/SimpleInputDialog.tsx"
@@ -11,8 +10,6 @@ interface SshConfigCardProps {
 }
 
 export function SshConfigCard({ data, save }: SshConfigCardProps) {
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-
   const handleSave = async (value: string) => {
     return await save({
       sshKeyPublic: value
@@ -28,28 +25,24 @@ export function SshConfigCard({ data, save }: SshConfigCardProps) {
             SSH key configuration for the machine provider.
           </CardDescription>
         </div>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => setIsEditDialogOpen(true)}
-        >
-          Edit SSH Key
-        </Button>
+        <SimpleInputDialog
+          trigger={<Button
+            type="button"
+            variant="outline"
+            size="sm"
+          >
+            Edit SSH Key
+          </Button>}
+          title="Edit SSH Configuration"
+          fieldLabel="SSH Public Key"
+          placeholder="Enter SSH public key"
+          defaultValue={""}
+          onSave={handleSave}
+        />
       </CardHeader>
       <CardContent>
         <LabelAndValue label={"SSH Key Fingerprint"} value={data.sshKeyFingerprint || "N/A"}/>
       </CardContent>
-
-      <SimpleInputDialog
-        open={isEditDialogOpen}
-        onOpenChange={setIsEditDialogOpen}
-        title="Edit SSH Configuration"
-        fieldLabel="SSH Public Key"
-        placeholder="Enter SSH public key"
-        defaultValue={""}
-        onSave={handleSave}
-      />
     </Card>
   )
 }

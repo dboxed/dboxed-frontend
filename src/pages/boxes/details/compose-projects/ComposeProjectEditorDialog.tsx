@@ -4,12 +4,17 @@ import { FormField, FormItem, FormControl, FormMessage } from "@/components/ui/f
 import { SimpleFormDialog } from "@/components/SimpleFormDialog.tsx"
 import { useCallback } from "react"
 import type { ComposeProjectInfo } from "@/pages/boxes/details/compose-projects/project-info.ts";
+import { Button } from "@/components/ui/button.tsx";
+import { Edit } from "lucide-react";
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts";
+import { toast } from "sonner";
+import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
+import type { components } from "@/api/models/dboxed-schema";
 
 interface ComposeProjectEditorDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  box: components["schemas"]["Box"]
   project: ComposeProjectInfo
-  onUpdateProject: (newContent: string) => Promise<boolean>
+  onSaved: () => void
 }
 
 interface EditProjectFormData {
@@ -17,11 +22,14 @@ interface EditProjectFormData {
 }
 
 export function ComposeProjectEditorDialog({
-  open,
-  onOpenChange,
+  box,
   project,
-  onUpdateProject
+  onSaved,
 }: ComposeProjectEditorDialogProps) {
+  const { workspaceId } = useSelectedWorkspaceId()
+  const client = useDboxedQueryClient()
+  const updateProjectMutation = client.useMutation('patch', '/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects/{composeName}')
+
   const buildInitialFormData = useCallback((): EditProjectFormData => {
     return {
       content: project.content
@@ -33,13 +41,43 @@ export function ComposeProjectEditorDialog({
     if (formData.content === project.content) {
       return true
     }
-    return await onUpdateProject(formData.content)
+
+    return new Promise<boolean>(resolve => {
+      updateProjectMutation.mutate({
+        params: {
+          path: {
+            workspaceId: workspaceId!,
+            id: box.id,
+            composeName: project.name,
+          }
+        },
+        body: {
+          composeProject: formData.content,
+        }
+      }, {
+        onSuccess: () => {
+          toast.success("Compose project updated successfully!")
+          resolve(true)
+          onSaved()
+        },
+        onError: (error) => {
+          toast.error("Failed to update compose project", {
+            description: error.detail || "An error occurred while updating the compose project."
+          })
+          resolve(false)
+        }
+      })
+    })
   }
 
   return (
     <SimpleFormDialog<EditProjectFormData>
-      open={open}
-      onOpenChange={onOpenChange}
+      trigger={<Button
+        variant="outline"
+        size="sm"
+      >
+        <Edit className="w-4 h-4"/>
+      </Button>}
       title="Edit Compose Project"
       buildInitial={buildInitialFormData}
       onSave={handleSave}

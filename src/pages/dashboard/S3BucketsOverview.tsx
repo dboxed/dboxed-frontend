@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router"
-import { useState } from "react"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 import { Database } from "lucide-react"
@@ -13,7 +12,6 @@ export function S3BucketsOverview() {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
   // Fetch S3 buckets
   const s3BucketsQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/s3-buckets', {
@@ -65,21 +63,16 @@ export function S3BucketsOverview() {
         isLoading={s3BucketsQuery.isLoading}
         error={!!s3BucketsQuery.error}
         items={items}
+        addNewDialog={CreateS3BucketDialog}
         emptyState={{
           message: "No S3 buckets configured yet",
           createButtonText: "Add First S3 Bucket",
-          onCreateClick: () => setCreateDialogOpen(true),
         }}
         actions={{
           viewAllText: "View All",
           onViewAllClick: () => navigate(`/workspaces/${workspaceId}/s3-buckets`),
           addNewText: "Add New",
-          onAddNewClick: () => setCreateDialogOpen(true),
         }}
-      />
-      <CreateS3BucketDialog
-        open={createDialogOpen}
-        onOpenChange={setCreateDialogOpen}
       />
     </>
   )

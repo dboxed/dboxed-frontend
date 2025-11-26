@@ -2,10 +2,10 @@ import { BaseCreateDialog } from "@/components/BaseCreateDialog.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/dboxed-schema"
 import { S3BucketForm, buildEndpoint, type ProviderType } from "@/pages/s3-buckets/details/S3BucketForm.tsx"
+import type { ReactElement } from "react";
 
 interface CreateS3BucketDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  trigger: ReactElement
 }
 
 interface S3BucketFormData {
@@ -17,7 +17,7 @@ interface S3BucketFormData {
   bucket: string
 }
 
-export function CreateS3BucketDialog({ open, onOpenChange }: CreateS3BucketDialogProps) {
+export function CreateS3BucketDialog({ trigger }: CreateS3BucketDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
 
   const handleSubmit = (data: S3BucketFormData): components["schemas"]["CreateS3Bucket"] => {
@@ -38,8 +38,7 @@ export function CreateS3BucketDialog({ open, onOpenChange }: CreateS3BucketDialo
 
   return (
     <BaseCreateDialog<S3BucketFormData, components["schemas"]["CreateS3Bucket"]>
-      open={open}
-      onOpenChange={onOpenChange}
+      trigger={trigger}
       title="Add S3 Bucket"
       apiRoute="/v1/workspaces/{workspaceId}/s3-buckets"
       apiParams={{

@@ -1,15 +1,17 @@
 import { SimpleFormDialog } from "@/components/SimpleFormDialog"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import type { ReactNode } from "react";
 
 interface SimpleInputFormData {
   value: string
 }
 
 interface SimpleInputDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  trigger: ReactNode
+  onOpenChange?: (open: boolean) => void
   title: string
+  description?: string
   fieldLabel: string
   placeholder?: string
   defaultValue?: string
@@ -18,9 +20,10 @@ interface SimpleInputDialogProps {
 }
 
 export function SimpleInputDialog({
-  open,
+  trigger,
   onOpenChange,
   title,
+  description,
   fieldLabel,
   placeholder,
   defaultValue = "",
@@ -41,9 +44,10 @@ export function SimpleInputDialog({
 
   return (
     <SimpleFormDialog<SimpleInputFormData>
-      open={open}
+      trigger={trigger}
       onOpenChange={onOpenChange}
       title={title}
+      description={description}
       buildInitial={buildInitial}
       onSave={handleSave}
       saveText="OK"

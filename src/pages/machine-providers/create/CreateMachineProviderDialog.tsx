@@ -9,20 +9,19 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import type { components } from "@/api/models/dboxed-schema";
+import type { ReactNode } from "react";
 
 
 interface CreateMachineProviderDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  trigger: ReactNode
 }
 
-export function CreateMachineProviderDialog({ open, onOpenChange }: CreateMachineProviderDialogProps) {
+export function CreateMachineProviderDialog({ trigger }: CreateMachineProviderDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
 
   return (
     <BaseCreateDialog<components["schemas"]["CreateMachineProvider"]>
-      open={open}
-      onOpenChange={onOpenChange}
+      trigger={trigger}
       title="Create Machine Provider"
       apiRoute="/v1/workspaces/{workspaceId}/machine-providers"
       apiParams={{

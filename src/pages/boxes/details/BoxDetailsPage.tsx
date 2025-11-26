@@ -72,9 +72,11 @@ export function BoxDetailsPage() {
       })
       toast.success('Box started successfully')
       setRefreshTrigger(x => x + 1)
+      return true
     } catch (error) {
       toast.error('Failed to start box')
       console.error('Failed to start box:', error)
+      return false
     }
   }
 
@@ -90,9 +92,11 @@ export function BoxDetailsPage() {
       })
       toast.success('Box stopped successfully')
       setRefreshTrigger(x => x + 1)
+      return true
     } catch (error) {
       toast.error('Failed to stop box')
       console.error('Failed to stop box:', error)
+      return false
     }
   }
 
@@ -108,9 +112,11 @@ export function BoxDetailsPage() {
       })
       toast.success('Box reconcile triggered successfully')
       setRefreshTrigger(x => x + 1)
+      return true
     } catch (error) {
       toast.error('Failed to reconcile box')
       console.error('Failed to reconcile box:', error)
+      return false
     }
   }
 
@@ -211,9 +217,10 @@ export function BoxDetailsPage() {
             trigger={
               <Button
                 variant="outline"
+                disabled={reconcileBoxMutation.isPending}
               >
                 <RefreshCw className="h-4 w-4 mr-2" />
-                Reconcile
+                {reconcileBoxMutation.isPending ? 'Reconciling...' : 'Reconcile'}
               </Button>
             }
             title="Reconcile Box?"

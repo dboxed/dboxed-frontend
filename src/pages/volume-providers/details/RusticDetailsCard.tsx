@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx"
@@ -13,8 +12,6 @@ interface RusticDetailsCardProps {
 }
 
 export function RusticDetailsCard({ volumeProvider, save }: RusticDetailsCardProps) {
-  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false)
-
   if (!volumeProvider.rustic) {
     return <div>Invalid volume provider</div>
   }
@@ -75,27 +72,23 @@ export function RusticDetailsCard({ volumeProvider, save }: RusticDetailsCardPro
                 readOnly
                 className="flex-1"
               />
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => setIsPasswordDialogOpen(true)}
-              >
-                Update
-              </Button>
+              <SimpleInputDialog
+                trigger={<Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                >
+                  Update
+                </Button>}
+                title="Update Rustic Password"
+                fieldLabel="New Password"
+                placeholder="Enter new password"
+                onSave={handlePasswordUpdate}
+              />
             </div>
         }
         />
       </CardContent>
-
-      <SimpleInputDialog
-        open={isPasswordDialogOpen}
-        onOpenChange={setIsPasswordDialogOpen}
-        title="Update Rustic Password"
-        fieldLabel="New Password"
-        placeholder="Enter new password"
-        onSave={handlePasswordUpdate}
-      />
     </Card>
   )
 }

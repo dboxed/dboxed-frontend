@@ -5,15 +5,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 import type { components } from "@/api/models/dboxed-schema"
+import { type ReactNode, useState } from "react";
 
 interface CreateLoadBalancerDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  trigger: ReactNode
 }
 
-export function CreateLoadBalancerDialog({ open, onOpenChange }: CreateLoadBalancerDialogProps) {
+export function CreateLoadBalancerDialog({ trigger }: CreateLoadBalancerDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
+  const [dialogOpen, setDialogOpen] = useState(false)
 
   // Fetch available networks
   const networksQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/networks', {
@@ -23,15 +24,15 @@ export function CreateLoadBalancerDialog({ open, onOpenChange }: CreateLoadBalan
       }
     }
   }, {
-    enabled: open
+    enabled: dialogOpen,
   })
 
   const networks = networksQuery.data?.items || []
 
   return (
     <BaseCreateDialog<components["schemas"]["CreateLoadBalancer"]>
-      open={open}
-      onOpenChange={onOpenChange}
+      trigger={trigger}
+      onOpenChange={setDialogOpen}
       title="Create Load Balancer"
       apiRoute="/v1/workspaces/{workspaceId}/load-balancers"
       apiParams={{

@@ -10,6 +10,7 @@ import { S3BucketsOverview } from "./S3BucketsOverview.tsx"
 import { LoadBalancersOverview } from "./LoadBalancersOverview.tsx"
 import { DeleteButton } from "@/components/DeleteButton.tsx"
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export function WorkspaceDashboardPage() {
   const { workspaceId } = useSelectedWorkspaceId()
@@ -44,8 +45,13 @@ export function WorkspaceDashboardPage() {
           }
         }
       })
-    } catch (error) {
-      console.error('Failed to delete workspace:', error)
+      toast.success("Workspace deleted successfully!")
+      return true
+    } catch (error: any) {
+      toast.error("Failed to delete workspace", {
+        description: error.detail || "An error occurred while deleting the workspace."
+      })
+      return false
     }
   }
 

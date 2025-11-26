@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx"
@@ -14,13 +13,11 @@ interface NetbirdFormData {
 }
 
 interface NetbirdEditDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
   netbirdData: components["schemas"]["NetworkNetbird"]
   save: (update: components["schemas"]["UpdateNetwork"]) => Promise<boolean>
 }
 
-function NetbirdEditDialog({ open, onOpenChange, netbirdData, save }: NetbirdEditDialogProps) {
+function NetbirdEditDialog({ netbirdData, save }: NetbirdEditDialogProps) {
   const buildInitial = (): NetbirdFormData => ({
     netbirdVersion: netbirdData.netbirdVersion,
     apiAccessToken: "",
@@ -39,8 +36,15 @@ function NetbirdEditDialog({ open, onOpenChange, netbirdData, save }: NetbirdEdi
 
   return (
     <SimpleFormDialog<NetbirdFormData>
-      open={open}
-      onOpenChange={onOpenChange}
+      trigger={
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+        >
+          Edit
+        </Button>
+      }
       title="Edit Netbird Configuration"
       buildInitial={buildInitial}
       onSave={handleSave}
@@ -100,8 +104,6 @@ interface NetbirdDetailsCardProps {
 }
 
 export function NetbirdDetailsCard({ netbirdData, save }: NetbirdDetailsCardProps) {
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-
   return (
     <Card>
       <CardHeader>
@@ -115,14 +117,10 @@ export function NetbirdDetailsCard({ netbirdData, save }: NetbirdDetailsCardProp
               Netbird network configuration details.
             </CardDescription>
           </div>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setIsEditDialogOpen(true)}
-          >
-            Edit
-          </Button>
+          <NetbirdEditDialog
+            netbirdData={netbirdData}
+            save={save}
+          />
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -141,13 +139,6 @@ export function NetbirdDetailsCard({ netbirdData, save }: NetbirdDetailsCardProp
           textValue="••••••••••••••••"
         />
       </CardContent>
-
-      <NetbirdEditDialog
-        open={isEditDialogOpen}
-        onOpenChange={setIsEditDialogOpen}
-        netbirdData={netbirdData}
-        save={save}
-      />
     </Card>
   )
 } 

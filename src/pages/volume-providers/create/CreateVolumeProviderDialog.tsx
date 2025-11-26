@@ -5,19 +5,18 @@ import { Input } from "@/components/ui/input.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/dboxed-schema"
+import type { ReactElement } from "react";
 
 interface CreateVolumeProviderDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  trigger: ReactElement
 }
 
-export function CreateVolumeProviderDialog({ open, onOpenChange }: CreateVolumeProviderDialogProps) {
+export function CreateVolumeProviderDialog({ trigger }: CreateVolumeProviderDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
 
   return (
     <BaseCreateDialog<components["schemas"]["CreateVolumeProvider"]>
-      open={open}
-      onOpenChange={onOpenChange}
+      trigger={trigger}
       title="Create Volume Provider"
       apiRoute="/v1/workspaces/{workspaceId}/volume-providers"
       apiParams={{

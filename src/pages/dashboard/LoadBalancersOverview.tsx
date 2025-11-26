@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router"
-import { useState } from "react"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 import { Globe } from "lucide-react"
@@ -13,7 +12,6 @@ export function LoadBalancersOverview() {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
   const loadBalancersQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/load-balancers', {
     params: {
@@ -62,21 +60,16 @@ export function LoadBalancersOverview() {
         isLoading={loadBalancersQuery.isLoading}
         error={!!loadBalancersQuery.error}
         items={items}
+        addNewDialog={CreateLoadBalancerDialog}
         emptyState={{
           message: "No Load Balancers configured yet",
           createButtonText: "Create First Load Balancer",
-          onCreateClick: () => setCreateDialogOpen(true),
         }}
         actions={{
           viewAllText: "View All",
           onViewAllClick: () => navigate(`/workspaces/${workspaceId}/load-balancers`),
           addNewText: "Add New",
-          onAddNewClick: () => setCreateDialogOpen(true),
         }}
-      />
-      <CreateLoadBalancerDialog
-        open={createDialogOpen}
-        onOpenChange={setCreateDialogOpen}
       />
     </>
   )

@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button.tsx";
 import type { components } from "@/api/models/dboxed-cloud-schema";
 import { deepClone, deepEqual } from "@/utils/utils.ts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
-import { Plus, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx";
 import { AddTaxIdDialog } from "./AddTaxIdDialog";
 import { getTaxIdByCountryAndEnum } from "./taxIdTypes";
@@ -24,7 +24,6 @@ export const StripeBillingAddress = (props: Props) => {
 
   const [formCustomer, setFormCustomer] = useState<any>({})
   const [formCustomerComplete, setFormCustomerComplete] = useState(false)
-  const [isAddTaxIdDialogOpen, setIsAddTaxIdDialogOpen] = useState(false)
 
   const client = useDboxedCloudQueryClient();
   const customerQuery = client.useQuery('get', '/v1/cloud/workspaces/{workspaceId}/billing/customer', {
@@ -77,29 +76,29 @@ export const StripeBillingAddress = (props: Props) => {
   const updateCustomer = useMemo(() => buildUpdateCustomer(), [formCustomer, customerQuery.data])
   const modified = useMemo(() => !deepEqual({}, updateCustomer), [updateCustomer])
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    mutation.mutate({
-      params: {
-        path: {
-          workspaceId: workspaceId!,
-        }
-      },
-      body: updateCustomer,
-    }, {
-      onSuccess: () => {
-        toast.success("Billing address updated successfully!")
-        if (props.handleDone) {
-          props.handleDone();
-        }
-      },
-      onError: (error) => {
-        toast.error("Failed to update billing address", {
-          description: error.detail || "An error occurred while updating the billing address."
-        })
+    try {
+      await mutation.mutateAsync({
+        params: {
+          path: {
+            workspaceId: workspaceId!,
+          }
+        },
+        body: updateCustomer,
+      })
+      toast.success("Billing address updated successfully!")
+      if (props.handleDone) {
+        props.handleDone();
       }
-    })
+      return true
+    } catch (error: any) {
+      toast.error("Failed to update billing address", {
+        description: error.detail || "An error occurred while updating the billing address."
+      })
+      return false
+    }
   }
 
   const handleChange = useCallback((event: StripeAddressElementChangeEvent) => {
@@ -108,51 +107,48 @@ export const StripeBillingAddress = (props: Props) => {
    }, [])
 
   const handleDeleteTaxId = async (taxIdId: string) => {
-    deleteTaxIdMutation.mutate({
-      params: {
-        path: {
-          workspaceId: workspaceId!,
-          id: taxIdId,
-        }
-      },
-    }, {
-      onSuccess: () => {
-        toast.success("Tax ID deleted successfully!");
-        customerQuery.refetch();
-      },
-      onError: (error) => {
-        toast.error("Failed to delete tax ID", {
-          description: error.detail || "An error occurred while deleting the tax ID."
-        })
-      }
-    })
+    try {
+      await deleteTaxIdMutation.mutateAsync({
+        params: {
+          path: {
+            workspaceId: workspaceId!,
+            id: taxIdId,
+          }
+        },
+      })
+      toast.success("Tax ID deleted successfully!");
+      customerQuery.refetch();
+      return true
+    } catch (error: any) {
+      toast.error("Failed to delete tax ID", {
+        description: error.detail || "An error occurred while deleting the tax ID."
+      })
+      return false
+    }
   };
 
   const handleAddTaxId = async (formData: { type: string; value: string }) => {
-    addTaxIdMutation.mutate({
-      params: {
-        path: {
-          workspaceId: workspaceId!,
-        }
-      },
-      body: {
-        type: formData.type,
-        value: formData.value,
-      },
-    }, {
-      onSuccess: () => {
-        toast.success("Tax ID added successfully!");
-        customerQuery.refetch();
-        setIsAddTaxIdDialogOpen(false);
-      },
-      onError: (error) => {
-        toast.error("Failed to add tax ID", {
-          description: error.detail || "An error occurred while adding the tax ID."
-        })
-      }
-    })
-
-    return true;
+    try {
+      await addTaxIdMutation.mutateAsync({
+        params: {
+          path: {
+            workspaceId: workspaceId!,
+          }
+        },
+        body: {
+          type: formData.type,
+          value: formData.value,
+        },
+      })
+      toast.success("Tax ID added successfully!");
+      customerQuery.refetch();
+      return true
+    } catch(error: any) {
+      toast.error("Failed to add tax ID", {
+        description: error.detail || "An error occurred while adding the tax ID."
+      })
+      return false
+    }
   };
 
   if (customerQuery.isLoading || customerQuery.isFetching) {
@@ -202,14 +198,10 @@ export const StripeBillingAddress = (props: Props) => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Tax IDs</CardTitle>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsAddTaxIdDialogOpen(true)}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Tax ID
-              </Button>
+              <AddTaxIdDialog
+                onSave={handleAddTaxId}
+                country={formCustomer.address?.country}
+              />
             </div>
           </CardHeader>
           <CardContent>
@@ -256,14 +248,6 @@ export const StripeBillingAddress = (props: Props) => {
           </CardContent>
         </Card>
       </div>
-
-      <AddTaxIdDialog
-        open={isAddTaxIdDialogOpen}
-        onOpenChange={setIsAddTaxIdDialogOpen}
-        onSave={handleAddTaxId}
-        isLoading={addTaxIdMutation.isPending}
-        country={formCustomer.address?.country}
-      />
     </div>
   </Elements>
 }

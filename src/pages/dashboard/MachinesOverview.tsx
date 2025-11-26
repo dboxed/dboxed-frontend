@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router"
-import { useState } from "react"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 import { Monitor } from "lucide-react"
@@ -12,7 +11,6 @@ export function MachinesOverview() {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
   // Fetch machine providers (needed for machine creation validation)
   const machineProvidersQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/machine-providers', {
@@ -71,10 +69,10 @@ export function MachinesOverview() {
         isLoading={machinesQuery.isLoading}
         error={!!machinesQuery.error}
         items={items}
+        addNewDialog={CreateMachineDialog}
         emptyState={{
           message: "No machines created yet",
           createButtonText: "Create First Machine",
-          onCreateClick: () => setCreateDialogOpen(true),
           isCreateDisabled: machineProviders.length === 0,
           createDisabledMessage: "Create a machine provider first",
         }}
@@ -82,13 +80,8 @@ export function MachinesOverview() {
           viewAllText: "View All",
           onViewAllClick: () => navigate(`/workspaces/${workspaceId}/machines`),
           addNewText: "Add New",
-          onAddNewClick: () => setCreateDialogOpen(true),
           isAddNewDisabled: machineProviders.length === 0,
         }}
-      />
-      <CreateMachineDialog
-        open={createDialogOpen}
-        onOpenChange={setCreateDialogOpen}
       />
     </>
   )

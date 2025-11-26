@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router"
-import { useState } from "react"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 import { Package } from "lucide-react"
@@ -14,7 +13,6 @@ export function BoxesOverview() {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
   // Fetch boxes
   const boxesQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/boxes', {
@@ -67,21 +65,16 @@ export function BoxesOverview() {
         isLoading={boxesQuery.isLoading}
         error={!!boxesQuery.error}
         items={items}
+        addNewDialog={CreateBoxDialog}
         emptyState={{
           message: "No boxes created yet",
           createButtonText: "Create First Box",
-          onCreateClick: () => setCreateDialogOpen(true),
         }}
         actions={{
           viewAllText: "View All",
           onViewAllClick: () => navigate(`/workspaces/${workspaceId}/boxes`),
           addNewText: "Add New",
-          onAddNewClick: () => setCreateDialogOpen(true),
         }}
-      />
-      <CreateBoxDialog
-        open={createDialogOpen}
-        onOpenChange={setCreateDialogOpen}
       />
     </>
   )

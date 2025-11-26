@@ -9,24 +9,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { type MouseEvent, useState } from "react";
+import { Button } from "@/components/ui/button.tsx";
 
 interface ConfirmationDialogProps {
   trigger?: React.ReactNode
-  open?: boolean
-  onOpenChange?(open: boolean): void;
   title: string
   description: string
   confirmText?: string
   cancelText?: string
-  onConfirm: () => void
+  onConfirm: () => Promise<boolean>
   destructive?: boolean
   children?: React.ReactNode
 }
 
 export function ConfirmationDialog({
   trigger,
-  open,
-  onOpenChange,
   title,
   description,
   confirmText = "Confirm",
@@ -35,8 +33,22 @@ export function ConfirmationDialog({
   destructive = false,
   children
 }: ConfirmationDialogProps) {
+  const [open, setOpen] = useState(false)
+  const [isConfirming, setIsConfirming] = useState(false)
+
+  const handleConfirm = async (e: MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsConfirming(true)
+    const close = await onConfirm()
+    if (close) {
+      setOpen(false)
+    }
+    setIsConfirming(false)
+  }
+
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       {trigger && <AlertDialogTrigger asChild>
         {trigger}
       </AlertDialogTrigger>}
@@ -49,12 +61,12 @@ export function ConfirmationDialog({
         </AlertDialogHeader>
         {children}
         <AlertDialogFooter>
-          <AlertDialogCancel>{cancelText}</AlertDialogCancel>
+          <AlertDialogCancel disabled={isConfirming}>{cancelText}</AlertDialogCancel>
           <AlertDialogAction
-            onClick={onConfirm}
+            asChild
             className={destructive ? "bg-destructive text-destructive-foreground hover:bg-destructive/90" : ""}
           >
-            {confirmText}
+            <Button type={"button"} disabled={isConfirming} onClick={handleConfirm}>{confirmText}</Button>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

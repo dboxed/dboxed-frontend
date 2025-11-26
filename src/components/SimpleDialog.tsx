@@ -1,86 +1,116 @@
-import { type ReactNode } from "react"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { type ReactNode, useState } from "react"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area.tsx";
 
 interface SimpleDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  trigger?: ReactNode
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
   title: string
+  description?: string
   children: ReactNode
-  onSave?: () => void | Promise<void>
+  onSave?: () => Promise<boolean>
   onCancel?: () => void
   saveText?: string
   cancelText?: string
   saveDisabled?: boolean
-  isLoading?: boolean
   showCancel?: boolean
   showSave?: boolean
   wide?: boolean
 }
 
 export function SimpleDialog({
+  trigger,
   open,
   onOpenChange,
   title,
+  description,
   children,
   onSave,
   onCancel,
   saveText = "Save",
   cancelText = "Cancel",
   saveDisabled = false,
-  isLoading = false,
   showCancel = true,
   showSave = true,
   wide = false,
 }: SimpleDialogProps) {
+  const [managedOpen, setManagedOpen] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+
+  const handleOpenChange = (o: boolean) => {
+    setManagedOpen(o)
+    if (onOpenChange) {
+      onOpenChange(o)
+    }
+  }
+
   const handleCancel = () => {
     if (onCancel) {
       onCancel()
     }
-    onOpenChange(false)
+    handleOpenChange(false)
   }
 
   const handleSave = async () => {
     if (onSave) {
-      await onSave()
+      setIsSaving(true)
+      const close = await onSave()
+      setIsSaving(false)
+      if (close) {
+        handleOpenChange(false)
+      }
     }
   }
 
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={wide ? "max-w-[95vw] min-w-[80vw] max-h-[90vh] min-h-[70vh] flex flex-col h-full" : "max-w-md"}>
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-        </DialogHeader>
+  const realOpen = open !== undefined ? open : managedOpen
 
-        <div className={wide ? "flex-1 min-h-0" : "py-4"}>
+  return <Dialog open={realOpen} onOpenChange={handleOpenChange}>
+    <DialogTrigger asChild>
+      {trigger}
+    </DialogTrigger>
+    <DialogContent className="p-0 sm:max-w-lg">
+      <DialogHeader className="sticky top-0 z-10 border-b px-6 pt-6 pb-4">
+        <DialogTitle>{title}</DialogTitle>
+        {description && <DialogDescription>
+          {description}
+        </DialogDescription>}
+      </DialogHeader>
+      <div className={wide ? "flex-1 min-h-0" : "py-4"}>
+        <ScrollArea className="h-[400px] px-6">
           {children}
-        </div>
-
-        {(showCancel || showSave) && (
-          <DialogFooter>
-            {showCancel && (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleCancel}
-                disabled={isLoading}
-              >
-                {cancelText}
-              </Button>
-            )}
-            {showSave && (
-              <Button
-                type="button"
-                onClick={handleSave}
-                disabled={saveDisabled || isLoading}
-              >
-                {isLoading ? "Saving..." : saveText}
-              </Button>
-            )}
-          </DialogFooter>
+        </ScrollArea>
+      </div>
+      <DialogFooter className="px-6 pt-4 pb-6">
+        {showCancel && (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleCancel}
+            disabled={isSaving}
+          >
+            {cancelText}
+          </Button>
         )}
-      </DialogContent>
-    </Dialog>
-  )
+        {showSave && (
+          <Button
+            type="button"
+            onClick={handleSave}
+            disabled={saveDisabled || isSaving}
+          >
+            {isSaving ? "Saving..." : saveText}
+          </Button>
+        )}
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 }

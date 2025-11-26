@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
@@ -24,21 +23,6 @@ interface PortFormData {
 
 export function LoadBalancerConfigCard({ data, save }: LoadBalancerConfigCardProps) {
   const { workspaceId } = useSelectedWorkspaceId()
-  const [editDialogOpen, setEditDialogOpen] = useState(false)
-
-  const buildInitial = (): PortFormData => ({
-    httpPort: data.httpPort,
-    httpsPort: data.httpsPort,
-    replicas: data.replicas
-  })
-
-  const handleSave = async (values: PortFormData): Promise<boolean> => {
-    return await save({
-      httpPort: values.httpPort,
-      httpsPort: values.httpsPort,
-      replicas: values.replicas
-    })
-  }
 
   return (
     <>
@@ -51,14 +35,7 @@ export function LoadBalancerConfigCard({ data, save }: LoadBalancerConfigCardPro
                 Network and protocol configuration for this load balancer
               </CardDescription>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setEditDialogOpen(true)}
-            >
-              <Edit className="w-4 h-4 mr-2" />
-              Edit
-            </Button>
+            <EditDialog data={data} save={save}/>
           </div>
         </CardHeader>
         <CardContent>
@@ -106,84 +83,107 @@ export function LoadBalancerConfigCard({ data, save }: LoadBalancerConfigCardPro
           </div>
         </CardContent>
       </Card>
-
-      <SimpleFormDialog<PortFormData>
-        open={editDialogOpen}
-        onOpenChange={setEditDialogOpen}
-        title="Edit Configuration"
-        buildInitial={buildInitial}
-        onSave={handleSave}
-        saveText="Save Changes"
-      >
-        {(form) => (
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="httpPort"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>HTTP Port</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        min="1"
-                        max="65535"
-                        placeholder="80"
-                        {...field}
-                        onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="httpsPort"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>HTTPS Port</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        min="1"
-                        max="65535"
-                        placeholder="443"
-                        {...field}
-                        onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="replicas"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Replicas</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      min="1"
-                      max="100"
-                      placeholder="1"
-                      {...field}
-                      onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        )}
-      </SimpleFormDialog>
     </>
   )
+}
+
+const EditDialog = ({ data, save }: LoadBalancerConfigCardProps) => {
+  const buildInitial = (): PortFormData => ({
+    httpPort: data.httpPort,
+    httpsPort: data.httpsPort,
+    replicas: data.replicas
+  })
+
+  const handleSave = async (values: PortFormData): Promise<boolean> => {
+    return await save({
+      httpPort: values.httpPort,
+      httpsPort: values.httpsPort,
+      replicas: values.replicas
+    })
+  }
+
+  return <SimpleFormDialog<PortFormData>
+    trigger={
+      <Button
+        variant="outline"
+        size="sm"
+      >
+        <Edit className="w-4 h-4 mr-2" />
+        Edit
+      </Button>
+    }
+    title="Edit Configuration"
+    buildInitial={buildInitial}
+    onSave={handleSave}
+    saveText="Save Changes"
+  >
+    {(form) => (
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="httpPort"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>HTTP Port</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    min="1"
+                    max="65535"
+                    placeholder="80"
+                    {...field}
+                    onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="httpsPort"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>HTTPS Port</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    min="1"
+                    max="65535"
+                    placeholder="443"
+                    {...field}
+                    onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <FormField
+          control={form.control}
+          name="replicas"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Replicas</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  min="1"
+                  max="100"
+                  placeholder="1"
+                  {...field}
+                  onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+    )}
+  </SimpleFormDialog>
 }

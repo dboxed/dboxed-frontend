@@ -1,27 +1,30 @@
 import { SimpleFormDialog } from "@/components/SimpleFormDialog"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import type { ReactNode } from "react";
 
 interface SimpleSelectFormData {
   value: string
 }
 
 interface SimpleSelectDialogProps<T> {
-  open: boolean
+  trigger: ReactNode
   onOpenChange: (open: boolean) => void
   title: string
+  description?: string
   fieldLabel: string
   placeholder?: string
   options: T[]
   optionKey: keyof T
   optionLabel: keyof T
-  onOk: (selectedItem: T) => void
+  onOk: (selectedItem: T) => Promise<boolean>
 }
 
 export function SimpleSelectDialog<T>({
-  open,
+  trigger,
   onOpenChange,
   title,
+  description,
   fieldLabel,
   placeholder = "Select an option...",
   options,
@@ -36,18 +39,17 @@ export function SimpleSelectDialog<T>({
   const handleSave = async (data: SimpleSelectFormData) => {
     const selectedItem = options.find(option => String(option[optionKey]) === data.value)
     if (selectedItem) {
-      onOk(selectedItem)
-      onOpenChange(false)
-      return true
+      return onOk(selectedItem)
     }
     return false
   }
 
   return (
     <SimpleFormDialog<SimpleSelectFormData>
-      open={open}
+      trigger={trigger}
       onOpenChange={onOpenChange}
       title={title}
+      description={description}
       buildInitial={buildInitial}
       onSave={handleSave}
       saveText="OK"

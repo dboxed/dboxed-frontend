@@ -4,12 +4,16 @@ import { Editor } from "@monaco-editor/react"
 import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { extractComposeProjectInfo } from "./project-info.ts"
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button.tsx";
+import { toast } from "sonner";
+import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
+import { useDboxedQueryClient } from "@/api/dboxed-api.ts";
+import type { components } from "@/api/models/dboxed-schema";
 
 interface AddComposeProjectDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onSave: (name: string, content: string) => Promise<boolean>
-  isLoading?: boolean
+  box: components["schemas"]["Box"]
+  onSaved: () => void
 }
 
 interface AddProjectFormData {
@@ -29,11 +33,18 @@ services:
 `
 
 export function AddComposeProjectDialog({
-  open,
-  onOpenChange,
-  onSave,
-  isLoading = false
+  box,
+  onSaved,
 }: AddComposeProjectDialogProps) {
+  const { workspaceId } = useSelectedWorkspaceId()
+  const client = useDboxedQueryClient()
+
+  const createProjectMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects', {
+    onSuccess: () => {
+      onSaved()
+    }
+  })
+
   const buildInitialFormData = useCallback((): AddProjectFormData => {
     return {
       name: "",
@@ -41,7 +52,7 @@ export function AddComposeProjectDialog({
     }
   }, [])
 
-  const handleSave = async (formData: AddProjectFormData) => {
+  const handleNewProject = async (formData: AddProjectFormData) => {
     let name = formData.name.trim()
 
     // If no name provided, extract it from the compose YAML
@@ -50,18 +61,43 @@ export function AddComposeProjectDialog({
       name = info.name
     }
 
-    return await onSave(name, formData.content)
+    try {
+      await createProjectMutation.mutateAsync({
+        params: {
+          path: {
+            workspaceId: workspaceId!,
+            id: box.id
+          }
+        },
+        body: {
+          name: name,
+          composeProject: formData.content,
+        }
+      })
+      toast.success("Compose project created successfully!")
+      return true
+    } catch (error: any) {
+      toast.error("Failed to create compose project", {
+        description: error.detail || "An error occurred while creating the compose project."
+      })
+      return false
+    }
   }
 
   return (
     <SimpleFormDialog<AddProjectFormData>
-      open={open}
-      onOpenChange={onOpenChange}
+      trigger={<Button
+        type={"button"}
+        variant="outline"
+        size="sm"
+      >
+        <Plus className="w-4 h-4 mr-2" />
+        New Project
+      </Button>}
       title="Add New Compose Project"
       buildInitial={buildInitialFormData}
-      onSave={handleSave}
+      onSave={handleNewProject}
       saveText="Add Project"
-      isLoading={isLoading}
       wide={true}
     >
       {(form) => (

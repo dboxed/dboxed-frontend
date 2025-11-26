@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router"
-import { useState } from "react"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 import { Network } from "lucide-react"
@@ -13,7 +12,6 @@ export function NetworksOverview() {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
   // Fetch networks
   const networksQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/networks', {
@@ -63,21 +61,16 @@ export function NetworksOverview() {
         isLoading={networksQuery.isLoading}
         error={!!networksQuery.error}
         items={items}
+        addNewDialog={CreateNetworkDialog}
         emptyState={{
           message: "No networks configured yet",
           createButtonText: "Create First Network",
-          onCreateClick: () => setCreateDialogOpen(true),
         }}
         actions={{
           viewAllText: "View All",
           onViewAllClick: () => navigate(`/workspaces/${workspaceId}/networks`),
           addNewText: "Add New",
-          onAddNewClick: () => setCreateDialogOpen(true),
         }}
-      />
-      <CreateNetworkDialog
-        open={createDialogOpen}
-        onOpenChange={setCreateDialogOpen}
       />
     </>
   )

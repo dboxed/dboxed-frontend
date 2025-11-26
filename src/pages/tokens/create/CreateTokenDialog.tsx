@@ -1,119 +1,38 @@
-import { useState } from "react"
+import { type ReactNode, useState } from "react"
 import { BaseCreateDialog } from "@/components/BaseCreateDialog.tsx"
-import { SimpleFormDialog } from "@/components/SimpleFormDialog.tsx"
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
-import { Button } from "@/components/ui/button.tsx"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
-import { Label } from "@/components/ui/label.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/dboxed-schema"
 import { BoxSelector } from "./BoxSelector.tsx"
-import { Copy, Key } from "lucide-react"
-import { toast } from "sonner"
+import { TokenSecretDialog } from "@/pages/tokens/create/TokenSecretDialog.tsx";
 
 interface CreateTokenDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  trigger: ReactNode
 }
 
-export function CreateTokenDialog({ open, onOpenChange }: CreateTokenDialogProps) {
+export function CreateTokenDialog({ trigger }: CreateTokenDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const [createdToken, setCreatedToken] = useState<components["schemas"]["Token"] | null>(null)
+  const [createdTokenDialog, setCreatedTokenDialog] = useState(false)
 
   const handleCreateSuccess = (token: components["schemas"]["Token"]) => {
     setCreatedToken(token)
-    return false
+    setCreatedTokenDialog(true)
   }
 
   const handleClose = (open: boolean) => {
     if (!open) {
       setCreatedToken(null)
-    }
-    onOpenChange(open)
-  }
-
-  const handleCopyToken = async () => {
-    if (!createdToken?.token) return
-
-    try {
-      await navigator.clipboard.writeText(createdToken.token)
-      toast.success("Token copied to clipboard!")
-    } catch {
-      toast.error("Failed to copy token to clipboard")
+      setCreatedTokenDialog(false)
     }
   }
 
-  if (createdToken) {
-    return (
-      <SimpleFormDialog<{}>
-        open={open}
-        onOpenChange={handleClose}
-        title="Token Created Successfully"
-        buildInitial={() => ({})}
-        onSave={async () => {
-          handleClose(false)
-          return true
-        }}
-        saveText="Done"
-        showCancel={false}
-      >
-        {() => (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Key className="h-5 w-5" />
-                <span>Your API Token</span>
-              </CardTitle>
-              <CardDescription>
-                Copy this token now - it will only be shown once for security reasons.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label>Token Value</Label>
-                <div className="flex space-x-2">
-                  <Input
-                    value={createdToken.token || ""}
-                    readOnly
-                    className="font-mono text-xs"
-                    type="password"
-                  />
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleCopyToken}
-                    type="button"
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label>Token Name</Label>
-                <Input
-                  value={createdToken.name}
-                  readOnly
-                  className="text-sm"
-                />
-              </div>
-              <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3">
-                <p className="text-sm text-yellow-800">
-                  ⚠️ Store this token securely. You won't be able to see it again after closing this dialog.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </SimpleFormDialog>
-    )
-  }
-
-  return (
+  return <>
+    <TokenSecretDialog open={createdTokenDialog} onOpenChange={handleClose} createdToken={createdToken}/>
     <BaseCreateDialog<components["schemas"]["CreateToken"], components["schemas"]["CreateToken"], components["schemas"]["Token"]>
-      open={open}
-      onOpenChange={handleClose}
+      trigger={trigger}
       title="Create Token"
       apiRoute="/v1/workspaces/{workspaceId}/tokens"
       apiParams={{
@@ -184,5 +103,5 @@ export function CreateTokenDialog({ open, onOpenChange }: CreateTokenDialogProps
         </div>
       }}
     </BaseCreateDialog>
-  )
+  </>
 }

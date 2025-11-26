@@ -1,30 +1,32 @@
-import { useState } from "react"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog.tsx"
-import { Button } from "@/components/ui/button.tsx"
-import { Input } from "@/components/ui/input.tsx"
-import { Label } from "@/components/ui/label.tsx"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
-import { Textarea } from "@/components/ui/textarea.tsx"
+import { SimpleFormDialog } from "@/components/SimpleFormDialog"
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 import { toast } from "sonner"
-import { StatusBadge } from "@/components/StatusBadge.tsx";
+import { StatusBadge } from "@/components/StatusBadge.tsx"
+import { type ReactNode, useState } from "react"
 
 interface AddLoadBalancerServiceDialogProps {
   boxId: string
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  trigger: ReactNode
   onSuccess: () => void
 }
 
-export function AddLoadBalancerServiceDialog({ boxId, open, onOpenChange, onSuccess }: AddLoadBalancerServiceDialogProps) {
+interface FormData {
+  loadBalancerId: string
+  hostname: string
+  pathPrefix: string
+  port: string
+  description: string
+}
+
+export function AddLoadBalancerServiceDialog({ boxId, trigger, onSuccess }: AddLoadBalancerServiceDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [loadBalancerId, setLoadBalancerId] = useState<string>("")
-  const [hostname, setHostname] = useState<string>("")
-  const [pathPrefix, setPathPrefix] = useState<string>("/")
-  const [port, setPort] = useState<string>("")
-  const [description, setDescription] = useState<string>("")
+  const [dialogOpen, setDialogOpen] = useState(false)
 
   const lbsQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/load-balancers', {
     params: {
@@ -33,153 +35,185 @@ export function AddLoadBalancerServiceDialog({ boxId, open, onOpenChange, onSucc
       }
     }
   }, {
-    enabled: open
+    enabled: dialogOpen,
   })
 
   const createLoadBalancerServiceMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/load-balancer-services')
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    const portNum = parseInt(port, 10)
+  const handleSave = async (formData: FormData) => {
+    const portNum = parseInt(formData.port, 10)
 
     if (isNaN(portNum)) {
       toast.error("Invalid port number")
-      return
+      return false
     }
 
-    if (!loadBalancerId) {
-      toast.error("Please select an Load Balancer")
-      return
+    if (!formData.loadBalancerId) {
+      toast.error("Please select a Load Balancer")
+      return false
     }
 
-    createLoadBalancerServiceMutation.mutate({
-      params: {
-        path: {
-          workspaceId: workspaceId!,
-          id: boxId
+    try {
+      await createLoadBalancerServiceMutation.mutateAsync({
+        params: {
+          path: {
+            workspaceId: workspaceId!,
+            id: boxId
+          }
+        },
+        body: {
+          loadBalancerId: formData.loadBalancerId,
+          hostname: formData.hostname,
+          pathPrefix: formData.pathPrefix,
+          port: portNum,
+          description: formData.description || undefined
         }
-      },
-      body: {
-        loadBalancerId: loadBalancerId,
-        hostname,
-        pathPrefix,
-        port: portNum,
-        description: description || undefined
-      }
-    }, {
-      onSuccess: () => {
-        toast.success("Load Balancer Service created successfully!")
-        onSuccess()
-        onOpenChange(false)
-        // Reset form
-        setLoadBalancerId("")
-        setHostname("")
-        setPathPrefix("/")
-        setPort("")
-        setDescription("")
-      },
-      onError: (error) => {
-        toast.error("Failed to create Load Balancer Service", {
-          description: error.detail || "An error occurred while creating the Load Balancer Service."
-        })
-      }
-    })
+      })
+
+      toast.success("Load Balancer Service created successfully!")
+      onSuccess()
+      return true
+    } catch (error: any) {
+      toast.error("Failed to create Load Balancer Service", {
+        description: error.detail || "An error occurred while creating the Load Balancer Service."
+      })
+      return false
+    }
   }
 
   const lbs = lbsQuery.data?.items || []
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <form onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle>Add Load Balancer Service</DialogTitle>
-            <DialogDescription>
-              Create a new HTTP Load Balancer Service rule for this box
-            </DialogDescription>
-          </DialogHeader>
+    <SimpleFormDialog<FormData>
+      trigger={trigger}
+      title="Add Load Balancer Service"
+      onOpenChange={setDialogOpen}
+      description="Create a new HTTP Load Balancer Service rule for this box"
+      buildInitial={() => ({
+        loadBalancerId: "",
+        hostname: "",
+        pathPrefix: "/",
+        port: "",
+        description: ""
+      })}
+      onSave={handleSave}
+      saveText="Create"
+    >
+      {(form) => (
+        <div className="grid gap-4">
+          <FormField
+            control={form.control}
+            name="loadBalancerId"
+            rules={{ required: "Load Balancer is required" }}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Load Balancer</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a load balancer" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {lbs.map((lb) => (
+                      <SelectItem key={lb.id} value={lb.id}>
+                        <div className="flex items-center gap-2">
+                          <span>{lb.name}</span>
+                          <StatusBadge item={lb}/>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="loadBalancerId">Load Balancer</Label>
-              <Select value={loadBalancerId} onValueChange={setLoadBalancerId}>
-                <SelectTrigger id="loadBalancerId">
-                  <SelectValue placeholder="Select a load balancer" />
-                </SelectTrigger>
-                <SelectContent>
-                  {lbs.map((lb) => (
-                    <SelectItem key={lb.id} value={lb.id}>
-                      <div className="flex items-center gap-2">
-                        <span>{lb.name}</span>
-                        <StatusBadge item={lb}/>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          <FormField
+            control={form.control}
+            name="hostname"
+            rules={{ required: "Hostname is required" }}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Hostname</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="example.com"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <div className="grid gap-2">
-              <Label htmlFor="hostname">Hostname</Label>
-              <Input
-                id="hostname"
-                type="text"
-                placeholder="example.com"
-                value={hostname}
-                onChange={(e) => setHostname(e.target.value)}
-                required
-              />
-            </div>
+          <FormField
+            control={form.control}
+            name="pathPrefix"
+            rules={{ required: "Path prefix is required" }}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Path Prefix</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="/"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <div className="grid gap-2">
-              <Label htmlFor="pathPrefix">Path Prefix</Label>
-              <Input
-                id="pathPrefix"
-                type="text"
-                placeholder="/"
-                value={pathPrefix}
-                onChange={(e) => setPathPrefix(e.target.value)}
-                required
-              />
-            </div>
+          <FormField
+            control={form.control}
+            name="port"
+            rules={{
+              required: "Port is required",
+              pattern: {
+                value: /^[0-9]+$/,
+                message: "Must be a valid port number"
+              }
+            }}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Port</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    min="1"
+                    max="65535"
+                    placeholder="8080"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <div className="grid gap-2">
-              <Label htmlFor="port">Port</Label>
-              <Input
-                id="port"
-                type="number"
-                min="1"
-                max="65535"
-                placeholder="8080"
-                value={port}
-                onChange={(e) => setPort(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="grid gap-2">
-              <Label htmlFor="description">Description (Optional)</Label>
-              <Textarea
-                id="description"
-                placeholder="Web application"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={2}
-              />
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={createLoadBalancerServiceMutation.isPending}>
-              {createLoadBalancerServiceMutation.isPending ? "Creating..." : "Create"}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description (Optional)</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Web application"
+                    rows={2}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      )}
+    </SimpleFormDialog>
   )
 }

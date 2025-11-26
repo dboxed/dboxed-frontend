@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
@@ -7,7 +6,7 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 import type { components } from "@/api/models/dboxed-schema"
 import type { ColumnDef } from "@tanstack/react-table"
-import { Plus, Unplug } from "lucide-react"
+import { Unplug } from "lucide-react"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip.tsx"
 import { formatSize } from "@/utils/size.ts"
@@ -23,7 +22,6 @@ interface AttachedVolumesProps {
 export function AttachedVolumes({ box }: AttachedVolumesProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [attachDialogOpen, setAttachDialogOpen] = useState(false)
 
   const allowEditing = box.boxType === "normal"
 
@@ -51,23 +49,27 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
   })
 
   const handleDetachVolume = (volumeId: string) => {
-    detachVolumeMutation.mutate({
-      params: {
-        path: {
-          workspaceId: workspaceId!,
-          id: box.id,
-          volumeId: volumeId
+    return new Promise<boolean>(resolve => {
+      detachVolumeMutation.mutate({
+        params: {
+          path: {
+            workspaceId: workspaceId!,
+            id: box.id,
+            volumeId: volumeId
+          }
         }
-      }
-    }, {
-      onSuccess: () => {
-        toast.success("Volume deattached successfully!")
-      },
-      onError: (error) => {
-        toast.error("Failed to detach volume", {
-          description: error.detail || "An error occurred while detaching the volume."
-        })
-      }
+      }, {
+        onSuccess: () => {
+          toast.success("Volume detached successfully!")
+          resolve(true)
+        },
+        onError: (error) => {
+          toast.error("Failed to detach volume", {
+            description: error.detail || "An error occurred while detaching the volume."
+          })
+          resolve(false)
+        }
+      })
     })
   }
 
@@ -158,13 +160,13 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
           return (
             <div className="flex space-x-2">
               <Tooltip>
-                <TooltipTrigger>
-                  <div>
-                    <FileModeDialog
-                      uid={attachment.rootUid}
-                      gid={attachment.rootGid}
-                      mode={attachment.rootMode}
-                      onUpdate={(uid, gid, mode) => {
+                <TooltipTrigger asChild>
+                  <FileModeDialog
+                    uid={attachment.rootUid}
+                    gid={attachment.rootGid}
+                    mode={attachment.rootMode}
+                    onUpdate={(uid, gid, mode) => {
+                      return new Promise<boolean>(resolve => {
                         updateAttachmentMutation.mutate({
                           params: {
                             path: {
@@ -178,11 +180,21 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
                             rootGid: gid,
                             rootMode: mode
                           }
+                        }, {
+                          onSuccess: () => {
+                            toast.success("Attachment updated successfully!")
+                            resolve(true)
+                          },
+                          onError: (error) => {
+                            toast.error("Failed to update attachment", {
+                              description: error.detail || "An error occurred while updating the attachment."
+                            })
+                            resolve(false)
+                          }
                         })
-                      }}
-                      onSuccess={() => attachedVolumesQuery.refetch()}
-                    />
-                  </div>
+                      })
+                    }}
+                  />
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Edit permissions</p>
@@ -190,24 +202,22 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div>
-                    <ConfirmationDialog
-                      trigger={
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          disabled={detachVolumeMutation.isPending}
-                        >
-                          <Unplug className="w-4 h-4"/>
-                        </Button>
-                      }
-                      title="Detach Volume"
-                      description={`Are you sure you want to detach volume "${volume.name}"?`}
-                      confirmText="Detach"
-                      onConfirm={() => handleDetachVolume(attachment.volumeId)}
-                      destructive
-                    />
-                  </div>
+                  <ConfirmationDialog
+                    trigger={
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={detachVolumeMutation.isPending}
+                      >
+                        <Unplug className="w-4 h-4"/>
+                      </Button>
+                    }
+                    title="Detach Volume"
+                    description={`Are you sure you want to detach volume "${volume.name}"?`}
+                    confirmText="Detach"
+                    onConfirm={() => handleDetachVolume(attachment.volumeId)}
+                    destructive
+                  />
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Detach volume</p>
@@ -230,17 +240,12 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
                 Volumes currently attached to this box
               </CardDescription>
             </div>
-            {allowEditing && <Button
-                type={"button"}
-                variant={"outline"}
-                onClick={() => {
-                  setAttachDialogOpen(true)
+            {allowEditing && <AttachVolumeDialog
+                boxId={box.id}
+                onSuccess={() => {
+                  attachedVolumesQuery.refetch()
                 }}
-                size="sm"
-            >
-                <Plus className="w-4 h-4 mr-2"/>
-                Attach Volume
-            </Button>}
+            />}
           </div>
         </CardHeader>
         <CardContent>
@@ -252,15 +257,6 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
           />
         </CardContent>
       </Card>
-
-      <AttachVolumeDialog
-        boxId={box.id}
-        open={attachDialogOpen}
-        onOpenChange={setAttachDialogOpen}
-        onSuccess={() => {
-          attachedVolumesQuery.refetch()
-        }}
-      />
     </>
   )
 }

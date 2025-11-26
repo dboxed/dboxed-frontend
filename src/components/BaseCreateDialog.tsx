@@ -5,27 +5,31 @@ import type { paths } from "@/api/models/dboxed-schema"
 import { useQueryClient } from "@tanstack/react-query"
 import { SimpleFormDialog } from "./SimpleFormDialog.tsx"
 import { deepClone } from "@/utils/utils.ts";
+import type { ReactNode } from "react";
 
 interface BaseCreateDialogProps<F extends FieldValues = FieldValues, C extends FieldValues = F, R extends FieldValues = FieldValues> {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  trigger?: ReactNode
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
   title: string
-  children: (form: UseFormReturn<F>) => React.ReactNode
+  description?: string
+  children: (form: UseFormReturn<F>) => ReactNode
   apiRoute: keyof paths
   apiParams?: Record<string, unknown>
   onSuccess?: (data: R) => (boolean | void) // when this returns false, the dialog is not closed automatically
   onError?: (error: any) => void
   submitButtonText?: string
   cancelButtonText?: string
-  isLoading?: boolean
   onSubmit?: (data: F) => C
   defaultValues?: DefaultValues<F>
 }
 
 export function BaseCreateDialog<F extends FieldValues = FieldValues, C extends FieldValues = F, R extends FieldValues = FieldValues>({
+  trigger,
   open,
   onOpenChange,
   title,
+  description,
   children,
   apiRoute,
   apiParams = {},
@@ -33,7 +37,6 @@ export function BaseCreateDialog<F extends FieldValues = FieldValues, C extends 
   onError,
   submitButtonText = "Create",
   cancelButtonText = "Cancel",
-  isLoading = false,
   onSubmit,
   defaultValues,
 }: BaseCreateDialogProps<F, C, R>) {
@@ -87,18 +90,17 @@ export function BaseCreateDialog<F extends FieldValues = FieldValues, C extends 
     }
   }
 
-  const isSubmitting = createMutation.isPending || isLoading
-
   return (
     <SimpleFormDialog<F>
+      trigger={trigger}
       open={open}
       onOpenChange={onOpenChange}
       title={title}
+      description={description}
       buildInitial={buildInitial}
       onSave={handleSave}
       saveText={submitButtonText}
       cancelText={cancelButtonText}
-      isLoading={isSubmitting}
     >
       {children}
     </SimpleFormDialog>

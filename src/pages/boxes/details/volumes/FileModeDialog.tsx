@@ -1,16 +1,15 @@
-import { useCallback, useState } from "react"
+import { useCallback } from "react"
 import { Button } from "@/components/ui/button.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Settings } from "lucide-react"
 import { SimpleFormDialog } from "@/components/SimpleFormDialog.tsx"
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form.tsx"
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 
 interface FileModeDialogProps {
   uid: number
   gid: number
   mode: string
-  onUpdate: (uid: number, gid: number, mode: string) => void
-  onSuccess?: () => void
+  onUpdate: (uid: number, gid: number, mode: string) => Promise<boolean>
 }
 
 interface FormData {
@@ -19,7 +18,7 @@ interface FormData {
   mode: string
 }
 
-export function FileModeDialog({ uid, gid, mode, onUpdate, onSuccess }: FileModeDialogProps) {
+export function FileModeDialog({ uid, gid, mode, onUpdate }: FileModeDialogProps) {
   const buildInitialFormData = useCallback((): FormData => {
     return {
       uid: uid.toString(),
@@ -28,29 +27,22 @@ export function FileModeDialog({ uid, gid, mode, onUpdate, onSuccess }: FileMode
     }
   }, [uid, gid, mode])
 
-  const [open, setOpen] = useState(false)
-
   const handleSave = async (formData: FormData) => {
-    onUpdate(parseInt(formData.uid), parseInt(formData.gid), formData.mode)
-    setOpen(false)
-    onSuccess?.()
-    return true
+    return onUpdate(parseInt(formData.uid), parseInt(formData.gid), formData.mode)
   }
 
   return (
     <>
-      <Button
-        type={"button"}
-        variant="outline"
-        size="sm"
-        onClick={() => setOpen(true)}
-      >
-        <Settings className="w-4 h-4" />
-      </Button>
-
       <SimpleFormDialog<FormData>
-        open={open}
-        onOpenChange={setOpen}
+        trigger={
+          <Button
+            type={"button"}
+            variant="outline"
+            size="sm"
+          >
+            <Settings className="w-4 h-4" />
+          </Button>
+        }
         title="Edit permissions and ownership"
         buildInitial={buildInitialFormData}
         onSave={handleSave}

@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
@@ -22,8 +21,6 @@ interface BoxLoadBalancerServicesProps {
 export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [addDialogOpen, setAddDialogOpen] = useState(false)
-  const [editingLoadBalancerService, setEditingLoadBalancerService] = useState<components["schemas"]["LoadBalancerService"] | null>(null)
 
   const allowEditing = box.boxType === "normal"
 
@@ -51,25 +48,25 @@ export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
     }
   })
 
-  const handleDeleteLoadBalancerService = (loadBalancerServiceId: string) => {
-    deleteLoadBalancerServiceMutation.mutate({
-      params: {
-        path: {
-          workspaceId: workspaceId!,
-          id: box.id,
-          loadBalancerServiceId: loadBalancerServiceId
+  const handleDeleteLoadBalancerService = async (loadBalancerServiceId: string) => {
+    try {
+      await deleteLoadBalancerServiceMutation.mutateAsync({
+        params: {
+          path: {
+            workspaceId: workspaceId!,
+            id: box.id,
+            loadBalancerServiceId: loadBalancerServiceId
+          }
         }
-      }
-    }, {
-      onSuccess: () => {
-        toast.success("LoadBalancerService deleted successfully!")
-      },
-      onError: (error) => {
-        toast.error("Failed to delete loadBalancerService", {
-          description: error.detail || "An error occurred while deleting the loadBalancerService."
-        })
-      }
-    })
+      })
+      toast.success("LoadBalancerService deleted successfully!")
+      return true
+    } catch (error: any) {
+      toast.error("Failed to delete loadBalancerService", {
+        description: error.detail || "An error occurred while deleting the loadBalancerService."
+      })
+      return false
+    }
   }
 
   const loadBalancerServices = loadBalancerServicesQuery.data?.items || []
@@ -164,16 +161,24 @@ export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
           <div className="flex space-x-2">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setEditingLoadBalancerService(row.original)}
-                >
-                  <Edit className="w-4 h-4"/>
-                </Button>
+                <div>
+                  <EditLoadBalancerServiceDialog
+                    boxId={box.id}
+                    loadBalancerService={row.original}
+                    trigger={
+                      <Button
+                        variant="outline"
+                        size="sm"
+                      >
+                        <Edit className="w-4 h-4"/>
+                      </Button>
+                    }
+                    onSuccess={() => loadBalancerServicesQuery.refetch()}
+                  />
+                </div>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Edit loadBalancerService</p>
+                <p>Edit load balancer service</p>
               </TooltipContent>
             </Tooltip>
             <Tooltip>
@@ -189,8 +194,8 @@ export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
                         <Trash2 className="w-4 h-4"/>
                       </Button>
                     }
-                    title="Delete LoadBalancerService"
-                    description={`Are you sure you want to delete the loadBalancerService for ${row.original.hostname}${row.original.pathPrefix}?`}
+                    title="Delete Load Balancer Service"
+                    description={`Are you sure you want to delete the load balancer service for ${row.original.hostname}${row.original.pathPrefix}?`}
                     confirmText="Delete"
                     onConfirm={() => handleDeleteLoadBalancerService(row.original.id)}
                     destructive
@@ -198,7 +203,7 @@ export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
                 </div>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Delete loadBalancerService</p>
+                <p>Delete load balancer service</p>
               </TooltipContent>
             </Tooltip>
           </div>
@@ -218,15 +223,22 @@ export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
                 HTTP loadBalancerService rules for accessing this box
               </CardDescription>
             </div>
-            {allowEditing && <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setAddDialogOpen(true)}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              New Load Balancer Service
-            </Button>}
+            {allowEditing && (
+              <AddLoadBalancerServiceDialog
+                boxId={box.id}
+                trigger={
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    New Load Balancer Service
+                  </Button>
+                }
+                onSuccess={() => loadBalancerServicesQuery.refetch()}
+              />
+            )}
           </div>
         </CardHeader>
         <CardContent>
@@ -238,27 +250,6 @@ export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
           />
         </CardContent>
       </Card>
-
-      <AddLoadBalancerServiceDialog
-        boxId={box.id}
-        open={addDialogOpen}
-        onOpenChange={setAddDialogOpen}
-        onSuccess={() => loadBalancerServicesQuery.refetch()}
-      />
-
-      {editingLoadBalancerService && (
-        <EditLoadBalancerServiceDialog
-          boxId={box.id}
-          loadBalancerService={editingLoadBalancerService}
-          open={true}
-          onOpenChange={(open) => {
-            if (!open) {
-              setEditingLoadBalancerService(null)
-            }
-          }}
-          onSuccess={() => loadBalancerServicesQuery.refetch()}
-        />
-      )}
     </>
   )
 }

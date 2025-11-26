@@ -1,4 +1,4 @@
-import { type ReactNode } from "react"
+import { type ComponentType, type ReactElement, type ReactNode } from "react"
 import { Button } from "@/components/ui/button.tsx"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
@@ -15,10 +15,10 @@ interface WorkspaceOverviewCardProps {
     id: string | number
     content: ReactNode
   }>
+  addNewDialog?: ComponentType<{ trigger: ReactElement }>
   emptyState: {
     message: string
     createButtonText: string
-    onCreateClick: () => void
     isCreateDisabled?: boolean
     createDisabledMessage?: string
   }
@@ -26,7 +26,6 @@ interface WorkspaceOverviewCardProps {
     viewAllText: string
     onViewAllClick: () => void
     addNewText: string
-    onAddNewClick: () => void
     isAddNewDisabled?: boolean
   }
 }
@@ -39,9 +38,13 @@ export function WorkspaceOverviewCard({
   isLoading,
   error,
   items,
+  addNewDialog,
   emptyState,
   actions,
 }: WorkspaceOverviewCardProps) {
+
+  const AddNewDialog = addNewDialog
+
   return (
     <Card className="flex flex-col h-full">
       <CardHeader>
@@ -73,14 +76,15 @@ export function WorkspaceOverviewCard({
                   <div className="text-sm text-muted-foreground mb-4">
                     {emptyState.message}
                   </div>
-                  <Button 
-                    onClick={emptyState.onCreateClick}
-                    size="sm"
-                    disabled={emptyState.isCreateDisabled}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    {emptyState.createButtonText}
-                  </Button>
+                  {AddNewDialog && <AddNewDialog trigger={
+                    <Button
+                      size="sm"
+                      disabled={emptyState.isCreateDisabled}
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      {emptyState.createButtonText}
+                    </Button>
+                  }/>}
                   {emptyState.isCreateDisabled && emptyState.createDisabledMessage && (
                     <div className="text-xs text-muted-foreground mt-2">
                       {emptyState.createDisabledMessage}
@@ -113,14 +117,15 @@ export function WorkspaceOverviewCard({
               {actions.viewAllText}
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
-            <Button 
-              size="sm"
-              onClick={actions.onAddNewClick}
-              disabled={actions.isAddNewDisabled}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              {actions.addNewText}
-            </Button>
+            {AddNewDialog && <AddNewDialog trigger={
+              <Button
+                size="sm"
+                disabled={actions.isAddNewDisabled}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                {actions.addNewText}
+              </Button>
+            }/>}
           </div>
         )}
       </CardContent>

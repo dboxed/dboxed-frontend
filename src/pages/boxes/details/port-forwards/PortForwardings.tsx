@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
@@ -21,8 +20,6 @@ interface PortForwardingsProps {
 export function PortForwardings({ box }: PortForwardingsProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [addDialogOpen, setAddDialogOpen] = useState(false)
-  const [editingPortForward, setEditingPortForward] = useState<components["schemas"]["BoxPortForward"] | null>(null)
 
   const allowEditing = box.boxType === "normal"
 
@@ -42,23 +39,27 @@ export function PortForwardings({ box }: PortForwardingsProps) {
   })
 
   const handleDeletePortForward = (portForwardId: string) => {
-    deletePortForwardMutation.mutate({
-      params: {
-        path: {
-          workspaceId: workspaceId!,
-          id: box.id,
-          portForwardId: portForwardId
+    return new Promise<boolean>(resolve => {
+      deletePortForwardMutation.mutate({
+        params: {
+          path: {
+            workspaceId: workspaceId!,
+            id: box.id,
+            portForwardId: portForwardId
+          }
         }
-      }
-    }, {
-      onSuccess: () => {
-        toast.success("Port forward deleted successfully!")
-      },
-      onError: (error) => {
-        toast.error("Failed to delete port forward", {
-          description: error.detail || "An error occurred while deleting the port forward."
-        })
-      }
+      }, {
+        onSuccess: () => {
+          toast.success("Port forward deleted successfully!")
+          resolve(true)
+        },
+        onError: (error) => {
+          toast.error("Failed to delete port forward", {
+            description: error.detail || "An error occurred while deleting the port forward."
+          })
+          resolve(false)
+        }
+      })
     })
   }
 
@@ -124,13 +125,21 @@ export function PortForwardings({ box }: PortForwardingsProps) {
           <div className="flex space-x-2">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setEditingPortForward(row.original)}
-                >
-                  <Edit className="w-4 h-4"/>
-                </Button>
+                <div>
+                  <EditPortForwardDialog
+                    boxId={box.id}
+                    portForward={row.original}
+                    trigger={
+                      <Button
+                        variant="outline"
+                        size="sm"
+                      >
+                        <Edit className="w-4 h-4"/>
+                      </Button>
+                    }
+                    onSuccess={() => portForwardsQuery.refetch()}
+                  />
+                </div>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Edit port forward</p>
@@ -178,15 +187,22 @@ export function PortForwardings({ box }: PortForwardingsProps) {
                 Port forwarding rules for this box
               </CardDescription>
             </div>
-            {allowEditing && <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setAddDialogOpen(true)}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              New Port Forward
-            </Button>}
+            {allowEditing && (
+              <AddPortForwardDialog
+                boxId={box.id}
+                trigger={
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    New Port Forward
+                  </Button>
+                }
+                onSuccess={() => portForwardsQuery.refetch()}
+              />
+            )}
           </div>
         </CardHeader>
         <CardContent>
@@ -198,27 +214,6 @@ export function PortForwardings({ box }: PortForwardingsProps) {
           />
         </CardContent>
       </Card>
-
-      <AddPortForwardDialog
-        boxId={box.id}
-        open={addDialogOpen}
-        onOpenChange={setAddDialogOpen}
-        onSuccess={() => portForwardsQuery.refetch()}
-      />
-
-      {editingPortForward && (
-        <EditPortForwardDialog
-          boxId={box.id}
-          portForward={editingPortForward}
-          open={true}
-          onOpenChange={(open) => {
-            if (!open) {
-              setEditingPortForward(null)
-            }
-          }}
-          onSuccess={() => portForwardsQuery.refetch()}
-        />
-      )}
     </>
   )
 }

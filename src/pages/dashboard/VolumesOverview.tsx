@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router"
-import { useState } from "react"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 import { HardDrive } from "lucide-react"
@@ -13,7 +12,6 @@ export function VolumesOverview() {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
   // Fetch volume providers (needed for volume creation validation)
   const volumeProvidersQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/volume-providers', {
@@ -74,10 +72,10 @@ export function VolumesOverview() {
       isLoading={volumesQuery.isLoading}
       error={!!volumesQuery.error}
       items={items}
+      addNewDialog={CreateVolumeDialog}
       emptyState={{
         message: "No volumes created yet",
         createButtonText: "Create First Volume",
-        onCreateClick: () => setCreateDialogOpen(true),
         isCreateDisabled: volumeProviders.length === 0,
         createDisabledMessage: "Create a volume provider first",
       }}
@@ -85,13 +83,8 @@ export function VolumesOverview() {
         viewAllText: "View All",
         onViewAllClick: () => navigate(`/workspaces/${workspaceId}/volumes`),
         addNewText: "Add New",
-        onAddNewClick: () => setCreateDialogOpen(true),
         isAddNewDisabled: volumeProviders.length === 0,
       }}
-      />
-      <CreateVolumeDialog
-        open={createDialogOpen}
-        onOpenChange={setCreateDialogOpen}
       />
     </>
   )

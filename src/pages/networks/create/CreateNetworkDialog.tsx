@@ -6,20 +6,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Network } from "lucide-react"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import type { components } from "@/api/models/dboxed-schema";
+import type { ReactNode } from "react";
 
 
 interface CreateNetworkDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  trigger: ReactNode
 }
 
-export function CreateNetworkDialog({ open, onOpenChange }: CreateNetworkDialogProps) {
+export function CreateNetworkDialog({ trigger }: CreateNetworkDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
 
   return (
     <BaseCreateDialog<components["schemas"]["CreateNetwork"]>
-      open={open}
-      onOpenChange={onOpenChange}
+      trigger={trigger}
       title="Create Network"
       apiRoute="/v1/workspaces/{workspaceId}/networks"
       apiParams={{

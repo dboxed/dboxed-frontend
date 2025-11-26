@@ -9,8 +9,7 @@ import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/dboxed-schema"
 import type { ColumnDef } from "@tanstack/react-table"
-import { Plus, Trash2, Edit } from "lucide-react"
-import { useState } from "react"
+import { Trash2 } from "lucide-react"
 import {
   type ComposeProjectInfo,
   extractComposeProjectInfo
@@ -24,8 +23,6 @@ interface ComposeProjectsProps {
 export function ComposeProjects({ box }: ComposeProjectsProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [newProjectDialogOpen, setNewProjectDialogOpen] = useState(false)
-  const [editingProject, setEditingProject] = useState<ComposeProjectInfo | null>(null)
 
   const allowEditing = box.boxType === "normal"
 
@@ -36,18 +33,6 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
         workspaceId: workspaceId!,
         id: box.id
       }
-    }
-  })
-
-  const createProjectMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects', {
-    onSuccess: () => {
-      composeProjectsQuery.refetch()
-    }
-  })
-
-  const updateProjectMutation = client.useMutation('patch', '/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects/{composeName}', {
-    onSuccess: () => {
-      composeProjectsQuery.refetch()
     }
   })
 
@@ -64,76 +49,24 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
     return extractComposeProjectInfo(project.composeProject, 0, project.name)
   })
 
-  const handleNewProject = (name: string, content: string) => {
-    return new Promise<boolean>((resolve) => {
-      createProjectMutation.mutate({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-            id: box.id
-          }
-        },
-        body: {
-          name: name,
-          composeProject: content
-        }
-      }, {
-        onSuccess: () => {
-          toast.success("Compose project created successfully!")
-          resolve(true)
-        },
-        onError: (error) => {
-          toast.error("Failed to create compose project", {
-            description: error.detail || "An error occurred while creating the compose project."
-          })
-          resolve(false)
-        }
-      })
-    })
-  }
-
   const handleDeleteProject = (projectName: string) => {
-    deleteProjectMutation.mutate({
-      params: {
-        path: {
-          workspaceId: workspaceId!,
-          id: box.id,
-          composeName: projectName
-        }
-      }
-    }, {
-      onSuccess: () => {
-        toast.success("Compose project deleted successfully!")
-      },
-      onError: (error) => {
-        toast.error("Failed to delete compose project", {
-          description: error.detail || "An error occurred while deleting the compose project."
-        })
-      }
-    })
-  }
-
-  const handleUpdateProject = (projectName: string, updatedContent: string) => {
-    return new Promise<boolean>((resolve) => {
-      updateProjectMutation.mutate({
+    return new Promise<boolean>(resolve => {
+      deleteProjectMutation.mutate({
         params: {
           path: {
             workspaceId: workspaceId!,
             id: box.id,
             composeName: projectName
           }
-        },
-        body: {
-          composeProject: updatedContent
         }
       }, {
         onSuccess: () => {
-          toast.success("Compose project updated successfully!")
+          toast.success("Compose project deleted successfully!")
           resolve(true)
         },
         onError: (error) => {
-          toast.error("Failed to update compose project", {
-            description: error.detail || "An error occurred while updating the compose project."
+          toast.error("Failed to delete compose project", {
+            description: error.detail || "An error occurred while deleting the compose project."
           })
           resolve(false)
         }
@@ -172,41 +105,39 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
           <div className="flex space-x-2">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setEditingProject(row.original)}
-                >
-                  <Edit className="w-4 h-4" />
-                </Button>
+                <ComposeProjectEditorDialog
+                  box={box}
+                  project={row.original}
+                  onSaved={() => composeProjectsQuery.refetch()}
+                />
               </TooltipTrigger>
               <TooltipContent>
                 <p>Edit project</p>
               </TooltipContent>
             </Tooltip>
             {allowEditing && <Tooltip>
-              <TooltipTrigger asChild>
-                <div>
-                  <ConfirmationDialog
-                    trigger={
-                      <Button
-                        variant="outline"
-                        size="sm"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    }
-                    title="Delete Compose Project"
-                    description={`Are you sure you want to delete "${row.original.name}"? This will remove all services in this project.`}
-                    confirmText="Delete"
-                    onConfirm={() => handleDeleteProject(row.original.name)}
-                    destructive
-                  />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Delete project</p>
-              </TooltipContent>
+                <TooltipTrigger asChild>
+                    <div>
+                        <ConfirmationDialog
+                            trigger={
+                              <Button
+                                variant="outline"
+                                size="sm"
+                              >
+                                <Trash2 className="w-4 h-4"/>
+                              </Button>
+                            }
+                            title="Delete Compose Project"
+                            description={`Are you sure you want to delete "${row.original.name}"? This will remove all services in this project.`}
+                            confirmText="Delete"
+                            onConfirm={() => handleDeleteProject(row.original.name)}
+                            destructive
+                        />
+                    </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>Delete project</p>
+                </TooltipContent>
             </Tooltip>}
           </div>
         )
@@ -225,15 +156,10 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
                 Docker Compose projects for this box
               </CardDescription>
             </div>
-            {allowEditing && <Button
-              type={"button"}
-              variant="outline"
-              size="sm"
-              onClick={() => setNewProjectDialogOpen(true)}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              New Project
-            </Button>}
+            {allowEditing && <AddComposeProjectDialog
+                box={box}
+                onSaved={() => composeProjectsQuery.refetch()}
+            />}
           </div>
         </CardHeader>
         <CardContent>
@@ -245,26 +171,6 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
           />
         </CardContent>
       </Card>
-
-      <AddComposeProjectDialog
-        open={newProjectDialogOpen}
-        onOpenChange={setNewProjectDialogOpen}
-        onSave={handleNewProject}
-        isLoading={createProjectMutation.isPending}
-      />
-
-      {editingProject && (
-        <ComposeProjectEditorDialog
-          open={true}
-          onOpenChange={(open) => {
-            if (!open) {
-              setEditingProject(null)
-            }
-          }}
-          project={editingProject}
-          onUpdateProject={(updatedContent) => handleUpdateProject(editingProject.name, updatedContent)}
-        />
-      )}
     </>
   )
 }

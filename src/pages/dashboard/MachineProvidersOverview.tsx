@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router"
-import { useState } from "react"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
 import { Cloud } from "lucide-react"
@@ -13,7 +12,6 @@ export function MachineProvidersOverview() {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
   // Fetch machine providers
   const machineProvidersQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/machine-providers', {
@@ -63,21 +61,16 @@ export function MachineProvidersOverview() {
       isLoading={machineProvidersQuery.isLoading}
       error={!!machineProvidersQuery.error}
       items={items}
+      addNewDialog={CreateMachineProviderDialog}
       emptyState={{
         message: "No machine providers configured yet",
         createButtonText: "Create First Provider",
-        onCreateClick: () => setCreateDialogOpen(true),
       }}
       actions={{
         viewAllText: "View All",
         onViewAllClick: () => navigate(`/workspaces/${workspaceId}/machine-providers`),
         addNewText: "Add New",
-        onAddNewClick: () => setCreateDialogOpen(true),
       }}
-      />
-      <CreateMachineProviderDialog
-        open={createDialogOpen}
-        onOpenChange={setCreateDialogOpen}
       />
     </>
   )

@@ -6,7 +6,6 @@ import { useDboxedCloudQueryClient } from "@/api/dboxed-cloud-api.ts";
 import { DataTable } from "@/components/data-table.tsx";
 import { BasePage } from "@/pages/base/BasePage.tsx";
 import { CreditCard, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx";
 import { toast } from "sonner";
 import type { components } from "@/api/models/dboxed-cloud-schema";
@@ -20,7 +19,6 @@ type StripePaymentMethod = components["schemas"]["StripePaymentMethod"];
 export function PaymentMethodsTab() {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedCloudQueryClient();
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
   const customer = client.useQuery("get", "/v1/cloud/workspaces/{workspaceId}/billing/customer", {
     params: {
@@ -52,10 +50,12 @@ export function PaymentMethodsTab() {
         }
       });
       toast.success("Payment method deleted successfully");
-      await paymentMethods.refetch();
+      paymentMethods.refetch();
+      return true
     } catch (error) {
       toast.error("Failed to delete payment method");
       console.error("Failed to delete payment method:", error);
+      return false
     }
   };
 
@@ -72,15 +72,13 @@ export function PaymentMethodsTab() {
         }
       });
       toast.success("Default payment method updated successfully");
-      await customer.refetch();
+      customer.refetch();
+      return true
     } catch (error) {
       toast.error("Failed to update default payment method");
       console.error("Failed to update default payment method:", error);
+      return false
     }
-  };
-
-  const handleAddPaymentMethod = () => {
-    setIsAddDialogOpen(true);
   };
 
   const defaultPaymentMethodId = customer.data?.defaultPaymentMethod;
@@ -94,7 +92,7 @@ export function PaymentMethodsTab() {
         const isDefault = row.original.id === defaultPaymentMethodId;
         return (
           <div className="flex items-center gap-2">
-            <CreditCard className="h-4 w-4 text-muted-foreground" />
+            <CreditCard className="h-4 w-4 text-muted-foreground"/>
             <Badge variant="secondary" className="capitalize">
               {type}
             </Badge>
@@ -184,7 +182,7 @@ export function PaymentMethodsTab() {
                   size="sm"
                   disabled={deletePaymentMethodMutation.isPending}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="h-4 w-4"/>
                 </Button>
               }
               title="Delete Payment Method"
@@ -226,10 +224,6 @@ export function PaymentMethodsTab() {
               Manage your payment methods for billing
             </p>
           </div>
-          <Button disabled>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Payment Method
-          </Button>
         </div>
         <div className="text-muted-foreground">Loading payment methods...</div>
       </BasePage>
@@ -246,10 +240,6 @@ export function PaymentMethodsTab() {
               Manage your payment methods for billing
             </p>
           </div>
-          <Button onClick={handleAddPaymentMethod}>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Payment Method
-          </Button>
         </div>
         <div className="text-red-600">Failed to load payment methods</div>
       </BasePage>
@@ -267,15 +257,12 @@ export function PaymentMethodsTab() {
             Manage your payment methods for billing
           </p>
         </div>
-        {data.length ? <Button onClick={handleAddPaymentMethod}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Payment Method
-        </Button> : null}
+        {data.length ? <AddPaymentMethodDialog/> : null}
       </div>
 
       {isDboxedCloudTestInstance() && (
         <Alert className="mb-6" variant={"destructive"}>
-          <CreditCard className="h-4 w-4" />
+          <CreditCard className="h-4 w-4"/>
           <AlertTitle>Dboxed Test Instance</AlertTitle>
           <AlertDescription>
             <p>
@@ -298,15 +285,12 @@ export function PaymentMethodsTab() {
 
       {data.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-center">
-          <CreditCard className="h-12 w-12 text-muted-foreground mb-4" />
+          <CreditCard className="h-12 w-12 text-muted-foreground mb-4"/>
           <p className="text-lg font-medium">No payment methods</p>
           <p className="text-sm text-muted-foreground max-w-sm mt-2">
             Add a payment method to enable automatic billing for your workspace
           </p>
-          <Button onClick={handleAddPaymentMethod} className="mt-4">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Your First Payment Method
-          </Button>
+          <AddPaymentMethodDialog/>
         </div>
       ) : (
         <DataTable
@@ -316,17 +300,22 @@ export function PaymentMethodsTab() {
           searchPlaceholder="Search payment methods..."
         />
       )}
-
-      <SimpleDialog
-        open={isAddDialogOpen}
-        onOpenChange={setIsAddDialogOpen}
-        title="Add Payment Method"
-        showSave={false}
-        showCancel={false}
-        wide={true}
-      >
-        <StripeCheckout />
-      </SimpleDialog>
     </BasePage>
   );
+}
+
+export function AddPaymentMethodDialog() {
+  return <SimpleDialog
+    trigger={<Button className="mt-4">
+      <Plus className="mr-2 h-4 w-4"/>
+      Add Your First Payment Method
+    </Button>}
+    //onOpenChange={setIsAddDialogOpen}
+    title="Add Payment Method"
+    showSave={false}
+    showCancel={false}
+    wide={true}
+  >
+    <StripeCheckout/>
+  </SimpleDialog>
 }

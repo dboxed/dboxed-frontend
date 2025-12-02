@@ -1,6 +1,5 @@
 import { BaseCreateDialog } from "@/components/BaseCreateDialog.tsx"
 import { MachineProviderSelector } from "./MachineProviderSelector.tsx"
-import { BoxSelector } from "./BoxSelector.tsx"
 import { AwsMachineConfigForm } from "./AwsMachineConfigForm.tsx"
 import { HetznerMachineConfigForm } from "./HetznerMachineConfigForm.tsx"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
@@ -84,8 +83,6 @@ export function CreateMachineDialog({ trigger }: CreateMachineDialogProps) {
               </FormItem>
             )}
           />
-
-          <BoxSelector form={form} />
 
           <MachineProviderSelector form={form} />
 

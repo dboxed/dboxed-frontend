@@ -28,22 +28,6 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           />
 
           <LabelAndValue
-            label="Box"
-            value={
-              <ReferenceLabel
-                resourceId={data.box}
-                resourcePath="/v1/workspaces/{workspaceId}/boxes/{id}"
-                pathParams={{
-                  workspaceId: data.workspace,
-                  id: data.box
-                }}
-                detailsUrl={`/workspaces/${data.workspace}/boxes/${data.box}`}
-                fallbackLabel="Box"
-              />
-            }
-          />
-          
-          <LabelAndValue
             label="Workspace"
             value={
               <ReferenceLabel

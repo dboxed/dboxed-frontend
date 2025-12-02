@@ -4,7 +4,9 @@ import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard"
 import { MachineProviderInfoCard } from "./MachineProviderInfoCard"
+import { BoxesCard } from "./BoxesCard"
 import type { components } from "@/api/models/dboxed-schema"
+import { cn } from "@/lib/utils.ts";
 
 export function MachineDetailsPage() {
   const { workspaceId } = useSelectedWorkspaceId()
@@ -32,26 +34,32 @@ export function MachineDetailsPage() {
         }
       }}
     >
-      {(data) => (
-        <Tabs defaultValue="general" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
+      {(data) => {
+        const hasMachineProvider = !!data.machineProvider
+        return <Tabs defaultValue="general" className="space-y-6">
+          <TabsList className={cn("grid w-full", hasMachineProvider ? "grid-cols-3" : "grid-cols-2")}>
             <TabsTrigger value="general">General Information</TabsTrigger>
-            <TabsTrigger value="machine-provider">Machine Provider</TabsTrigger>
+            <TabsTrigger value="boxes">Boxes</TabsTrigger>
+            {hasMachineProvider && <TabsTrigger value="machine-provider">Machine Provider</TabsTrigger>}
           </TabsList>
 
           <TabsContent value="general">
             <GeneralInfoCard data={data} />
           </TabsContent>
 
-          <TabsContent value="machine-provider">
+          <TabsContent value="boxes">
+            <BoxesCard machineId={data.id} workspaceId={data.workspace} />
+          </TabsContent>
+
+          {hasMachineProvider && <TabsContent value="machine-provider">
             <MachineProviderInfoCard
-              machineProviderId={data.machineProvider}
-              machineProviderType={data.machineProviderType}
+              machineProviderId={data.machineProvider!}
+              machineProviderType={data.machineProviderType!}
               workspaceId={data.workspace}
             />
-          </TabsContent>
+          </TabsContent>}
         </Tabs>
-      )}
+      }}
     </BaseResourceDetailsPage>
   )
 } 

@@ -676,6 +676,41 @@ export interface paths {
         patch: operations["patch-v1-workspaces-by-workspace-id-machines-by-id"];
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/machines/{id}/boxes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID machines by ID boxes */
+        get: operations["get-v1-workspaces-by-workspace-id-machines-by-id-boxes"];
+        put?: never;
+        /** Post v1 workspaces by workspace ID machines by ID boxes */
+        post: operations["post-v1-workspaces-by-workspace-id-machines-by-id-boxes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/machines/{id}/boxes/{boxId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete v1 workspaces by workspace ID machines by ID boxes by box ID */
+        delete: operations["delete-v1-workspaces-by-workspace-id-machines-by-id-boxes-by-box-id"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/networks": {
         parameters: {
             query?: never;
@@ -1137,6 +1172,14 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        AddBoxToMachineRequest: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            boxId: string;
+        };
         AttachVolumeRequest: {
             /**
              * Format: uri
@@ -1173,7 +1216,6 @@ export interface components {
             boxType: string;
             /** Format: date-time */
             createdAt: string;
-            dboxedVersion: string;
             desiredState: string;
             id: string;
             machine: string | null;
@@ -1324,9 +1366,8 @@ export interface components {
              */
             readonly $schema?: string;
             aws?: components["schemas"]["CreateMachineAws"];
-            box: string;
             hetzner?: components["schemas"]["CreateMachineHetzner"];
-            machineProvider: string;
+            machineProvider?: string;
             name: string;
         };
         CreateMachineAws: {
@@ -1814,12 +1855,12 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            box: string;
             /** Format: date-time */
             createdAt: string;
+            dboxedVersion: string;
             id: string;
-            machineProvider: string;
-            machineProviderType: string;
+            machineProvider?: string;
+            machineProviderType?: string;
             name: string;
             status: string;
             statusDetails: string;
@@ -4664,6 +4705,114 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Machine"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-machines-by-id-boxes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListBodyBox"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-machines-by-id-boxes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddBoxToMachineRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-v1-workspaces-by-workspace-id-machines-by-id-boxes-by-box-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                boxId: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
             /** @description Error */

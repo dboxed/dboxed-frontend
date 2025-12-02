@@ -1,4 +1,4 @@
-import { Box, LayoutDashboard, Users, HardDrive, Key, BookOpen, Globe } from "lucide-react"
+import { Box, LayoutDashboard, Users, HardDrive, Key, BookOpen, Globe, Monitor } from "lucide-react"
 
 import { NavItems } from "@/components/nav-items.tsx"
 import { NavUser } from "@/components/nav-user"
@@ -34,11 +34,11 @@ const navMain = [
     navigate: "/workspaces/{workspaceId}/boxes",
     icon: <Box/>,
   },
-  /*{
+  {
     title: "Machines",
     navigate: "/workspaces/{workspaceId}/machines",
     icon: <Monitor/>,
-  },*/
+  },
 ]
 
 const navWorkspace = [

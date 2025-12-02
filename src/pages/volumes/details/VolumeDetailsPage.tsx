@@ -10,45 +10,36 @@ import { Button } from "@/components/ui/button.tsx"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx"
 import { AlertTriangle, Unlock } from "lucide-react"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedMutation } from "@/api/mutation.ts"
 import type { components } from "@/api/models/dboxed-schema";
-import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
 
 export function VolumeDetailsPage() {
   const { workspaceId } = useSelectedWorkspaceId()
   const { volumeId } = useParams<{ volumeId: string }>()
-  const client = useDboxedQueryClient()
-  const queryClient = useQueryClient()
 
   if (!volumeId) {
     return <div>Invalid volume ID</div>
   }
 
-  const forceReleaseMountMutation = client.useMutation(
+  const forceReleaseMountMutation = useDboxedMutation(
     'post',
-    '/v1/workspaces/{workspaceId}/volumes/{id}/force-release-mount'
+    '/v1/workspaces/{workspaceId}/volumes/{id}/force-release-mount',
+    {
+      successMessage: "Volume has been released!",
+      errorMessage: "Failed to release volume",
+      refetchPath: "/v1/workspaces/{workspaceId}/volumes/{id}",
+    }
   )
 
   const handleForceRelease = async () => {
-    try {
-      await forceReleaseMountMutation.mutateAsync({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-            id: volumeId,
-          }
+    return await forceReleaseMountMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+          id: volumeId,
         }
-      })
-      toast.success("Volume has been released!")
-      queryClient.invalidateQueries({ queryKey: ['get', '/v1/workspaces/{workspaceId}/volumes/{id}'] })
-      return true
-    } catch (error: any) {
-      toast.error("Failed to delete compose project", {
-        description: error.detail || "An error occurred while deleting the compose project."
-      })
-      return false
-    }
+      }
+    })
   }
 
   return (

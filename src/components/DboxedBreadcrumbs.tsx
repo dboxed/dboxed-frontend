@@ -8,7 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedQueryClient } from "@/api/client.ts"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher"
 
 interface BreadcrumbElementProps {

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { DataTable } from "@/components/data-table.tsx"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedQueryClient } from "@/api/client.ts"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useNavigate } from "react-router"
 import { formatDuration } from "@/utils/time.ts"

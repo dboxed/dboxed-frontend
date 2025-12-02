@@ -5,7 +5,8 @@ import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip.tsx"
 import { AddComposeProjectDialog } from "./AddComposeProjectDialog.tsx"
 import { ComposeProjectEditorDialog } from "./ComposeProjectEditorDialog.tsx"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedQueryClient } from "@/api/client.ts"
+import { useDboxedMutation } from "@/api/mutation.ts"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/dboxed-schema"
 import type { ColumnDef } from "@tanstack/react-table"
@@ -14,7 +15,6 @@ import {
   type ComposeProjectInfo,
   extractComposeProjectInfo
 } from "@/pages/boxes/details/compose-projects/project-info.ts";
-import { toast } from "sonner"
 
 interface ComposeProjectsProps {
   box: components["schemas"]["Box"]
@@ -36,10 +36,10 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
     }
   })
 
-  const deleteProjectMutation = client.useMutation('delete', '/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects/{composeName}', {
-    onSuccess: () => {
-      composeProjectsQuery.refetch()
-    }
+  const deleteProjectMutation = useDboxedMutation('delete', '/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects/{composeName}', {
+    successMessage: "Compose project deleted successfully!",
+    errorMessage: "Failed to delete compose project",
+    refetchPath: "/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects",
   })
 
   const composeProjects = composeProjectsQuery.data?.items || []
@@ -49,28 +49,15 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
     return extractComposeProjectInfo(project.composeProject, 0, project.name)
   })
 
-  const handleDeleteProject = (projectName: string) => {
-    return new Promise<boolean>(resolve => {
-      deleteProjectMutation.mutate({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-            id: box.id,
-            composeName: projectName
-          }
+  const handleDeleteProject = async (projectName: string) => {
+    return await deleteProjectMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+          id: box.id,
+          composeName: projectName
         }
-      }, {
-        onSuccess: () => {
-          toast.success("Compose project deleted successfully!")
-          resolve(true)
-        },
-        onError: (error) => {
-          toast.error("Failed to delete compose project", {
-            description: error.detail || "An error occurred while deleting the compose project."
-          })
-          resolve(false)
-        }
-      })
+      }
     })
   }
 

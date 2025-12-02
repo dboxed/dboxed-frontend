@@ -8,7 +8,7 @@ import { BaseListPage } from "@/pages/base";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { CreateVolumeDialog } from "./create/CreateVolumeDialog.tsx";
 import { VolumeMountBadge } from "./details/VolumeMountBadge.tsx";
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts";
+import { useDboxedQueryClient } from "@/api/client.ts";
 import { TimeAgo } from "@/components/TimeAgo.tsx";
 
 export function ListVolumesPage() {

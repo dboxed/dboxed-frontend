@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input.tsx"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
 import { Cloud } from "lucide-react"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedQueryClient } from "@/api/client.ts"
 import type { UseFormReturn } from "react-hook-form";
 
 interface AwsConfigFormProps {

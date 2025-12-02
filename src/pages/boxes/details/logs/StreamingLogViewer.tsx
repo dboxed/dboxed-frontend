@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import type { components } from "@/api/models/dboxed-schema"
 import { envVars } from "@/env.ts"
-import { useDboxedApiEventSource } from "@/api/dboxed-api.ts"
+import { useDboxedApiEventSource } from "@/api/client.ts"
 import { VirtualizedLogViewer } from "@/components/logs/VirtualizedLogViewer.tsx"
 
 interface StreamingLogViewerProps {

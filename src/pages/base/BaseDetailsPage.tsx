@@ -1,6 +1,5 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { useNavigate } from "react-router"
-import { toast } from "sonner"
 import { DeleteButton } from "@/components/DeleteButton"
 
 export interface BaseDetailsPagePropsBase<T, U> {
@@ -14,8 +13,8 @@ export interface BaseDetailsPagePropsBase<T, U> {
 interface BaseDetailsPageProps<T, U> extends BaseDetailsPagePropsBase<T, U> {
   title: string
   resourceData?: T
-  onDelete?: () => Promise<void>
-  onSave?: (data: U) => Promise<void>
+  onDelete?: () => Promise<boolean>
+  onSave?: (data: U) => Promise<boolean>
   afterDeleteUrl?: string
   isLoading?: boolean
   isDeleting?: boolean
@@ -29,35 +28,18 @@ export function BaseDetailsPage<T, U>(props: BaseDetailsPageProps<T, U>) {
     if (!props.onDelete) {
       return true
     }
-    try {
-      await props.onDelete()
-      toast.success(`${props.title} deleted successfully!`)
-      if (props.afterDeleteUrl) {
-        navigate(props.afterDeleteUrl)
-      }
-      return true
-    } catch (error: any) {
-      toast.error(`Failed to delete ${props.title.toLowerCase()}`, {
-        description: error.detail || `An error occurred while deleting the ${props.title.toLowerCase()}.`
-      })
-      return false
+    const ok = await props.onDelete()
+    if (ok && props.afterDeleteUrl) {
+      navigate(props.afterDeleteUrl)
     }
+    return ok
   }
 
   const handleSave = async (data: U) => {
-    if (props.onSave) {
-      try {
-        await props.onSave(data)
-        toast.success(`${props.title} saved successfully!`)
-        return true
-      } catch (error: any) {
-        toast.error(`Failed to save ${props.title.toLowerCase()}`, {
-          description: error.detail || `An error occurred while saving the ${props.title.toLowerCase()}.`
-        })
-        return false
-      }
+    if (!props.onSave) {
+      return false
     }
-    return false
+    return await props.onSave(data)
   }
 
   if (props.isLoading || !props.resourceData) {

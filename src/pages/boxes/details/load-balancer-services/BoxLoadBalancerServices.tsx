@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import { DataTable } from "@/components/data-table.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedQueryClient } from "@/api/client.ts"
+import { useDboxedMutation } from "@/api/mutation.ts"
 import type { components } from "@/api/models/dboxed-schema"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Plus, Trash2, Edit } from "lucide-react"
@@ -11,7 +12,6 @@ import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip.tsx"
 import { AddLoadBalancerServiceDialog } from "./AddLoadBalancerServiceDialog.tsx"
 import { EditLoadBalancerServiceDialog } from "./EditLoadBalancerServiceDialog.tsx"
-import { toast } from "sonner"
 import { StatusBadge } from "@/components/StatusBadge.tsx";
 
 interface BoxLoadBalancerServicesProps {
@@ -42,31 +42,22 @@ export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
     }
   })
 
-  const deleteLoadBalancerServiceMutation = client.useMutation('delete', '/v1/workspaces/{workspaceId}/boxes/{id}/load-balancer-services/{loadBalancerServiceId}', {
-    onSuccess: () => {
-      loadBalancerServicesQuery.refetch()
-    }
+  const deleteLoadBalancerServiceMutation = useDboxedMutation('delete', '/v1/workspaces/{workspaceId}/boxes/{id}/load-balancer-services/{loadBalancerServiceId}', {
+    successMessage: "Load Balancer Service deleted successfully!",
+    errorMessage: "Failed to delete load balancer service",
+    refetchPath: "/v1/workspaces/{workspaceId}/boxes/{id}/load-balancer-services",
   })
 
   const handleDeleteLoadBalancerService = async (loadBalancerServiceId: string) => {
-    try {
-      await deleteLoadBalancerServiceMutation.mutateAsync({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-            id: box.id,
-            loadBalancerServiceId: loadBalancerServiceId
-          }
+    return await deleteLoadBalancerServiceMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+          id: box.id,
+          loadBalancerServiceId: loadBalancerServiceId
         }
-      })
-      toast.success("LoadBalancerService deleted successfully!")
-      return true
-    } catch (error: any) {
-      toast.error("Failed to delete loadBalancerService", {
-        description: error.detail || "An error occurred while deleting the loadBalancerService."
-      })
-      return false
-    }
+      }
+    })
   }
 
   const loadBalancerServices = loadBalancerServicesQuery.data?.items || []

@@ -2,16 +2,16 @@ import { Button } from "@/components/ui/button"
 import type { ColumnDef } from "@tanstack/react-table"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
-import { useDboxedCloudQueryClient } from "@/api/dboxed-cloud-api.ts";
+import { useDboxedCloudQueryClient } from "@/api/client.ts";
 import { DataTable } from "@/components/data-table.tsx";
 import { BasePage } from "@/pages/base/BasePage.tsx";
 import { CreditCard, Trash2 } from "lucide-react";
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx";
-import { toast } from "sonner";
 import type { components } from "@/api/models/dboxed-cloud-schema";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { isDboxedCloudTestInstance } from "@/env";
 import { AddPaymentMethodDialog } from "@/pages/billing/stripe/AddPaymentMethodDialog.tsx";
+import { useDboxedCloudMutation } from "@/api/mutation.ts";
 
 type StripePaymentMethod = components["schemas"]["StripePaymentMethod"];
 
@@ -35,51 +35,39 @@ export function PaymentMethodsTab() {
     }
   });
 
-  const deletePaymentMethodMutation = client.useMutation("delete", "/v1/cloud/workspaces/{workspaceId}/billing/payment-methods/{id}");
-  const updateCustomerMutation = client.useMutation("patch", "/v1/cloud/workspaces/{workspaceId}/billing/customer");
+  const deletePaymentMethodMutation = useDboxedCloudMutation("delete", "/v1/cloud/workspaces/{workspaceId}/billing/payment-methods/{id}", {
+    successMessage: "Payment method deleted successfully",
+    errorMessage: "Failed to delete payment method",
+    onComplete: paymentMethods.refetch,
+  });
+  const updateCustomerMutation = useDboxedCloudMutation("patch", "/v1/cloud/workspaces/{workspaceId}/billing/customer", {
+    successMessage: "Default payment method updated successfully",
+    errorMessage: "Failed to update default payment method",
+    onComplete: customer.refetch,
+  });
 
   const handleDeletePaymentMethod = async (paymentMethodId: string) => {
-    try {
-      await deletePaymentMethodMutation.mutateAsync({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-            id: paymentMethodId,
-          }
+    return await deletePaymentMethodMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+          id: paymentMethodId,
         }
-      });
-      toast.success("Payment method deleted successfully");
-      paymentMethods.refetch();
-      return true
-    } catch (error: any) {
-      toast.error("Failed to delete payment method", {
-        description: error.detail || "An error occurred while deleting the payment method."
-      });
-      console.error("Failed to delete payment method:", error);
-      return false
-    }
+      }
+    })
   };
 
   const handleSetDefaultPaymentMethod = async (paymentMethodId: string) => {
-    try {
-      await updateCustomerMutation.mutateAsync({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-          }
-        },
-        body: {
-          defaultPaymentMethod: paymentMethodId,
+    return await updateCustomerMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
         }
-      });
-      toast.success("Default payment method updated successfully");
-      customer.refetch();
-      return true
-    } catch (error) {
-      toast.error("Failed to update default payment method");
-      console.error("Failed to update default payment method:", error);
-      return false
-    }
+      },
+      body: {
+        defaultPaymentMethod: paymentMethodId,
+      }
+    });
   };
 
   const defaultPaymentMethodId = customer.data?.defaultPaymentMethod;

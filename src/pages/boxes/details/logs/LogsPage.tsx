@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedQueryClient } from "@/api/client.ts"
 import { Card, CardContent } from "@/components/ui/card.tsx"
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table.tsx"
 import { HardDrive } from "lucide-react"

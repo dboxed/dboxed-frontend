@@ -1,7 +1,7 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedQueryClient } from "@/api/client.ts"
 import type { UseFormReturn, FieldValues, Path } from "react-hook-form"
 
 interface S3BucketSelectorProps<TFieldValues extends FieldValues> {

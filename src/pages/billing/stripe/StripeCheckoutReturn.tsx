@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useAuth } from "react-oidc-context";
-import { useDboxedCloudQueryClient } from "@/api/dboxed-cloud-api.ts";
+import { useDboxedCloudQueryClient } from "@/api/client.ts";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
-import { toast } from "sonner";
+import { useDboxedCloudMutation } from "@/api/mutation.ts";
 
 export const StripeCheckoutReturn = () => {
   const { workspaceId } = useSelectedWorkspaceId()
@@ -24,7 +24,15 @@ export const StripeCheckoutReturn = () => {
     enabled: auth.isAuthenticated,
   });
 
-  const updateCustomerMutation = client.useMutation("patch", "/v1/cloud/workspaces/{workspaceId}/billing/customer");
+  const updateCustomerMutation = useDboxedCloudMutation("patch", "/v1/cloud/workspaces/{workspaceId}/billing/customer", {
+    successMessage: "Default payment method updated!",
+    errorMessage: "Failed to update default payment method",
+    onComplete: () => {
+      setTimeout(() => {
+        navigate(`/workspaces/${workspaceId}/billing`)
+      }, 2000)
+    }
+  });
   const [didUpdate, setDidUpdate] = useState(false)
 
   useEffect(() => {
@@ -36,7 +44,7 @@ export const StripeCheckoutReturn = () => {
     }
     setDidUpdate(true)
 
-    updateCustomerMutation.mutate({
+    updateCustomerMutation.mutateAsync({
       params: {
         path: {
           workspaceId: workspaceId!,
@@ -45,19 +53,6 @@ export const StripeCheckoutReturn = () => {
       body: {
         defaultPaymentMethod: checkoutSession.data.setup_intent.payment_method.id,
       },
-    }, {
-      onSuccess: () => {
-        toast.success("Default payment method updated!")
-        navigate(`/workspaces/${workspaceId}/billing`)
-      },
-      onError: (error) => {
-        toast.error("Failed to update default payment method", {
-          description: error.detail || "An error occurred while updating the default payment method."
-        })
-        setTimeout(() => {
-          navigate(`/workspaces/${workspaceId}/billing`)
-        }, 2000)
-      }
     })
   }, [checkoutSession.data])
 

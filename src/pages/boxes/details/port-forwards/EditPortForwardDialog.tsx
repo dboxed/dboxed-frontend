@@ -3,7 +3,7 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedMutation } from "@/api/mutation.ts"
 import type { components } from "@/api/models/dboxed-schema"
 import { toast } from "sonner"
 import type { ReactNode } from "react"
@@ -23,8 +23,13 @@ interface FormData {
 
 export function EditPortForwardDialog({ boxId, portForward, trigger, onSuccess }: EditPortForwardDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
-  const client = useDboxedQueryClient()
-  const updatePortForwardMutation = client.useMutation('patch', '/v1/workspaces/{workspaceId}/boxes/{id}/port-forwards/{portForwardId}')
+
+  const updatePortForwardMutation = useDboxedMutation('patch', '/v1/workspaces/{workspaceId}/boxes/{id}/port-forwards/{portForwardId}', {
+    successMessage: "Port forward updated successfully!",
+    errorMessage: "Failed to update port forward",
+    refetchPath: "/v1/workspaces/{workspaceId}/boxes/{id}/port-forwards",
+    onSuccess: () => onSuccess(),
+  })
 
   const handleSave = async (formData: FormData) => {
     const hostPortFirstNum = parseInt(formData.hostPortFirst, 10)
@@ -40,31 +45,20 @@ export function EditPortForwardDialog({ boxId, portForward, trigger, onSuccess }
       return false
     }
 
-    try {
-      await updatePortForwardMutation.mutateAsync({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-            id: boxId,
-            portForwardId: portForward.id
-          }
-        },
-        body: {
-          hostPortFirst: hostPortFirstNum,
-          hostPortLast: hostPortLastNum,
-          description: formData.description || undefined
+    return await updatePortForwardMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+          id: boxId,
+          portForwardId: portForward.id
         }
-      })
-
-      toast.success("Port forward updated successfully!")
-      onSuccess()
-      return true
-    } catch (error: any) {
-      toast.error("Failed to update port forward", {
-        description: error.detail || "An error occurred while updating the port forward."
-      })
-      return false
-    }
+      },
+      body: {
+        hostPortFirst: hostPortFirstNum,
+        hostPortLast: hostPortLastNum,
+        description: formData.description || undefined
+      }
+    })
   }
 
   return (

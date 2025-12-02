@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
-import { useDboxedCloudQueryClient } from "@/api/dboxed-cloud-api.ts";
+import { useDboxedCloudQueryClient } from "@/api/client.ts";
 import { DataTable } from "@/components/data-table.tsx";
 import { BasePage } from "@/pages/base/BasePage.tsx";
 import { FileText, ExternalLink } from "lucide-react";

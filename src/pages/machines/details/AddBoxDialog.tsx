@@ -1,8 +1,7 @@
 import { useState, useMemo } from "react"
-import { useQueryClient } from "@tanstack/react-query"
-import { toast } from "sonner"
 import { Package } from "lucide-react"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedQueryClient } from "@/api/client.ts"
+import { useDboxedMutation } from "@/api/mutation.ts"
 import { SimpleDialog } from "@/components/SimpleDialog.tsx"
 import {
   Select,
@@ -22,7 +21,6 @@ export function AddBoxDialog({ trigger, machineId, workspaceId }: AddBoxDialogPr
   const [selectedBoxId, setSelectedBoxId] = useState<string>("")
 
   const client = useDboxedQueryClient()
-  const queryClient = useQueryClient()
 
   const boxesQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/boxes', {
     params: {
@@ -32,7 +30,12 @@ export function AddBoxDialog({ trigger, machineId, workspaceId }: AddBoxDialogPr
     }
   })
 
-  const addBoxMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/machines/{id}/boxes')
+  const addBoxMutation = useDboxedMutation('post', '/v1/workspaces/{workspaceId}/machines/{id}/boxes', {
+    successMessage: "Box added to machine",
+    errorMessage: "Failed to add box to machine",
+    refetchPath: "/v1/workspaces/{workspaceId}/machines/{id}/boxes",
+    onSuccess: () => setSelectedBoxId(""),
+  })
 
   const boxes = boxesQuery.data?.items || []
 
@@ -53,30 +56,20 @@ export function AddBoxDialog({ trigger, machineId, workspaceId }: AddBoxDialogPr
     return boxes.filter(box => !assignedBoxIds.has(box.id))
   }, [boxes, assignedBoxIds])
 
-  const handleSave = async (): Promise<boolean> => {
+  const handleSave = async () => {
     if (!selectedBoxId) return false
 
-    try {
-      await addBoxMutation.mutateAsync({
-        params: {
-          path: {
-            workspaceId: workspaceId,
-            id: machineId,
-          }
-        },
-        body: {
-          boxId: selectedBoxId,
+    return await addBoxMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId,
+          id: machineId,
         }
-      })
-
-      await queryClient.invalidateQueries()
-      toast.success("Box added to machine")
-      setSelectedBoxId("")
-      return true
-    } catch {
-      toast.error("Failed to add box to machine")
-      return false
-    }
+      },
+      body: {
+        boxId: selectedBoxId,
+      }
+    })
   }
 
   const isLoading = boxesQuery.isLoading

@@ -1,8 +1,8 @@
 import { SimpleSelectDialog } from "@/components/SimpleSelectDialog.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedQueryClient } from "@/api/client.ts"
+import { useDboxedMutation } from "@/api/mutation.ts"
 import type { components } from "@/api/models/dboxed-schema"
-import { toast } from "sonner"
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
@@ -27,40 +27,27 @@ export function AttachVolumeDialog({ boxId, onSuccess }: AttachVolumeDialogProps
     enabled: open,
   })
 
-  const attachVolumeMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/volumes', {
-    onSuccess: () => {
-      allVolumesQuery.refetch()
-      onSuccess()
-    }
+  const attachVolumeMutation = useDboxedMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/volumes', {
+    successMessage: "Volume attached successfully!",
+    errorMessage: "Failed to attach volume",
+    refetchPath: "/v1/workspaces/{workspaceId}/boxes/{id}/volumes",
+    onSuccess: () => onSuccess(),
   })
 
-  const handleAttachVolume = (selectedVolume: components["schemas"]["Volume"]) => {
-    return new Promise<boolean>(resolve => {
-      attachVolumeMutation.mutate({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-            id: boxId
-          }
-        },
-        body: {
-          volumeId: selectedVolume.id,
-          rootUid: 0,
-          rootGid: 0,
-          rootMode: "0777"
+  const handleAttachVolume = async (selectedVolume: components["schemas"]["Volume"]) => {
+    return await attachVolumeMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+          id: boxId
         }
-      }, {
-        onSuccess: () => {
-          toast.success("Volume attached successfully!")
-          resolve(true)
-        },
-        onError: (error) => {
-          toast.error("Failed to attach volume", {
-            description: error.detail || "An error occurred while attaching the volume."
-          })
-          resolve(false)
-        }
-      })
+      },
+      body: {
+        volumeId: selectedVolume.id,
+        rootUid: 0,
+        rootGid: 0,
+        rootMode: "0777"
+      }
     })
   }
 

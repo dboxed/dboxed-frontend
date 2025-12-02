@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Label } from "@/components/ui/label.tsx"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedMutation } from "@/api/mutation.ts"
 import { useState } from "react"
 import { toast } from "sonner"
 import { Copy, Key, RefreshCw } from "lucide-react"
@@ -15,13 +15,30 @@ interface BoxTokenCardProps {
 }
 
 export function BoxRunCard({ box }: BoxTokenCardProps) {
-  const client = useDboxedQueryClient()
   const [cliCommand, setCliCommand] = useState<string>("")
 
-  const createTokenMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/tokens')
+  const createTokenMutation = useDboxedMutation('post', '/v1/workspaces/{workspaceId}/tokens', {
+    successMessage: "CLI command generated successfully!",
+    errorMessage: "Failed to create box token",
+    onSuccess: (responseData: { token?: string }) => {
+      if (responseData.token) {
+        const generatedToken = responseData.token
+        let command = `dboxed sandbox run ${box.name}`
+
+        // Add --api-url if VITE_API_URL_PUBLIC is different from DEFAULT_API_URL
+        if (envVars.VITE_API_URL_PUBLIC !== DEFAULT_API_URL) {
+          command += ` --api-url ${envVars.VITE_API_URL_PUBLIC}`
+        }
+
+        command += ` --api-token ${generatedToken}`
+
+        setCliCommand(command)
+      }
+    },
+  })
 
   const handleGenerateToken = () => {
-    createTokenMutation.mutate({
+    createTokenMutation.mutateAsync({
       params: {
         path: {
           workspaceId: box.workspace,
@@ -31,28 +48,6 @@ export function BoxRunCard({ box }: BoxTokenCardProps) {
         name: `box_${box.id}_${randomString(8)}`,
         forWorkspace: false,
         boxId: box.id,
-      }
-    }, {
-      onSuccess: (responseData) => {
-        if (responseData.token) {
-          const generatedToken = responseData.token
-          let command = `dboxed sandbox run ${box.name}`
-
-          // Add --api-url if VITE_API_URL_PUBLIC is different from DEFAULT_API_URL
-          if (envVars.VITE_API_URL_PUBLIC !== DEFAULT_API_URL) {
-            command += ` --api-url ${envVars.VITE_API_URL_PUBLIC}`
-          }
-
-          command += ` --api-token ${generatedToken}`
-
-          setCliCommand(command)
-          toast.success("CLI command generated successfully!")
-        }
-      },
-      onError: (error) => {
-        toast.error("Failed to create box token", {
-          description: error.detail || "An error occurred while creating the token."
-        })
       }
     })
   }

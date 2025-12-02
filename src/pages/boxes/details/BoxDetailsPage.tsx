@@ -11,8 +11,7 @@ import { BoxRunCard } from "./BoxRunCard.tsx"
 import { LogsPage } from "./logs/LogsPage.tsx"
 import { BoxConfigTab } from "./BoxConfigTab.tsx"
 import type { components } from "@/api/models/dboxed-schema"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
-import { toast } from "sonner"
+import { useDboxedMutation } from "@/api/mutation.ts"
 import { useState } from "react";
 
 function BoxDetailsContent({ data }: { data: components["schemas"]["Box"] }) {
@@ -49,75 +48,61 @@ function BoxDetailsContent({ data }: { data: components["schemas"]["Box"] }) {
 export function BoxDetailsPage() {
   const { workspaceId } = useSelectedWorkspaceId()
   const { boxId } = useParams<{ boxId: string }>()
-  const client = useDboxedQueryClient()
   const [refreshTrigger, setRefreshTrigger] = useState(0)
+
+  const startBoxMutation = useDboxedMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/start', {
+    successMessage: 'Box started successfully',
+    errorMessage: 'Failed to start box',
+    onSuccess: () => setRefreshTrigger(x => x + 1),
+  })
+
+  const stopBoxMutation = useDboxedMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/stop', {
+    successMessage: 'Box stopped successfully',
+    errorMessage: 'Failed to stop box',
+    onSuccess: () => setRefreshTrigger(x => x + 1),
+  })
+
+  const reconcileBoxMutation = useDboxedMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/reconcile', {
+    successMessage: 'Box reconcile triggered successfully',
+    errorMessage: 'Failed to reconcile box',
+    onSuccess: () => setRefreshTrigger(x => x + 1),
+  })
 
   if (!boxId) {
     return <div>Invalid box ID</div>
   }
 
-  const startBoxMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/start')
-  const stopBoxMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/stop')
-  const reconcileBoxMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/reconcile')
-
   const handleStart = async () => {
-    try {
-      await startBoxMutation.mutateAsync({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-            id: boxId,
-          }
+    return await startBoxMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+          id: boxId,
         }
-      })
-      toast.success('Box started successfully')
-      setRefreshTrigger(x => x + 1)
-      return true
-    } catch (error) {
-      toast.error('Failed to start box')
-      console.error('Failed to start box:', error)
-      return false
-    }
+      }
+    })
   }
 
   const handleStop = async () => {
-    try {
-      await stopBoxMutation.mutateAsync({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-            id: boxId,
-          }
+    return await stopBoxMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+          id: boxId,
         }
-      })
-      toast.success('Box stopped successfully')
-      setRefreshTrigger(x => x + 1)
-      return true
-    } catch (error) {
-      toast.error('Failed to stop box')
-      console.error('Failed to stop box:', error)
-      return false
-    }
+      }
+    })
   }
 
   const handleReconcile = async () => {
-    try {
-      await reconcileBoxMutation.mutateAsync({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-            id: boxId,
-          }
+    return await reconcileBoxMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+          id: boxId,
         }
-      })
-      toast.success('Box reconcile triggered successfully')
-      setRefreshTrigger(x => x + 1)
-      return true
-    } catch (error) {
-      toast.error('Failed to reconcile box')
-      console.error('Failed to reconcile box:', error)
-      return false
-    }
+      }
+    })
   }
 
   return (

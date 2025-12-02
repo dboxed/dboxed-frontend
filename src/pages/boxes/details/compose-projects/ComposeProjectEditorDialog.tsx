@@ -6,8 +6,7 @@ import { useCallback } from "react"
 import type { ComposeProjectInfo } from "@/pages/boxes/details/compose-projects/project-info.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { Edit } from "lucide-react";
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts";
-import { toast } from "sonner";
+import { useDboxedMutation } from "@/api/mutation.ts";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import type { components } from "@/api/models/dboxed-schema";
 
@@ -27,8 +26,13 @@ export function ComposeProjectEditorDialog({
   onSaved,
 }: ComposeProjectEditorDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
-  const client = useDboxedQueryClient()
-  const updateProjectMutation = client.useMutation('patch', '/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects/{composeName}')
+
+  const updateProjectMutation = useDboxedMutation('patch', '/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects/{composeName}', {
+    successMessage: "Compose project updated successfully!",
+    errorMessage: "Failed to update compose project",
+    refetchPath: "/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects",
+    onSuccess: () => onSaved(),
+  })
 
   const buildInitialFormData = useCallback((): EditProjectFormData => {
     return {
@@ -42,31 +46,17 @@ export function ComposeProjectEditorDialog({
       return true
     }
 
-    return new Promise<boolean>(resolve => {
-      updateProjectMutation.mutate({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-            id: box.id,
-            composeName: project.name,
-          }
-        },
-        body: {
-          composeProject: formData.content,
+    return await updateProjectMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+          id: box.id,
+          composeName: project.name,
         }
-      }, {
-        onSuccess: () => {
-          toast.success("Compose project updated successfully!")
-          resolve(true)
-          onSaved()
-        },
-        onError: (error) => {
-          toast.error("Failed to update compose project", {
-            description: error.detail || "An error occurred while updating the compose project."
-          })
-          resolve(false)
-        }
-      })
+      },
+      body: {
+        composeProject: formData.content,
+      }
     })
   }
 

@@ -6,7 +6,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/dboxed-schema"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts";
+import { useDboxedQueryClient } from "@/api/client.ts";
 import type { ReactNode } from "react";
 
 interface CreateMachineDialogProps {
@@ -30,7 +30,7 @@ export function CreateMachineDialog({ trigger }: CreateMachineDialogProps) {
   }
 
   const handleSubmit = (data: components["schemas"]["CreateMachine"]) => {
-    const mp = getMachineProvider(data.machineProvider)
+    const mp = data.machineProvider && getMachineProvider(data.machineProvider)
     if (!mp) {
       return data
     }

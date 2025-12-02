@@ -1,7 +1,8 @@
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedQueryClient } from "@/api/client.ts"
 import type { paths } from "@/api/models/dboxed-schema"
 import { BaseDetailsPage, type BaseDetailsPagePropsBase } from "./BaseDetailsPage"
 import { useEffect, useMemo, useState } from "react";
+import { useDboxedMutation } from "@/api/mutation.ts";
 
 interface BaseResourceDetailsPageProps<T, U> extends BaseDetailsPagePropsBase<T, U> {
   title: string | ((data?: T) => string)
@@ -33,48 +34,42 @@ export function BaseResourceDetailsPage<T, U>(props: BaseResourceDetailsPageProp
     resourceQuery.refetch()
   }, [resourceQuery, lastRefreshTrigger, props.refreshTrigger]);
 
-  const deleteMutation = props.enableDelete ? client.useMutation('delete', props.resourcePath as any) : null
-  const saveMutation = client.useMutation('patch', props.resourcePath as any)
-
-  const handleDelete = async () => {
-    if (!deleteMutation) {
-      return
-    }
-
-    await new Promise((resolve, reject) => {
-      deleteMutation.mutate({
-        params: props.apiParams as any,
-      }, {
-        onSuccess: data => resolve(data),
-        onError: error => reject(error),
-      })
-    })
-  }
-
-  const handleSave =  (data: U) => {
-    return new Promise<void>((resolve, reject) => {
-      saveMutation.mutate({
-        params: props.apiParams as any,
-        body: data as any,
-      }, {
-        onSuccess: _data => {
-          resolve()
-          resourceQuery.refetch()
-        },
-        onError: error => {
-          reject(error)
-          resourceQuery.refetch()
-        },
-      })
-    })
-  }
-
   const title = useMemo(() => {
     if (typeof props.title === 'function') {
       return props.title(resourceQuery.data)
     }
     return props.title
   }, [props.title, resourceQuery.data])
+
+  const deleteMutation = useDboxedMutation('delete', props.resourcePath as any, {
+    successMessage: `${title} deleted successfully!`,
+    errorMessage: `Failed to delete ${title}`,
+    refetchAll: true,
+  })
+  const saveMutation = useDboxedMutation('patch', props.resourcePath as any, {
+    successMessage: `${title} has been saved!`,
+    errorMessage: `Failed to save ${title}`,
+    refetchPath: props.resourcePath,
+  })
+
+  const handleDelete = async () => {
+    if (!props.enableDelete) {
+      return false
+    }
+
+    return await deleteMutation.mutateAsync({
+      params: props.apiParams as any,
+    })
+  }
+
+  const handleSave = async (data: U) => {
+    const ok = await saveMutation.mutateAsync({
+      params: props.apiParams as any,
+      body: data as any,
+    })
+    resourceQuery.refetch()
+    return ok
+  }
 
   return (
     <BaseDetailsPage<T, U>

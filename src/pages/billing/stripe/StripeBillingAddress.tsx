@@ -1,10 +1,9 @@
 import { AddressElement, Elements } from "@stripe/react-stripe-js";
 import { useCallback, useMemo, useState } from "react";
 import type { StripeAddressElementChangeEvent } from "@stripe/stripe-js";
-import { useDboxedCloudQueryClient } from "@/api/dboxed-cloud-api.ts";
+import { useDboxedCloudQueryClient } from "@/api/client.ts";
 import { stripe } from "@/App.tsx";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button.tsx";
 import type { components } from "@/api/models/dboxed-cloud-schema";
 import { deepClone, deepEqual } from "@/utils/utils.ts";
@@ -13,6 +12,7 @@ import { Trash2 } from "lucide-react";
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx";
 import { AddTaxIdDialog } from "./AddTaxIdDialog";
 import { getTaxIdByCountryAndEnum } from "./taxIdTypes";
+import { useDboxedCloudMutation } from "@/api/mutation.ts";
 
 interface Props {
   allowIncomplete?: boolean
@@ -34,9 +34,26 @@ export const StripeBillingAddress = (props: Props) => {
     }
   })
 
-  const mutation = client.useMutation("patch", "/v1/cloud/workspaces/{workspaceId}/billing/customer");
-  const addTaxIdMutation = client.useMutation("post", "/v1/cloud/workspaces/{workspaceId}/billing/customer/tax-ids");
-  const deleteTaxIdMutation = client.useMutation("delete", "/v1/cloud/workspaces/{workspaceId}/billing/customer/tax-ids/{id}");
+  const mutation = useDboxedCloudMutation("patch", "/v1/cloud/workspaces/{workspaceId}/billing/customer", {
+    successMessage: "Billing address updated successfully!",
+    errorMessage: "Failed to update billing address",
+    onSuccess: () => {
+      if (props.handleDone) {
+        props.handleDone();
+      }
+      customerQuery.refetch()
+    }
+  });
+  const addTaxIdMutation = useDboxedCloudMutation("post", "/v1/cloud/workspaces/{workspaceId}/billing/customer/tax-ids", {
+    successMessage: "Tax ID added successfully!",
+    errorMessage: "Failed to add tax ID",
+    onComplete: customerQuery.refetch,
+  });
+  const deleteTaxIdMutation = useDboxedCloudMutation("delete", "/v1/cloud/workspaces/{workspaceId}/billing/customer/tax-ids/{id}", {
+    successMessage: "Tax ID deleted successfully!",
+    errorMessage: "Failed to delete tax ID",
+    onComplete: customerQuery.refetch,
+  });
 
   const buildUpdateCustomer = () => {
     if (!customerQuery.data) {
@@ -79,26 +96,14 @@ export const StripeBillingAddress = (props: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    try {
-      await mutation.mutateAsync({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-          }
-        },
-        body: updateCustomer,
-      })
-      toast.success("Billing address updated successfully!")
-      if (props.handleDone) {
-        props.handleDone();
-      }
-      return true
-    } catch (error: any) {
-      toast.error("Failed to update billing address", {
-        description: error.detail || "An error occurred while updating the billing address."
-      })
-      return false
-    }
+    return await mutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+        }
+      },
+      body: updateCustomer,
+    })
   }
 
   const handleChange = useCallback((event: StripeAddressElementChangeEvent) => {
@@ -106,52 +111,32 @@ export const StripeBillingAddress = (props: Props) => {
     setFormCustomerComplete(event.complete)
    }, [])
 
-  const handleDeleteTaxId = async (taxIdId: string) => {
-    try {
-      await deleteTaxIdMutation.mutateAsync({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-            id: taxIdId,
-          }
-        },
-      })
-      toast.success("Tax ID deleted successfully!");
-      customerQuery.refetch();
-      return true
-    } catch (error: any) {
-      toast.error("Failed to delete tax ID", {
-        description: error.detail || "An error occurred while deleting the tax ID."
-      })
-      return false
-    }
-  };
-
   const handleAddTaxId = async (formData: { type: string; value: string }) => {
-    try {
-      await addTaxIdMutation.mutateAsync({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-          }
-        },
-        body: {
-          type: formData.type,
-          value: formData.value,
-        },
-      })
-      toast.success("Tax ID added successfully!");
-      customerQuery.refetch();
-      return true
-    } catch(error: any) {
-      toast.error("Failed to add tax ID", {
-        description: error.detail || "An error occurred while adding the tax ID."
-      })
-      return false
-    }
+    return await addTaxIdMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+        }
+      },
+      body: {
+        type: formData.type,
+        value: formData.value,
+      },
+    })
   };
 
-  if (customerQuery.isLoading || customerQuery.isFetching) {
+  const handleDeleteTaxId = async (taxIdId: string) => {
+    return await deleteTaxIdMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+          id: taxIdId,
+        }
+      },
+    })
+  };
+
+  if (!customerQuery.data) {
     return <div>Loading...</div>
   }
 

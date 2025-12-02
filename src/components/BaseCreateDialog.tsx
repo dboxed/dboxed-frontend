@@ -1,11 +1,9 @@
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
-import { toast } from "sonner"
 import type { DefaultValues, FieldValues, UseFormReturn } from "react-hook-form"
 import type { paths } from "@/api/models/dboxed-schema"
-import { useQueryClient } from "@tanstack/react-query"
 import { SimpleFormDialog } from "./SimpleFormDialog.tsx"
 import { deepClone } from "@/utils/utils.ts";
 import type { ReactNode } from "react";
+import { useDboxedMutation } from "@/api/mutation.ts";
 
 interface BaseCreateDialogProps<F extends FieldValues = FieldValues, C extends FieldValues = F, R extends FieldValues = FieldValues> {
   trigger?: ReactNode
@@ -16,7 +14,7 @@ interface BaseCreateDialogProps<F extends FieldValues = FieldValues, C extends F
   children: (form: UseFormReturn<F>) => ReactNode
   apiRoute: keyof paths
   apiParams?: Record<string, unknown>
-  onSuccess?: (data: R) => (boolean | void) // when this returns false, the dialog is not closed automatically
+  onSuccess?: (data: R) => void // when this returns false, the dialog is not closed automatically
   onError?: (error: any) => void
   submitButtonText?: string
   cancelButtonText?: string
@@ -40,9 +38,13 @@ export function BaseCreateDialog<F extends FieldValues = FieldValues, C extends 
   onSubmit,
   defaultValues,
 }: BaseCreateDialogProps<F, C, R>) {
-  const client = useDboxedQueryClient()
-  const queryClient = useQueryClient()
-  const createMutation = client.useMutation('post', apiRoute as any)
+  const createMutation = useDboxedMutation('post', apiRoute as any, {
+    successMessage: `${title} created successfully!`,
+    errorMessage: `Failed to create ${title.toLowerCase()}`,
+    refetchPath: apiRoute,
+    onSuccess: onSuccess,
+    onError: onError,
+  })
 
   const buildInitial = () => {
     return defaultValues
@@ -56,38 +58,10 @@ export function BaseCreateDialog<F extends FieldValues = FieldValues, C extends 
       processedData = data as unknown as C
     }
 
-    try {
-      const responseData = await new Promise((resolve, reject) => {
-        createMutation.mutate({
-          params: apiParams,
-          body: processedData,
-        }, {
-          onSuccess: resolve,
-          onError: reject
-        })
-      })
-
-      await queryClient.invalidateQueries()
-
-      toast.success(`${title} created successfully!`)
-
-      if (onSuccess) {
-        const ret = onSuccess(responseData as R)
-        if (typeof ret === "boolean") {
-          return ret
-        }
-        return true
-      }
-      return true
-    } catch (error: any) {
-      toast.error(`Failed to create ${title.toLowerCase()}`, {
-        description: error.detail || `An error occurred while creating the ${title.toLowerCase()}.`
-      })
-      if (onError) {
-        onError(error)
-      }
-      return false
-    }
+    return await createMutation.mutateAsync({
+      params: apiParams,
+      body: processedData,
+    })
   }
 
   return (

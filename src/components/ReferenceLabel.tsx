@@ -1,5 +1,5 @@
 import { Link } from "react-router"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedQueryClient } from "@/api/client.ts"
 import type { paths } from "@/api/models/dboxed-schema";
 
 interface ReferenceLabelProps<TResource extends { name: string }> {

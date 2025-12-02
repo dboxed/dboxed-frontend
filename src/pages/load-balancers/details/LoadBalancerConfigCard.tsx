@@ -94,7 +94,7 @@ const EditDialog = ({ data, save }: LoadBalancerConfigCardProps) => {
     replicas: data.replicas
   })
 
-  const handleSave = async (values: PortFormData): Promise<boolean> => {
+  const handleSave = async (values: PortFormData) => {
     return await save({
       httpPort: values.httpPort,
       httpsPort: values.httpsPort,

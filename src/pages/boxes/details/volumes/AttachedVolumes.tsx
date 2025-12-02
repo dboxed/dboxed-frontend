@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import { DataTable } from "@/components/data-table.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedQueryClient } from "@/api/client.ts"
+import { useDboxedMutation } from "@/api/mutation.ts"
 import type { components } from "@/api/models/dboxed-schema"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Unplug } from "lucide-react"
@@ -13,7 +14,6 @@ import { formatSize } from "@/utils/size.ts"
 import { FileModeDialog } from "@/pages/boxes/details/volumes/FileModeDialog.tsx"
 import { VolumeMountBadge } from "@/pages/volumes/details/VolumeMountBadge.tsx"
 import { AttachVolumeDialog } from "@/pages/boxes/details/volumes/AttachVolumeDialog.tsx"
-import { toast } from "sonner"
 
 interface AttachedVolumesProps {
   box: components["schemas"]["Box"]
@@ -36,40 +36,27 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
     refetchInterval: 5000,
   })
 
-  const detachVolumeMutation = client.useMutation('delete', '/v1/workspaces/{workspaceId}/boxes/{id}/volumes/{volumeId}', {
-    onSuccess: () => {
-      attachedVolumesQuery.refetch()
-    }
+  const detachVolumeMutation = useDboxedMutation('delete', '/v1/workspaces/{workspaceId}/boxes/{id}/volumes/{volumeId}', {
+    successMessage: "Volume detached successfully!",
+    errorMessage: "Failed to detach volume",
+    refetchPath: "/v1/workspaces/{workspaceId}/boxes/{id}/volumes",
   })
 
-  const updateAttachmentMutation = client.useMutation('patch', '/v1/workspaces/{workspaceId}/boxes/{id}/volumes/{volumeId}', {
-    onSuccess: () => {
-      attachedVolumesQuery.refetch()
-    }
+  const updateAttachmentMutation = useDboxedMutation('patch', '/v1/workspaces/{workspaceId}/boxes/{id}/volumes/{volumeId}', {
+    successMessage: "Attachment updated successfully!",
+    errorMessage: "Failed to update attachment",
+    refetchPath: "/v1/workspaces/{workspaceId}/boxes/{id}/volumes",
   })
 
-  const handleDetachVolume = (volumeId: string) => {
-    return new Promise<boolean>(resolve => {
-      detachVolumeMutation.mutate({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-            id: box.id,
-            volumeId: volumeId
-          }
+  const handleDetachVolume = async (volumeId: string) => {
+    return await detachVolumeMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+          id: box.id,
+          volumeId: volumeId
         }
-      }, {
-        onSuccess: () => {
-          toast.success("Volume detached successfully!")
-          resolve(true)
-        },
-        onError: (error) => {
-          toast.error("Failed to detach volume", {
-            description: error.detail || "An error occurred while detaching the volume."
-          })
-          resolve(false)
-        }
-      })
+      }
     })
   }
 
@@ -165,33 +152,20 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
                     uid={attachment.rootUid}
                     gid={attachment.rootGid}
                     mode={attachment.rootMode}
-                    onUpdate={(uid, gid, mode) => {
-                      return new Promise<boolean>(resolve => {
-                        updateAttachmentMutation.mutate({
-                          params: {
-                            path: {
-                              workspaceId: workspaceId!,
-                              id: box.id,
-                              volumeId: attachment.volumeId
-                            }
-                          },
-                          body: {
-                            rootUid: uid,
-                            rootGid: gid,
-                            rootMode: mode
+                    onUpdate={async (uid, gid, mode) => {
+                      return await updateAttachmentMutation.mutateAsync({
+                        params: {
+                          path: {
+                            workspaceId: workspaceId!,
+                            id: box.id,
+                            volumeId: attachment.volumeId
                           }
-                        }, {
-                          onSuccess: () => {
-                            toast.success("Attachment updated successfully!")
-                            resolve(true)
-                          },
-                          onError: (error) => {
-                            toast.error("Failed to update attachment", {
-                              description: error.detail || "An error occurred while updating the attachment."
-                            })
-                            resolve(false)
-                          }
-                        })
+                        },
+                        body: {
+                          rootUid: uid,
+                          rootGid: gid,
+                          rootMode: mode
+                        }
                       })
                     }}
                   />

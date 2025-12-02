@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedMutation } from "@/api/mutation.ts"
 import { toast } from "sonner"
 import type { ReactNode } from "react"
 
@@ -24,8 +24,13 @@ interface FormData {
 
 export function AddPortForwardDialog({ boxId, trigger, onSuccess }: AddPortForwardDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
-  const client = useDboxedQueryClient()
-  const createPortForwardMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/port-forwards')
+
+  const createPortForwardMutation = useDboxedMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/port-forwards', {
+    successMessage: "Port forward created successfully!",
+    errorMessage: "Failed to create port forward",
+    refetchPath: "/v1/workspaces/{workspaceId}/boxes/{id}/port-forwards",
+    onSuccess: () => onSuccess(),
+  })
 
   const handleSave = async (formData: FormData) => {
     const sandboxPortNum = parseInt(formData.sandboxPort, 10)
@@ -42,32 +47,21 @@ export function AddPortForwardDialog({ boxId, trigger, onSuccess }: AddPortForwa
       return false
     }
 
-    try {
-      await createPortForwardMutation.mutateAsync({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-            id: boxId
-          }
-        },
-        body: {
-          protocol: formData.protocol,
-          sandboxPort: sandboxPortNum,
-          hostPortFirst: hostPortFirstNum,
-          hostPortLast: hostPortLastNum,
-          description: formData.description || undefined
+    return await createPortForwardMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+          id: boxId
         }
-      })
-
-      toast.success("Port forward created successfully!")
-      onSuccess()
-      return true
-    } catch (error: any) {
-      toast.error("Failed to create port forward", {
-        description: error.detail || "An error occurred while creating the port forward."
-      })
-      return false
-    }
+      },
+      body: {
+        protocol: formData.protocol,
+        sandboxPort: sandboxPortNum,
+        hostPortFirst: hostPortFirstNum,
+        hostPortLast: hostPortLastNum,
+        description: formData.description || undefined
+      }
+    })
   }
 
   return (

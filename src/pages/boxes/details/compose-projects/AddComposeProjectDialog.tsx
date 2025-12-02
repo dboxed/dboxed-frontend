@@ -6,9 +6,8 @@ import { Input } from "@/components/ui/input.tsx"
 import { extractComposeProjectInfo } from "./project-info.ts"
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
-import { toast } from "sonner";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts";
+import { useDboxedMutation } from "@/api/mutation.ts";
 import type { components } from "@/api/models/dboxed-schema";
 
 interface AddComposeProjectDialogProps {
@@ -37,12 +36,12 @@ export function AddComposeProjectDialog({
   onSaved,
 }: AddComposeProjectDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
-  const client = useDboxedQueryClient()
 
-  const createProjectMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects', {
-    onSuccess: () => {
-      onSaved()
-    }
+  const createProjectMutation = useDboxedMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects', {
+    successMessage: "Compose project created successfully!",
+    errorMessage: "Failed to create compose project",
+    refetchPath: "/v1/workspaces/{workspaceId}/boxes/{id}/compose-projects",
+    onSuccess: () => onSaved(),
   })
 
   const buildInitialFormData = useCallback((): AddProjectFormData => {
@@ -61,27 +60,18 @@ export function AddComposeProjectDialog({
       name = info.name
     }
 
-    try {
-      await createProjectMutation.mutateAsync({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-            id: box.id
-          }
-        },
-        body: {
-          name: name,
-          composeProject: formData.content,
+    return await createProjectMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+          id: box.id
         }
-      })
-      toast.success("Compose project created successfully!")
-      return true
-    } catch (error: any) {
-      toast.error("Failed to create compose project", {
-        description: error.detail || "An error occurred while creating the compose project."
-      })
-      return false
-    }
+      },
+      body: {
+        name: name,
+        composeProject: formData.content,
+      }
+    })
   }
 
   return (

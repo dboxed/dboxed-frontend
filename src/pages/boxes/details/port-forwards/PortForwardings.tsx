@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
 import { DataTable } from "@/components/data-table.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedQueryClient } from "@/api/client.ts"
+import { useDboxedMutation } from "@/api/mutation.ts"
 import type { components } from "@/api/models/dboxed-schema"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Plus, Trash2, Edit } from "lucide-react"
@@ -11,7 +12,6 @@ import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip.tsx"
 import { AddPortForwardDialog } from "./AddPortForwardDialog.tsx"
 import { EditPortForwardDialog } from "./EditPortForwardDialog.tsx"
-import { toast } from "sonner"
 
 interface PortForwardingsProps {
   box: components["schemas"]["Box"]
@@ -32,34 +32,21 @@ export function PortForwardings({ box }: PortForwardingsProps) {
     }
   })
 
-  const deletePortForwardMutation = client.useMutation('delete', '/v1/workspaces/{workspaceId}/boxes/{id}/port-forwards/{portForwardId}', {
-    onSuccess: () => {
-      portForwardsQuery.refetch()
-    }
+  const deletePortForwardMutation = useDboxedMutation('delete', '/v1/workspaces/{workspaceId}/boxes/{id}/port-forwards/{portForwardId}', {
+    successMessage: "Port forward deleted successfully!",
+    errorMessage: "Failed to delete port forward",
+    refetchPath: "/v1/workspaces/{workspaceId}/boxes/{id}/port-forwards",
   })
 
-  const handleDeletePortForward = (portForwardId: string) => {
-    return new Promise<boolean>(resolve => {
-      deletePortForwardMutation.mutate({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-            id: box.id,
-            portForwardId: portForwardId
-          }
+  const handleDeletePortForward = async (portForwardId: string) => {
+    return await deletePortForwardMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+          id: box.id,
+          portForwardId: portForwardId
         }
-      }, {
-        onSuccess: () => {
-          toast.success("Port forward deleted successfully!")
-          resolve(true)
-        },
-        onError: (error) => {
-          toast.error("Failed to delete port forward", {
-            description: error.detail || "An error occurred while deleting the port forward."
-          })
-          resolve(false)
-        }
-      })
+      }
     })
   }
 

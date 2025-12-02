@@ -1,37 +1,35 @@
 import createFetchClient from "openapi-fetch";
 import createClient from "openapi-react-query";
-import type { paths } from "./models/dboxed-schema";
 import { useAuth } from "react-oidc-context";
 import { useEffect, useMemo } from "react";
 import { type EventSourceMessage, fetchEventSource } from "@microsoft/fetch-event-source";
 import { envVars } from "@/env.ts";
 import { buildAuthHeaders } from "@/api/auth.ts";
+import type { paths } from "@/api/models/dboxed-schema";
+import type { paths as paths_cloud } from "@/api/models/dboxed-cloud-schema";
 
-const createDboxedFetchClient = (token?: string) => {
-    return createFetchClient<paths>({
-        baseUrl: envVars.VITE_API_URL,
-        headers: buildAuthHeaders(token),
-    })
-}
-
-export const useDboxedFetchClient = () => {
+export function useDboxedQueryClientBase<Paths extends {}>(apiUrl: string) {
     const auth = useAuth()
-
-    const client = useMemo(() => {
-        return createDboxedFetchClient(auth.user?.access_token)
-    }, [auth.isLoading, auth.user?.access_token])
-
-    return client
-}
-
-export const useDboxedQueryClient = () => {
-    const fetchClient = useDboxedFetchClient()
+    const fetchClient = useMemo(() => {
+        return createFetchClient<Paths>({
+            baseUrl: apiUrl,
+            headers: buildAuthHeaders(auth.user?.access_token),
+        })
+    }, [apiUrl, auth.user?.access_token])
 
     const queryClient = useMemo(() => {
         return createClient(fetchClient);
     }, [fetchClient])
 
     return queryClient
+}
+
+export function useDboxedQueryClient() {
+    return useDboxedQueryClientBase<paths>(envVars.VITE_API_URL)
+}
+
+export function useDboxedCloudQueryClient() {
+    return useDboxedQueryClientBase<paths_cloud>(envVars.VITE_CLOUD_API_URL)
 }
 
 interface EventSourceOptions {

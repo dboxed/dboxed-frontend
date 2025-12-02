@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedQueryClient } from "@/api/client.ts"
 import { Link } from "react-router"
 import { TimeAgo } from "@/components/TimeAgo.tsx"
 

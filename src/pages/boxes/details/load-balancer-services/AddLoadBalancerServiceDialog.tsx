@@ -4,7 +4,8 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedQueryClient } from "@/api/client.ts"
+import { useDboxedMutation } from "@/api/mutation.ts"
 import { toast } from "sonner"
 import { StatusBadge } from "@/components/StatusBadge.tsx"
 import { type ReactNode, useState } from "react"
@@ -38,7 +39,12 @@ export function AddLoadBalancerServiceDialog({ boxId, trigger, onSuccess }: AddL
     enabled: dialogOpen,
   })
 
-  const createLoadBalancerServiceMutation = client.useMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/load-balancer-services')
+  const createLoadBalancerServiceMutation = useDboxedMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/load-balancer-services', {
+    successMessage: "Load Balancer Service created successfully!",
+    errorMessage: "Failed to create Load Balancer Service",
+    refetchPath: "/v1/workspaces/{workspaceId}/boxes/{id}/load-balancer-services",
+    onSuccess: () => onSuccess(),
+  })
 
   const handleSave = async (formData: FormData) => {
     const portNum = parseInt(formData.port, 10)
@@ -53,32 +59,21 @@ export function AddLoadBalancerServiceDialog({ boxId, trigger, onSuccess }: AddL
       return false
     }
 
-    try {
-      await createLoadBalancerServiceMutation.mutateAsync({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-            id: boxId
-          }
-        },
-        body: {
-          loadBalancerId: formData.loadBalancerId,
-          hostname: formData.hostname,
-          pathPrefix: formData.pathPrefix,
-          port: portNum,
-          description: formData.description || undefined
+    return await createLoadBalancerServiceMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+          id: boxId
         }
-      })
-
-      toast.success("Load Balancer Service created successfully!")
-      onSuccess()
-      return true
-    } catch (error: any) {
-      toast.error("Failed to create Load Balancer Service", {
-        description: error.detail || "An error occurred while creating the Load Balancer Service."
-      })
-      return false
-    }
+      },
+      body: {
+        loadBalancerId: formData.loadBalancerId,
+        hostname: formData.hostname,
+        pathPrefix: formData.pathPrefix,
+        port: portNum,
+        description: formData.description || undefined
+      }
+    })
   }
 
   const lbs = lbsQuery.data?.items || []

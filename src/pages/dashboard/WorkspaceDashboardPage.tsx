@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedQueryClient } from "@/api/client.ts"
+import { useDboxedMutation } from "@/api/mutation.ts"
 import { BasePage } from "@/pages/base/BasePage.tsx"
 import { NetworksOverview } from "./NetworksOverview.tsx"
 import { BoxesOverview } from "./BoxesOverview.tsx"
@@ -9,14 +10,11 @@ import { VolumesOverview } from "./VolumesOverview.tsx"
 import { S3BucketsOverview } from "./S3BucketsOverview.tsx"
 import { LoadBalancersOverview } from "./LoadBalancersOverview.tsx"
 import { DeleteButton } from "@/components/DeleteButton.tsx"
-import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 
 export function WorkspaceDashboardPage() {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
 
   // Fetch workspace
   const workspaceQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}', {
@@ -27,32 +25,21 @@ export function WorkspaceDashboardPage() {
     }
   })
 
-  const deleteWorkspaceMutation = client.useMutation('delete', '/v1/workspaces/{workspaceId}', {
-    onSuccess: () => {
-      // Invalidate and refetch workspaces list
-      queryClient.invalidateQueries({ queryKey: ['get', '/v1/workspaces'] })
-      // Navigate to workspaces list
-      navigate('/workspaces')
-    }
+  const deleteWorkspaceMutation = useDboxedMutation('delete', '/v1/workspaces/{workspaceId}', {
+    successMessage: "Workspace deleted successfully!",
+    errorMessage: "Failed to delete workspace",
+    refetchPath: "/v1/workspaces",
+    onSuccess: () => navigate('/workspaces'),
   })
 
   const handleDeleteWorkspace = async () => {
-    try {
-      await deleteWorkspaceMutation.mutateAsync({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-          }
+    return await deleteWorkspaceMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
         }
-      })
-      toast.success("Workspace deleted successfully!")
-      return true
-    } catch (error: any) {
-      toast.error("Failed to delete workspace", {
-        description: error.detail || "An error occurred while deleting the workspace."
-      })
-      return false
-    }
+      }
+    })
   }
 
   return (

@@ -1,5 +1,5 @@
 import { UserManager, WebStorageStateStore } from 'oidc-client-ts';
-import { useDboxedQueryClient } from "./dboxed-api.ts";
+import { useDboxedQueryClient } from "./client.ts";
 import type { components } from "./models/dboxed-schema";
 import { envVars } from "@/env.ts";
 

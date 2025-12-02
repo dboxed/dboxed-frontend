@@ -3,7 +3,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { UseFormReturn } from "react-hook-form"
 import type { components } from "@/api/models/dboxed-schema"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedQueryClient } from "@/api/client.ts"
 
 interface BoxSelectorProps {
   form: UseFormReturn<components["schemas"]["CreateToken"]>

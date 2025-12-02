@@ -3,7 +3,7 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedMutation } from "@/api/mutation.ts"
 import type { components } from "@/api/models/dboxed-schema"
 import { toast } from "sonner"
 import type { ReactNode } from "react"
@@ -24,8 +24,13 @@ interface FormData {
 
 export function EditLoadBalancerServiceDialog({ boxId, loadBalancerService, trigger, onSuccess }: EditLoadBalancerServiceDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
-  const client = useDboxedQueryClient()
-  const updateLoadBalancerServiceMutation = client.useMutation('patch', '/v1/workspaces/{workspaceId}/boxes/{id}/load-balancer-services/{loadBalancerServiceId}')
+
+  const updateLoadBalancerServiceMutation = useDboxedMutation('patch', '/v1/workspaces/{workspaceId}/boxes/{id}/load-balancer-services/{loadBalancerServiceId}', {
+    successMessage: "Load Balancer Service updated successfully!",
+    errorMessage: "Failed to update Load Balancer Service",
+    refetchPath: "/v1/workspaces/{workspaceId}/boxes/{id}/load-balancer-services",
+    onSuccess: () => onSuccess(),
+  })
 
   const handleSave = async (formData: FormData) => {
     const portNum = parseInt(formData.port, 10)
@@ -35,32 +40,21 @@ export function EditLoadBalancerServiceDialog({ boxId, loadBalancerService, trig
       return false
     }
 
-    try {
-      await updateLoadBalancerServiceMutation.mutateAsync({
-        params: {
-          path: {
-            workspaceId: workspaceId!,
-            id: boxId,
-            loadBalancerServiceId: loadBalancerService.id
-          }
-        },
-        body: {
-          hostname: formData.hostname,
-          pathPrefix: formData.pathPrefix,
-          port: portNum,
-          description: formData.description || undefined
+    return await updateLoadBalancerServiceMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId!,
+          id: boxId,
+          loadBalancerServiceId: loadBalancerService.id
         }
-      })
-
-      toast.success("Load Balancer Service updated successfully!")
-      onSuccess()
-      return true
-    } catch (error: any) {
-      toast.error("Failed to update Load Balancer Service", {
-        description: error.detail || "An error occurred while updating the Load Balancer Service."
-      })
-      return false
-    }
+      },
+      body: {
+        hostname: formData.hostname,
+        pathPrefix: formData.pathPrefix,
+        port: portNum,
+        description: formData.description || undefined
+      }
+    })
   }
 
   return (

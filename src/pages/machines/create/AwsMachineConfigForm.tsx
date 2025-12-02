@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Cloud } from "lucide-react"
 import type { UseFormReturn } from "react-hook-form"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedQueryClient } from "@/api/client.ts"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/dboxed-schema"
 import { useEffect } from "react"

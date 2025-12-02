@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
-import { useDboxedQueryClient } from "@/api/dboxed-api.ts"
+import { useDboxedQueryClient } from "@/api/client.ts"
 import { Monitor } from "lucide-react"
 import type { components } from "@/api/models/dboxed-schema"
 import { WorkspaceOverviewCard } from "@/pages/dashboard/WorkspaceOverviewCard.tsx"

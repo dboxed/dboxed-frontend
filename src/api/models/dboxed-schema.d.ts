@@ -711,6 +711,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/machines/{id}/boxes/{boxId}/create-token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID machines by ID boxes by box ID create token */
+        post: operations["post-v1-workspaces-by-workspace-id-machines-by-id-boxes-by-box-id-create-token"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/networks": {
         parameters: {
             query?: never;
@@ -1439,6 +1456,7 @@ export interface components {
             boxId?: string;
             forWorkspace?: boolean;
             loadBalancerId?: string;
+            machineId?: string;
             name: string;
         };
         CreateVolume: {
@@ -2089,6 +2107,7 @@ export interface components {
             forWorkspace: boolean;
             id: string;
             loadBalancerId?: string;
+            machineId?: string;
             name: string;
             token?: string;
             workspace: string;
@@ -4813,6 +4832,40 @@ export interface operations {
                     "application/json": {
                         [key: string]: unknown;
                     };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-machines-by-id-boxes-by-box-id-create-token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                boxId: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Token"];
                 };
             };
             /** @description Error */

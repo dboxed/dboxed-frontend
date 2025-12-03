@@ -28,6 +28,26 @@ export function TokenScopeBadge({ token }: TokenScopeBadgeProps) {
     )
   }
 
+  if (token.machineId) {
+    return (
+      <div className="flex items-center gap-2">
+        <Badge variant="outline" className="capitalize">
+          Machine
+        </Badge>
+        <ReferenceLabel
+          resourceId={token.machineId}
+          resourcePath="/v1/workspaces/{workspaceId}/machines/{id}"
+          pathParams={{
+            workspaceId: token.workspace,
+            id: token.machineId
+          }}
+          detailsUrl={`/workspaces/${token.workspace}/machines/${token.machineId}`}
+          fallbackLabel="Machine"
+        />
+      </div>
+    )
+  }
+
   if (token.loadBalancerId) {
     return (
       <div className="flex items-center gap-2">

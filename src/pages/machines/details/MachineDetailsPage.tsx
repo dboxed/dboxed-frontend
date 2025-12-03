@@ -5,6 +5,7 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard"
 import { MachineProviderInfoCard } from "./MachineProviderInfoCard"
 import { BoxesCard } from "./BoxesCard"
+import { MachineConnectCard } from "./MachineConnectCard"
 import type { components } from "@/api/models/dboxed-schema"
 import { cn } from "@/lib/utils.ts";
 
@@ -37,14 +38,19 @@ export function MachineDetailsPage() {
       {(data) => {
         const hasMachineProvider = !!data.machineProvider
         return <Tabs defaultValue="general" className="space-y-6">
-          <TabsList className={cn("grid w-full", hasMachineProvider ? "grid-cols-3" : "grid-cols-2")}>
+          <TabsList className={cn("grid w-full", hasMachineProvider ? "grid-cols-4" : "grid-cols-3")}>
             <TabsTrigger value="general">General Information</TabsTrigger>
+            <TabsTrigger value="connect">Connect</TabsTrigger>
             <TabsTrigger value="boxes">Boxes</TabsTrigger>
             {hasMachineProvider && <TabsTrigger value="machine-provider">Machine Provider</TabsTrigger>}
           </TabsList>
 
           <TabsContent value="general">
             <GeneralInfoCard data={data} />
+          </TabsContent>
+
+          <TabsContent value="connect">
+            <MachineConnectCard machine={data} />
           </TabsContent>
 
           <TabsContent value="boxes">

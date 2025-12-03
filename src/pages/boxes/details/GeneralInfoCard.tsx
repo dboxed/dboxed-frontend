@@ -47,15 +47,6 @@ export function GeneralInfoCard({ box }: GeneralInfoCardProps) {
               />
 
               <LabelAndValue
-                label="Dboxed Version"
-                value={
-                  <Badge variant="outline" className="w-fit">
-                    {box.dboxedVersion}
-                  </Badge>
-                }
-              />
-
-              <LabelAndValue
                 label="Network"
                 value={
                   <ReferenceLabel

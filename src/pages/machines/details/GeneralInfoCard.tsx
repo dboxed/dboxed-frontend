@@ -66,6 +66,15 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           />
 
           <LabelAndValue
+            label="Dboxed Version"
+            value={
+              <Badge variant="outline" className="w-fit">
+                {data.dboxedVersion}
+              </Badge>
+            }
+          />
+
+          <LabelAndValue
             label="Status"
             value={
               <StatusBadge item={data}/>

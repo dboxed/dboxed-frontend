@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip.tsx"
-import { FileText, AlertTriangle } from "lucide-react"
+import { AlertTriangle, ScrollText } from "lucide-react"
 import { StatusBadge } from "@/components/StatusBadge.tsx"
 import type { components } from "@/api/models/dboxed-schema"
 import { decompressDockerPs, type DockerContainer } from "@/pages/boxes/docker-utils.tsx"
@@ -86,7 +86,7 @@ export function ContainersCard({ box }: ContainersCardProps) {
                 size="sm"
                 onClick={() => setSelectedContainerForLogs(row.original.Names)}
               >
-                <FileText className="h-4 w-4" />
+                <ScrollText className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>

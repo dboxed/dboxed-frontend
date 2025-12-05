@@ -106,7 +106,7 @@ export function GeneralInfoCard({ box }: GeneralInfoCardProps) {
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>View reconcile logs</p>
+                    <p>View sandbox logs</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>

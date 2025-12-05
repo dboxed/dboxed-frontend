@@ -14,11 +14,14 @@ export function ReconcileLogsDialog({ boxId, open, onOpenChange }: ReconcileLogs
   const client = useDboxedQueryClient()
 
   // Fetch available log files
-  const logFiles = client.useQuery('get', "/v1/workspaces/{workspaceId}/boxes/{id}/logs", {
+  const logFiles = client.useQuery('get', "/v1/workspaces/{workspaceId}/logs", {
     params: {
       path: {
         workspaceId: workspaceId!,
-        id: boxId,
+      },
+      query: {
+        owner_type: 'box',
+        owner_id: boxId,
       }
     },
   }, {
@@ -28,7 +31,7 @@ export function ReconcileLogsDialog({ boxId, open, onOpenChange }: ReconcileLogs
 
   // Filter for reconcile.log
   const reconcileLogFiles = logFiles.data?.items?.filter(logFile =>
-    logFile.fileName === 'dboxed/reconcile.log'
+    logFile.fileName === 'dboxed/run-in-sandbox.log'
   ) || []
 
   if (!workspaceId) {
@@ -49,7 +52,6 @@ export function ReconcileLogsDialog({ boxId, open, onOpenChange }: ReconcileLogs
         ) : (
           <LogViewerWithControls
             workspaceId={workspaceId}
-            boxId={boxId}
             logFiles={reconcileLogFiles}
           />
         )}

@@ -15,11 +15,14 @@ export function ContainerLogsDialog({ containerName, boxId, open, onOpenChange }
   const client = useDboxedQueryClient()
 
   // Fetch available log files
-  const logFiles = client.useQuery('get', "/v1/workspaces/{workspaceId}/boxes/{id}/logs", {
+  const logFiles = client.useQuery('get', "/v1/workspaces/{workspaceId}/logs", {
     params: {
       path: {
         workspaceId: workspaceId!,
-        id: boxId,
+      },
+      query: {
+        owner_type: 'box',
+        owner_id: boxId,
       }
     },
   }, {
@@ -55,7 +58,6 @@ export function ContainerLogsDialog({ containerName, boxId, open, onOpenChange }
         ) : (
           <LogViewerWithControls
             workspaceId={workspaceId}
-            boxId={boxId}
             logFiles={containerLogFiles}
           />
         )}

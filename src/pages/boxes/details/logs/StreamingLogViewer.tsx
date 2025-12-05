@@ -6,7 +6,6 @@ import { VirtualizedLogViewer } from "@/components/logs/VirtualizedLogViewer.tsx
 
 interface StreamingLogViewerProps {
   workspaceId: string
-  boxId: string
   logId: string | null
   since?: string
   follow?: boolean
@@ -18,7 +17,6 @@ const isoPattern = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.)(\d+)Z$/
 
 export function StreamingLogViewer({
   workspaceId,
-  boxId,
   logId,
   since,
   height,
@@ -41,7 +39,7 @@ export function StreamingLogViewer({
   let url = ""
   if (logId) {
     const u = new URL(
-      `/v1/workspaces/${workspaceId}/boxes/${boxId}/logs/${logId}/stream`,
+      `/v1/workspaces/${workspaceId}/logs/${logId}/stream`,
       envVars.VITE_API_URL
     )
     if (since) {

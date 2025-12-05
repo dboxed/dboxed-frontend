@@ -60,11 +60,14 @@ export function LogsPage({ box }: LogsPageProps) {
   const [selectedEntryName, setSelectedEntryName] = useState<string | null>(null)
 
   // Fetch available log files
-  const logFiles = client.useQuery('get', "/v1/workspaces/{workspaceId}/boxes/{id}/logs", {
+  const logFiles = client.useQuery('get', "/v1/workspaces/{workspaceId}/logs", {
     params: {
       path: {
         workspaceId: workspaceId!,
-        id: box.id,
+      },
+      query: {
+        owner_type: 'box',
+        owner_id: box.id,
       }
     },
   }, {
@@ -157,7 +160,6 @@ export function LogsPage({ box }: LogsPageProps) {
           <div className="col-span-3">
             <LogViewerWithControls
               workspaceId={workspaceId}
-              boxId={box.id}
               logFiles={selectedEntryLogFiles}
             />
           </div>

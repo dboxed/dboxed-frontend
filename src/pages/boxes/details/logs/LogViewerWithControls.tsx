@@ -6,7 +6,6 @@ import { StreamingLogViewer } from "@/pages/boxes/details/logs/StreamingLogViewe
 
 interface LogViewerWithControlsProps {
   workspaceId: string
-  boxId: string
   logFiles: components["schemas"]["LogMetadataModel"][]
 }
 
@@ -17,7 +16,7 @@ const getLogCreationDate = (f: components["schemas"]["LogMetadataModel"]) => {
     : new Date(f.createdAt).getTime()
 }
 
-export function LogViewerWithControls({ workspaceId, boxId, logFiles }: LogViewerWithControlsProps) {
+export function LogViewerWithControls({ workspaceId, logFiles }: LogViewerWithControlsProps) {
   const [selectedLogId, setSelectedLogId] = useState<string | null>(null)
   const [logsSince, setLogsSince] = useState<string>("1h")
 
@@ -35,7 +34,7 @@ export function LogViewerWithControls({ workspaceId, boxId, logFiles }: LogViewe
         setSelectedLogId(null)
       }
     }
-  }, [boxId, sortedLogFiles, selectedLogId]);
+  }, [sortedLogFiles, selectedLogId]);
 
   return (
     <div className="space-y-4">
@@ -70,7 +69,6 @@ export function LogViewerWithControls({ workspaceId, boxId, logFiles }: LogViewe
 
       <StreamingLogViewer
         workspaceId={workspaceId}
-        boxId={boxId}
         logId={selectedLogId}
         since={logsSince}
         follow={true}

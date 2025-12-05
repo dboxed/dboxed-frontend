@@ -46,7 +46,7 @@ export function MachineConnectCard({ machine }: MachineConnectCardProps) {
       },
       body: {
         name: `machine_${machine.id}_${randomString(8)}`,
-        forWorkspace: false,
+        type: "machine",
         machineId: machine.id,
       }
     })
@@ -67,7 +67,7 @@ export function MachineConnectCard({ machine }: MachineConnectCardProps) {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
-          <Key className="h-5 w-5" />
+          <Key className="h-5 w-5"/>
           <span>Connect to Machine</span>
         </CardTitle>
         <CardDescription>
@@ -85,7 +85,7 @@ export function MachineConnectCard({ machine }: MachineConnectCardProps) {
             >
               {createTokenMutation.isPending ? (
                 <>
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin"/>
                   Creating Token...
                 </>
               ) : (
@@ -114,7 +114,7 @@ export function MachineConnectCard({ machine }: MachineConnectCardProps) {
                   onClick={handleCopyCommand}
                   type={"button"}
                 >
-                  <Copy className="h-4 w-4" />
+                  <Copy className="h-4 w-4"/>
                 </Button>
               </div>
             </div>

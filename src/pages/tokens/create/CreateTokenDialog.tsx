@@ -41,12 +41,12 @@ export function CreateTokenDialog({ trigger }: CreateTokenDialogProps) {
         }
       }}
       defaultValues={{
-        forWorkspace: true
+        type: "workspace"
       }}
       onSuccess={handleCreateSuccess}
     >
       {(form) => {
-        const forWorkspace = form.watch("forWorkspace")
+        const type = form.watch("type")
 
         return <div className="space-y-6">
           <FormField
@@ -65,17 +65,13 @@ export function CreateTokenDialog({ trigger }: CreateTokenDialogProps) {
 
           <FormField
             control={form.control}
-            name="forWorkspace"
+            name="type"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Token Scope</FormLabel>
                 <Select
                   onValueChange={(value) => {
-                    const isWorkspace = value === "true"
-                    field.onChange(isWorkspace)
-                    if (isWorkspace) {
-                      form.setValue("boxId", undefined)
-                    }
+                    field.onChange(value)
                   }}
                   value={field.value?.toString()}
                 >
@@ -85,8 +81,9 @@ export function CreateTokenDialog({ trigger }: CreateTokenDialogProps) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="true">Workspace Token</SelectItem>
-                    <SelectItem value="false">Box Token</SelectItem>
+                    <SelectItem value="workspace">Workspace Token</SelectItem>
+                    <SelectItem value="box">Box Token</SelectItem>
+                    <SelectItem value="machine">Machine Token</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormDescription>
@@ -97,7 +94,7 @@ export function CreateTokenDialog({ trigger }: CreateTokenDialogProps) {
             )}
           />
 
-          {!forWorkspace && (
+          {type === "box" && (
             <BoxSelector form={form} />
           )}
         </div>

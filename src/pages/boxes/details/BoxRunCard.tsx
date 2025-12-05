@@ -46,7 +46,7 @@ export function BoxRunCard({ box }: BoxTokenCardProps) {
       },
       body: {
         name: `box_${box.id}_${randomString(8)}`,
-        forWorkspace: false,
+        type: "box",
         boxId: box.id,
       }
     })
@@ -67,7 +67,7 @@ export function BoxRunCard({ box }: BoxTokenCardProps) {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
-          <Key className="h-5 w-5" />
+          <Key className="h-5 w-5"/>
           <span>Run box</span>
         </CardTitle>
         <CardDescription>
@@ -85,7 +85,7 @@ export function BoxRunCard({ box }: BoxTokenCardProps) {
             >
               {createTokenMutation.isPending ? (
                 <>
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin"/>
                   Creating Token...
                 </>
               ) : (
@@ -114,7 +114,7 @@ export function BoxRunCard({ box }: BoxTokenCardProps) {
                   onClick={handleCopyCommand}
                   type={"button"}
                 >
-                  <Copy className="h-4 w-4" />
+                  <Copy className="h-4 w-4"/>
                 </Button>
               </div>
             </div>

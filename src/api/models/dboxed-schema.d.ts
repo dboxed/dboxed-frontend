@@ -1472,10 +1472,10 @@ export interface components {
              */
             readonly $schema?: string;
             boxId?: string;
-            forWorkspace?: boolean;
             loadBalancerId?: string;
             machineId?: string;
             name: string;
+            type: string;
         };
         CreateVolume: {
             /**
@@ -2141,12 +2141,12 @@ export interface components {
             boxId?: string;
             /** Format: date-time */
             createdAt: string;
-            forWorkspace: boolean;
             id: string;
             loadBalancerId?: string;
             machineId?: string;
             name: string;
             token?: string;
+            type: string;
             workspace: string;
         };
         UpdateBoxComposeProject: {

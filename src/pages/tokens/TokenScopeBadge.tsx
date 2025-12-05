@@ -8,7 +8,7 @@ interface TokenScopeBadgeProps {
 
 export function TokenScopeBadge({ token }: TokenScopeBadgeProps) {
   // Determine scope type and resource
-  if (token.boxId) {
+  if (token.type === "box") {
     return (
       <div className="flex items-center gap-2">
         <Badge variant="outline" className="capitalize">
@@ -28,7 +28,7 @@ export function TokenScopeBadge({ token }: TokenScopeBadgeProps) {
     )
   }
 
-  if (token.machineId) {
+  if (token.type === "machine") {
     return (
       <div className="flex items-center gap-2">
         <Badge variant="outline" className="capitalize">
@@ -48,7 +48,7 @@ export function TokenScopeBadge({ token }: TokenScopeBadgeProps) {
     )
   }
 
-  if (token.loadBalancerId) {
+  if (token.type === "load-balancer") {
     return (
       <div className="flex items-center gap-2">
         <Badge variant="outline" className="capitalize">
@@ -68,7 +68,7 @@ export function TokenScopeBadge({ token }: TokenScopeBadgeProps) {
     )
   }
 
-  if (token.forWorkspace) {
+  if (token.type === "workspace") {
     return (
       <div className="flex items-center gap-2">
         <Badge variant="outline" className="capitalize">

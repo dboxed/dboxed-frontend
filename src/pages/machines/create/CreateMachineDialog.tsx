@@ -84,7 +84,7 @@ export function CreateMachineDialog({ trigger }: CreateMachineDialogProps) {
             )}
           />
 
-          <MachineProviderSelector form={form} />
+          {false && <MachineProviderSelector form={form} />}
 
           {machineProvider?.type === "aws" && (
             <AwsMachineConfigForm form={form} />

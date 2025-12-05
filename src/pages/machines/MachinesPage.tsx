@@ -23,9 +23,9 @@ export function MachinesPage() {
   return (
     <div className="space-y-6">
       <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-1">
           <TabsTrigger value="machines">Machines</TabsTrigger>
-          <TabsTrigger value="machine-providers">Machine Providers</TabsTrigger>
+          {/*<TabsTrigger value="machine-providers">Machine Providers</TabsTrigger>*/}
         </TabsList>
 
         <TabsContent value="machines">

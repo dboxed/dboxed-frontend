@@ -8,7 +8,7 @@ import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
 import { AlertTriangle, Play, StopCircle, RefreshCw } from "lucide-react"
 import { GeneralInfoCard } from "./GeneralInfoCard"
 import { BoxRunCard } from "./BoxRunCard.tsx"
-import { LogsPage } from "./logs/LogsPage.tsx"
+import { LogsCard } from "../../logs/LogsCard.tsx"
 import { BoxConfigTab } from "./BoxConfigTab.tsx"
 import type { components } from "@/api/models/dboxed-schema"
 import { useDboxedMutation } from "@/api/mutation.ts"
@@ -38,7 +38,7 @@ function BoxDetailsContent({ data }: { data: components["schemas"]["Box"] }) {
         </TabsContent>
 
         <TabsContent value="logs">
-          <LogsPage box={data} />
+          <LogsCard ownerType="box" ownerId={data.id} />
         </TabsContent>
       </Tabs>
     </div>

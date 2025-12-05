@@ -10,8 +10,9 @@ import { LogViewerWithControls } from "./LogViewerWithControls.tsx"
 
 import DBoxedIcon from "/public/dboxed-icon.svg?react";
 
-interface LogsPageProps {
-  box: components["schemas"]["Box"]
+interface LogsCardProps {
+  ownerType: string
+  ownerId: string
 }
 
 function getLogEntryGroup(logFile: components["schemas"]["LogMetadataModel"]): string {
@@ -54,7 +55,7 @@ function getLogFileCategory(logFile: components["schemas"]["LogMetadataModel"]):
   return 'other'
 }
 
-export function LogsPage({ box }: LogsPageProps) {
+export function LogsCard({ ownerType, ownerId }: LogsCardProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
   const [selectedEntryName, setSelectedEntryName] = useState<string | null>(null)
@@ -66,8 +67,8 @@ export function LogsPage({ box }: LogsPageProps) {
         workspaceId: workspaceId!,
       },
       query: {
-        owner_type: 'box',
-        owner_id: box.id,
+        owner_type: ownerType,
+        owner_id: ownerId,
       }
     },
   }, {

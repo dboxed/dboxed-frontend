@@ -1,7 +1,7 @@
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/client.ts"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog.tsx"
-import { LogViewerWithControls } from "../logs/LogViewerWithControls.tsx"
+import { LogViewerWithControls } from "../../../logs/LogViewerWithControls.tsx"
 
 interface ReconcileLogsDialogProps {
   boxId: string

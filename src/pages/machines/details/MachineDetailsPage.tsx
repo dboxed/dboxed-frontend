@@ -6,6 +6,7 @@ import { GeneralInfoCard } from "./GeneralInfoCard"
 import { MachineProviderInfoCard } from "./MachineProviderInfoCard"
 import { BoxesCard } from "./BoxesCard"
 import { MachineConnectCard } from "./MachineConnectCard"
+import { LogsCard } from "@/pages/logs/LogsCard.tsx"
 import type { components } from "@/api/models/dboxed-schema"
 import { cn } from "@/lib/utils.ts";
 
@@ -38,10 +39,11 @@ export function MachineDetailsPage() {
       {(data) => {
         const hasMachineProvider = !!data.machineProvider
         return <Tabs defaultValue="general" className="space-y-6">
-          <TabsList className={cn("grid w-full", hasMachineProvider ? "grid-cols-4" : "grid-cols-3")}>
+          <TabsList className={cn("grid w-full", hasMachineProvider ? "grid-cols-5" : "grid-cols-4")}>
             <TabsTrigger value="general">General Information</TabsTrigger>
             <TabsTrigger value="connect">Connect</TabsTrigger>
             <TabsTrigger value="boxes">Boxes</TabsTrigger>
+            <TabsTrigger value="logs">Logs</TabsTrigger>
             {hasMachineProvider && <TabsTrigger value="machine-provider">Machine Provider</TabsTrigger>}
           </TabsList>
 
@@ -55,6 +57,10 @@ export function MachineDetailsPage() {
 
           <TabsContent value="boxes">
             <BoxesCard machineId={data.id} workspaceId={data.workspace} />
+          </TabsContent>
+
+          <TabsContent value="logs">
+            <LogsCard ownerType="machine" ownerId={data.id} />
           </TabsContent>
 
           {hasMachineProvider && <TabsContent value="machine-provider">

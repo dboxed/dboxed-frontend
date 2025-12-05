@@ -1,3 +1,4 @@
+import type { ReactNode } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
 import { useDboxedQueryClient } from "@/api/client.ts"
 import type { paths } from "@/api/models/dboxed-schema"
@@ -11,6 +12,8 @@ interface ResourceSelectorProps<TResource extends { id: string; name: string }> 
   disabled?: boolean
   getLabel?: (item: TResource) => string
   getValue?: (item: TResource) => string
+  /** Optional custom render function for each item (icon, extra info, etc.) */
+  renderItem?: (item: TResource) => ReactNode
   className?: string
 }
 
@@ -23,6 +26,7 @@ export function ResourceSelector<TResource extends { id: string; name: string }>
   disabled = false,
   getLabel = (item) => item.name,
   getValue = (item) => item.id,
+  renderItem,
   className,
 }: ResourceSelectorProps<TResource>) {
   const client = useDboxedQueryClient()
@@ -45,7 +49,7 @@ export function ResourceSelector<TResource extends { id: string; name: string }>
       <SelectContent>
         {items.map((item) => (
           <SelectItem key={getValue(item)} value={getValue(item)}>
-            {getLabel(item)}
+            {renderItem ? renderItem(item) : getLabel(item)}
           </SelectItem>
         ))}
       </SelectContent>

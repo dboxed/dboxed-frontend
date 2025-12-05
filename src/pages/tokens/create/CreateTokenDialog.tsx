@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/dboxed-schema"
-import { BoxSelector } from "./BoxSelector.tsx"
+import { ResourceSelector } from "@/components/ResourceSelector.tsx"
 import { TokenSecretDialog } from "@/pages/tokens/create/TokenSecretDialog.tsx";
 
 interface CreateTokenDialogProps {
@@ -95,7 +95,54 @@ export function CreateTokenDialog({ trigger }: CreateTokenDialogProps) {
           />
 
           {type === "box" && (
-            <BoxSelector form={form} />
+            <FormField
+              control={form.control}
+              name="boxId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Box</FormLabel>
+                  <FormControl>
+                    <ResourceSelector
+                      resourcePath="/v1/workspaces/{workspaceId}/boxes"
+                      apiParams={{
+                        path: {
+                          workspaceId: workspaceId,
+                        }
+                      }}
+                      value={field.value ?? undefined}
+                      onChange={field.onChange}
+                      placeholder="Select a box"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+          {type === "machine" && (
+            <FormField
+              control={form.control}
+              name="machineId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Machine</FormLabel>
+                  <FormControl>
+                    <ResourceSelector
+                      resourcePath="/v1/workspaces/{workspaceId}/machines"
+                      apiParams={{
+                        path: {
+                          workspaceId: workspaceId,
+                        }
+                      }}
+                      value={field.value ?? undefined}
+                      onChange={field.onChange}
+                      placeholder="Select a machine"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           )}
         </div>
       }}

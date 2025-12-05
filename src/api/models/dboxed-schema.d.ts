@@ -352,40 +352,6 @@ export interface paths {
         patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id-load-balancer-services-by-load-balancer-service-id"];
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/boxes/{id}/logs": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get v1 workspaces by workspace ID boxes by ID logs */
-        get: operations["get-v1-workspaces-by-workspace-id-boxes-by-id-logs"];
-        put?: never;
-        /** Post v1 workspaces by workspace ID boxes by ID logs */
-        post: operations["post-v1-workspaces-by-workspace-id-boxes-by-id-logs"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/workspaces/{workspaceId}/boxes/{id}/logs/{logId}/stream": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["logs-stream"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/v1/workspaces/{workspaceId}/boxes/{id}/port-forwards": {
         parameters: {
             query?: never;
@@ -602,6 +568,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/logs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID logs */
+        get: operations["get-v1-workspaces-by-workspace-id-logs"];
+        put?: never;
+        /** Post v1 workspaces by workspace ID logs */
+        post: operations["post-v1-workspaces-by-workspace-id-logs"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/logs/{logId}/stream": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["logs-stream"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/machine-providers": {
         parameters: {
             query?: never;
@@ -726,6 +726,24 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/machines/{id}/machine-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID machines by ID machine status */
+        get: operations["get-v1-workspaces-by-workspace-id-machines-by-id-machine-status"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Patch v1 workspaces by workspace ID machines by ID machine status */
+        patch: operations["patch-v1-workspaces-by-workspace-id-machines-by-id-machine-status"];
         trace?: never;
     };
     "/v1/workspaces/{workspaceId}/networks": {
@@ -1840,6 +1858,8 @@ export interface components {
             metadata?: {
                 [key: string]: unknown;
             };
+            ownerId: string;
+            ownerType: string;
         };
         LogMetadataModel: {
             /** Format: date-time */
@@ -1852,6 +1872,8 @@ export interface components {
             metadata?: {
                 [key: string]: unknown;
             };
+            ownerId: string;
+            ownerType: string;
             workspace: string;
         };
         LogsBatch: {
@@ -1880,6 +1902,7 @@ export interface components {
             machineProvider?: string;
             machineProviderType?: string;
             name: string;
+            runStatus?: components["schemas"]["MachineRunStatus"];
             status: string;
             statusDetails: string;
             workspace: string;
@@ -1927,6 +1950,20 @@ export interface components {
             robotSubnetCidr: string | null;
             /** Format: int64 */
             robotVswitchId: number | null;
+        };
+        MachineRunStatus: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            runStatus?: string;
+            /** Format: date-time */
+            startTime?: string;
+            /** Format: date-time */
+            statusTime?: string;
+            /** Format: date-time */
+            stopTime?: string;
         };
         Network: {
             /**
@@ -2202,6 +2239,18 @@ export interface components {
             cloudToken?: string;
             robotPassword?: string;
             robotUsername?: string;
+        };
+        UpdateMachineRunStatus: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            runStatus?: string;
+            /** Format: date-time */
+            startTime?: string;
+            /** Format: date-time */
+            stopTime?: string;
         };
         UpdateNetwork: {
             /**
@@ -3391,158 +3440,6 @@ export interface operations {
             };
         };
     };
-    "get-v1-workspaces-by-workspace-id-boxes-by-id-logs": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-                /** @description The workspace id */
-                workspaceId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ListBodyLogMetadataModel"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "post-v1-workspaces-by-workspace-id-boxes-by-id-logs": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-                /** @description The workspace id */
-                workspaceId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PostLogs"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "logs-stream": {
-        parameters: {
-            query?: {
-                since?: string;
-            };
-            header?: never;
-            path: {
-                id: string;
-                logId: string;
-                /** @description The workspace id */
-                workspaceId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "text/event-stream": ({
-                        data: components["schemas"]["EndOfHistory"];
-                        /**
-                         * @description The event name.
-                         * @constant
-                         */
-                        event: "end-of-history";
-                        /** @description The event ID. */
-                        id?: number;
-                        /** @description The retry time in milliseconds. */
-                        retry?: number;
-                    } | {
-                        data: components["schemas"]["LogsError"];
-                        /**
-                         * @description The event name.
-                         * @constant
-                         */
-                        event: "error";
-                        /** @description The event ID. */
-                        id?: number;
-                        /** @description The retry time in milliseconds. */
-                        retry?: number;
-                    } | {
-                        data: components["schemas"]["LogsBatch"];
-                        /**
-                         * @description The event name.
-                         * @constant
-                         */
-                        event: "logs-batch";
-                        /** @description The event ID. */
-                        id?: number;
-                        /** @description The retry time in milliseconds. */
-                        retry?: number;
-                    } | {
-                        data: components["schemas"]["LogMetadataModel"];
-                        /**
-                         * @description The event name.
-                         * @constant
-                         */
-                        event: "metadata";
-                        /** @description The event ID. */
-                        id?: number;
-                        /** @description The retry time in milliseconds. */
-                        retry?: number;
-                    })[];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
     "get-v1-workspaces-by-workspace-id-boxes-by-id-port-forwards": {
         parameters: {
             query?: never;
@@ -4391,6 +4288,159 @@ export interface operations {
             };
         };
     };
+    "get-v1-workspaces-by-workspace-id-logs": {
+        parameters: {
+            query?: {
+                owner_type?: string;
+                owner_id?: string;
+            };
+            header?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListBodyLogMetadataModel"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-logs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PostLogs"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "logs-stream": {
+        parameters: {
+            query?: {
+                since?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+                logId: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": ({
+                        data: components["schemas"]["EndOfHistory"];
+                        /**
+                         * @description The event name.
+                         * @constant
+                         */
+                        event: "end-of-history";
+                        /** @description The event ID. */
+                        id?: number;
+                        /** @description The retry time in milliseconds. */
+                        retry?: number;
+                    } | {
+                        data: components["schemas"]["LogsError"];
+                        /**
+                         * @description The event name.
+                         * @constant
+                         */
+                        event: "error";
+                        /** @description The event ID. */
+                        id?: number;
+                        /** @description The retry time in milliseconds. */
+                        retry?: number;
+                    } | {
+                        data: components["schemas"]["LogsBatch"];
+                        /**
+                         * @description The event name.
+                         * @constant
+                         */
+                        event: "logs-batch";
+                        /** @description The event ID. */
+                        id?: number;
+                        /** @description The retry time in milliseconds. */
+                        retry?: number;
+                    } | {
+                        data: components["schemas"]["LogMetadataModel"];
+                        /**
+                         * @description The event name.
+                         * @constant
+                         */
+                        event: "metadata";
+                        /** @description The event ID. */
+                        id?: number;
+                        /** @description The retry time in milliseconds. */
+                        retry?: number;
+                    })[];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-v1-workspaces-by-workspace-id-machine-providers": {
         parameters: {
             query?: never;
@@ -4866,6 +4916,78 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Token"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-machines-by-id-machine-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MachineRunStatus"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "patch-v1-workspaces-by-workspace-id-machines-by-id-machine-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateMachineRunStatus"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
             /** @description Error */

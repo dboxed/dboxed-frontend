@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
-import { StatusBadge } from "@/components/StatusBadge.tsx"
+import { MachineStatusBadge } from "./status/MachineStatusBadge.tsx"
 import { TimeAgo } from "@/components/TimeAgo.tsx"
 import type { components } from "@/api/models/dboxed-schema"
 
@@ -77,7 +77,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           <LabelAndValue
             label="Status"
             value={
-              <StatusBadge item={data}/>
+              <MachineStatusBadge machine={data}/>
             }
           />
 

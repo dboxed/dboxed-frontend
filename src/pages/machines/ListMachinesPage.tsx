@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge.tsx";
 import { BaseListPage } from "@/pages/base";
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { CreateMachineDialog } from "./create/CreateMachineDialog.tsx";
-import { StatusBadge } from "@/components/StatusBadge.tsx";
+import { MachineStatusBadge } from "./details/status/MachineStatusBadge.tsx";
 import { TimeAgo } from "@/components/TimeAgo.tsx";
 
 export function ListMachinesPage() {
@@ -87,7 +87,7 @@ export function ListMachinesPage() {
       header: "Status",
       cell: ({ row }) => {
         return (
-          <StatusBadge item={row.original}/>
+          <MachineStatusBadge machine={row.original}/>
         )
       },
     },

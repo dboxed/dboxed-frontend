@@ -42,7 +42,7 @@ export function ReconcileLogsDialog({ boxId, open, onOpenChange }: ReconcileLogs
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="min-w-[80%] max-h-[80%]">
         <DialogHeader>
-          <DialogTitle>Reconcile Logs</DialogTitle>
+          <DialogTitle>Sandbox Logs</DialogTitle>
         </DialogHeader>
 
         {reconcileLogFiles.length === 0 ? (

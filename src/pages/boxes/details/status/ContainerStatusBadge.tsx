@@ -4,12 +4,12 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Badge } from "@/components/ui/badge.tsx";
 import { cn } from "@/lib/utils.ts";
 import { decompressDockerPs, type DockerContainer } from "@/pages/boxes/docker-utils.tsx";
-import { isStatusStale, formatTimeAgo } from "@/utils/time.ts";
+import { formatTimeAgo } from "@/utils/time.ts";
 
 export function ContainerStatusBadge({ box }: { box: components["schemas"]["Box"] }) {
   const [containers, setContainers] = useState<DockerContainer[]>([])
   const statusTime = box.sandboxStatus?.statusTime
-  const isStale = !statusTime || isStatusStale(statusTime)
+  const isStale = box.status === "Stale"
 
   useEffect(() => {
     if (box.sandboxStatus?.dockerPs) {

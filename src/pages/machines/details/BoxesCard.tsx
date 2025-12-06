@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router"
-import { Plus, Trash2 } from "lucide-react"
+import { Plus, Trash2, Play, StopCircle } from "lucide-react"
 import type { ColumnDef } from "@tanstack/react-table"
 import { useDboxedQueryClient } from "@/api/client.ts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
@@ -28,11 +28,25 @@ export function BoxesCard({ machineId, workspaceId }: BoxesCardProps) {
         id: machineId,
       }
     }
+  }, {
+    refetchInterval: 10000,
   })
 
   const removeBoxMutation = useDboxedMutation('delete', '/v1/workspaces/{workspaceId}/machines/{id}/boxes/{boxId}', {
     successMessage: "Box removed from machine",
     errorMessage: "Failed to remove box from machine",
+    refetchPath: "/v1/workspaces/{workspaceId}/machines/{id}/boxes",
+  })
+
+  const enableBoxMutation = useDboxedMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/enable', {
+    successMessage: "Box enabled",
+    errorMessage: "Failed to enable box",
+    refetchPath: "/v1/workspaces/{workspaceId}/machines/{id}/boxes",
+  })
+
+  const disableBoxMutation = useDboxedMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/disable', {
+    successMessage: "Box disabled",
+    errorMessage: "Failed to disable box",
     refetchPath: "/v1/workspaces/{workspaceId}/machines/{id}/boxes",
   })
 
@@ -45,6 +59,28 @@ export function BoxesCard({ machineId, workspaceId }: BoxesCardProps) {
           workspaceId: workspaceId,
           id: machineId,
           boxId: boxId,
+        }
+      }
+    })
+  }
+
+  const handleEnableBox = async (boxId: string) => {
+    return await enableBoxMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId,
+          id: boxId,
+        }
+      }
+    })
+  }
+
+  const handleDisableBox = async (boxId: string) => {
+    return await disableBoxMutation.mutateAsync({
+      params: {
+        path: {
+          workspaceId: workspaceId,
+          id: boxId,
         }
       }
     })
@@ -87,13 +123,13 @@ export function BoxesCard({ machineId, workspaceId }: BoxesCardProps) {
       },
     },
     {
-      accessorKey: "desiredState",
-      header: "Desired State",
+      accessorKey: "enabled",
+      header: "Enabled",
       cell: ({ row }) => {
-        const desiredState = row.getValue("desiredState") as string
+        const enabled = row.getValue("enabled") as boolean
         return (
-          <Badge variant={desiredState === 'up' ? 'default' : 'outline'} className="capitalize">
-            {desiredState}
+          <Badge variant={enabled ? 'default' : 'outline'}>
+            {enabled ? 'Yes' : 'No'}
           </Badge>
         )
       },
@@ -104,18 +140,39 @@ export function BoxesCard({ machineId, workspaceId }: BoxesCardProps) {
       cell: ({ row }) => {
         const box = row.original
         return (
-          <ConfirmationDialog
-            trigger={
-              <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            }
-            title="Remove Box"
-            description={`Are you sure you want to remove "${box.name}" from this machine?`}
-            confirmText="Remove"
-            onConfirm={() => handleRemoveBox(box.id)}
-            destructive
-          />
+          <div className="flex items-center gap-1">
+            <ConfirmationDialog
+              trigger={
+                <Button variant="ghost" size="sm">
+                  {box.enabled ? (
+                    <StopCircle className="h-4 w-4" />
+                  ) : (
+                    <Play className="h-4 w-4" />
+                  )}
+                </Button>
+              }
+              title={box.enabled ? "Disable Box?" : "Enable Box?"}
+              description={box.enabled
+                ? `This will disable "${box.name}" and stop all running containers.`
+                : `This will enable "${box.name}" and start all configured containers.`
+              }
+              confirmText={box.enabled ? "Disable" : "Enable"}
+              onConfirm={() => box.enabled ? handleDisableBox(box.id) : handleEnableBox(box.id)}
+              destructive={box.enabled}
+            />
+            <ConfirmationDialog
+              trigger={
+                <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              }
+              title="Remove Box"
+              description={`Are you sure you want to remove "${box.name}" from this machine?`}
+              confirmText="Remove"
+              onConfirm={() => handleRemoveBox(box.id)}
+              destructive
+            />
+          </div>
         )
       },
     },

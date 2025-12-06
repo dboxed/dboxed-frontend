@@ -177,19 +177,6 @@ function MachineBreadcrumb({ machineId, isCurrentPage }: MachineBreadcrumbProps)
   )
 }
 
-
-interface CreateBreadcrumbProps {
-  isCurrentPage?: boolean
-}
-
-function CreateBreadcrumb({ isCurrentPage }: CreateBreadcrumbProps) {
-  return (
-    <BreadcrumbElement isCurrentPage={isCurrentPage}>
-      <span>Create</span>
-    </BreadcrumbElement>
-  )
-}
-
 interface NetworksBreadcrumbProps {
   isCurrentPage?: boolean
 }
@@ -643,16 +630,6 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
 
       currentIndex++
     }
-
-    // Handle create path
-    if (pathSegments[currentIndex] === 'create') {
-      breadcrumbElements.push(
-        <BreadcrumbSeparator key="sep-create-machine-provider"/>,
-        <BreadcrumbItem key="create">
-          <CreateBreadcrumb isCurrentPage={true}/>
-        </BreadcrumbItem>
-      )
-    }
   }
 
   // Handle machines path
@@ -685,16 +662,6 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
       )
 
       currentIndex++
-    }
-
-    // Handle create path
-    if (pathSegments[currentIndex] === 'create') {
-      breadcrumbElements.push(
-        <BreadcrumbSeparator key="sep-create-machine"/>,
-        <BreadcrumbItem key="create">
-          <CreateBreadcrumb isCurrentPage={true}/>
-        </BreadcrumbItem>
-      )
     }
   }
 
@@ -729,16 +696,6 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
 
       currentIndex++
     }
-
-    // Handle create path
-    if (pathSegments[currentIndex] === 'create') {
-      breadcrumbElements.push(
-        <BreadcrumbSeparator key="sep-create-network"/>,
-        <BreadcrumbItem key="create">
-          <CreateBreadcrumb isCurrentPage={true}/>
-        </BreadcrumbItem>
-      )
-    }
   }
 
   // Handle boxes path
@@ -771,16 +728,6 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
       )
 
       currentIndex++
-    }
-
-    // Handle create path
-    if (pathSegments[currentIndex] === 'create') {
-      breadcrumbElements.push(
-        <BreadcrumbSeparator key="sep-create-box"/>,
-        <BreadcrumbItem key="create">
-          <CreateBreadcrumb isCurrentPage={true}/>
-        </BreadcrumbItem>
-      )
     }
   }
 
@@ -815,16 +762,6 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
 
       currentIndex++
     }
-
-    // Handle create path
-    if (pathSegments[currentIndex] === 'create') {
-      breadcrumbElements.push(
-        <BreadcrumbSeparator key="sep-create-volume-provider"/>,
-        <BreadcrumbItem key="create">
-          <CreateBreadcrumb isCurrentPage={true}/>
-        </BreadcrumbItem>
-      )
-    }
   }
 
   // Handle volumes path
@@ -857,16 +794,6 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
       )
 
       currentIndex++
-    }
-
-    // Handle create path
-    if (pathSegments[currentIndex] === 'create') {
-      breadcrumbElements.push(
-        <BreadcrumbSeparator key="sep-create-volume"/>,
-        <BreadcrumbItem key="create">
-          <CreateBreadcrumb isCurrentPage={true}/>
-        </BreadcrumbItem>
-      )
     }
   }
 
@@ -901,16 +828,6 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
 
       currentIndex++
     }
-
-    // Handle create path
-    if (pathSegments[currentIndex] === 'create') {
-      breadcrumbElements.push(
-        <BreadcrumbSeparator key="sep-create-s3-bucket"/>,
-        <BreadcrumbItem key="create">
-          <CreateBreadcrumb isCurrentPage={true}/>
-        </BreadcrumbItem>
-      )
-    }
   }
 
   // Handle load-balancers path
@@ -943,16 +860,6 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
       )
 
       currentIndex++
-    }
-
-    // Handle create path
-    if (pathSegments[currentIndex] === 'create') {
-      breadcrumbElements.push(
-        <BreadcrumbSeparator key="sep-create-load-balancer"/>,
-        <BreadcrumbItem key="create">
-          <CreateBreadcrumb isCurrentPage={true}/>
-        </BreadcrumbItem>
-      )
     }
   }
 
@@ -987,32 +894,6 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
 
       currentIndex++
     }
-
-    // Handle create path
-    if (pathSegments[currentIndex] === 'create') {
-      breadcrumbElements.push(
-        <BreadcrumbSeparator key="sep-create-token"/>,
-        <BreadcrumbItem key="create">
-          <CreateBreadcrumb isCurrentPage={true}/>
-        </BreadcrumbItem>
-      )
-    }
-  }
-
-  // Handle workspace create path (outside the main layout)
-  if (pathSegments[0] === 'workspaces' && pathSegments[1] === 'create') {
-    breadcrumbElements.push(
-      <BreadcrumbSeparator key="sep-workspaces" className="hidden md:block"/>,
-      <BreadcrumbItem key="workspaces">
-        <BreadcrumbElement isCurrentPage={false}>
-          <span>Workspaces</span>
-        </BreadcrumbElement>
-      </BreadcrumbItem>,
-      <BreadcrumbSeparator key="sep-create-workspace"/>,
-      <BreadcrumbItem key="create">
-        <CreateBreadcrumb isCurrentPage={true}/>
-      </BreadcrumbItem>
-    )
   }
 
   // Don't render if we only have the dashboard breadcrumb

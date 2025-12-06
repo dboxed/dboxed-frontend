@@ -50,15 +50,15 @@ export function BoxDetailsPage() {
   const { boxId } = useParams<{ boxId: string }>()
   const [refreshTrigger, setRefreshTrigger] = useState(0)
 
-  const startBoxMutation = useDboxedMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/start', {
-    successMessage: 'Box started successfully',
-    errorMessage: 'Failed to start box',
+  const enableBoxMutation = useDboxedMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/enable', {
+    successMessage: 'Box enabled successfully',
+    errorMessage: 'Failed to enable box',
     onSuccess: () => setRefreshTrigger(x => x + 1),
   })
 
-  const stopBoxMutation = useDboxedMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/stop', {
-    successMessage: 'Box stopped successfully',
-    errorMessage: 'Failed to stop box',
+  const disableBoxMutation = useDboxedMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/disable', {
+    successMessage: 'Box disabled successfully',
+    errorMessage: 'Failed to disable box',
     onSuccess: () => setRefreshTrigger(x => x + 1),
   })
 
@@ -72,8 +72,8 @@ export function BoxDetailsPage() {
     return <div>Invalid box ID</div>
   }
 
-  const handleStart = async () => {
-    return await startBoxMutation.mutateAsync({
+  const handleEnable = async () => {
+    return await enableBoxMutation.mutateAsync({
       params: {
         path: {
           workspaceId: workspaceId!,
@@ -83,8 +83,8 @@ export function BoxDetailsPage() {
     })
   }
 
-  const handleStop = async () => {
-    return await stopBoxMutation.mutateAsync({
+  const handleDisable = async () => {
+    return await disableBoxMutation.mutateAsync({
       params: {
         path: {
           workspaceId: workspaceId!,
@@ -124,21 +124,21 @@ export function BoxDetailsPage() {
         }
       }}
       deleteConfirmationChildren={(data) => {
-        if (data.desiredState === 'up') {
+        if (data.enabled) {
           return (
             <Alert variant="destructive">
               <AlertTriangle className="h-4 w-4" />
-              <AlertTitle>Warning: Box is Running</AlertTitle>
+              <AlertTitle>Warning: Box is Enabled</AlertTitle>
               <AlertDescription>
                 <div className="space-y-2">
                   <p>
-                    <strong>This box has desired state set to "up" and may be actively running.</strong>
+                    <strong>This box is enabled and may be actively running.</strong>
                   </p>
                   <p>
-                    It is strongly recommended to stop the box before deletion to ensure a clean shutdown of all containers and services.
+                    It is strongly recommended to disable the box before deletion to ensure a clean shutdown of all containers and services.
                   </p>
                   <p>
-                    Click the <strong>Stop</strong> button first, wait for the box to stop, then delete it.
+                    Click the <strong>Disable</strong> button first, wait for the box to stop, then delete it.
                   </p>
                 </div>
               </AlertDescription>
@@ -153,50 +153,29 @@ export function BoxDetailsPage() {
             trigger={
               <Button
                 variant="outline"
-                disabled={data.desiredState === 'up' || startBoxMutation.isPending}
+                disabled={enableBoxMutation.isPending || disableBoxMutation.isPending}
               >
-                <Play className="h-4 w-4 mr-2" />
-                {startBoxMutation.isPending ? 'Starting...' : 'Start'}
+                {data.enabled ? (
+                  <>
+                    <StopCircle className="h-4 w-4 mr-2" />
+                    {disableBoxMutation.isPending ? 'Disabling...' : 'Disable'}
+                  </>
+                ) : (
+                  <>
+                    <Play className="h-4 w-4 mr-2" />
+                    {enableBoxMutation.isPending ? 'Enabling...' : 'Enable'}
+                  </>
+                )}
               </Button>
             }
-            title="Start Box?"
-            description="This will start the box and all configured containers."
-            confirmText="Start"
-            onConfirm={handleStart}
-          >
-            <Alert variant="destructive">
-              <AlertTriangle className="h-4 w-4" />
-              <AlertTitle>Note</AlertTitle>
-              <AlertDescription>
-                <div className="space-y-2">
-                  <p>
-                    Automatic starting of sandboxes for the box is not implemented yet. This will come in a future release of dboxed.
-                  </p>
-                  <p>
-                    This means you will need to manually run <code className="px-1.5 py-0.5 rounded bg-muted font-mono text-xs">dboxed sandbox run ...</code> yourself.
-                  </p>
-                  <p>
-                    Check the <strong>Connect Box</strong> tab for details.
-                  </p>
-                </div>
-              </AlertDescription>
-            </Alert>
-          </ConfirmationDialog>
-          <ConfirmationDialog
-            trigger={
-              <Button
-                variant="outline"
-                disabled={data.desiredState !== 'up' || stopBoxMutation.isPending}
-              >
-                <StopCircle className="h-4 w-4 mr-2" />
-                {stopBoxMutation.isPending ? 'Stopping...' : 'Stop'}
-              </Button>
+            title={data.enabled ? "Disable Box?" : "Enable Box?"}
+            description={data.enabled
+              ? "This will disable the box and stop all running containers."
+              : "This will enable the box and start all configured containers."
             }
-            title="Stop Box?"
-            description="This will stop the box and all running containers."
-            confirmText="Stop"
-            onConfirm={handleStop}
-            destructive
+            confirmText={data.enabled ? "Disable" : "Enable"}
+            onConfirm={data.enabled ? handleDisable : handleEnable}
+            destructive={data.enabled}
           />
           <ConfirmationDialog
             trigger={

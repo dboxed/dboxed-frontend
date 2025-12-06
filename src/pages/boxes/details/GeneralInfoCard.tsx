@@ -115,10 +115,10 @@ export function GeneralInfoCard({ box }: GeneralInfoCardProps) {
           <CardContent>
             <DetailsCardLayout>
               <LabelAndValue
-                label="Desired State"
+                label="Enabled"
                 value={
-                  <Badge variant={box.desiredState === 'up' ? 'default' : 'outline'} className="capitalize">
-                    {box.desiredState}
+                  <Badge variant={box.enabled ? 'default' : 'outline'}>
+                    {box.enabled ? 'Yes' : 'No'}
                   </Badge>
                 }
               />

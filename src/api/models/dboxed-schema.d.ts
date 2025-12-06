@@ -316,6 +316,40 @@ export interface paths {
         patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id-compose-projects-by-compose-name"];
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/boxes/{id}/disable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID boxes by ID disable */
+        post: operations["post-v1-workspaces-by-workspace-id-boxes-by-id-disable"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/boxes/{id}/enable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post v1 workspaces by workspace ID boxes by ID enable */
+        post: operations["post-v1-workspaces-by-workspace-id-boxes-by-id-enable"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/boxes/{id}/load-balancer-services": {
         parameters: {
             query?: never;
@@ -421,40 +455,6 @@ export interface paths {
         head?: never;
         /** Patch v1 workspaces by workspace ID boxes by ID sandbox status */
         patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id-sandbox-status"];
-        trace?: never;
-    };
-    "/v1/workspaces/{workspaceId}/boxes/{id}/start": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Post v1 workspaces by workspace ID boxes by ID start */
-        post: operations["post-v1-workspaces-by-workspace-id-boxes-by-id-start"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/workspaces/{workspaceId}/boxes/{id}/stop": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Post v1 workspaces by workspace ID boxes by ID stop */
-        post: operations["post-v1-workspaces-by-workspace-id-boxes-by-id-stop"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
         trace?: never;
     };
     "/v1/workspaces/{workspaceId}/boxes/{id}/volumes": {
@@ -586,7 +586,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/workspaces/{workspaceId}/logs/{logId}/stream": {
+    "/v1/workspaces/{workspaceId}/logs/{id}/stream": {
         parameters: {
             query?: never;
             header?: never;
@@ -1251,7 +1251,7 @@ export interface components {
             boxType: string;
             /** Format: date-time */
             createdAt: string;
-            desiredState: string;
+            enabled: boolean;
             id: string;
             machine: string | null;
             name: string;
@@ -1322,7 +1322,7 @@ export interface components {
             composeProjects?: {
                 [key: string]: string;
             };
-            desiredState: string;
+            enabled: boolean;
             id: string;
             name: string;
             network?: components["schemas"]["BoxNetwork"];
@@ -1476,6 +1476,8 @@ export interface components {
             machineId?: string;
             name: string;
             type: string;
+            /** Format: date-time */
+            validUntil?: string;
         };
         CreateVolume: {
             /**
@@ -2147,6 +2149,8 @@ export interface components {
             name: string;
             token?: string;
             type: string;
+            /** Format: date-time */
+            validUntil: string | null;
             workspace: string;
         };
         UpdateBoxComposeProject: {
@@ -3296,6 +3300,72 @@ export interface operations {
             };
         };
     };
+    "post-v1-workspaces-by-workspace-id-boxes-by-id-disable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Box"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-boxes-by-id-enable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Box"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-v1-workspaces-by-workspace-id-boxes-by-id-load-balancer-services": {
         parameters: {
             query?: never;
@@ -3676,72 +3746,6 @@ export interface operations {
                     "application/json": {
                         [key: string]: unknown;
                     };
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "post-v1-workspaces-by-workspace-id-boxes-by-id-start": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-                /** @description The workspace id */
-                workspaceId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Box"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "post-v1-workspaces-by-workspace-id-boxes-by-id-stop": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-                /** @description The workspace id */
-                workspaceId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Box"];
                 };
             };
             /** @description Error */
@@ -4369,7 +4373,6 @@ export interface operations {
             header?: never;
             path: {
                 id: string;
-                logId: string;
                 /** @description The workspace id */
                 workspaceId: string;
             };

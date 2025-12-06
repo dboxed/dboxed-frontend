@@ -520,6 +520,61 @@ function LoadBalancerBreadcrumb({ loadBalancerId, isCurrentPage }: LoadBalancerB
   )
 }
 
+interface TokensBreadcrumbProps {
+  isCurrentPage?: boolean
+}
+
+function TokensBreadcrumb({ isCurrentPage }: TokensBreadcrumbProps) {
+  const navigate = useNavigate()
+  const { workspaceId } = useSelectedWorkspaceId()
+  const href = `/workspaces/${workspaceId}/tokens`
+
+  return (
+    <BreadcrumbElement
+      href={href}
+      isCurrentPage={isCurrentPage}
+      onClick={() => navigate(href)}
+    >
+      <span>Tokens</span>
+    </BreadcrumbElement>
+  )
+}
+
+interface TokenBreadcrumbProps {
+  tokenId: string
+  isCurrentPage?: boolean
+}
+
+function TokenBreadcrumb({ tokenId, isCurrentPage }: TokenBreadcrumbProps) {
+  const navigate = useNavigate()
+  const { workspaceId } = useSelectedWorkspaceId()
+  const client = useDboxedQueryClient()
+
+  const token = client.useQuery('get', '/v1/workspaces/{workspaceId}/tokens/{id}', {
+    params: {
+      path: {
+        workspaceId: workspaceId!,
+        id: tokenId
+      }
+    },
+  }, {
+    enabled: !!workspaceId && !!tokenId
+  })
+
+  const href = `/workspaces/${workspaceId}/tokens/${tokenId}`
+  const label = token.data?.name || 'Token'
+
+  return (
+    <BreadcrumbElement
+      href={href}
+      isCurrentPage={isCurrentPage}
+      onClick={() => navigate(href)}
+    >
+      <span>{label}</span>
+    </BreadcrumbElement>
+  )
+}
+
 interface DboxedBreadcrumbsProps {
   className?: string
 }
@@ -894,6 +949,49 @@ export function DboxedBreadcrumbs({ className }: DboxedBreadcrumbsProps) {
     if (pathSegments[currentIndex] === 'create') {
       breadcrumbElements.push(
         <BreadcrumbSeparator key="sep-create-load-balancer"/>,
+        <BreadcrumbItem key="create">
+          <CreateBreadcrumb isCurrentPage={true}/>
+        </BreadcrumbItem>
+      )
+    }
+  }
+
+  // Handle tokens path
+  if (pathSegments[currentIndex] === 'tokens') {
+    const isCurrentPage = pathSegments.length === currentIndex + 1
+
+    breadcrumbElements.push(
+      <BreadcrumbSeparator key="sep-workspace-tokens"/>,
+      <BreadcrumbItem key="tokens">
+        <TokensBreadcrumb isCurrentPage={isCurrentPage}/>
+      </BreadcrumbItem>
+    )
+
+    currentIndex++
+
+    // Handle specific token ID
+    const tokenIdSegment = pathSegments[currentIndex]
+    if (tokenIdSegment && tokenIdSegment.match(/^[^/]+$/)) {
+      const tokenId = tokenIdSegment
+      const isCurrentPage = pathSegments.length === currentIndex + 1
+
+      breadcrumbElements.push(
+        <BreadcrumbSeparator key="sep-tokens"/>,
+        <BreadcrumbItem key="token">
+          <TokenBreadcrumb
+            tokenId={tokenId}
+            isCurrentPage={isCurrentPage}
+          />
+        </BreadcrumbItem>
+      )
+
+      currentIndex++
+    }
+
+    // Handle create path
+    if (pathSegments[currentIndex] === 'create') {
+      breadcrumbElements.push(
+        <BreadcrumbSeparator key="sep-create-token"/>,
         <BreadcrumbItem key="create">
           <CreateBreadcrumb isCurrentPage={true}/>
         </BreadcrumbItem>

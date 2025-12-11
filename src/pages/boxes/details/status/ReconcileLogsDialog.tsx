@@ -31,7 +31,7 @@ export function ReconcileLogsDialog({ boxId, open, onOpenChange }: ReconcileLogs
 
   // Filter for reconcile.log
   const reconcileLogFiles = logFiles.data?.items?.filter(logFile =>
-    logFile.fileName === 'dboxed/run-in-sandbox.log'
+    logFile.fileName.startsWith('containers/dboxed-run-in-sandbox/')
   ) || []
 
   if (!workspaceId) {

@@ -76,7 +76,7 @@ export function HetznerConfigForm({ form }: HetznerConfigFormProps) {
                   />
                 </FormControl>
                 <FormDescription>
-                  Optional robot username for additional authentication.
+                  Optional robot username.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -97,7 +97,7 @@ export function HetznerConfigForm({ form }: HetznerConfigFormProps) {
                   />
                 </FormControl>
                 <FormDescription>
-                  Optional robot password for additional authentication.
+                  Optional robot password.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

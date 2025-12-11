@@ -115,8 +115,8 @@ export function ListBoxesPage() {
       },
     },
     {
-      accessorKey: "desiredState",
-      header: "Desired State",
+      accessorKey: "enabled",
+      header: "Enabled",
       cell: ({ row }) => {
         const desiredState = row.getValue("desiredState") as string
         return (

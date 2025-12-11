@@ -75,7 +75,7 @@ function HetznerEditCredentialsDialog({ open, onOpenChange, save }: HetznerEditC
                   />
                 </FormControl>
                 <FormDescription>
-                  Optional robot username for additional authentication.
+                  Optional robot username.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -96,7 +96,7 @@ function HetznerEditCredentialsDialog({ open, onOpenChange, save }: HetznerEditC
                   />
                 </FormControl>
                 <FormDescription>
-                  Optional robot password for additional authentication.
+                  Optional robot password.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

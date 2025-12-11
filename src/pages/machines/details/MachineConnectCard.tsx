@@ -23,7 +23,7 @@ export function MachineConnectCard({ machine }: MachineConnectCardProps) {
     onSuccess: (responseData: { token?: string }) => {
       if (responseData.token) {
         const generatedToken = responseData.token
-        let command = `dboxed machine run ${machine.name}`
+        let command = `dboxed machine service install ${machine.name}`
 
         // Add --api-url if VITE_API_URL_PUBLIC is different from DEFAULT_API_URL
         if (envVars.VITE_API_URL_PUBLIC !== DEFAULT_API_URL) {

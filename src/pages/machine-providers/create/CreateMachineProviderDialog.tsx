@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import type { components } from "@/api/models/dboxed-schema";
 import type { ReactNode } from "react";
+import { deepClone } from "@/utils/utils.ts";
 
 
 interface CreateMachineProviderDialogProps {
@@ -18,6 +19,19 @@ interface CreateMachineProviderDialogProps {
 
 export function CreateMachineProviderDialog({ trigger }: CreateMachineProviderDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
+
+  const handleSubmit = (data: components["schemas"]["CreateMachineProvider"]) => {
+    const c = deepClone(data)
+    switch (data.type) {
+      case "aws":
+        c.hetzner = undefined
+        break
+      case "hetzner":
+        c.aws = undefined
+        break
+    }
+    return c
+  }
 
   return (
     <BaseCreateDialog<components["schemas"]["CreateMachineProvider"]>
@@ -34,6 +48,7 @@ export function CreateMachineProviderDialog({ trigger }: CreateMachineProviderDi
         type: "aws",
         sshKeyPublic: "",
       }}
+      onSubmit={handleSubmit}
     >
       {(form) => (
         <div className="space-y-6">

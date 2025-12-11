@@ -17,7 +17,7 @@ export function SshKeyForm({ form }: SshKeyFormProps) {
           <span>SSH Key Configuration</span>
         </CardTitle>
         <CardDescription>
-          Optionally provide an SSH public key for secure access to your cloud resources.
+          Optionally provide an SSH public key for secure SSH access.
         </CardDescription>
       </CardHeader>
       <CardContent>

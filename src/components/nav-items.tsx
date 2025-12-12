@@ -12,6 +12,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import { useLocation, useNavigate, useParams } from "react-router";
 import type { ReactElement } from "react";
@@ -29,11 +30,13 @@ function NavButton({item}: {item: Item}) {
   const navigate = useNavigate()
   const location = useLocation()
   const { workspaceId } = useParams();
+  const { setOpenMobile } = useSidebar()
 
   const handleSelect = (item: Item) => {
     if (item.navigate) {
       const l = item.navigate.replace('{workspaceId}', workspaceId || 'invalid')
       navigate(l)
+      setOpenMobile(false)
     }
   }
 
@@ -71,11 +74,13 @@ export function NavItems({
 }) {
   const navigate = useNavigate()
   const { workspaceId } = useParams();
+  const { setOpenMobile } = useSidebar()
 
   const handleSelect = (item: Item) => {
     if (item.navigate) {
       const l = item.navigate.replace('{workspaceId}', workspaceId || 'invalid')
       navigate(l)
+      setOpenMobile(false)
     }
   }
 

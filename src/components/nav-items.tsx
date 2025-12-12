@@ -13,7 +13,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import type { ReactElement } from "react";
 
 interface Item {
@@ -27,6 +27,7 @@ interface Item {
 
 function NavButton({item}: {item: Item}) {
   const navigate = useNavigate()
+  const location = useLocation()
   const { workspaceId } = useParams();
 
   const handleSelect = (item: Item) => {
@@ -36,7 +37,19 @@ function NavButton({item}: {item: Item}) {
     }
   }
 
-  const button = <SidebarMenuButton tooltip={item.title} onClick={() => handleSelect(item)} className={item.url ? "cursor-pointer" : ""}>
+  // Determine if this item is active based on current route
+  const isActive = (() => {
+    if (!item.navigate) return false
+    const resolvedPath = item.navigate.replace('{workspaceId}', workspaceId || '')
+    // Dashboard (workspace root) needs exact match to avoid matching all workspace routes
+    if (item.navigate === '/workspaces/{workspaceId}') {
+      return location.pathname === resolvedPath
+    }
+    // Other routes use prefix matching
+    return location.pathname.startsWith(resolvedPath)
+  })()
+
+  const button = <SidebarMenuButton tooltip={item.title} onClick={() => handleSelect(item)} className={item.url ? "cursor-pointer" : ""} data-active={isActive}>
     {item.icon }
     <span>{item.title}</span>
     {item.items && <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />}

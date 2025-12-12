@@ -140,7 +140,7 @@ export function LogsCard({ ownerType, ownerId }: LogsCardProps) {
                             <div className="flex-shrink-0 w-4 flex items-center justify-center">
                               {icon}
                             </div>
-                            <span className="truncate">{entryName}</span>
+                            <span className="truncate">{entryName.replace(/^containers\//, '')}</span>
                             <span className="text-xs text-muted-foreground ml-auto">
                               {logFiles.length}
                             </span>
@@ -168,4 +168,4 @@ export function LogsCard({ ownerType, ownerId }: LogsCardProps) {
       </CardContent>
     </Card>
   )
-} 
+}

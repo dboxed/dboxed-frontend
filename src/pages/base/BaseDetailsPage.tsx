@@ -44,69 +44,63 @@ export function BaseDetailsPage<T, U>(props: BaseDetailsPageProps<T, U>) {
 
   if (props.isLoading || !props.resourceData) {
     return (
-      <div className="min-h-screen flex items-start justify-center p-4 w-full overflow-y-auto">
-        <Card className="w-full max-w-2xl my-8">
-          <CardHeader>
-            <CardTitle>{props.title}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-muted-foreground">Loading resource...</div>
-          </CardContent>
-        </Card>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>{props.title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-muted-foreground">Loading resource...</div>
+        </CardContent>
+      </Card>
     )
   }
 
   if (props.error) {
     return (
-      <div className="min-h-screen flex items-start justify-center p-4 w-full overflow-y-auto">
-        <Card className="w-full max-w-2xl my-8">
-          <CardHeader>
-            <CardTitle>{props.title}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-red-600">
-              Failed to load resource: {props.error.detail || "An error occurred while loading the resource."}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>{props.title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-red-600">
+            Failed to load resource: {props.error.detail || "An error occurred while loading the resource."}
+          </div>
+        </CardContent>
+      </Card>
     )
   }
 
   const enableDelete = props.enableDelete !== undefined && (typeof props.enableDelete === "boolean" ? props.enableDelete : props.enableDelete(props.resourceData))
 
   return (
-    <div className="min-h-screen flex items-start justify-center p-4 w-full overflow-y-auto">
-      <Card className="w-full max-w-7xl my-8">
-        <CardHeader>
-          <CardTitle>{props.title}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {props.children(props.resourceData, handleSave)}
-        </CardContent>
-        <CardFooter className="flex justify-between space-x-2">
-          <div className="flex items-center space-x-2">
-            {enableDelete && (
-              <DeleteButton
-                onDelete={handleDelete}
-                resourceName={props.title}
-                isLoading={props.isDeleting}
-                buttonText={props.deleteButtonText}
-              >
-                {props.deleteConfirmationChildren && props.deleteConfirmationChildren(props.resourceData)}
-              </DeleteButton>
-            )}
-          </div>
-          <div className="flex space-x-2">
-            {props.customButtons && (
-              <>
-                {props.customButtons(props.resourceData, handleSave)}
-              </>
-            )}
-          </div>
-        </CardFooter>
-      </Card>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>{props.title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {props.children(props.resourceData, handleSave)}
+      </CardContent>
+      <CardFooter className="flex justify-between space-x-2">
+        <div className="flex items-center space-x-2">
+          {enableDelete && (
+            <DeleteButton
+              onDelete={handleDelete}
+              resourceName={props.title}
+              isLoading={props.isDeleting}
+              buttonText={props.deleteButtonText}
+            >
+              {props.deleteConfirmationChildren && props.deleteConfirmationChildren(props.resourceData)}
+            </DeleteButton>
+          )}
+        </div>
+        <div className="flex space-x-2">
+          {props.customButtons && (
+            <>
+              {props.customButtons(props.resourceData, handleSave)}
+            </>
+          )}
+        </div>
+      </CardFooter>
+    </Card>
   )
 }

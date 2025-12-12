@@ -14,7 +14,10 @@ export function EarlyStageWarningBanner() {
             All workloads that you define here may be wiped at any time.{" "}
           </>
         )}
-        Breaking changes might be introduced at any time.
+        <span className="hidden md:inline">
+          <br/>
+          Breaking changes might be introduced at any time.
+        </span>
       </span>
     </div>
   )

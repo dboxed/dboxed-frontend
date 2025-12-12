@@ -4,8 +4,6 @@ import { FormField, FormItem, FormControl, FormMessage } from "@/components/ui/f
 import { SimpleFormDialog } from "@/components/SimpleFormDialog.tsx"
 import { useCallback } from "react"
 import type { ComposeProjectInfo } from "@/pages/boxes/details/compose-projects/project-info.ts";
-import { Button } from "@/components/ui/button.tsx";
-import { Edit } from "lucide-react";
 import { useDboxedMutation } from "@/api/mutation.ts";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import type { components } from "@/api/models/dboxed-schema";
@@ -13,6 +11,8 @@ import type { components } from "@/api/models/dboxed-schema";
 interface ComposeProjectEditorDialogProps {
   box: components["schemas"]["Box"]
   project: ComposeProjectInfo
+  open: boolean
+  onOpenChange: (open: boolean) => void
   onSaved: () => void
 }
 
@@ -23,6 +23,8 @@ interface EditProjectFormData {
 export function ComposeProjectEditorDialog({
   box,
   project,
+  open,
+  onOpenChange,
   onSaved,
 }: ComposeProjectEditorDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
@@ -62,12 +64,8 @@ export function ComposeProjectEditorDialog({
 
   return (
     <SimpleFormDialog<EditProjectFormData>
-      trigger={<Button
-        variant="outline"
-        size="sm"
-      >
-        <Edit className="w-4 h-4"/>
-      </Button>}
+      open={open}
+      onOpenChange={onOpenChange}
       title="Edit Compose Project"
       buildInitial={buildInitialFormData}
       onSave={handleSave}

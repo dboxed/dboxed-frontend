@@ -6,12 +6,12 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedMutation } from "@/api/mutation.ts"
 import type { components } from "@/api/models/dboxed-schema"
 import { toast } from "sonner"
-import type { ReactNode } from "react"
 
 interface EditLoadBalancerServiceDialogProps {
   boxId: string
   loadBalancerService: components["schemas"]["LoadBalancerService"]
-  trigger: ReactNode
+  open: boolean
+  onOpenChange: (open: boolean) => void
   onSuccess: () => void
 }
 
@@ -22,7 +22,7 @@ interface FormData {
   description: string
 }
 
-export function EditLoadBalancerServiceDialog({ boxId, loadBalancerService, trigger, onSuccess }: EditLoadBalancerServiceDialogProps) {
+export function EditLoadBalancerServiceDialog({ boxId, loadBalancerService, open, onOpenChange, onSuccess }: EditLoadBalancerServiceDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
 
   const updateLoadBalancerServiceMutation = useDboxedMutation('patch', '/v1/workspaces/{workspaceId}/boxes/{id}/load-balancer-services/{loadBalancerServiceId}', {
@@ -59,7 +59,8 @@ export function EditLoadBalancerServiceDialog({ boxId, loadBalancerService, trig
 
   return (
     <SimpleFormDialog<FormData>
-      trigger={trigger}
+      open={open}
+      onOpenChange={onOpenChange}
       title="Edit Load Balancer Service"
       description="Update the HTTP load balancer service rule for this box"
       buildInitial={() => ({

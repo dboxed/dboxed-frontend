@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button.tsx";
 
 interface ConfirmationDialogProps {
   trigger?: React.ReactNode
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
   title: string
   description: string
   confirmText?: string
@@ -25,6 +27,8 @@ interface ConfirmationDialogProps {
 
 export function ConfirmationDialog({
   trigger,
+  open: controlledOpen,
+  onOpenChange,
   title,
   description,
   confirmText = "Confirm",
@@ -33,7 +37,16 @@ export function ConfirmationDialog({
   destructive = false,
   children
 }: ConfirmationDialogProps) {
-  const [open, setOpen] = useState(false)
+  const [internalOpen, setInternalOpen] = useState(false)
+  const isControlled = controlledOpen !== undefined
+  const open = isControlled ? controlledOpen : internalOpen
+
+  const setOpen = (newOpen: boolean) => {
+    if (!isControlled) {
+      setInternalOpen(newOpen)
+    }
+    onOpenChange?.(newOpen)
+  }
   const [isConfirming, setIsConfirming] = useState(false)
 
   const handleConfirm = async (e: MouseEvent) => {

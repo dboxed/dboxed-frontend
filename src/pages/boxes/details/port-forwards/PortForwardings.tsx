@@ -5,6 +5,7 @@ import { DataTable } from "@/components/data-table.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/client.ts"
 import { useDboxedMutation } from "@/api/mutation.ts"
+import { useEditDialogOpenState } from "@/hooks/use-edit-dialog-open-state.ts"
 import type { components } from "@/api/models/dboxed-schema"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Plus, Trash2, Edit } from "lucide-react"
@@ -20,6 +21,8 @@ interface PortForwardingsProps {
 export function PortForwardings({ box }: PortForwardingsProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
+  const editDialog = useEditDialogOpenState<components["schemas"]["BoxPortForward"]>()
+  const deleteDialog = useEditDialogOpenState<components["schemas"]["BoxPortForward"]>()
 
   const allowEditing = box.boxType === "normal"
 
@@ -112,21 +115,13 @@ export function PortForwardings({ box }: PortForwardingsProps) {
           <div className="flex space-x-2">
             <Tooltip>
               <TooltipTrigger asChild>
-                <div>
-                  <EditPortForwardDialog
-                    boxId={box.id}
-                    portForward={row.original}
-                    trigger={
-                      <Button
-                        variant="outline"
-                        size="sm"
-                      >
-                        <Edit className="w-4 h-4"/>
-                      </Button>
-                    }
-                    onSuccess={() => portForwardsQuery.refetch()}
-                  />
-                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => editDialog.setItem(row.original)}
+                >
+                  <Edit className="w-4 h-4"/>
+                </Button>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Edit port forward</p>
@@ -134,24 +129,13 @@ export function PortForwardings({ box }: PortForwardingsProps) {
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div>
-                  <ConfirmationDialog
-                    trigger={
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={deletePortForwardMutation.isPending}
-                      >
-                        <Trash2 className="w-4 h-4"/>
-                      </Button>
-                    }
-                    title="Delete Port Forward"
-                    description={`Are you sure you want to delete this port forward (${row.original.protocol}:${row.original.sandboxPort})?`}
-                    confirmText="Delete"
-                    onConfirm={() => handleDeletePortForward(row.original.id)}
-                    destructive
-                  />
-                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => deleteDialog.setItem(row.original)}
+                >
+                  <Trash2 className="w-4 h-4"/>
+                </Button>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Delete port forward</p>
@@ -201,6 +185,20 @@ export function PortForwardings({ box }: PortForwardingsProps) {
           />
         </CardContent>
       </Card>
+      {editDialog.item && <EditPortForwardDialog
+        boxId={box.id}
+        portForward={editDialog.item}
+        {...editDialog.dialogProps}
+        onSuccess={() => portForwardsQuery.refetch()}
+      />}
+      {deleteDialog.item && <ConfirmationDialog
+        {...deleteDialog.dialogProps}
+        title="Delete Port Forward"
+        description={`Are you sure you want to delete this port forward (${deleteDialog.item.protocol}:${deleteDialog.item.sandboxPort})?`}
+        confirmText="Delete"
+        onConfirm={() => handleDeletePortForward(deleteDialog.item!.id)}
+        destructive
+      />}
     </>
   )
 }

@@ -8,9 +8,10 @@ import { ComposeProjectEditorDialog } from "./ComposeProjectEditorDialog.tsx"
 import { useDboxedQueryClient } from "@/api/client.ts"
 import { useDboxedMutation } from "@/api/mutation.ts"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
+import { useEditDialogOpenState } from "@/hooks/use-edit-dialog-open-state.ts"
 import type { components } from "@/api/models/dboxed-schema"
 import type { ColumnDef } from "@tanstack/react-table"
-import { Trash2 } from "lucide-react"
+import { Edit, Trash2 } from "lucide-react"
 import {
   type ComposeProjectInfo,
   extractComposeProjectInfo
@@ -23,6 +24,8 @@ interface ComposeProjectsProps {
 export function ComposeProjects({ box }: ComposeProjectsProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
+  const editDialog = useEditDialogOpenState<ComposeProjectInfo>()
+  const deleteDialog = useEditDialogOpenState<ComposeProjectInfo>()
 
   const allowEditing = box.boxType === "normal"
 
@@ -92,11 +95,13 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
           <div className="flex space-x-2">
             <Tooltip>
               <TooltipTrigger asChild>
-                <ComposeProjectEditorDialog
-                  box={box}
-                  project={row.original}
-                  onSaved={() => composeProjectsQuery.refetch()}
-                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => editDialog.setItem(row.original)}
+                >
+                  <Edit className="w-4 h-4"/>
+                </Button>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Edit project</p>
@@ -104,23 +109,13 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
             </Tooltip>
             {allowEditing && <Tooltip>
                 <TooltipTrigger asChild>
-                    <div>
-                        <ConfirmationDialog
-                            trigger={
-                              <Button
-                                variant="outline"
-                                size="sm"
-                              >
-                                <Trash2 className="w-4 h-4"/>
-                              </Button>
-                            }
-                            title="Delete Compose Project"
-                            description={`Are you sure you want to delete "${row.original.name}"? This will remove all services in this project.`}
-                            confirmText="Delete"
-                            onConfirm={() => handleDeleteProject(row.original.name)}
-                            destructive
-                        />
-                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => deleteDialog.setItem(row.original)}
+                    >
+                      <Trash2 className="w-4 h-4"/>
+                    </Button>
                 </TooltipTrigger>
                 <TooltipContent>
                     <p>Delete project</p>
@@ -158,6 +153,20 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
           />
         </CardContent>
       </Card>
+      {editDialog.item && <ComposeProjectEditorDialog
+        box={box}
+        project={editDialog.item}
+        {...editDialog.dialogProps}
+        onSaved={() => composeProjectsQuery.refetch()}
+      />}
+      {deleteDialog.item && <ConfirmationDialog
+        {...deleteDialog.dialogProps}
+        title="Delete Compose Project"
+        description={`Are you sure you want to delete "${deleteDialog.item.name}"? This will remove all services in this project.`}
+        confirmText="Delete"
+        onConfirm={() => handleDeleteProject(deleteDialog.item!.name)}
+        destructive
+      />}
     </>
   )
 }

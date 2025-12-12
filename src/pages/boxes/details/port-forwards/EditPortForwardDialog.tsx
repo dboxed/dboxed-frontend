@@ -6,12 +6,12 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedMutation } from "@/api/mutation.ts"
 import type { components } from "@/api/models/dboxed-schema"
 import { toast } from "sonner"
-import type { ReactNode } from "react"
 
 interface EditPortForwardDialogProps {
   boxId: string
   portForward: components["schemas"]["BoxPortForward"]
-  trigger: ReactNode
+  open: boolean
+  onOpenChange: (open: boolean) => void
   onSuccess: () => void
 }
 
@@ -21,7 +21,7 @@ interface FormData {
   description: string
 }
 
-export function EditPortForwardDialog({ boxId, portForward, trigger, onSuccess }: EditPortForwardDialogProps) {
+export function EditPortForwardDialog({ boxId, portForward, open, onOpenChange, onSuccess }: EditPortForwardDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
 
   const updatePortForwardMutation = useDboxedMutation('patch', '/v1/workspaces/{workspaceId}/boxes/{id}/port-forwards/{portForwardId}', {
@@ -63,7 +63,8 @@ export function EditPortForwardDialog({ boxId, portForward, trigger, onSuccess }
 
   return (
     <SimpleFormDialog<FormData>
-      trigger={trigger}
+      open={open}
+      onOpenChange={onOpenChange}
       title="Edit Port Forward"
       description={`Update port forwarding rule (${portForward.protocol}:${portForward.sandboxPort})`}
       buildInitial={() => ({

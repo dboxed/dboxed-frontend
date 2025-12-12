@@ -5,6 +5,7 @@ import { DataTable } from "@/components/data-table.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/client.ts"
 import { useDboxedMutation } from "@/api/mutation.ts"
+import { useEditDialogOpenState } from "@/hooks/use-edit-dialog-open-state.ts"
 import type { components } from "@/api/models/dboxed-schema"
 import type { ColumnDef } from "@tanstack/react-table"
 import { Plus, Trash2, Edit } from "lucide-react"
@@ -21,6 +22,8 @@ interface BoxLoadBalancerServicesProps {
 export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
+  const editDialog = useEditDialogOpenState<components["schemas"]["LoadBalancerService"]>()
+  const deleteDialog = useEditDialogOpenState<components["schemas"]["LoadBalancerService"]>()
 
   const allowEditing = box.boxType === "normal"
 
@@ -152,21 +155,13 @@ export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
           <div className="flex space-x-2">
             <Tooltip>
               <TooltipTrigger asChild>
-                <div>
-                  <EditLoadBalancerServiceDialog
-                    boxId={box.id}
-                    loadBalancerService={row.original}
-                    trigger={
-                      <Button
-                        variant="outline"
-                        size="sm"
-                      >
-                        <Edit className="w-4 h-4"/>
-                      </Button>
-                    }
-                    onSuccess={() => loadBalancerServicesQuery.refetch()}
-                  />
-                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => editDialog.setItem(row.original)}
+                >
+                  <Edit className="w-4 h-4"/>
+                </Button>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Edit load balancer service</p>
@@ -174,24 +169,13 @@ export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div>
-                  <ConfirmationDialog
-                    trigger={
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={deleteLoadBalancerServiceMutation.isPending}
-                      >
-                        <Trash2 className="w-4 h-4"/>
-                      </Button>
-                    }
-                    title="Delete Load Balancer Service"
-                    description={`Are you sure you want to delete the load balancer service for ${row.original.hostname}${row.original.pathPrefix}?`}
-                    confirmText="Delete"
-                    onConfirm={() => handleDeleteLoadBalancerService(row.original.id)}
-                    destructive
-                  />
-                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => deleteDialog.setItem(row.original)}
+                >
+                  <Trash2 className="w-4 h-4"/>
+                </Button>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Delete load balancer service</p>
@@ -241,6 +225,20 @@ export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
           />
         </CardContent>
       </Card>
+      {editDialog.item && <EditLoadBalancerServiceDialog
+        boxId={box.id}
+        loadBalancerService={editDialog.item}
+        {...editDialog.dialogProps}
+        onSuccess={() => loadBalancerServicesQuery.refetch()}
+      />}
+      {deleteDialog.item && <ConfirmationDialog
+        {...deleteDialog.dialogProps}
+        title="Delete Load Balancer Service"
+        description={`Are you sure you want to delete the load balancer service for ${deleteDialog.item.hostname}${deleteDialog.item.pathPrefix}?`}
+        confirmText="Delete"
+        onConfirm={() => handleDeleteLoadBalancerService(deleteDialog.item!.id)}
+        destructive
+      />}
     </>
   )
 }

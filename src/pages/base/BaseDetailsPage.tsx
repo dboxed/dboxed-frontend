@@ -1,4 +1,3 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { useNavigate } from "react-router"
 import { DeleteButton } from "@/components/DeleteButton"
 
@@ -44,44 +43,32 @@ export function BaseDetailsPage<T, U>(props: BaseDetailsPageProps<T, U>) {
 
   if (props.isLoading || !props.resourceData) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>{props.title}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-muted-foreground">Loading resource...</div>
-        </CardContent>
-      </Card>
+      <div>
+        <h2 className="text-2xl font-bold mb-6">{props.title}</h2>
+        <div className="text-muted-foreground">Loading resource...</div>
+      </div>
     )
   }
 
   if (props.error) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>{props.title}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-red-600">
-            Failed to load resource: {props.error.detail || "An error occurred while loading the resource."}
-          </div>
-        </CardContent>
-      </Card>
+      <div>
+        <h2 className="text-2xl font-bold mb-6">{props.title}</h2>
+        <div className="text-red-600">
+          Failed to load resource: {props.error.detail || "An error occurred while loading the resource."}
+        </div>
+      </div>
     )
   }
 
   const enableDelete = props.enableDelete !== undefined && (typeof props.enableDelete === "boolean" ? props.enableDelete : props.enableDelete(props.resourceData))
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{props.title}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {props.children(props.resourceData, handleSave)}
-      </CardContent>
-      <CardFooter className="flex justify-between space-x-2">
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold">{props.title}</h2>
         <div className="flex items-center space-x-2">
+          {props.customButtons && props.customButtons(props.resourceData, handleSave)}
           {enableDelete && (
             <DeleteButton
               onDelete={handleDelete}
@@ -93,14 +80,8 @@ export function BaseDetailsPage<T, U>(props: BaseDetailsPageProps<T, U>) {
             </DeleteButton>
           )}
         </div>
-        <div className="flex space-x-2">
-          {props.customButtons && (
-            <>
-              {props.customButtons(props.resourceData, handleSave)}
-            </>
-          )}
-        </div>
-      </CardFooter>
-    </Card>
+      </div>
+      {props.children(props.resourceData, handleSave)}
+    </div>
   )
 }

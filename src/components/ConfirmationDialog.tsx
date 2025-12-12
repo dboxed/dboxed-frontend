@@ -1,19 +1,17 @@
+import { type ReactNode, useState } from "react"
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { type MouseEvent, useState } from "react";
-import { Button } from "@/components/ui/button.tsx";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
 
 interface ConfirmationDialogProps {
-  trigger?: React.ReactNode
+  trigger?: ReactNode
   open?: boolean
   onOpenChange?: (open: boolean) => void
   title: string
@@ -22,7 +20,7 @@ interface ConfirmationDialogProps {
   cancelText?: string
   onConfirm: () => Promise<boolean>
   destructive?: boolean
-  children?: React.ReactNode
+  children?: ReactNode
 }
 
 export function ConfirmationDialog({
@@ -38,6 +36,8 @@ export function ConfirmationDialog({
   children
 }: ConfirmationDialogProps) {
   const [internalOpen, setInternalOpen] = useState(false)
+  const [isConfirming, setIsConfirming] = useState(false)
+
   const isControlled = controlledOpen !== undefined
   const open = isControlled ? controlledOpen : internalOpen
 
@@ -47,11 +47,8 @@ export function ConfirmationDialog({
     }
     onOpenChange?.(newOpen)
   }
-  const [isConfirming, setIsConfirming] = useState(false)
 
-  const handleConfirm = async (e: MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
+  const handleConfirm = async () => {
     setIsConfirming(true)
     const close = await onConfirm()
     if (close) {
@@ -61,28 +58,35 @@ export function ConfirmationDialog({
   }
 
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
-      {trigger && <AlertDialogTrigger asChild>
+    <Dialog open={open} onOpenChange={setOpen}>
+      {trigger && <DialogTrigger asChild>
         {trigger}
-      </AlertDialogTrigger>}
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {description}
-          </AlertDialogDescription>
-        </AlertDialogHeader>
+      </DialogTrigger>}
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
         {children}
-        <AlertDialogFooter>
-          <AlertDialogCancel disabled={isConfirming}>{cancelText}</AlertDialogCancel>
-          <AlertDialogAction
-            asChild
-            className={destructive ? "bg-destructive text-destructive-foreground hover:bg-destructive/90" : ""}
+        <DialogFooter>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setOpen(false)}
+            disabled={isConfirming}
           >
-            <Button type={"button"} disabled={isConfirming} onClick={handleConfirm}>{confirmText}</Button>
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+            {cancelText}
+          </Button>
+          <Button
+            type="button"
+            variant={destructive ? "destructive" : "default"}
+            onClick={handleConfirm}
+            disabled={isConfirming}
+          >
+            {isConfirming ? "..." : confirmText}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }

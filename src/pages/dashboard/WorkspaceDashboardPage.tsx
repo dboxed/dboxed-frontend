@@ -10,6 +10,8 @@ import { VolumesOverview } from "./VolumesOverview.tsx"
 import { S3BucketsOverview } from "./S3BucketsOverview.tsx"
 import { LoadBalancersOverview } from "./LoadBalancersOverview.tsx"
 import { DeleteButton } from "@/components/DeleteButton.tsx"
+import { MachineProvidersOverview } from "@/pages/dashboard/MachineProvidersOverview.tsx";
+import { MachinesOverview } from "@/pages/dashboard/MachinesOverview.tsx";
 
 export function WorkspaceDashboardPage() {
   const { workspaceId } = useSelectedWorkspaceId()
@@ -57,6 +59,8 @@ export function WorkspaceDashboardPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           <BoxesOverview />
+          <MachineProvidersOverview />
+          <MachinesOverview />
           <NetworksOverview />
           <LoadBalancersOverview />
           {/*<MachineProvidersOverview />*/}

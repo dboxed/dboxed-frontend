@@ -18,6 +18,7 @@ interface EditPortForwardDialogProps {
 interface FormData {
   hostPortFirst: string
   hostPortLast: string
+  sandboxPort: string
   description: string
 }
 
@@ -34,8 +35,9 @@ export function EditPortForwardDialog({ boxId, portForward, open, onOpenChange, 
   const handleSave = async (formData: FormData) => {
     const hostPortFirstNum = parseInt(formData.hostPortFirst, 10)
     const hostPortLastNum = parseInt(formData.hostPortLast, 10)
+    const sandboxPortNum = parseInt(formData.sandboxPort, 10)
 
-    if (isNaN(hostPortFirstNum) || isNaN(hostPortLastNum)) {
+    if (isNaN(hostPortFirstNum) || isNaN(hostPortLastNum) || isNaN(sandboxPortNum)) {
       toast.error("Invalid port numbers")
       return false
     }
@@ -56,6 +58,7 @@ export function EditPortForwardDialog({ boxId, portForward, open, onOpenChange, 
       body: {
         hostPortFirst: hostPortFirstNum,
         hostPortLast: hostPortLastNum,
+        sandboxPort: sandboxPortNum,
         description: formData.description || undefined
       }
     })
@@ -70,6 +73,7 @@ export function EditPortForwardDialog({ boxId, portForward, open, onOpenChange, 
       buildInitial={() => ({
         hostPortFirst: portForward.hostPortFirst.toString(),
         hostPortLast: portForward.hostPortLast.toString(),
+        sandboxPort: portForward.sandboxPort.toString(),
         description: portForward.description || ""
       })}
       onSave={handleSave}
@@ -130,6 +134,32 @@ export function EditPortForwardDialog({ boxId, portForward, open, onOpenChange, 
               )}
             />
           </div>
+
+          <FormField
+            control={form.control}
+            name="sandboxPort"
+            rules={{
+              required: "Sandbox port is required",
+              pattern: {
+                value: /^[0-9]+$/,
+                message: "Must be a valid port number"
+              }
+            }}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Sandbox Port</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    min="1"
+                    max="65535"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <FormField
             control={form.control}

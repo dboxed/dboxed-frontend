@@ -48,6 +48,7 @@ export function SimpleDialog({
   const [isSaving, setIsSaving] = useState(false)
 
   const handleOpenChange = (o: boolean) => {
+    if (!o && isSaving) return
     setManagedOpen(o)
     if (onOpenChange) {
       onOpenChange(o)
@@ -80,7 +81,12 @@ export function SimpleDialog({
     <DialogTrigger asChild>
       {trigger}
     </DialogTrigger>
-    <DialogContent className={`p-0 ${widthClass} max-h-[90vh] flex flex-col`}>
+    <DialogContent
+      className={`p-0 ${widthClass} max-h-[90vh] flex flex-col`}
+      onPointerDownOutside={(e) => isSaving && e.preventDefault()}
+      onEscapeKeyDown={(e) => isSaving && e.preventDefault()}
+      onInteractOutside={(e) => isSaving && e.preventDefault()}
+    >
       <DialogHeader className="border-b px-6 pt-6 pb-4 flex-shrink-0">
         <DialogTitle>{title}</DialogTitle>
         {description && <DialogDescription>

@@ -42,6 +42,7 @@ export function ConfirmationDialog({
   const open = isControlled ? controlledOpen : internalOpen
 
   const setOpen = (newOpen: boolean) => {
+    if (!newOpen && isConfirming) return
     if (!isControlled) {
       setInternalOpen(newOpen)
     }
@@ -62,7 +63,11 @@ export function ConfirmationDialog({
       {trigger && <DialogTrigger asChild>
         {trigger}
       </DialogTrigger>}
-      <DialogContent>
+      <DialogContent
+        onPointerDownOutside={(e) => isConfirming && e.preventDefault()}
+        onEscapeKeyDown={(e) => isConfirming && e.preventDefault()}
+        onInteractOutside={(e) => isConfirming && e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>

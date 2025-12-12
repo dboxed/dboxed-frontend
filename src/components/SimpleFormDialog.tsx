@@ -1,4 +1,4 @@
-import { type ReactNode, useCallback, useState } from "react"
+import { type ReactNode, useCallback, useEffect, useState } from "react"
 import { useForm, type UseFormReturn, type FieldValues, type DefaultValues } from "react-hook-form"
 import { Form } from "@/components/ui/form.tsx";
 import { deepClone } from "@/utils/utils.ts";
@@ -47,32 +47,30 @@ export function SimpleFormDialog<T extends FieldValues = FieldValues>({
     return deepClone(data)
   }, [buildInitial])
 
-  const form = useForm<T>({
-    defaultValues: doBuildInitial(),
-  })
+  const form = useForm<T>({})
 
-  const handleOpenChange = (open: boolean) => {
+  useEffect(() => {
+    if (open === undefined) {
+      return
+    }
+
     if (open && !oldOpen) {
       // Reset form data when dialog opens
       form.reset(doBuildInitial())
     }
     setOldOpen(open)
-    if (onOpenChange) {
-      onOpenChange(open)
-    }
-  }
+  }, [open, oldOpen, doBuildInitial, form]);
 
   const handleSave = async () => {
     const formData = form.getValues()
-    const close = await onSave(formData)
-    return close
+    return await onSave(formData)
   }
 
   return (
     <SimpleDialog
       trigger={trigger}
       open={open}
-      onOpenChange={handleOpenChange}
+      onOpenChange={onOpenChange}
       title={title}
       description={description}
       onSave={handleSave}

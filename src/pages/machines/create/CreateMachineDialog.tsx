@@ -7,13 +7,13 @@ import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/dboxed-schema"
 import { useDboxedQueryClient } from "@/api/client.ts";
-import type { ReactNode } from "react";
 
 interface CreateMachineDialogProps {
-  trigger: ReactNode
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
-export function CreateMachineDialog({ trigger }: CreateMachineDialogProps) {
+export function CreateMachineDialog({ open, onOpenChange }: CreateMachineDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
 
@@ -45,7 +45,8 @@ export function CreateMachineDialog({ trigger }: CreateMachineDialogProps) {
 
   return (
     <BaseCreateDialog<components["schemas"]["CreateMachine"]>
-      trigger={trigger}
+      open={open}
+      onOpenChange={onOpenChange}
       title="Create Machine"
       apiRoute="/v1/workspaces/{workspaceId}/machines"
       apiParams={{

@@ -8,7 +8,7 @@ import { useDboxedMutation } from "@/api/mutation.ts"
 import { useEditDialogOpenState } from "@/hooks/use-edit-dialog-open-state.ts"
 import type { components } from "@/api/models/dboxed-schema"
 import type { ColumnDef } from "@tanstack/react-table"
-import { Settings, Unplug } from "lucide-react"
+import { Plus, Settings, Unplug } from "lucide-react"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip.tsx"
 import { formatSize } from "@/utils/size.ts"
@@ -23,6 +23,7 @@ interface AttachedVolumesProps {
 export function AttachedVolumes({ box }: AttachedVolumesProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
+  const attachDialog = useEditDialogOpenState()
   const editDialog = useEditDialogOpenState<components["schemas"]["VolumeAttachment"]>()
   const detachDialog = useEditDialogOpenState<components["schemas"]["VolumeAttachment"]>()
 
@@ -192,12 +193,17 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
                 Volumes currently attached to this box
               </CardDescription>
             </div>
-            {allowEditing && <AttachVolumeDialog
-                boxId={box.id}
-                onSuccess={() => {
-                  attachedVolumesQuery.refetch()
-                }}
-            />}
+            {allowEditing && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => attachDialog.setOpen(true)}
+              >
+                <Plus className="w-4 h-4 mr-2"/>
+                Attach Volume
+              </Button>
+            )}
           </div>
         </CardHeader>
         <CardContent>
@@ -209,6 +215,11 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
           />
         </CardContent>
       </Card>
+      <AttachVolumeDialog
+        {...attachDialog.dialogProps}
+        boxId={box.id}
+        onSuccess={() => attachedVolumesQuery.refetch()}
+      />
       {editDialog.item && <FileModeDialog
         uid={editDialog.item.rootUid}
         gid={editDialog.item.rootGid}

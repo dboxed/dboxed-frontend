@@ -7,8 +7,9 @@ import { DataTable } from "@/components/data-table.tsx"
 import type { ColumnDef } from "@tanstack/react-table"
 import type { paths } from "@/api/models/dboxed-schema"
 import type { FieldValues } from "react-hook-form"
-import { type ComponentType, type ReactElement } from "react"
+import { type ComponentType } from "react"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip.tsx"
+import { useEditDialogOpenState } from "@/hooks/use-edit-dialog-open-state.ts";
 
 interface BaseListPageProps<TData extends FieldValues> {
   title: string
@@ -17,7 +18,7 @@ interface BaseListPageProps<TData extends FieldValues> {
   columns: ColumnDef<TData>[]
   apiParams?: Record<string, unknown>
   createButton?: React.ReactNode
-  createDialog?: ComponentType<{ trigger: ReactElement }>
+  createDialog?: ComponentType<{ open: boolean, onOpenChange: (open: boolean) => void }>
   createButtonText?: string
   emptyStateMessage?: string
   loadingMessage?: string
@@ -56,6 +57,8 @@ export function BaseListPage<TData extends FieldValues>({
   const client = useDboxedQueryClient()
   const navigate = useNavigate()
 
+  const createDialogState = useEditDialogOpenState()
+
   const query = client.useQuery('get', resourcePath as any, {
     params: Object.keys(apiParams).length > 0 ? { ...apiParams } : undefined
   }, {
@@ -65,6 +68,8 @@ export function BaseListPage<TData extends FieldValues>({
   const handleCreateClick = () => {
     if (createPath) {
       navigate(createPath)
+    } else {
+      createDialogState.setOpen(true)
     }
   }
 
@@ -73,10 +78,10 @@ export function BaseListPage<TData extends FieldValues>({
 
   let actualCreateButton = createButton
   if (shouldShowCreateButton && !actualCreateButton) {
-    const buttonContent = (onClick?: () => void) => (
+    const buttonContent = () => (
       <Button
         disabled={!allowCreate}
-        onClick={onClick}
+        onClick={handleCreateClick}
       >
         <Plus className="mr-2 h-4 w-4"/>
         {createButtonText}
@@ -87,26 +92,26 @@ export function BaseListPage<TData extends FieldValues>({
       actualCreateButton = !allowCreate && createDisabledMessage ? (
         <Tooltip>
           <TooltipTrigger asChild>
-            <CreateDialog trigger={buttonContent()}/>
+            {buttonContent()}
           </TooltipTrigger>
           <TooltipContent>
             {createDisabledMessage}
           </TooltipContent>
         </Tooltip>
-      ) : <CreateDialog trigger={buttonContent()}/>
+      ) : buttonContent()
     } else if (createPath) {
       actualCreateButton = !allowCreate && createDisabledMessage ? (
         <Tooltip>
           <TooltipTrigger asChild>
             <div>
-              {buttonContent(handleCreateClick)}
+              {buttonContent()}
             </div>
           </TooltipTrigger>
           <TooltipContent>
             {createDisabledMessage}
           </TooltipContent>
         </Tooltip>
-      ) : buttonContent(handleCreateClick)
+      ) : buttonContent()
     }
   }
 
@@ -146,7 +151,7 @@ export function BaseListPage<TData extends FieldValues>({
   const defaultEmptyMessage = emptyStateMessage ||
     `No ${title.toLowerCase()} found yet.${shouldShowCreateButton ? ` Create your first ${title.slice(0, -1).toLowerCase()} to get started.` : ''}`
 
-  return (
+  return <>
     <BasePage title={title}>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">{title}</h2>
@@ -166,5 +171,6 @@ export function BaseListPage<TData extends FieldValues>({
         />
       )}
     </BasePage>
-  )
+    {CreateDialog && <CreateDialog open={createDialogState.open} onOpenChange={createDialogState.setOpen} />}
+  </>
 } 

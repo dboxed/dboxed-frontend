@@ -4,13 +4,13 @@ import { Editor } from "@monaco-editor/react"
 import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { extractComposeProjectInfo } from "./project-info.ts"
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button.tsx";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import { useDboxedMutation } from "@/api/mutation.ts";
 import type { components } from "@/api/models/dboxed-schema";
 
 interface AddComposeProjectDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
   box: components["schemas"]["Box"]
   onSaved: () => void
 }
@@ -32,6 +32,8 @@ services:
 `
 
 export function AddComposeProjectDialog({
+  open,
+  onOpenChange,
   box,
   onSaved,
 }: AddComposeProjectDialogProps) {
@@ -76,14 +78,8 @@ export function AddComposeProjectDialog({
 
   return (
     <SimpleFormDialog<AddProjectFormData>
-      trigger={<Button
-        type={"button"}
-        variant="outline"
-        size="sm"
-      >
-        <Plus className="w-4 h-4 mr-2" />
-        New Project
-      </Button>}
+      open={open}
+      onOpenChange={onOpenChange}
       title="Add New Compose Project"
       buildInitial={buildInitialFormData}
       onSave={handleNewProject}

@@ -4,11 +4,12 @@ import type { StripeAddressElementChangeEvent } from "@stripe/stripe-js";
 import { useDboxedCloudQueryClient } from "@/api/client.ts";
 import { stripe } from "@/App.tsx";
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
+import { useEditDialogOpenState } from "@/hooks/use-edit-dialog-open-state.ts";
 import { Button } from "@/components/ui/button.tsx";
 import type { components } from "@/api/models/dboxed-cloud-schema";
 import { deepClone, deepEqual } from "@/utils/utils.ts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
-import { Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx";
 import { AddTaxIdDialog } from "./AddTaxIdDialog";
 import { getTaxIdByCountryAndEnum } from "./taxIdTypes";
@@ -21,6 +22,7 @@ interface Props {
 
 export const StripeBillingAddress = (props: Props) => {
   const { workspaceId } = useSelectedWorkspaceId()
+  const addTaxIdDialog = useEditDialogOpenState()
 
   const [formCustomer, setFormCustomer] = useState<any>({})
   const [formCustomerComplete, setFormCustomerComplete] = useState(false)
@@ -183,10 +185,14 @@ export const StripeBillingAddress = (props: Props) => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Tax IDs</CardTitle>
-              <AddTaxIdDialog
-                onSave={handleAddTaxId}
-                country={formCustomer.address?.country}
-              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => addTaxIdDialog.setOpen(true)}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Tax ID
+              </Button>
             </div>
           </CardHeader>
           <CardContent>
@@ -233,6 +239,11 @@ export const StripeBillingAddress = (props: Props) => {
           </CardContent>
         </Card>
       </div>
+      <AddTaxIdDialog
+        {...addTaxIdDialog.dialogProps}
+        onSave={handleAddTaxId}
+        country={formCustomer.address?.country}
+      />
     </div>
   </Elements>
 }

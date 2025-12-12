@@ -12,12 +12,13 @@ import {
 } from "@/components/ui/select.tsx"
 
 interface AddBoxDialogProps {
-  trigger: React.ReactNode
+  open: boolean
+  onOpenChange: (open: boolean) => void
   machineId: string
   workspaceId: string
 }
 
-export function AddBoxDialog({ trigger, machineId, workspaceId }: AddBoxDialogProps) {
+export function AddBoxDialog({ open, onOpenChange, machineId, workspaceId }: AddBoxDialogProps) {
   const [selectedBoxId, setSelectedBoxId] = useState<string>("")
 
   const client = useDboxedQueryClient()
@@ -76,7 +77,8 @@ export function AddBoxDialog({ trigger, machineId, workspaceId }: AddBoxDialogPr
 
   return (
     <SimpleDialog
-      trigger={trigger}
+      open={open}
+      onOpenChange={onOpenChange}
       title="Add Box to Machine"
       description="Select a box to add to this machine."
       onSave={handleSave}

@@ -11,6 +11,7 @@ import { BoxStatusBadge } from "@/pages/boxes/details/status/BoxStatusBadge.tsx"
 import { AddBoxDialog } from "./AddBoxDialog.tsx"
 import type { components } from "@/api/models/dboxed-schema"
 import { useDboxedMutation } from "@/api/mutation.ts";
+import { useEditDialogOpenState } from "@/hooks/use-edit-dialog-open-state.ts";
 
 interface BoxesCardProps {
   machineId: string
@@ -20,6 +21,7 @@ interface BoxesCardProps {
 export function BoxesCard({ machineId, workspaceId }: BoxesCardProps) {
   const navigate = useNavigate()
   const client = useDboxedQueryClient()
+  const addBoxDialog = useEditDialogOpenState()
 
   const boxesQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/machines/{id}/boxes', {
     params: {
@@ -187,16 +189,10 @@ export function BoxesCard({ machineId, workspaceId }: BoxesCardProps) {
             Boxes associated with this machine.
           </CardDescription>
         </div>
-        <AddBoxDialog
-          trigger={
-            <Button size="sm">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Box
-            </Button>
-          }
-          machineId={machineId}
-          workspaceId={workspaceId}
-        />
+        <Button size="sm" onClick={() => addBoxDialog.setOpen(true)}>
+          <Plus className="h-4 w-4 mr-2" />
+          Add Box
+        </Button>
       </CardHeader>
       <CardContent>
         {boxesQuery.isLoading ? (
@@ -209,6 +205,11 @@ export function BoxesCard({ machineId, workspaceId }: BoxesCardProps) {
           <DataTable columns={columns} data={boxes} />
         )}
       </CardContent>
+      <AddBoxDialog
+        {...addBoxDialog.dialogProps}
+        machineId={machineId}
+        workspaceId={workspaceId}
+      />
     </Card>
   )
 }

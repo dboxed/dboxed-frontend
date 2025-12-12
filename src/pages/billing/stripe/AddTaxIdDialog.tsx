@@ -7,15 +7,17 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { uniqBy } from "@/utils/utils.ts";
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button.tsx";
 
 interface AddTaxIdDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   onSave: (formData: { type: string; value: string }) => Promise<boolean>;
   country?: string;
 }
 
 export function AddTaxIdDialog({
+  open,
+  onOpenChange,
   onSave,
   country,
 }: AddTaxIdDialogProps) {
@@ -30,13 +32,8 @@ export function AddTaxIdDialog({
     .sort((a, b) => a.type.localeCompare(b.type))
   return (
     <SimpleFormDialog
-      trigger={<Button
-        variant="outline"
-        size="sm"
-      >
-        <Plus className="h-4 w-4 mr-2" />
-        Add Tax ID
-      </Button>}
+      open={open}
+      onOpenChange={onOpenChange}
       title="Add Tax ID"
       buildInitial={() => ({ type: taxIdTypes[0]?.type || "", value: "" })}
       onSave={onSave}

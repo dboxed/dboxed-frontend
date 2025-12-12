@@ -4,19 +4,20 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/dboxed-schema"
-import type { ReactNode } from "react"
 import { Network } from "lucide-react"
 
 interface CreateBoxDialogProps {
-  trigger: ReactNode
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
-export function CreateBoxDialog({ trigger }: CreateBoxDialogProps) {
+export function CreateBoxDialog({ open, onOpenChange }: CreateBoxDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
 
   return (
     <BaseCreateDialog<components["schemas"]["CreateBox"]>
-      trigger={trigger}
+      open={open}
+      onOpenChange={onOpenChange}
       title="Create Box"
       apiRoute="/v1/workspaces/{workspaceId}/boxes"
       apiParams={{

@@ -5,15 +5,15 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
 import { parseSize } from "@/utils/size.ts"
-import { type ReactElement, useState } from "react"
+import { useState } from "react"
 import type { components } from "@/api/models/dboxed-schema";
 
-
 interface CreateVolumeDialogProps {
-  trigger: ReactElement
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
-export function CreateVolumeDialog({ trigger }: CreateVolumeDialogProps) {
+export function CreateVolumeDialog({ open, onOpenChange }: CreateVolumeDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const [selectedProvider, setSelectedProvider] = useState<components["schemas"]["VolumeProvider"] | null>(null)
 
@@ -28,7 +28,8 @@ export function CreateVolumeDialog({ trigger }: CreateVolumeDialogProps) {
 
   return (
     <BaseCreateDialog<components["schemas"]["CreateVolume"]>
-      trigger={trigger}
+      open={open}
+      onOpenChange={onOpenChange}
       title="Create Volume"
       apiRoute="/v1/workspaces/{workspaceId}/volumes"
       apiParams={{

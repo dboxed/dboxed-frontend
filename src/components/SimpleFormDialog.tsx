@@ -5,9 +5,8 @@ import { deepClone } from "@/utils/utils.ts";
 import { SimpleDialog } from "@/components/SimpleDialog";
 
 interface SimpleFormDialogProps<T extends FieldValues = FieldValues> {
-  trigger?: ReactNode
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
+  open: boolean
+  onOpenChange: (open: boolean) => void
   title: string
   description?: string
   children: (form: UseFormReturn<T>) => ReactNode
@@ -22,7 +21,6 @@ interface SimpleFormDialogProps<T extends FieldValues = FieldValues> {
 }
 
 export function SimpleFormDialog<T extends FieldValues = FieldValues>({
-  trigger,
   open,
   onOpenChange,
   title,
@@ -50,10 +48,6 @@ export function SimpleFormDialog<T extends FieldValues = FieldValues>({
   const form = useForm<T>({})
 
   useEffect(() => {
-    if (open === undefined) {
-      return
-    }
-
     if (open && !oldOpen) {
       // Reset form data when dialog opens
       form.reset(doBuildInitial())
@@ -68,7 +62,6 @@ export function SimpleFormDialog<T extends FieldValues = FieldValues>({
 
   return (
     <SimpleDialog
-      trigger={trigger}
       open={open}
       onOpenChange={onOpenChange}
       title={title}

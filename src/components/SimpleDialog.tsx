@@ -6,15 +6,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area.tsx";
 
 interface SimpleDialogProps {
-  trigger?: ReactNode
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
+  open: boolean
+  onOpenChange: (open: boolean) => void
   title: string
   description?: string
   children: ReactNode
@@ -29,7 +27,6 @@ interface SimpleDialogProps {
 }
 
 export function SimpleDialog({
-  trigger,
   open,
   onOpenChange,
   title,
@@ -44,15 +41,11 @@ export function SimpleDialog({
   showSave = true,
   wide = false,
 }: SimpleDialogProps) {
-  const [managedOpen, setManagedOpen] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
 
   const handleOpenChange = (o: boolean) => {
     if (!o && isSaving) return
-    setManagedOpen(o)
-    if (onOpenChange) {
-      onOpenChange(o)
-    }
+    onOpenChange(o)
   }
 
   const handleCancel = () => {
@@ -73,14 +66,9 @@ export function SimpleDialog({
     }
   }
 
-  const realOpen = open !== undefined ? open : managedOpen
-
   const widthClass = wide ? "sm:max-w-[95vw] w-[80vw]" : "sm:max-w-lg"
 
-  return <Dialog open={realOpen} onOpenChange={handleOpenChange}>
-    <DialogTrigger asChild>
-      {trigger}
-    </DialogTrigger>
+  return <Dialog open={open} onOpenChange={handleOpenChange}>
     <DialogContent
       className={`p-0 ${widthClass} max-h-[90vh] flex flex-col`}
       onPointerDownOutside={(e) => isSaving && e.preventDefault()}

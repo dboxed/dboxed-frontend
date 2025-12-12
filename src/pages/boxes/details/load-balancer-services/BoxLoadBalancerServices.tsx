@@ -22,6 +22,7 @@ interface BoxLoadBalancerServicesProps {
 export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
+  const addDialog = useEditDialogOpenState()
   const editDialog = useEditDialogOpenState<components["schemas"]["LoadBalancerService"]>()
   const deleteDialog = useEditDialogOpenState<components["schemas"]["LoadBalancerService"]>()
 
@@ -199,20 +200,15 @@ export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
               </CardDescription>
             </div>
             {allowEditing && (
-              <AddLoadBalancerServiceDialog
-                boxId={box.id}
-                trigger={
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    New Load Balancer Service
-                  </Button>
-                }
-                onSuccess={() => loadBalancerServicesQuery.refetch()}
-              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => addDialog.setOpen(true)}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                New Load Balancer Service
+              </Button>
             )}
           </div>
         </CardHeader>
@@ -225,6 +221,11 @@ export function BoxLoadBalancerServices({ box }: BoxLoadBalancerServicesProps) {
           />
         </CardContent>
       </Card>
+      <AddLoadBalancerServiceDialog
+        {...addDialog.dialogProps}
+        boxId={box.id}
+        onSuccess={() => loadBalancerServicesQuery.refetch()}
+      />
       {editDialog.item && <EditLoadBalancerServiceDialog
         boxId={box.id}
         loadBalancerService={editDialog.item}

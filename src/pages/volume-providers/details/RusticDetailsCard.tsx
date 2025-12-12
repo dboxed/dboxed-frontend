@@ -4,6 +4,7 @@ import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { SimpleInputDialog } from "@/components/SimpleInputDialog.tsx"
 import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
+import { useEditDialogOpenState } from "@/hooks/use-edit-dialog-open-state.ts"
 import type { components } from "@/api/models/dboxed-schema"
 
 interface RusticDetailsCardProps {
@@ -12,6 +13,7 @@ interface RusticDetailsCardProps {
 }
 
 export function RusticDetailsCard({ volumeProvider, save }: RusticDetailsCardProps) {
+  const passwordDialog = useEditDialogOpenState()
   if (!volumeProvider.rustic) {
     return <div>Invalid volume provider</div>
   }
@@ -72,23 +74,25 @@ export function RusticDetailsCard({ volumeProvider, save }: RusticDetailsCardPro
                 readOnly
                 className="flex-1"
               />
-              <SimpleInputDialog
-                trigger={<Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                >
-                  Update
-                </Button>}
-                title="Update Rustic Password"
-                fieldLabel="New Password"
-                placeholder="Enter new password"
-                onSave={handlePasswordUpdate}
-              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => passwordDialog.setOpen(true)}
+              >
+                Update
+              </Button>
             </div>
         }
         />
       </CardContent>
+      <SimpleInputDialog
+        {...passwordDialog.dialogProps}
+        title="Update Rustic Password"
+        fieldLabel="New Password"
+        placeholder="Enter new password"
+        onSave={handlePasswordUpdate}
+      />
     </Card>
   )
 }

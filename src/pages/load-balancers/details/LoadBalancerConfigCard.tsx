@@ -7,6 +7,7 @@ import { SimpleFormDialog } from "@/components/SimpleFormDialog.tsx"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
+import { useEditDialogOpenState } from "@/hooks/use-edit-dialog-open-state.ts"
 import type { components } from "@/api/models/dboxed-schema"
 import { Edit } from "lucide-react"
 
@@ -23,6 +24,7 @@ interface PortFormData {
 
 export function LoadBalancerConfigCard({ data, save }: LoadBalancerConfigCardProps) {
   const { workspaceId } = useSelectedWorkspaceId()
+  const editDialog = useEditDialogOpenState()
 
   return (
     <>
@@ -35,7 +37,14 @@ export function LoadBalancerConfigCard({ data, save }: LoadBalancerConfigCardPro
                 Network and protocol configuration for this load balancer
               </CardDescription>
             </div>
-            <EditDialog data={data} save={save}/>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => editDialog.setOpen(true)}
+            >
+              <Edit className="w-4 h-4 mr-2" />
+              Edit
+            </Button>
           </div>
         </CardHeader>
         <CardContent>
@@ -83,11 +92,19 @@ export function LoadBalancerConfigCard({ data, save }: LoadBalancerConfigCardPro
           </div>
         </CardContent>
       </Card>
+      <EditDialog {...editDialog.dialogProps} data={data} save={save} />
     </>
   )
 }
 
-const EditDialog = ({ data, save }: LoadBalancerConfigCardProps) => {
+interface EditDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  data: components["schemas"]["LoadBalancer"]
+  save: (data: components["schemas"]["UpdateLoadBalancer"]) => Promise<boolean>
+}
+
+const EditDialog = ({ open, onOpenChange, data, save }: EditDialogProps) => {
   const buildInitial = (): PortFormData => ({
     httpPort: data.httpPort,
     httpsPort: data.httpsPort,
@@ -103,15 +120,8 @@ const EditDialog = ({ data, save }: LoadBalancerConfigCardProps) => {
   }
 
   return <SimpleFormDialog<PortFormData>
-    trigger={
-      <Button
-        variant="outline"
-        size="sm"
-      >
-        <Edit className="w-4 h-4 mr-2" />
-        Edit
-      </Button>
-    }
+    open={open}
+    onOpenChange={onOpenChange}
     title="Edit Configuration"
     buildInitial={buildInitial}
     onSave={handleSave}

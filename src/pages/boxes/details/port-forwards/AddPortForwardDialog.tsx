@@ -6,11 +6,11 @@ import { Textarea } from "@/components/ui/textarea"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedMutation } from "@/api/mutation.ts"
 import { toast } from "sonner"
-import type { ReactNode } from "react"
 
 interface AddPortForwardDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
   boxId: string
-  trigger: ReactNode
   onSuccess: () => void
 }
 
@@ -22,7 +22,7 @@ interface FormData {
   description: string
 }
 
-export function AddPortForwardDialog({ boxId, trigger, onSuccess }: AddPortForwardDialogProps) {
+export function AddPortForwardDialog({ open, onOpenChange, boxId, onSuccess }: AddPortForwardDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
 
   const createPortForwardMutation = useDboxedMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/port-forwards', {
@@ -66,7 +66,8 @@ export function AddPortForwardDialog({ boxId, trigger, onSuccess }: AddPortForwa
 
   return (
     <SimpleFormDialog<FormData>
-      trigger={trigger}
+      open={open}
+      onOpenChange={onOpenChange}
       title="Add Port Forward"
       description="Create a new port forwarding rule for this box"
       buildInitial={() => ({

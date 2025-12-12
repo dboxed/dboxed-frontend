@@ -4,6 +4,7 @@ import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { SimpleFormDialog } from "@/components/SimpleFormDialog.tsx"
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
+import { useEditDialogOpenState } from "@/hooks/use-edit-dialog-open-state.ts"
 import { Network } from "lucide-react"
 import type { components } from "@/api/models/dboxed-schema"
 
@@ -13,11 +14,13 @@ interface NetbirdFormData {
 }
 
 interface NetbirdEditDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
   netbirdData: components["schemas"]["NetworkNetbird"]
   save: (update: components["schemas"]["UpdateNetwork"]) => Promise<boolean>
 }
 
-function NetbirdEditDialog({ netbirdData, save }: NetbirdEditDialogProps) {
+function NetbirdEditDialog({ open, onOpenChange, netbirdData, save }: NetbirdEditDialogProps) {
   const buildInitial = (): NetbirdFormData => ({
     netbirdVersion: netbirdData.netbirdVersion,
     apiAccessToken: "",
@@ -36,15 +39,8 @@ function NetbirdEditDialog({ netbirdData, save }: NetbirdEditDialogProps) {
 
   return (
     <SimpleFormDialog<NetbirdFormData>
-      trigger={
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-        >
-          Edit
-        </Button>
-      }
+      open={open}
+      onOpenChange={onOpenChange}
       title="Edit Netbird Configuration"
       buildInitial={buildInitial}
       onSave={handleSave}
@@ -104,25 +100,32 @@ interface NetbirdDetailsCardProps {
 }
 
 export function NetbirdDetailsCard({ netbirdData, save }: NetbirdDetailsCardProps) {
+  const editDialog = useEditDialogOpenState()
+
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="flex items-center space-x-2">
-              <Network className="h-5 w-5" />
-              <span>Netbird Configuration</span>
-            </CardTitle>
-            <CardDescription>
-              Netbird network configuration details.
-            </CardDescription>
+    <>
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center space-x-2">
+                <Network className="h-5 w-5" />
+                <span>Netbird Configuration</span>
+              </CardTitle>
+              <CardDescription>
+                Netbird network configuration details.
+              </CardDescription>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => editDialog.setOpen(true)}
+            >
+              Edit
+            </Button>
           </div>
-          <NetbirdEditDialog
-            netbirdData={netbirdData}
-            save={save}
-          />
-        </div>
-      </CardHeader>
+        </CardHeader>
       <CardContent className="space-y-4">
         <LabelAndValue
           label="API URL"
@@ -139,6 +142,12 @@ export function NetbirdDetailsCard({ netbirdData, save }: NetbirdDetailsCardProp
           textValue="••••••••••••••••"
         />
       </CardContent>
-    </Card>
+      </Card>
+      <NetbirdEditDialog
+        {...editDialog.dialogProps}
+        netbirdData={netbirdData}
+        save={save}
+      />
+    </>
   )
 } 

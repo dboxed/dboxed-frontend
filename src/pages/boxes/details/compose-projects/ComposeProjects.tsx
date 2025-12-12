@@ -11,7 +11,7 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useEditDialogOpenState } from "@/hooks/use-edit-dialog-open-state.ts"
 import type { components } from "@/api/models/dboxed-schema"
 import type { ColumnDef } from "@tanstack/react-table"
-import { Edit, Trash2 } from "lucide-react"
+import { Edit, Plus, Trash2 } from "lucide-react"
 import {
   type ComposeProjectInfo,
   extractComposeProjectInfo
@@ -24,6 +24,7 @@ interface ComposeProjectsProps {
 export function ComposeProjects({ box }: ComposeProjectsProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
+  const addDialog = useEditDialogOpenState()
   const editDialog = useEditDialogOpenState<ComposeProjectInfo>()
   const deleteDialog = useEditDialogOpenState<ComposeProjectInfo>()
 
@@ -138,10 +139,17 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
                 Docker Compose projects for this box
               </CardDescription>
             </div>
-            {allowEditing && <AddComposeProjectDialog
-                box={box}
-                onSaved={() => composeProjectsQuery.refetch()}
-            />}
+            {allowEditing && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => addDialog.setOpen(true)}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                New Project
+              </Button>
+            )}
           </div>
         </CardHeader>
         <CardContent>
@@ -153,6 +161,11 @@ export function ComposeProjects({ box }: ComposeProjectsProps) {
           />
         </CardContent>
       </Card>
+      <AddComposeProjectDialog
+        {...addDialog.dialogProps}
+        box={box}
+        onSaved={() => composeProjectsQuery.refetch()}
+      />
       {editDialog.item && <ComposeProjectEditorDialog
         box={box}
         project={editDialog.item}

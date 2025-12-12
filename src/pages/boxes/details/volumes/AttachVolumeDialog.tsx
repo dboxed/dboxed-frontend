@@ -3,19 +3,17 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useDboxedQueryClient } from "@/api/client.ts"
 import { useDboxedMutation } from "@/api/mutation.ts"
 import type { components } from "@/api/models/dboxed-schema"
-import { useState } from "react";
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button.tsx";
 
 interface AttachVolumeDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
   boxId: string
   onSuccess: () => void
 }
 
-export function AttachVolumeDialog({ boxId, onSuccess }: AttachVolumeDialogProps) {
+export function AttachVolumeDialog({ open, onOpenChange, boxId, onSuccess }: AttachVolumeDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [open, setOpen] = useState(false)
 
   const allVolumesQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/volumes', {
     params: {
@@ -55,17 +53,8 @@ export function AttachVolumeDialog({ boxId, onSuccess }: AttachVolumeDialogProps
 
   return (
     <SimpleSelectDialog<components["schemas"]["Volume"]>
-      trigger={
-        <Button
-          type={"button"}
-          variant={"outline"}
-          size="sm"
-        >
-          <Plus className="w-4 h-4 mr-2"/>
-          Attach Volume
-        </Button>
-      }
-      onOpenChange={setOpen}
+      open={open}
+      onOpenChange={onOpenChange}
       title="Attach Volume"
       fieldLabel="Select Volume"
       placeholder="Choose a volume to attach..."

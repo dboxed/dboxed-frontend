@@ -1,8 +1,9 @@
-import { type ComponentType, type ReactElement, type ReactNode } from "react"
+import { type ComponentType, type ReactNode } from "react"
 import { Button } from "@/components/ui/button.tsx"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
 import { ArrowRight, Plus } from "lucide-react"
+import { useEditDialogOpenState } from "@/hooks/use-edit-dialog-open-state.ts";
 
 interface WorkspaceOverviewCardProps {
   icon: ReactNode
@@ -15,7 +16,7 @@ interface WorkspaceOverviewCardProps {
     id: string | number
     content: ReactNode
   }>
-  addNewDialog?: ComponentType<{ trigger: ReactElement }>
+  addNewDialog?: ComponentType<{ open: boolean, onOpenChange: (open: boolean) => void }>
   emptyState: {
     message: string
     createButtonText: string
@@ -43,9 +44,10 @@ export function WorkspaceOverviewCard({
   actions,
 }: WorkspaceOverviewCardProps) {
 
+  const addNewDialogState = useEditDialogOpenState()
   const AddNewDialog = addNewDialog
 
-  return (
+  return <>
     <Card className="flex flex-col h-full">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
@@ -76,15 +78,15 @@ export function WorkspaceOverviewCard({
                   <div className="text-sm text-muted-foreground mb-4">
                     {emptyState.message}
                   </div>
-                  {AddNewDialog && <AddNewDialog trigger={
-                    <Button
+                  {AddNewDialog && <Button
                       size="sm"
                       disabled={emptyState.isCreateDisabled}
-                    >
-                      <Plus className="h-4 w-4 mr-2" />
-                      {emptyState.createButtonText}
-                    </Button>
-                  }/>}
+                      onClick={() => addNewDialogState.setOpen(true)}
+                  >
+                      <Plus className="h-4 w-4 mr-2"/>
+                    {emptyState.createButtonText}
+                  </Button>
+                  }
                   {emptyState.isCreateDisabled && emptyState.createDisabledMessage && (
                     <div className="text-xs text-muted-foreground mt-2">
                       {emptyState.createDisabledMessage}
@@ -108,27 +110,27 @@ export function WorkspaceOverviewCard({
         {/* Action buttons - shown only when there are items */}
         {!isLoading && !error && items.length > 0 && (
           <div className="flex gap-2 pt-4 mt-auto">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               onClick={actions.onViewAllClick}
               className="flex-1"
             >
               {actions.viewAllText}
-              <ArrowRight className="h-4 w-4 ml-2" />
+              <ArrowRight className="h-4 w-4 ml-2"/>
             </Button>
-            {AddNewDialog && <AddNewDialog trigger={
-              <Button
+            {AddNewDialog && <Button
                 size="sm"
                 disabled={actions.isAddNewDisabled}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                {actions.addNewText}
-              </Button>
-            }/>}
+                onClick={() => addNewDialogState.setOpen(true)}
+            >
+                <Plus className="h-4 w-4 mr-2"/>
+              {actions.addNewText}
+            </Button>}
           </div>
         )}
       </CardContent>
     </Card>
-  )
+    {AddNewDialog && <AddNewDialog open={addNewDialogState.open} onOpenChange={addNewDialogState.setOpen}/>}
+  </>
 }

@@ -1,14 +1,13 @@
 import { SimpleFormDialog } from "@/components/SimpleFormDialog"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import type { ReactNode } from "react";
 
 interface SimpleSelectFormData {
   value: string
 }
 
 interface SimpleSelectDialogProps<T> {
-  trigger: ReactNode
+  open: boolean
   onOpenChange: (open: boolean) => void
   title: string
   description?: string
@@ -21,7 +20,7 @@ interface SimpleSelectDialogProps<T> {
 }
 
 export function SimpleSelectDialog<T>({
-  trigger,
+  open,
   onOpenChange,
   title,
   description,
@@ -46,7 +45,7 @@ export function SimpleSelectDialog<T>({
 
   return (
     <SimpleFormDialog<SimpleSelectFormData>
-      trigger={trigger}
+      open={open}
       onOpenChange={onOpenChange}
       title={title}
       description={description}

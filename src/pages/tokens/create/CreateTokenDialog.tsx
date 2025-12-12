@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from "react"
+import { useState } from "react"
 import { BaseCreateDialog } from "@/components/BaseCreateDialog.tsx"
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
@@ -9,10 +9,11 @@ import { ResourceSelector } from "@/components/ResourceSelector.tsx"
 import { TokenSecretDialog } from "@/pages/tokens/create/TokenSecretDialog.tsx";
 
 interface CreateTokenDialogProps {
-  trigger: ReactNode
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
-export function CreateTokenDialog({ trigger }: CreateTokenDialogProps) {
+export function CreateTokenDialog({ open, onOpenChange }: CreateTokenDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const [createdToken, setCreatedToken] = useState<components["schemas"]["Token"] | null>(null)
   const [createdTokenDialog, setCreatedTokenDialog] = useState(false)
@@ -32,7 +33,8 @@ export function CreateTokenDialog({ trigger }: CreateTokenDialogProps) {
   return <>
     <TokenSecretDialog open={createdTokenDialog} onOpenChange={handleClose} createdToken={createdToken}/>
     <BaseCreateDialog<components["schemas"]["CreateToken"], components["schemas"]["CreateToken"], components["schemas"]["Token"]>
-      trigger={trigger}
+      open={open}
+      onOpenChange={onOpenChange}
       title="Create Token"
       apiRoute="/v1/workspaces/{workspaceId}/tokens"
       apiParams={{

@@ -21,6 +21,7 @@ interface PortForwardingsProps {
 export function PortForwardings({ box }: PortForwardingsProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
+  const addDialog = useEditDialogOpenState()
   const editDialog = useEditDialogOpenState<components["schemas"]["BoxPortForward"]>()
   const deleteDialog = useEditDialogOpenState<components["schemas"]["BoxPortForward"]>()
 
@@ -159,20 +160,15 @@ export function PortForwardings({ box }: PortForwardingsProps) {
               </CardDescription>
             </div>
             {allowEditing && (
-              <AddPortForwardDialog
-                boxId={box.id}
-                trigger={
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    New Port Forward
-                  </Button>
-                }
-                onSuccess={() => portForwardsQuery.refetch()}
-              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => addDialog.setOpen(true)}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                New Port Forward
+              </Button>
             )}
           </div>
         </CardHeader>
@@ -185,6 +181,11 @@ export function PortForwardings({ box }: PortForwardingsProps) {
           />
         </CardContent>
       </Card>
+      <AddPortForwardDialog
+        {...addDialog.dialogProps}
+        boxId={box.id}
+        onSuccess={() => portForwardsQuery.refetch()}
+      />
       {editDialog.item && <EditPortForwardDialog
         boxId={box.id}
         portForward={editDialog.item}

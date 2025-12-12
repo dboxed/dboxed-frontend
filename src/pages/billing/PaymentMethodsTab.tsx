@@ -5,19 +5,21 @@ import { Badge } from "@/components/ui/badge.tsx";
 import { useDboxedCloudQueryClient } from "@/api/client.ts";
 import { DataTable } from "@/components/data-table.tsx";
 import { BasePage } from "@/pages/base/BasePage.tsx";
-import { CreditCard, Trash2 } from "lucide-react";
+import { CreditCard, Plus, Trash2 } from "lucide-react";
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx";
 import type { components } from "@/api/models/dboxed-cloud-schema";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { isDboxedCloudTestInstance } from "@/env";
 import { AddPaymentMethodDialog } from "@/pages/billing/stripe/AddPaymentMethodDialog.tsx";
 import { useDboxedCloudMutation } from "@/api/mutation.ts";
+import { useEditDialogOpenState } from "@/hooks/use-edit-dialog-open-state.ts";
 
 type StripePaymentMethod = components["schemas"]["StripePaymentMethod"];
 
 export function PaymentMethodsTab() {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedCloudQueryClient();
+  const addPaymentMethodDialog = useEditDialogOpenState();
 
   const customer = client.useQuery("get", "/v1/cloud/workspaces/{workspaceId}/billing/customer", {
     params: {
@@ -246,7 +248,12 @@ export function PaymentMethodsTab() {
             Manage your payment methods for billing
           </p>
         </div>
-        {data.length ? <AddPaymentMethodDialog/> : null}
+        {data.length > 0 && (
+          <Button className="mt-4" onClick={() => addPaymentMethodDialog.setOpen(true)}>
+            <Plus className="mr-2 h-4 w-4"/>
+            Add Payment Method
+          </Button>
+        )}
       </div>
 
       {isDboxedCloudTestInstance() && (
@@ -279,7 +286,10 @@ export function PaymentMethodsTab() {
           <p className="text-sm text-muted-foreground max-w-sm mt-2">
             Add a payment method to enable automatic billing for your workspace
           </p>
-          <AddPaymentMethodDialog/>
+          <Button className="mt-4" onClick={() => addPaymentMethodDialog.setOpen(true)}>
+            <Plus className="mr-2 h-4 w-4"/>
+            Add Payment Method
+          </Button>
         </div>
       ) : (
         <DataTable
@@ -289,6 +299,7 @@ export function PaymentMethodsTab() {
           searchPlaceholder="Search payment methods..."
         />
       )}
+      <AddPaymentMethodDialog {...addPaymentMethodDialog.dialogProps} />
     </BasePage>
   );
 }

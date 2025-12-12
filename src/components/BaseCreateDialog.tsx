@@ -6,9 +6,8 @@ import type { ReactNode } from "react";
 import { useDboxedMutation } from "@/api/mutation.ts";
 
 interface BaseCreateDialogProps<F extends FieldValues = FieldValues, C extends FieldValues = F, R extends FieldValues = FieldValues> {
-  trigger?: ReactNode
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
+  open: boolean
+  onOpenChange: (open: boolean) => void
   title: string
   description?: string
   children: (form: UseFormReturn<F>) => ReactNode
@@ -23,7 +22,6 @@ interface BaseCreateDialogProps<F extends FieldValues = FieldValues, C extends F
 }
 
 export function BaseCreateDialog<F extends FieldValues = FieldValues, C extends FieldValues = F, R extends FieldValues = FieldValues>({
-  trigger,
   open,
   onOpenChange,
   title,
@@ -66,7 +64,6 @@ export function BaseCreateDialog<F extends FieldValues = FieldValues, C extends 
 
   return (
     <SimpleFormDialog<F>
-      trigger={trigger}
       open={open}
       onOpenChange={onOpenChange}
       title={title}

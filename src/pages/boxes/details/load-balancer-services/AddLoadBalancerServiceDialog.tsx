@@ -8,11 +8,11 @@ import { useDboxedQueryClient } from "@/api/client.ts"
 import { useDboxedMutation } from "@/api/mutation.ts"
 import { toast } from "sonner"
 import { StatusBadge } from "@/components/StatusBadge.tsx"
-import { type ReactNode, useState } from "react"
 
 interface AddLoadBalancerServiceDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
   boxId: string
-  trigger: ReactNode
   onSuccess: () => void
 }
 
@@ -24,10 +24,9 @@ interface FormData {
   description: string
 }
 
-export function AddLoadBalancerServiceDialog({ boxId, trigger, onSuccess }: AddLoadBalancerServiceDialogProps) {
+export function AddLoadBalancerServiceDialog({ open, onOpenChange, boxId, onSuccess }: AddLoadBalancerServiceDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedQueryClient()
-  const [dialogOpen, setDialogOpen] = useState(false)
 
   const lbsQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/load-balancers', {
     params: {
@@ -36,7 +35,7 @@ export function AddLoadBalancerServiceDialog({ boxId, trigger, onSuccess }: AddL
       }
     }
   }, {
-    enabled: dialogOpen,
+    enabled: open,
   })
 
   const createLoadBalancerServiceMutation = useDboxedMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/load-balancer-services', {
@@ -80,9 +79,9 @@ export function AddLoadBalancerServiceDialog({ boxId, trigger, onSuccess }: AddL
 
   return (
     <SimpleFormDialog<FormData>
-      trigger={trigger}
+      open={open}
+      onOpenChange={onOpenChange}
       title="Add Load Balancer Service"
-      onOpenChange={setDialogOpen}
       description="Create a new HTTP Load Balancer Service rule for this box"
       buildInitial={() => ({
         loadBalancerId: "",

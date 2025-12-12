@@ -26,13 +26,18 @@ export default function MainLayout({ isAdmin }: MainLayoutProps) {
             <DboxedBreadcrumbs />
           </div>
           <div className="ml-auto flex items-center gap-4 px-4">
-            <EarlyStageWarningBanner />
             <ModeToggle />
           </div>
         </header>
-        <div className="flex-1 overflow-y-auto">
-          <div className="flex flex-col gap-4 p-4">
+        <div className="flex-1 overflow-y-auto relative">
+          <div className="flex flex-col gap-4 p-4 pb-12">
             <Outlet/>
+          </div>
+        </div>
+        <Separator/>
+        <div className="sticky bottom-0 flex justify-end px-4 py-2 pointer-events-none">
+          <div className="pointer-events-auto">
+            <EarlyStageWarningBanner />
           </div>
         </div>
       </SidebarInset>

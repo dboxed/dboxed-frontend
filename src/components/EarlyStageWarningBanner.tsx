@@ -8,16 +8,17 @@ export function EarlyStageWarningBanner() {
       <AlertTriangle className="h-4 w-4" />
       <span className="text-xs">
         <strong>Dboxed is currently in a very early stage.</strong>{" "}
+        <span>
+          <br/>
+          Breaking changes might be introduced at any time.
+        </span>
         {isTestInstance && (
           <>
+            <br/>
             This is a test instance of Dboxed Cloud.
             All workloads that you define here may be wiped at any time.{" "}
           </>
         )}
-        <span className="hidden md:inline">
-          <br/>
-          Breaking changes might be introduced at any time.
-        </span>
       </span>
     </div>
   )

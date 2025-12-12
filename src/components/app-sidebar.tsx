@@ -94,17 +94,17 @@ export function AppSidebar({ isAdmin }: AppSidebarProps) {
       </SidebarHeader>
       <SidebarContent>
         <NavItems title={"DBoxed"} items={navMain}/>
+
+        <div className="flex-1" />
+        {isDboxedCloud() &&
+            <NavItems title={"Workspace"} items={navWorkspace}/>
+        }
+        {isAdmin &&
+          <NavItems title={"Admin"} items={navAdmin}/>
+        }
+        <NavItems title={"Resources"} items={navResources}/>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarContent>
-          {isDboxedCloud() &&
-              <NavItems title={"Workspace"} items={navWorkspace}/>
-          }
-          {isAdmin &&
-            <NavItems title={"Admin"} items={navAdmin}/>
-          }
-          <NavItems title={"Resources"} items={navResources}/>
-        </SidebarContent>
         <SidebarSeparator />
         <NavUser user={user.user}/>
       </SidebarFooter>

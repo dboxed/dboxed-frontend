@@ -9,7 +9,7 @@ import { decompressDockerPs, type DockerContainer } from "@/pages/boxes/docker-u
 import { ContainerLogsDialog } from "./status/ContainerLogsDialog.tsx"
 import { DataTable } from "@/components/data-table.tsx"
 import type { ColumnDef } from "@tanstack/react-table"
-import { formatTimeAgo } from "@/utils/time.ts"
+import { TimeAgo } from "@/components/TimeAgo.tsx"
 
 interface ContainersCardProps {
   box: components["schemas"]["Box"]
@@ -20,6 +20,7 @@ export function ContainersCard({ box }: ContainersCardProps) {
   const [selectedContainerForLogs, setSelectedContainerForLogs] = useState<string | null>(null)
 
   const isStale = box.status === "Stale"
+  const isStopped = box.status === "Stopped"
 
   useEffect(() => {
     if (box.sandboxStatus?.dockerPs) {
@@ -104,12 +105,14 @@ export function ContainersCard({ box }: ContainersCardProps) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Docker Containers</CardTitle>
-            {isStale && (
+            {(isStale || isStopped) && (
               <div className="flex items-center gap-2 text-destructive">
                 <AlertTriangle className="h-4 w-4" />
                 <span className="text-sm font-medium">
-                  Container information is stale and may not be up-to-date.
-                  {box.sandboxStatus?.statusTime && ` Last updated ${formatTimeAgo(box.sandboxStatus.statusTime)}.`}
+                  {isStopped
+                    ? "Box is stopped. Container information is outdated."
+                    : "Container information is stale and may not be up-to-date."}
+                  {box.sandboxStatus?.statusTime && <> Last updated <TimeAgo date={box.sandboxStatus.statusTime} />.</>}
                 </span>
               </div>
             )}

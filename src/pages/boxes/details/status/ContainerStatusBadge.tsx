@@ -4,12 +4,13 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Badge } from "@/components/ui/badge.tsx";
 import { cn } from "@/lib/utils.ts";
 import { decompressDockerPs, type DockerContainer } from "@/pages/boxes/docker-utils.tsx";
-import { formatTimeAgo } from "@/utils/time.ts";
+import { TimeAgo } from "@/components/TimeAgo.tsx";
 
 export function ContainerStatusBadge({ box }: { box: components["schemas"]["Box"] }) {
   const [containers, setContainers] = useState<DockerContainer[]>([])
   const statusTime = box.sandboxStatus?.statusTime
   const isStale = box.status === "Stale"
+  const isStopped = box.status === "Stopped"
 
   useEffect(() => {
     if (box.sandboxStatus?.dockerPs) {
@@ -29,7 +30,7 @@ export function ContainerStatusBadge({ box }: { box: components["schemas"]["Box"
 
   let containersColorClass = ""
   if (box.sandboxStatus?.runStatus === "running") {
-    if (isStale) {
+    if (isStale || isStopped) {
       containersColorClass = 'bg-yellow-400'
     } else if (allOk) {
       containersColorClass = 'bg-green-400'
@@ -54,10 +55,11 @@ export function ContainerStatusBadge({ box }: { box: components["schemas"]["Box"
           <div className="space-y-2">
             {statusTime && (
               <p className="text-xs text-muted-foreground">
-                Last updated {formatTimeAgo(statusTime)}
+                Last updated <TimeAgo date={statusTime} />
               </p>
             )}
-            {isStale && <p className="text-red-500 font-semibold">Box status is stale, containers information is not up-to-date.</p>}
+            {isStopped && <p className="text-red-500 font-semibold">Box is stopped. Container information is outdated.</p>}
+            {isStale && !isStopped && <p className="text-red-500 font-semibold">Box status is stale, containers information is not up-to-date.</p>}
             {containers.length > 0 ? (
               <div className="space-y-1">
                 {containers.map((container) => (

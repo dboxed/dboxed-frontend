@@ -20,6 +20,8 @@ export function PaymentMethodsTab() {
   const { workspaceId } = useSelectedWorkspaceId()
   const client = useDboxedCloudQueryClient();
   const addPaymentMethodDialog = useEditDialogOpenState();
+  const deletePaymentMethodDialog = useEditDialogOpenState<StripePaymentMethod>();
+  const setDefaultPaymentMethodDialog = useEditDialogOpenState<StripePaymentMethod>();
 
   const customer = client.useQuery("get", "/v1/cloud/workspaces/{workspaceId}/billing/customer", {
     params: {
@@ -162,42 +164,26 @@ export function PaymentMethodsTab() {
       id: "actions",
       header: "Actions",
       cell: ({ row }) => {
-        const id = row.original.id;
-        const isDefault = id === defaultPaymentMethodId;
+        const isDefault = row.original.id === defaultPaymentMethodId;
         return (
           <div className="flex items-center gap-2">
-            <ConfirmationDialog
-              trigger={
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={deletePaymentMethodMutation.isPending}
-                >
-                  <Trash2 className="h-4 w-4"/>
-                </Button>
-              }
-              title="Delete Payment Method"
-              description="Are you sure you want to delete this payment method? This action cannot be undone."
-              confirmText="Delete"
-              onConfirm={() => handleDeletePaymentMethod(id)}
-              destructive
-            />
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={deletePaymentMethodMutation.isPending}
+              onClick={() => deletePaymentMethodDialog.setItem(row.original)}
+            >
+              <Trash2 className="h-4 w-4"/>
+            </Button>
             {!isDefault && (
-              <ConfirmationDialog
-                trigger={
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={updateCustomerMutation.isPending}
-                  >
-                    Set Default
-                  </Button>
-                }
-                title="Set Default Payment Method"
-                description="Are you sure you want to set this as your default payment method? It will be used for future payments."
-                confirmText="Set Default"
-                onConfirm={() => handleSetDefaultPaymentMethod(id)}
-              />
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={updateCustomerMutation.isPending}
+                onClick={() => setDefaultPaymentMethodDialog.setItem(row.original)}
+              >
+                Set Default
+              </Button>
             )}
           </div>
         );
@@ -300,6 +286,21 @@ export function PaymentMethodsTab() {
         />
       )}
       <AddPaymentMethodDialog {...addPaymentMethodDialog.dialogProps} />
+      {deletePaymentMethodDialog.item && <ConfirmationDialog
+        {...deletePaymentMethodDialog.dialogProps}
+        title="Delete Payment Method"
+        description="Are you sure you want to delete this payment method? This action cannot be undone."
+        confirmText="Delete"
+        onConfirm={() => handleDeletePaymentMethod(deletePaymentMethodDialog.item!.id)}
+        destructive
+      />}
+      {setDefaultPaymentMethodDialog.item && <ConfirmationDialog
+        {...setDefaultPaymentMethodDialog.dialogProps}
+        title="Set Default Payment Method"
+        description="Are you sure you want to set this as your default payment method? It will be used for future payments."
+        confirmText="Set Default"
+        onConfirm={() => handleSetDefaultPaymentMethod(setDefaultPaymentMethodDialog.item!.id)}
+      />}
     </BasePage>
   );
 }

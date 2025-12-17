@@ -23,6 +23,7 @@ interface Props {
 export const StripeBillingAddress = (props: Props) => {
   const { workspaceId } = useSelectedWorkspaceId()
   const addTaxIdDialog = useEditDialogOpenState()
+  const deleteTaxIdDialog = useEditDialogOpenState<components["schemas"]["TaxId"]>()
 
   const [formCustomer, setFormCustomer] = useState<any>({})
   const [formCustomerComplete, setFormCustomerComplete] = useState(false)
@@ -215,22 +216,14 @@ export const StripeBillingAddress = (props: Props) => {
                         <p className="text-sm font-medium">{displayName}</p>
                         <p className="text-sm text-muted-foreground">{taxId.value}</p>
                       </div>
-                      <ConfirmationDialog
-                        trigger={
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            disabled={deleteTaxIdMutation.isPending}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        }
-                        title="Delete Tax ID"
-                        description="Are you sure you want to delete this tax ID? This action cannot be undone."
-                        confirmText="Delete"
-                        onConfirm={() => handleDeleteTaxId(taxId.id)}
-                        destructive
-                      />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={deleteTaxIdMutation.isPending}
+                        onClick={() => deleteTaxIdDialog.setItem(taxId)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   );
                 })}
@@ -244,6 +237,14 @@ export const StripeBillingAddress = (props: Props) => {
         onSave={handleAddTaxId}
         country={formCustomer.address?.country}
       />
+      {deleteTaxIdDialog.item && <ConfirmationDialog
+        {...deleteTaxIdDialog.dialogProps}
+        title="Delete Tax ID"
+        description="Are you sure you want to delete this tax ID? This action cannot be undone."
+        confirmText="Delete"
+        onConfirm={() => handleDeleteTaxId(deleteTaxIdDialog.item!.id)}
+        destructive
+      />}
     </div>
   </Elements>
 }

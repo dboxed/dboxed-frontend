@@ -13,6 +13,7 @@ import { BoxConfigTab } from "./BoxConfigTab.tsx"
 import type { components } from "@/api/models/dboxed-schema"
 import { useDboxedMutation } from "@/api/mutation.ts"
 import { useState } from "react";
+import { useEditDialogOpenState } from "@/hooks/use-edit-dialog-open-state.ts";
 
 function BoxDetailsContent({ data }: { data: components["schemas"]["Box"] }) {
   return (
@@ -49,6 +50,8 @@ export function BoxDetailsPage() {
   const { workspaceId } = useSelectedWorkspaceId()
   const { boxId } = useParams<{ boxId: string }>()
   const [refreshTrigger, setRefreshTrigger] = useState(0)
+  const enableDisableDialog = useEditDialogOpenState()
+  const reconcileDialog = useEditDialogOpenState()
 
   const enableBoxMutation = useDboxedMutation('post', '/v1/workspaces/{workspaceId}/boxes/{id}/enable', {
     successMessage: 'Box enabled successfully',
@@ -149,25 +152,25 @@ export function BoxDetailsPage() {
       }}
       customButtons={(data, _save) => (
         <>
+          <Button
+            variant="outline"
+            disabled={enableBoxMutation.isPending || disableBoxMutation.isPending}
+            onClick={() => enableDisableDialog.setOpen(true)}
+          >
+            {data.enabled ? (
+              <>
+                <StopCircle className="h-4 w-4 mr-2" />
+                {disableBoxMutation.isPending ? 'Disabling...' : 'Disable'}
+              </>
+            ) : (
+              <>
+                <Play className="h-4 w-4 mr-2" />
+                {enableBoxMutation.isPending ? 'Enabling...' : 'Enable'}
+              </>
+            )}
+          </Button>
           <ConfirmationDialog
-            trigger={
-              <Button
-                variant="outline"
-                disabled={enableBoxMutation.isPending || disableBoxMutation.isPending}
-              >
-                {data.enabled ? (
-                  <>
-                    <StopCircle className="h-4 w-4 mr-2" />
-                    {disableBoxMutation.isPending ? 'Disabling...' : 'Disable'}
-                  </>
-                ) : (
-                  <>
-                    <Play className="h-4 w-4 mr-2" />
-                    {enableBoxMutation.isPending ? 'Enabling...' : 'Enable'}
-                  </>
-                )}
-              </Button>
-            }
+            {...enableDisableDialog.dialogProps}
             title={data.enabled ? "Disable Box?" : "Enable Box?"}
             description={data.enabled
               ? "This will disable the box and stop all running containers."
@@ -177,16 +180,16 @@ export function BoxDetailsPage() {
             onConfirm={data.enabled ? handleDisable : handleEnable}
             destructive={data.enabled}
           />
+          <Button
+            variant="outline"
+            disabled={reconcileBoxMutation.isPending}
+            onClick={() => reconcileDialog.setOpen(true)}
+          >
+            <RefreshCw className="h-4 w-4 mr-2" />
+            {reconcileBoxMutation.isPending ? 'Reconciling...' : 'Reconcile'}
+          </Button>
           <ConfirmationDialog
-            trigger={
-              <Button
-                variant="outline"
-                disabled={reconcileBoxMutation.isPending}
-              >
-                <RefreshCw className="h-4 w-4 mr-2" />
-                {reconcileBoxMutation.isPending ? 'Reconciling...' : 'Reconcile'}
-              </Button>
-            }
+            {...reconcileDialog.dialogProps}
             title="Reconcile Box?"
             description="This will trigger a reconciliation of the box state with the desired configuration."
             confirmText="Reconcile"

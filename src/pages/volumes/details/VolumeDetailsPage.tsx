@@ -12,10 +12,12 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx"
 import { AlertTriangle, Unlock } from "lucide-react"
 import { useDboxedMutation } from "@/api/mutation.ts"
 import type { components } from "@/api/models/dboxed-schema";
+import { useEditDialogOpenState } from "@/hooks/use-edit-dialog-open-state.ts";
 
 export function VolumeDetailsPage() {
   const { workspaceId } = useSelectedWorkspaceId()
   const { volumeId } = useParams<{ volumeId: string }>()
+  const forceReleaseDialog = useEditDialogOpenState()
 
   if (!volumeId) {
     return <div>Invalid volume ID</div>
@@ -57,39 +59,40 @@ export function VolumeDetailsPage() {
       customButtons={(data) => (
         <>
           {data.mountId && (
-            <ConfirmationDialog
-              trigger={
-                <Button variant="outline">
-                  <Unlock className="h-4 w-4 mr-2" />
-                  Force Release Mount
-                </Button>
-              }
-              title="Force release mounted Volume?"
-              description="This will forcefully release the mounted volume."
-              confirmText="Force Release"
-              onConfirm={handleForceRelease}
-              destructive
-            >
-              <Alert variant="destructive">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>Warning</AlertTitle>
-                <AlertDescription>
-                  <div className="space-y-2">
-                    <p>
-                      <strong>Force releasing a mounted volume can be dangerous if it is actively in use.</strong>
-                    </p>
-                    <p>
-                      Only use this option if you are certain the volume is not being used, or if the mount is stale due to a crashed machine/server.
-                    </p>
-                    <p>
-                      {data.mountStatus?.boxId && (
-                        <>Currently mounted by Box ID: <strong>{data.mountStatus.boxId}</strong></>
-                      )}
-                    </p>
-                  </div>
-                </AlertDescription>
-              </Alert>
-            </ConfirmationDialog>
+            <>
+              <Button variant="outline" onClick={() => forceReleaseDialog.setOpen(true)}>
+                <Unlock className="h-4 w-4 mr-2" />
+                Force Release Mount
+              </Button>
+              <ConfirmationDialog
+                {...forceReleaseDialog.dialogProps}
+                title="Force release mounted Volume?"
+                description="This will forcefully release the mounted volume."
+                confirmText="Force Release"
+                onConfirm={handleForceRelease}
+                destructive
+              >
+                <Alert variant="destructive">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertTitle>Warning</AlertTitle>
+                  <AlertDescription>
+                    <div className="space-y-2">
+                      <p>
+                        <strong>Force releasing a mounted volume can be dangerous if it is actively in use.</strong>
+                      </p>
+                      <p>
+                        Only use this option if you are certain the volume is not being used, or if the mount is stale due to a crashed machine/server.
+                      </p>
+                      <p>
+                        {data.mountStatus?.boxId && (
+                          <>Currently mounted by Box ID: <strong>{data.mountStatus.boxId}</strong></>
+                        )}
+                      </p>
+                    </div>
+                  </AlertDescription>
+                </Alert>
+              </ConfirmationDialog>
+            </>
           )}
         </>
       )}

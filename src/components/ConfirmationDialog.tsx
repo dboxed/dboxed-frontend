@@ -6,14 +6,12 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 
 interface ConfirmationDialogProps {
-  trigger?: ReactNode
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
+  open: boolean
+  onOpenChange: (open: boolean) => void
   title: string
   description: string
   confirmText?: string
@@ -24,8 +22,7 @@ interface ConfirmationDialogProps {
 }
 
 export function ConfirmationDialog({
-  trigger,
-  open: controlledOpen,
+  open,
   onOpenChange,
   title,
   description,
@@ -35,18 +32,11 @@ export function ConfirmationDialog({
   destructive = false,
   children
 }: ConfirmationDialogProps) {
-  const [internalOpen, setInternalOpen] = useState(false)
   const [isConfirming, setIsConfirming] = useState(false)
-
-  const isControlled = controlledOpen !== undefined
-  const open = isControlled ? controlledOpen : internalOpen
 
   const setOpen = (newOpen: boolean) => {
     if (!newOpen && isConfirming) return
-    if (!isControlled) {
-      setInternalOpen(newOpen)
-    }
-    onOpenChange?.(newOpen)
+    onOpenChange(newOpen)
   }
 
   const handleConfirm = async () => {
@@ -60,9 +50,6 @@ export function ConfirmationDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {trigger && <DialogTrigger asChild>
-        {trigger}
-      </DialogTrigger>}
       <DialogContent
         onPointerDownOutside={(e) => isConfirming && e.preventDefault()}
         onEscapeKeyDown={(e) => isConfirming && e.preventDefault()}

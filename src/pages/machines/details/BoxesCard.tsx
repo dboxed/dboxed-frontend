@@ -22,6 +22,8 @@ export function BoxesCard({ machineId, workspaceId }: BoxesCardProps) {
   const navigate = useNavigate()
   const client = useDboxedQueryClient()
   const addBoxDialog = useEditDialogOpenState()
+  const enableDisableDialog = useEditDialogOpenState<components["schemas"]["Box"]>()
+  const removeBoxDialog = useEditDialogOpenState<components["schemas"]["Box"]>()
 
   const boxesQuery = client.useQuery('get', '/v1/workspaces/{workspaceId}/machines/{id}/boxes', {
     params: {
@@ -143,37 +145,16 @@ export function BoxesCard({ machineId, workspaceId }: BoxesCardProps) {
         const box = row.original
         return (
           <div className="flex items-center gap-1">
-            <ConfirmationDialog
-              trigger={
-                <Button variant="ghost" size="sm">
-                  {box.enabled ? (
-                    <StopCircle className="h-4 w-4" />
-                  ) : (
-                    <Play className="h-4 w-4" />
-                  )}
-                </Button>
-              }
-              title={box.enabled ? "Disable Box?" : "Enable Box?"}
-              description={box.enabled
-                ? `This will disable "${box.name}" and stop all running containers.`
-                : `This will enable "${box.name}" and start all configured containers.`
-              }
-              confirmText={box.enabled ? "Disable" : "Enable"}
-              onConfirm={() => box.enabled ? handleDisableBox(box.id) : handleEnableBox(box.id)}
-              destructive={box.enabled}
-            />
-            <ConfirmationDialog
-              trigger={
-                <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              }
-              title="Remove Box"
-              description={`Are you sure you want to remove "${box.name}" from this machine?`}
-              confirmText="Remove"
-              onConfirm={() => handleRemoveBox(box.id)}
-              destructive
-            />
+            <Button variant="ghost" size="sm" onClick={() => enableDisableDialog.setItem(box)}>
+              {box.enabled ? (
+                <StopCircle className="h-4 w-4" />
+              ) : (
+                <Play className="h-4 w-4" />
+              )}
+            </Button>
+            <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => removeBoxDialog.setItem(box)}>
+              <Trash2 className="h-4 w-4" />
+            </Button>
           </div>
         )
       },
@@ -210,6 +191,25 @@ export function BoxesCard({ machineId, workspaceId }: BoxesCardProps) {
         machineId={machineId}
         workspaceId={workspaceId}
       />
+      {enableDisableDialog.item && <ConfirmationDialog
+        {...enableDisableDialog.dialogProps}
+        title={enableDisableDialog.item.enabled ? "Disable Box?" : "Enable Box?"}
+        description={enableDisableDialog.item.enabled
+          ? `This will disable "${enableDisableDialog.item.name}" and stop all running containers.`
+          : `This will enable "${enableDisableDialog.item.name}" and start all configured containers.`
+        }
+        confirmText={enableDisableDialog.item.enabled ? "Disable" : "Enable"}
+        onConfirm={() => enableDisableDialog.item!.enabled ? handleDisableBox(enableDisableDialog.item!.id) : handleEnableBox(enableDisableDialog.item!.id)}
+        destructive={enableDisableDialog.item.enabled}
+      />}
+      {removeBoxDialog.item && <ConfirmationDialog
+        {...removeBoxDialog.dialogProps}
+        title="Remove Box"
+        description={`Are you sure you want to remove "${removeBoxDialog.item.name}" from this machine?`}
+        confirmText="Remove"
+        onConfirm={() => handleRemoveBox(removeBoxDialog.item!.id)}
+        destructive
+      />}
     </Card>
   )
 }

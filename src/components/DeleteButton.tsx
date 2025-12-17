@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog"
 import { Trash2 } from "lucide-react"
@@ -29,32 +30,36 @@ export function DeleteButton({
   variant = "destructive",
   children
 }: DeleteButtonProps) {
+  const [open, setOpen] = useState(false)
   const isDisabled = disabled || isLoading
 
   // Use custom confirmation text or fall back to defaults
   const title = confirmationTitle || "Are you sure?"
-  const description = confirmationDescription || 
+  const description = confirmationDescription ||
     (resourceName ? `This action cannot be undone. This will permanently delete the ${resourceName}.` : "This action cannot be undone.")
 
   return (
-    <ConfirmationDialog
-      trigger={
-        <Button
-          variant={variant}
-          disabled={isDisabled}
-          className={className}
-          size={size}
-        >
-          {isLoading ? "Deleting..." : (buttonText || <Trash2 className="h-4 w-4" />)}
-        </Button>
-      }
-      title={title}
-      description={description}
-      confirmText="Delete"
-      onConfirm={onDelete}
-      destructive
-    >
-      {children}
-    </ConfirmationDialog>
+    <>
+      <Button
+        variant={variant}
+        disabled={isDisabled}
+        className={className}
+        size={size}
+        onClick={() => setOpen(true)}
+      >
+        {isLoading ? "Deleting..." : (buttonText || <Trash2 className="h-4 w-4" />)}
+      </Button>
+      <ConfirmationDialog
+        open={open}
+        onOpenChange={setOpen}
+        title={title}
+        description={description}
+        confirmText="Delete"
+        onConfirm={onDelete}
+        destructive
+      >
+        {children}
+      </ConfirmationDialog>
+    </>
   )
-} 
+}

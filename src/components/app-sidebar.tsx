@@ -1,4 +1,4 @@
-import { Box, LayoutDashboard, Users, HardDrive, Key, BookOpen, Globe, Monitor } from "lucide-react"
+import { Box, LayoutDashboard, Users, HardDrive, Key, BookOpen, Globe, Monitor, GitBranch } from "lucide-react"
 
 import { NavItems } from "@/components/nav-items.tsx"
 import { NavUser } from "@/components/nav-user"
@@ -28,6 +28,11 @@ const navMain = [
     title: "Storage",
     navigate: "/workspaces/{workspaceId}/volumes",
     icon: <HardDrive/>,
+  },
+  {
+    title: "Git",
+    navigate: "/workspaces/{workspaceId}/git-credentials",
+    icon: <GitBranch/>,
   },
   {
     title: "Boxes",

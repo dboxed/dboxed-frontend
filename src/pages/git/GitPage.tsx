@@ -23,16 +23,16 @@ export function GitPage() {
     <div className="space-y-6">
       <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="git-credentials">Credentials</TabsTrigger>
           <TabsTrigger value="git-specs">Specs</TabsTrigger>
+          <TabsTrigger value="git-credentials">Credentials</TabsTrigger>
         </TabsList>
-
-        <TabsContent value="git-credentials">
-          <ListGitCredentialsPage />
-        </TabsContent>
 
         <TabsContent value="git-specs">
           <ListGitSpecsPage />
+        </TabsContent>
+
+        <TabsContent value="git-credentials">
+          <ListGitCredentialsPage />
         </TabsContent>
       </Tabs>
     </div>

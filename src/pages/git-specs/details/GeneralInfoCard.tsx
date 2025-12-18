@@ -1,5 +1,4 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
-import { Badge } from "@/components/ui/badge.tsx"
 import { TimeAgo } from "@/components/TimeAgo.tsx"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx"
 import { AlertTriangle } from "lucide-react"
@@ -11,8 +10,6 @@ interface GeneralInfoCardProps {
 }
 
 export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
-  const statusVariant = data.status === "ready" ? "default" : data.status === "error" ? "destructive" : "secondary"
-
   return (
     <div className="space-y-6">
       {data.status === "error" && data.statusDetails && (

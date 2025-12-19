@@ -2181,6 +2181,7 @@ export interface components {
             bucket: string;
             /** Format: date-time */
             createdAt: string;
+            determinedRegion: string | null;
             endpoint: string;
             id: string;
             status: string;

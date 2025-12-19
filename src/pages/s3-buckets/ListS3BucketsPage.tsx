@@ -43,6 +43,18 @@ export function ListS3BucketsPage() {
       },
     },
     {
+      accessorKey: "determinedRegion",
+      header: "Region",
+      cell: ({ row }) => {
+        const region = row.getValue("determinedRegion") as string | null
+        return region ? (
+          <span className="text-sm">{region}</span>
+        ) : (
+          <span className="text-sm text-muted-foreground">—</span>
+        )
+      },
+    },
+    {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => {

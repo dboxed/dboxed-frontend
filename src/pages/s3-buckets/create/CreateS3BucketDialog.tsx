@@ -56,6 +56,7 @@ export function CreateS3BucketDialog({ open, onOpenChange }: CreateS3BucketDialo
         bucket: "",
       }}
       onSubmit={handleSubmit}
+      wide={true}
     >
       {(form) => (
         <S3BucketForm

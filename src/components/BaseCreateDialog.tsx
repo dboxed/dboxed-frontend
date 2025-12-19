@@ -19,6 +19,7 @@ interface BaseCreateDialogProps<F extends FieldValues = FieldValues, C extends F
   cancelButtonText?: string
   onSubmit?: (data: F) => C
   defaultValues?: DefaultValues<F>
+  wide?: boolean
 }
 
 export function BaseCreateDialog<F extends FieldValues = FieldValues, C extends FieldValues = F, R extends FieldValues = FieldValues>({
@@ -35,6 +36,7 @@ export function BaseCreateDialog<F extends FieldValues = FieldValues, C extends 
   cancelButtonText = "Cancel",
   onSubmit,
   defaultValues,
+  wide,
 }: BaseCreateDialogProps<F, C, R>) {
   const createMutation = useDboxedMutation('post', apiRoute as any, {
     successMessage: `${title} created successfully!`,
@@ -72,6 +74,7 @@ export function BaseCreateDialog<F extends FieldValues = FieldValues, C extends 
       onSave={handleSave}
       saveText={submitButtonText}
       cancelText={cancelButtonText}
+      wide={wide}
     >
       {children}
     </SimpleFormDialog>

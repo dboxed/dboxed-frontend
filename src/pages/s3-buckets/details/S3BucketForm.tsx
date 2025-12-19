@@ -7,33 +7,6 @@ import type { UseFormReturn, FieldValues, Path } from "react-hook-form"
 
 export type ProviderType = "amazon-s3" | "hetzner" | "generic"
 
-export function detectProviderType(endpoint: string): ProviderType {
-  if (endpoint.includes("amazonaws.com")) {
-    return "amazon-s3"
-  }
-  if (endpoint.includes("your-objectstorage.com")) {
-    return "hetzner"
-  }
-  return "generic"
-}
-
-export function extractRegionFromEndpoint(endpoint: string, providerType: ProviderType): string {
-  switch (providerType) {
-    case "amazon-s3": {
-      // Extract region from URLs like https://s3.us-east-1.amazonaws.com or https://s3-us-east-1.amazonaws.com
-      const match = endpoint.match(/s3[.-]([a-z0-9-]+)\.amazonaws\.com/)
-      return match ? match[1] : ""
-    }
-    case "hetzner": {
-      // Extract location from URLs like https://fsn1.your-objectstorage.com
-      const match = endpoint.match(/https?:\/\/([a-z0-9]+)\.your-objectstorage\.com/)
-      return match ? match[1] : ""
-    }
-    case "generic":
-      return ""
-  }
-}
-
 export function buildEndpoint(providerType: ProviderType, region: string): string {
   switch (providerType) {
     case "amazon-s3":

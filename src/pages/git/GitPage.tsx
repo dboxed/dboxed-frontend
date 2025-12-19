@@ -10,9 +10,9 @@ export function GitPage() {
   const { workspaceId } = useSelectedWorkspaceId()
 
   // Determine active tab from URL path
-  let activeTab = 'git-credentials'
-  if (location.pathname.includes('/git-specs')) {
-    activeTab = 'git-specs'
+  let activeTab = 'git-specs'
+  if (location.pathname.includes('/git-credentials')) {
+    activeTab = 'git-credentials'
   }
 
   const handleTabChange = (value: string) => {

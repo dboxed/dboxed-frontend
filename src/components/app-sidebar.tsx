@@ -31,7 +31,7 @@ const navMain = [
   },
   {
     title: "Git",
-    navigate: "/workspaces/{workspaceId}/git-credentials",
+    navigate: "/workspaces/{workspaceId}/git-specs",
     icon: <GitBranch/>,
   },
   {

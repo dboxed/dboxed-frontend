@@ -4,23 +4,23 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import type { UseFormReturn } from "react-hook-form"
 
-interface RusticConfigProps {
+interface ResticConfigProps {
   form: UseFormReturn<any>
 }
 
-export function RusticConfig({ form }: RusticConfigProps) {
+export function ResticConfig({ form }: ResticConfigProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Rustic Volume Configuration</CardTitle>
+        <CardTitle>Restic Volume Configuration</CardTitle>
         <CardDescription>
-          Configure the filesystem settings for the selected rustic provider.
+          Configure the filesystem settings for the selected restic provider.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <FormField
           control={form.control}
-          name="rustic.fsSize"
+          name="restic.fsSize"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Filesystem Size</FormLabel>
@@ -37,7 +37,7 @@ export function RusticConfig({ form }: RusticConfigProps) {
         />
         <FormField
           control={form.control}
-          name="rustic.fsType"
+          name="restic.fsType"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Filesystem Type</FormLabel>

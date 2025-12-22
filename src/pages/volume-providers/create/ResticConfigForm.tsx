@@ -5,30 +5,30 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import type { UseFormReturn } from "react-hook-form"
 import { S3BucketSelector } from "./S3BucketSelector.tsx"
 
-interface RusticConfigFormProps {
+interface ResticConfigFormProps {
   form: UseFormReturn<any>
 }
 
-export function RusticConfigForm({ form }: RusticConfigFormProps) {
+export function ResticConfigForm({ form }: ResticConfigFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Rustic Configuration</CardTitle>
+        <CardTitle>Restic Configuration</CardTitle>
         <CardDescription>
-          Configure the Rustic backup repository settings.
+          Configure the Restic backup repository settings.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <FormField
           control={form.control}
-          name="rustic.password"
+          name="restic.password"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
                 <Input
                   type="password"
-                  placeholder="Enter Rustic password"
+                  placeholder="Enter Restic password"
                   {...field}
                 />
               </FormControl>
@@ -37,12 +37,12 @@ export function RusticConfigForm({ form }: RusticConfigFormProps) {
           )}
         />
 
-        {form.watch("rustic.storageType") === "s3" && (
+        {form.watch("restic.storageType") === "s3" && (
           <>
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="rustic.storageType"
+                name="restic.storageType"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Storage Type</FormLabel>
@@ -63,7 +63,7 @@ export function RusticConfigForm({ form }: RusticConfigFormProps) {
 
               <S3BucketSelector
                 form={form}
-                fieldName="rustic.s3BucketId"
+                fieldName="restic.s3BucketId"
                 label="S3 Bucket"
                 description=""
               />
@@ -71,7 +71,7 @@ export function RusticConfigForm({ form }: RusticConfigFormProps) {
 
             <FormField
               control={form.control}
-              name="rustic.storagePrefix"
+              name="restic.storagePrefix"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Storage Prefix</FormLabel>
@@ -88,10 +88,10 @@ export function RusticConfigForm({ form }: RusticConfigFormProps) {
           </>
         )}
 
-        {!form.watch("rustic.storageType") && (
+        {!form.watch("restic.storageType") && (
           <FormField
             control={form.control}
-            name="rustic.storageType"
+            name="restic.storageType"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Storage Type</FormLabel>

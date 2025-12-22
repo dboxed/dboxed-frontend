@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.t
 import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard.tsx"
-import { RusticDetailsCard } from "./RusticDetailsCard.tsx"
+import { ResticDetailsCard } from "./ResticDetailsCard.tsx"
 import type { components } from "@/api/models/dboxed-schema";
 
 export function VolumeProviderDetailsPage() {
@@ -33,7 +33,7 @@ export function VolumeProviderDetailsPage() {
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="general">General Information</TabsTrigger>
             <TabsTrigger value="configuration">
-              {data.rustic ? 'Rustic Configuration' : 'Provider Configuration'}
+              {data.restic ? 'Restic Configuration' : 'Provider Configuration'}
             </TabsTrigger>
           </TabsList>
 
@@ -42,9 +42,9 @@ export function VolumeProviderDetailsPage() {
           </TabsContent>
 
           <TabsContent value="configuration">
-            {data.rustic ? (
+            {data.restic ? (
               <div className="space-y-6">
-                <RusticDetailsCard volumeProvider={data} save={save} />
+                <ResticDetailsCard volumeProvider={data} save={save} />
               </div>
             ) : (
               <Card>

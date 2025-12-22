@@ -1,6 +1,6 @@
 import { BaseCreateDialog } from "@/components/BaseCreateDialog.tsx"
 import { VolumeProviderSelector } from "@/pages/volumes/create/index.ts"
-import { RusticConfig } from "@/pages/volumes/create/RusticConfig.tsx"
+import { ResticConfig } from "@/pages/volumes/create/ResticConfig.tsx"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx";
@@ -18,9 +18,9 @@ export function CreateVolumeDialog({ open, onOpenChange }: CreateVolumeDialogPro
   const [selectedProvider, setSelectedProvider] = useState<components["schemas"]["VolumeProvider"] | null>(null)
 
   function onSubmit(data: components["schemas"]["CreateVolume"]) {
-    // Process rustic fsSize if it's a string (convert to bytes)
-    if (selectedProvider?.type === "rustic" && data.rustic && typeof data.rustic.fsSize === "string") {
-      data.rustic.fsSize = parseSize(data.rustic.fsSize)
+    // Process restic fsSize if it's a string (convert to bytes)
+    if (selectedProvider?.type === "restic" && data.restic && typeof data.restic.fsSize === "string") {
+      data.restic.fsSize = parseSize(data.restic.fsSize)
     }
 
     return data
@@ -41,7 +41,7 @@ export function CreateVolumeDialog({ open, onOpenChange }: CreateVolumeDialogPro
       defaultValues={{
         name: "",
         volumeProvider: "", // Will be overridden when user selects
-        rustic: {
+        restic: {
           fsSize: 1024 * 1024 * 1024, // 1G
           fsType: "ext4",
         }
@@ -68,8 +68,8 @@ export function CreateVolumeDialog({ open, onOpenChange }: CreateVolumeDialogPro
             onProviderChange={setSelectedProvider}
           />
 
-          {selectedProvider?.type === "rustic" && (
-            <RusticConfig form={form} />
+          {selectedProvider?.type === "restic" && (
+            <ResticConfig form={form} />
           )}
         </div>
       )}

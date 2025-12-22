@@ -1585,7 +1585,7 @@ export interface components {
              */
             readonly $schema?: string;
             name: string;
-            rustic?: components["schemas"]["CreateVolumeRustic"];
+            restic?: components["schemas"]["CreateVolumeRestic"];
             volumeProvider: string;
         };
         CreateVolumeProvider: {
@@ -1595,16 +1595,16 @@ export interface components {
              */
             readonly $schema?: string;
             name: string;
-            rustic: components["schemas"]["CreateVolumeProviderRustic"];
+            restic: components["schemas"]["CreateVolumeProviderRestic"];
             type: string;
         };
-        CreateVolumeProviderRustic: {
+        CreateVolumeProviderRestic: {
             password: string;
             s3BucketId: string | null;
             storagePrefix: string;
             storageType: string;
         };
-        CreateVolumeRustic: {
+        CreateVolumeRestic: {
             /** Format: int64 */
             fsSize: number;
             fsType: string;
@@ -1616,7 +1616,7 @@ export interface components {
              */
             readonly $schema?: string;
             mountId: string;
-            rustic?: components["schemas"]["VolumeSnapshotRustic"];
+            restic?: components["schemas"]["VolumeSnapshotRestic"];
         };
         CreateWorkspace: {
             /**
@@ -2221,6 +2221,7 @@ export interface components {
              */
             readonly $schema?: string;
             prefix: string;
+            recursive: boolean;
         };
         S3ProxyListObjectsResult: {
             /**
@@ -2480,9 +2481,9 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
-            rustic?: components["schemas"]["UpdateVolumeProviderRustic"];
+            restic?: components["schemas"]["UpdateVolumeProviderRestic"];
         };
-        UpdateVolumeProviderRustic: {
+        UpdateVolumeProviderRestic: {
             password?: string;
             storageS3?: components["schemas"]["UpdateRepositoryStorageS3"];
         };
@@ -2513,7 +2514,7 @@ export interface components {
             mountId?: string;
             mountStatus?: components["schemas"]["VolumeMountStatus"];
             name: string;
-            rustic?: components["schemas"]["VolumeRustic"];
+            restic?: components["schemas"]["VolumeRestic"];
             volumeProvider: components["schemas"]["VolumeProvider"];
             volumeProviderId: string;
             volumeProviderType: string;
@@ -2578,13 +2579,13 @@ export interface components {
             createdAt: string;
             id: string;
             name: string;
-            rustic?: components["schemas"]["VolumeProviderRustic"];
+            restic?: components["schemas"]["VolumeProviderRestic"];
             status: string;
             statusDetails: string;
             type: string;
             workspace: string;
         };
-        VolumeProviderRustic: {
+        VolumeProviderRestic: {
             s3BucketId: string | null;
             storagePrefix: string;
             storageType: string;
@@ -2614,7 +2615,7 @@ export interface components {
             readonly $schema?: string;
             mountId: string;
         };
-        VolumeRustic: {
+        VolumeRestic: {
             /** Format: int64 */
             fsSize: number;
             fsType: string;
@@ -2630,13 +2631,11 @@ export interface components {
             createdAt: string;
             id: string;
             mountId: string;
-            rustic?: components["schemas"]["VolumeSnapshotRustic"];
+            restic?: components["schemas"]["VolumeSnapshotRestic"];
             volumeId: string;
             workspace: string;
         };
-        VolumeSnapshotRustic: {
-            /** Format: float */
-            backupDuration: number;
+        VolumeSnapshotRestic: {
             /** Format: date-time */
             backupEnd: string;
             /** Format: date-time */
@@ -2644,15 +2643,7 @@ export interface components {
             /** Format: int64 */
             dataAdded: number;
             /** Format: int64 */
-            dataAddedFiles: number;
-            /** Format: int64 */
-            dataAddedFilesPacked: number;
-            /** Format: int64 */
             dataAddedPacked: number;
-            /** Format: int64 */
-            dataAddedTrees: number;
-            /** Format: int64 */
-            dataAddedTreesPacked: number;
             /** Format: int64 */
             dataBlobs: number;
             /** Format: int64 */
@@ -2674,12 +2665,6 @@ export interface components {
             snapshotTime: string;
             /** Format: int64 */
             totalBytesProcessed: number;
-            /** Format: int64 */
-            totalDirsProcessed: number;
-            /** Format: int64 */
-            totalDirsizeProcessed: number;
-            /** Format: float */
-            totalDuration: number;
             /** Format: int64 */
             totalFilesProcessed: number;
             /** Format: int64 */

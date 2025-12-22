@@ -100,15 +100,15 @@ export function AttachedVolumes({ box }: AttachedVolumesProps) {
       }
     },
     {
-      accessorKey: "volume.rustic.fsSize",
+      accessorKey: "volume.restic.fsSize",
       header: "Size",
       cell: ({ row }) => {
         const attachment = row.original
         const volume = attachment.volume!
 
         switch (volume.volumeProviderType) {
-          case "rustic":
-            return formatSize(volume.rustic!.fsSize)
+          case "restic":
+            return formatSize(volume.restic!.fsSize)
 
           default:
             return "N/A"

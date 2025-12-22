@@ -4,7 +4,7 @@ import { DataTable } from "@/components/data-table.tsx"
 import { useDboxedQueryClient } from "@/api/client.ts"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { useNavigate } from "react-router"
-import { formatDuration } from "@/utils/time.ts"
+import { formatDurationBetween } from "@/utils/time.ts"
 import { TimeAgo } from "@/components/TimeAgo.tsx"
 import type { components } from "@/api/models/dboxed-schema"
 import type { ColumnDef } from "@tanstack/react-table"
@@ -52,17 +52,17 @@ export function SnapshotsTab({ volumeId }: SnapshotsTabProps) {
       }
     },
     {
-      accessorKey: "rustic",
+      accessorKey: "restic",
       header: "Backup Info",
       cell: ({ row }) => {
-        const rustic = row.original.rustic
-        if (!rustic) return <span className="text-sm text-muted-foreground">N/A</span>
+        const restic = row.original.restic
+        if (!restic) return <span className="text-sm text-muted-foreground">N/A</span>
 
         return (
           <div className="flex flex-col text-sm">
-            <span>Files: {rustic.totalFilesProcessed} | Size: {formatSize(rustic.totalBytesProcessed)}</span>
+            <span>Files: {restic.totalFilesProcessed} | Size: {formatSize(restic.totalBytesProcessed)}</span>
             <span className="text-xs text-muted-foreground">
-              Duration: {formatDuration(rustic.backupDuration)}
+              Duration: {formatDurationBetween(restic.backupStart, restic.backupEnd)}
             </span>
           </div>
         )

@@ -7,20 +7,20 @@ import { ReferenceLabel } from "@/components/ReferenceLabel.tsx"
 import { useEditDialogOpenState } from "@/hooks/use-edit-dialog-open-state.ts"
 import type { components } from "@/api/models/dboxed-schema"
 
-interface RusticDetailsCardProps {
+interface ResticDetailsCardProps {
   volumeProvider: components["schemas"]["VolumeProvider"]
   save: (newBox: components["schemas"]["UpdateVolumeProvider"]) => Promise<boolean>
 }
 
-export function RusticDetailsCard({ volumeProvider, save }: RusticDetailsCardProps) {
+export function ResticDetailsCard({ volumeProvider, save }: ResticDetailsCardProps) {
   const passwordDialog = useEditDialogOpenState()
-  if (!volumeProvider.rustic) {
+  if (!volumeProvider.restic) {
     return <div>Invalid volume provider</div>
   }
 
   const handlePasswordUpdate = async (newPassword: string) => {
     return await save({
-      rustic: {
+      restic: {
         password: newPassword
       }
     })
@@ -29,29 +29,29 @@ export function RusticDetailsCard({ volumeProvider, save }: RusticDetailsCardPro
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Rustic Configuration</CardTitle>
+        <CardTitle>Restic Configuration</CardTitle>
         <CardDescription>
-          Rustic volume provider configuration settings. Sensitive credentials are not displayed for security reasons.
+          Restic volume provider configuration settings. Sensitive credentials are not displayed for security reasons.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <LabelAndValue
           label="Storage Type"
-          textValue={volumeProvider.rustic.storageType}
+          textValue={volumeProvider.restic.storageType}
         />
 
-        {volumeProvider.rustic.s3BucketId && (
+        {volumeProvider.restic.s3BucketId && (
           <LabelAndValue
             label="S3 Bucket"
             value={
               <ReferenceLabel
-                resourceId={volumeProvider.rustic.s3BucketId}
+                resourceId={volumeProvider.restic.s3BucketId}
                 resourcePath="/v1/workspaces/{workspaceId}/s3-buckets/{id}"
                 pathParams={{
                   workspaceId: volumeProvider.workspace,
-                  id: volumeProvider.rustic.s3BucketId
+                  id: volumeProvider.restic.s3BucketId
                 }}
-                detailsUrl={`/workspaces/${volumeProvider.workspace}/s3-buckets/${volumeProvider.rustic.s3BucketId}`}
+                detailsUrl={`/workspaces/${volumeProvider.workspace}/s3-buckets/${volumeProvider.restic.s3BucketId}`}
                 fallbackLabel="S3 Bucket"
                 className="text-blue-600 hover:text-blue-800 underline text-sm"
               />
@@ -61,7 +61,7 @@ export function RusticDetailsCard({ volumeProvider, save }: RusticDetailsCardPro
 
         <LabelAndValue
           label="Storage Prefix"
-          textValue={volumeProvider.rustic.storagePrefix}
+          textValue={volumeProvider.restic.storagePrefix}
         />
 
         <LabelAndValue
@@ -88,7 +88,7 @@ export function RusticDetailsCard({ volumeProvider, save }: RusticDetailsCardPro
       </CardContent>
       <SimpleInputDialog
         {...passwordDialog.dialogProps}
-        title="Update Rustic Password"
+        title="Update Restic Password"
         fieldLabel="New Password"
         placeholder="Enter new password"
         onSave={handlePasswordUpdate}

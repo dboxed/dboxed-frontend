@@ -4,7 +4,7 @@ import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
-import { formatDuration } from "@/utils/time.ts"
+import { formatDurationBetween } from "@/utils/time.ts"
 import { TimeAgo } from "@/components/TimeAgo.tsx"
 import { formatSize } from "@/utils/size.ts"
 import type { components } from "@/api/models/dboxed-schema"
@@ -58,7 +58,7 @@ export function SnapshotDetailsPage() {
             </CardContent>
           </Card>
 
-          {data.rustic && (
+          {data.restic && (
             <>
               <Card>
                 <CardHeader>
@@ -70,20 +70,20 @@ export function SnapshotDetailsPage() {
                 <CardContent>
                   <DetailsCardLayout>
                     <LabelAndValue
-                      label="Snapshot ID (Rustic)"
-                      textValue={data.rustic.snapshotId}
+                      label="Snapshot ID (Restic)"
+                      textValue={data.restic.snapshotId}
                     />
                     <LabelAndValue
                       label="Hostname"
-                      textValue={data.rustic.hostname}
+                      textValue={data.restic.hostname}
                     />
                     <LabelAndValue
                       label="Parent Snapshot"
-                      textValue={data.rustic.parentSnapshotId || "None"}
+                      textValue={data.restic.parentSnapshotId || "None"}
                     />
                     <LabelAndValue
                       label="Snapshot Time"
-                      value={<TimeAgo date={data.rustic.snapshotTime} />}
+                      value={<TimeAgo date={data.restic.snapshotTime} />}
                     />
                   </DetailsCardLayout>
                 </CardContent>
@@ -100,35 +100,31 @@ export function SnapshotDetailsPage() {
                   <DetailsCardLayout>
                     <LabelAndValue
                       label="Total Files Processed"
-                      textValue={data.rustic.totalFilesProcessed.toLocaleString()}
+                      textValue={data.restic.totalFilesProcessed.toLocaleString()}
                     />
                     <LabelAndValue
                       label="Files Changed"
-                      textValue={data.rustic.filesChanged.toLocaleString()}
+                      textValue={data.restic.filesChanged.toLocaleString()}
                     />
                     <LabelAndValue
                       label="Files New"
-                      textValue={data.rustic.filesNew.toLocaleString()}
+                      textValue={data.restic.filesNew.toLocaleString()}
                     />
                     <LabelAndValue
                       label="Files Unmodified"
-                      textValue={data.rustic.filesUnmodified.toLocaleString()}
-                    />
-                    <LabelAndValue
-                      label="Total Directories Processed"
-                      textValue={data.rustic.totalDirsProcessed.toLocaleString()}
+                      textValue={data.restic.filesUnmodified.toLocaleString()}
                     />
                     <LabelAndValue
                       label="Directories Changed"
-                      textValue={data.rustic.dirsChanged.toLocaleString()}
+                      textValue={data.restic.dirsChanged.toLocaleString()}
                     />
                     <LabelAndValue
                       label="Directories New"
-                      textValue={data.rustic.dirsNew.toLocaleString()}
+                      textValue={data.restic.dirsNew.toLocaleString()}
                     />
                     <LabelAndValue
                       label="Directories Unmodified"
-                      textValue={data.rustic.dirsUnmodified.toLocaleString()}
+                      textValue={data.restic.dirsUnmodified.toLocaleString()}
                     />
                   </DetailsCardLayout>
                 </CardContent>
@@ -145,27 +141,19 @@ export function SnapshotDetailsPage() {
                   <DetailsCardLayout>
                     <LabelAndValue
                       label="Total Bytes Processed"
-                      textValue={formatSize(data.rustic.totalBytesProcessed)}
+                      textValue={formatSize(data.restic.totalBytesProcessed)}
                     />
                     <LabelAndValue
                       label="Data Added"
-                      textValue={formatSize(data.rustic.dataAdded)}
+                      textValue={formatSize(data.restic.dataAdded)}
                     />
                     <LabelAndValue
                       label="Data Added (Packed)"
-                      textValue={formatSize(data.rustic.dataAddedPacked)}
-                    />
-                    <LabelAndValue
-                      label="Data Added Files"
-                      textValue={data.rustic.dataAddedFiles.toLocaleString()}
-                    />
-                    <LabelAndValue
-                      label="Data Added Files (Packed)"
-                      textValue={data.rustic.dataAddedFilesPacked.toLocaleString()}
+                      textValue={formatSize(data.restic.dataAddedPacked)}
                     />
                     <LabelAndValue
                       label="Data Blobs"
-                      textValue={data.rustic.dataBlobs.toLocaleString()}
+                      textValue={data.restic.dataBlobs.toLocaleString()}
                     />
                   </DetailsCardLayout>
                 </CardContent>
@@ -182,19 +170,15 @@ export function SnapshotDetailsPage() {
                   <DetailsCardLayout>
                     <LabelAndValue
                       label="Backup Duration"
-                      textValue={formatDuration(data.rustic.backupDuration)}
-                    />
-                    <LabelAndValue
-                      label="Total Duration"
-                      textValue={formatDuration(data.rustic.totalDuration)}
+                      textValue={formatDurationBetween(data.restic.backupStart, data.restic.backupEnd)}
                     />
                     <LabelAndValue
                       label="Backup Start"
-                      textValue={new Date(data.rustic.backupStart).toLocaleString()}
+                      textValue={new Date(data.restic.backupStart).toLocaleString()}
                     />
                     <LabelAndValue
                       label="Backup End"
-                      textValue={new Date(data.rustic.backupEnd).toLocaleString()}
+                      textValue={new Date(data.restic.backupEnd).toLocaleString()}
                     />
                   </DetailsCardLayout>
                 </CardContent>

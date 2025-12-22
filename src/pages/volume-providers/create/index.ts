@@ -1,1 +1,1 @@
-export { RusticConfigForm } from './RusticConfigForm.tsx'
+export { ResticConfigForm } from './ResticConfigForm.tsx'

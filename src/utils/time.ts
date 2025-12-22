@@ -5,7 +5,7 @@
  */
 export function formatTimeAgo(date: Date | string): string {
   const now = new Date()
-  const then = typeof date === 'string' ? new Date(date) : date
+  const then = parseDate(date)
   const minutesAgo = (now.getTime() - then.getTime()) / 1000 / 60
 
   if (minutesAgo < 1) {
@@ -54,4 +54,13 @@ export function formatDuration(seconds: number): string {
 
   // Show max 2 parts for readability
   return parts.slice(0, 2).join(' ')
+}
+
+export function formatDurationBetween(start: Date | string, stop: Date | string): string {
+  const d = parseDate(stop).getTime() - parseDate(start).getTime()
+  return formatDuration(d / 1000)
+}
+
+function parseDate(date: Date | string) {
+  return typeof date === 'string' ? new Date(date) : date
 }

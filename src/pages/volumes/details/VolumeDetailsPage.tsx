@@ -4,7 +4,7 @@ import { useParams } from "react-router"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard.tsx"
 import { MountStatusCard } from "./MountStatusCard.tsx"
-import { RusticVolumeInfo } from "./RusticVolumeInfo.tsx"
+import { ResticVolumeInfo } from "./ResticVolumeInfo.tsx"
 import { SnapshotsTab } from "./SnapshotsTab.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { ConfirmationDialog } from "@/components/ConfirmationDialog.tsx"
@@ -110,8 +110,8 @@ export function VolumeDetailsPage() {
                 <GeneralInfoCard data={data} />
                 <MountStatusCard volumeId={volumeId} />
               </div>
-              {data.volumeProviderType === "rustic" && data.rustic && (
-                <RusticVolumeInfo data={data} />
+              {data.volumeProviderType === "restic" && data.restic && (
+                <ResticVolumeInfo data={data} />
               )}
             </div>
           </TabsContent>

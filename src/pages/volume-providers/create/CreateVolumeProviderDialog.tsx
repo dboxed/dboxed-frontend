@@ -1,5 +1,5 @@
 import { BaseCreateDialog } from "@/components/BaseCreateDialog.tsx"
-import { RusticConfigForm } from "@/pages/volume-providers/create/index.ts"
+import { ResticConfigForm } from "@/pages/volume-providers/create/index.ts"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
@@ -27,8 +27,8 @@ export function CreateVolumeProviderDialog({ open, onOpenChange }: CreateVolumeP
       }}
       defaultValues={{
         name: "",
-        type: "rustic",
-        rustic: {
+        type: "restic",
+        restic: {
           password: "",
           storageType: "s3",
           storagePrefix: "",
@@ -64,7 +64,7 @@ export function CreateVolumeProviderDialog({ open, onOpenChange }: CreateVolumeP
                       <SelectValue placeholder="Select a volume provider type"/>
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem key="rustic" value="rustic">Rustic</SelectItem>
+                      <SelectItem key="restic" value="restic">Restic</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -72,8 +72,8 @@ export function CreateVolumeProviderDialog({ open, onOpenChange }: CreateVolumeP
               </FormItem>
             )}
           />
-          {form.watch("type") === "rustic" && (
-            <RusticConfigForm form={form}/>
+          {form.watch("type") === "restic" && (
+            <ResticConfigForm form={form}/>
           )}
         </div>
       )}

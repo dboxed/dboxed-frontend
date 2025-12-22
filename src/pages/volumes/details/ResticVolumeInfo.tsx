@@ -4,28 +4,28 @@ import { LabelAndValue } from "@/components/LabelAndValue.tsx"
 import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import type { components } from "@/api/models/dboxed-schema"
 
-interface RusticVolumeInfoProps {
+interface ResticVolumeInfoProps {
   data: components["schemas"]["Volume"]
 }
 
-export function RusticVolumeInfo({ data }: RusticVolumeInfoProps) {
+export function ResticVolumeInfo({ data }: ResticVolumeInfoProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Rustic Volume Information</CardTitle>
+        <CardTitle>Restic Volume Information</CardTitle>
         <CardDescription>
-          Filesystem configuration details for this rustic volume.
+          Filesystem configuration details for this restic volume.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <DetailsCardLayout>
           <LabelAndValue
             label="Filesystem Size"
-            textValue={data.rustic?.fsSize ? formatSize(data.rustic.fsSize) : 'N/A'}
+            textValue={data.restic?.fsSize ? formatSize(data.restic.fsSize) : 'N/A'}
           />
           <LabelAndValue
             label="Filesystem Type"
-            textValue={data.rustic?.fsType || 'N/A'}
+            textValue={data.restic?.fsType || 'N/A'}
           />
         </DetailsCardLayout>
       </CardContent>

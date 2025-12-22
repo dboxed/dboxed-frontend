@@ -52,9 +52,9 @@ export function VolumesOverview() {
           <div className="text-sm font-medium">{volume.name}</div>
         </div>
         <div className="flex items-center gap-2">
-          {volume.volumeProviderType === "rustic" && volume.rustic && (
+          {volume.volumeProviderType === "restic" && volume.restic && (
             <Badge variant="outline" className="text-xs">
-              {formatSize(volume.rustic.fsSize)}
+              {formatSize(volume.restic.fsSize)}
             </Badge>
           )}
         </div>

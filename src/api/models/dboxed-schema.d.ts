@@ -2052,9 +2052,11 @@ export interface components {
              * @description A URL to the JSON Schema for this object.
              */
             readonly $schema?: string;
+            aws?: components["schemas"]["MachineAws"];
             /** Format: date-time */
             createdAt: string;
             dboxedVersion: string;
+            hetzner?: components["schemas"]["MachineHetzner"];
             id: string;
             machineProvider?: string;
             machineProviderStatus: string;
@@ -2065,6 +2067,18 @@ export interface components {
             status: string;
             statusDetails: string;
             workspace: string;
+        };
+        MachineAws: {
+            instanceType: string;
+            /** Format: int64 */
+            rootVolumeSize: number;
+            status?: components["schemas"]["MachineStatusAws"];
+            subnetID: string;
+        };
+        MachineHetzner: {
+            serverLocation: string;
+            serverType: string;
+            status?: components["schemas"]["MachineStatusHetzner"];
         };
         MachineProvider: {
             /**
@@ -2123,6 +2137,15 @@ export interface components {
             statusTime?: string;
             /** Format: date-time */
             stopTime?: string;
+        };
+        MachineStatusAws: {
+            instanceId?: string;
+            publicIp4?: string;
+        };
+        MachineStatusHetzner: {
+            publicIp4?: string;
+            /** Format: int64 */
+            serverId?: number;
         };
         Network: {
             /**

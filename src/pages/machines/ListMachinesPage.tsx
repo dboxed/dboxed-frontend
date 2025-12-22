@@ -9,6 +9,7 @@ import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { CreateMachineDialog } from "./create/CreateMachineDialog.tsx";
 import { MachineStatusBadge } from "./details/status/MachineStatusBadge.tsx";
 import { TimeAgo } from "@/components/TimeAgo.tsx";
+import { getMachinePublicIp } from "./utils.ts";
 
 export function ListMachinesPage() {
   const navigate = useNavigate()
@@ -66,6 +67,18 @@ export function ListMachinesPage() {
       cell: ({ row }) => {
         return (
           <MachineStatusBadge machine={row.original}/>
+        )
+      },
+    },
+    {
+      id: "publicIp",
+      header: "Public IP",
+      cell: ({ row }) => {
+        const publicIp = getMachinePublicIp(row.original)
+        return publicIp ? (
+          <span className="text-sm font-mono">{publicIp}</span>
+        ) : (
+          <span className="text-sm text-muted-foreground">—</span>
         )
       },
     },

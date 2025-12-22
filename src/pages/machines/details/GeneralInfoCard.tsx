@@ -6,7 +6,7 @@ import { DetailsCardLayout } from "@/components/DetailsCardLayout.tsx"
 import { MachineStatusBadge } from "./status/MachineStatusBadge.tsx"
 import { TimeAgo } from "@/components/TimeAgo.tsx"
 import type { components } from "@/api/models/dboxed-schema"
-import { getMachinePublicIp } from "../utils.ts"
+import { getMachinePublicIp, getMachineCloudId } from "../utils.ts"
 
 interface GeneralInfoCardProps {
   data: components["schemas"]["Machine"]
@@ -85,6 +85,11 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
           <LabelAndValue
             label="Public IP"
             textValue={getMachinePublicIp(data) || "—"}
+          />
+
+          <LabelAndValue
+            label="Cloud ID"
+            textValue={getMachineCloudId(data) || "—"}
           />
 
           <LabelAndValue

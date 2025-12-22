@@ -9,7 +9,7 @@ import { ReferenceLabel } from "@/components/ReferenceLabel.tsx";
 import { CreateMachineDialog } from "./create/CreateMachineDialog.tsx";
 import { MachineStatusBadge } from "./details/status/MachineStatusBadge.tsx";
 import { TimeAgo } from "@/components/TimeAgo.tsx";
-import { getMachinePublicIp } from "./utils.ts";
+import { getMachinePublicIp, getMachineCloudId } from "./utils.ts";
 
 export function ListMachinesPage() {
   const navigate = useNavigate()
@@ -77,6 +77,18 @@ export function ListMachinesPage() {
         const publicIp = getMachinePublicIp(row.original)
         return publicIp ? (
           <span className="text-sm font-mono">{publicIp}</span>
+        ) : (
+          <span className="text-sm text-muted-foreground">—</span>
+        )
+      },
+    },
+    {
+      id: "cloudId",
+      header: "Cloud ID",
+      cell: ({ row }) => {
+        const cloudId = getMachineCloudId(row.original)
+        return cloudId ? (
+          <span className="text-sm font-mono">{cloudId}</span>
         ) : (
           <span className="text-sm text-muted-foreground">—</span>
         )

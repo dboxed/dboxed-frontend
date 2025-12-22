@@ -15,3 +15,17 @@ export function getMachinePublicIp(machine: Machine): string | null {
   }
   return null
 }
+
+/**
+ * Gets the cloud provider ID from a machine's provider-specific status.
+ * Returns the instance ID for AWS or server ID for Hetzner.
+ */
+export function getMachineCloudId(machine: Machine): string | null {
+  if (machine.aws?.status?.instanceId) {
+    return machine.aws.status.instanceId
+  }
+  if (machine.hetzner?.status?.serverId) {
+    return machine.hetzner.status.serverId.toString()
+  }
+  return null
+}

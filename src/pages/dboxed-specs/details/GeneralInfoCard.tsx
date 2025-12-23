@@ -6,7 +6,7 @@ import type { components } from "@/api/models/dboxed-schema"
 import { StatusBadge } from "@/components/StatusBadge.tsx";
 
 interface GeneralInfoCardProps {
-  data: components["schemas"]["GitSpec"]
+  data: components["schemas"]["DboxedSpec"]
 }
 
 export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
@@ -24,7 +24,7 @@ export function GeneralInfoCard({ data }: GeneralInfoCardProps) {
         <CardHeader>
           <CardTitle>General Information</CardTitle>
           <CardDescription>
-            Git spec configuration details
+            Dboxed spec configuration details
           </CardDescription>
         </CardHeader>
         <CardContent>

@@ -16,9 +16,9 @@ import { BoxDetailsPage } from "@/pages/boxes/details";
 import { ListBoxesPage } from "@/pages/boxes";
 import { VolumeProviderDetailsPage } from "@/pages/volume-providers";
 import { VolumeDetailsPage, VolumesPage } from "@/pages/volumes";
-import { GitPage } from "@/pages/git";
+import { DboxedSpecsPage } from "@/pages/git";
 import { GitCredentialsDetailsPage } from "@/pages/git-credentials";
-import { GitSpecDetailsPage } from "@/pages/git-specs";
+import { DboxedSpecDetailsPage } from "@/pages/dboxed-specs";
 import { SnapshotDetailsPage } from "@/pages/volumes/snapshots/SnapshotDetailsPage.tsx";
 import { ListTokensPage, TokenDetailsPage } from "@/pages/tokens";
 import { S3BucketDetailsPage } from "@/pages/s3-buckets/details/S3BucketDetailsPage.tsx";
@@ -124,10 +124,10 @@ function AuthenticatedApp() {
           <Route path="/workspaces/:workspaceId/load-balancers/:loadBalancerId" element={<LoadBalancerDetailsPage/>}/>
           <Route path="/workspaces/:workspaceId/tokens" element={<ListTokensPage/>}/>
           <Route path="/workspaces/:workspaceId/tokens/:tokenId" element={<TokenDetailsPage/>}/>
-          <Route path="/workspaces/:workspaceId/git-credentials" element={<GitPage/>}/>
+          <Route path="/workspaces/:workspaceId/git-credentials" element={<DboxedSpecsPage/>}/>
           <Route path="/workspaces/:workspaceId/git-credentials/:id" element={<GitCredentialsDetailsPage/>}/>
-          <Route path="/workspaces/:workspaceId/git-specs" element={<GitPage/>}/>
-          <Route path="/workspaces/:workspaceId/git-specs/:id" element={<GitSpecDetailsPage/>}/>
+          <Route path="/workspaces/:workspaceId/dboxed-specs" element={<DboxedSpecsPage/>}/>
+          <Route path="/workspaces/:workspaceId/dboxed-specs/:id" element={<DboxedSpecDetailsPage/>}/>
           <Route path="/workspaces/:workspaceId/s3-buckets" element={<VolumesPage/>}/>
           <Route path="/workspaces/:workspaceId/s3-buckets/:s3BucketId" element={<S3BucketDetailsPage/>}/>
           {isDboxedCloud() &&

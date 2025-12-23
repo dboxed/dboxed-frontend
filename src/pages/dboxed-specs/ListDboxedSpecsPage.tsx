@@ -5,14 +5,14 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/dboxed-schema"
 import { BaseListPage } from "@/pages/base"
 import { TimeAgo } from "@/components/TimeAgo.tsx"
-import { CreateGitSpecDialog } from "./create/CreateGitSpecDialog.tsx"
+import { CreateDboxedSpecDialog } from "@/pages/dboxed-specs/create"
 import { StatusBadge } from "@/components/StatusBadge.tsx";
 
-export function ListGitSpecsPage() {
+export function ListDboxedSpecsPage() {
   const navigate = useNavigate()
   const { workspaceId } = useSelectedWorkspaceId()
 
-  const columns: ColumnDef<components["schemas"]["GitSpec"]>[] = [
+  const columns: ColumnDef<components["schemas"]["DboxedSpec"]>[] = [
     {
       accessorKey: "gitUrl",
       header: "Git URL",
@@ -21,7 +21,7 @@ export function ListGitSpecsPage() {
         const id = row.original.id
         return (
           <button
-            onClick={() => navigate(`/workspaces/${workspaceId}/git-specs/${id}`)}
+            onClick={() => navigate(`/workspaces/${workspaceId}/dboxed-specs/${id}`)}
             className="font-medium text-left hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded font-mono text-sm"
           >
             {gitUrl}
@@ -75,7 +75,7 @@ export function ListGitSpecsPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate(`/workspaces/${workspaceId}/git-specs/${id}`)}
+            onClick={() => navigate(`/workspaces/${workspaceId}/dboxed-specs/${id}`)}
           >
             View Details
           </Button>
@@ -85,17 +85,17 @@ export function ListGitSpecsPage() {
   ]
 
   return (
-    <BaseListPage<components["schemas"]["GitSpec"]>
-      title="Git Specs"
-      resourcePath="/v1/workspaces/{workspaceId}/git-specs"
-      createDialog={CreateGitSpecDialog}
+    <BaseListPage<components["schemas"]["DboxedSpec"]>
+      title="Specs"
+      resourcePath="/v1/workspaces/{workspaceId}/dboxed-specs"
+      createDialog={CreateDboxedSpecDialog}
       columns={columns}
       apiParams={{
         path: {
           workspaceId: workspaceId,
         }
       }}
-      emptyStateMessage="No git specs configured yet. Create your first git spec to get started."
+      emptyStateMessage="No specs configured yet. Create your first dboxed spec to get started."
       searchColumn="gitUrl"
       searchPlaceholder="Search specs..."
     />

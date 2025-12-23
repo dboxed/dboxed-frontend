@@ -4,20 +4,20 @@ import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import { GeneralInfoCard } from "./GeneralInfoCard.tsx"
 import type { components } from "@/api/models/dboxed-schema"
 
-export function GitSpecDetailsPage() {
+export function DboxedSpecDetailsPage() {
   const { workspaceId } = useSelectedWorkspaceId()
   const { id } = useParams<{ id: string }>()
 
   if (!id) {
-    return <div>Invalid git spec ID</div>
+    return <div>Invalid dboxed spec ID</div>
   }
 
   return (
-    <BaseResourceDetailsPage<components["schemas"]["GitSpec"], components["schemas"]["UpdateGitSpec"]>
-      title="Git Spec"
-      resourcePath="/v1/workspaces/{workspaceId}/git-specs/{id}"
+    <BaseResourceDetailsPage<components["schemas"]["DboxedSpec"], components["schemas"]["UpdateDboxedSpec"]>
+      title="Dboxed Spec"
+      resourcePath="/v1/workspaces/{workspaceId}/dboxed-specs/{id}"
       enableDelete={true}
-      afterDeleteUrl={`/workspaces/${workspaceId}/git-specs`}
+      afterDeleteUrl={`/workspaces/${workspaceId}/dboxed-specs`}
       apiParams={{
         path: {
           workspaceId: workspaceId,

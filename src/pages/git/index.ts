@@ -1,1 +1,1 @@
-export { GitPage } from "./GitPage.tsx"
+export { DboxedSpecsPage } from "./DboxedSpecsPage.tsx"

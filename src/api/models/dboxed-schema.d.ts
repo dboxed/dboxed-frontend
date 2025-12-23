@@ -493,6 +493,43 @@ export interface paths {
         patch: operations["patch-v1-workspaces-by-workspace-id-boxes-by-id-volumes-by-volume-id"];
         trace?: never;
     };
+    "/v1/workspaces/{workspaceId}/dboxed-specs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID dboxed specs */
+        get: operations["get-v1-workspaces-by-workspace-id-dboxed-specs"];
+        put?: never;
+        /** Post v1 workspaces by workspace ID dboxed specs */
+        post: operations["post-v1-workspaces-by-workspace-id-dboxed-specs"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/workspaces/{workspaceId}/dboxed-specs/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get v1 workspaces by workspace ID dboxed specs by ID */
+        get: operations["get-v1-workspaces-by-workspace-id-dboxed-specs-by-id"];
+        put?: never;
+        post?: never;
+        /** Delete v1 workspaces by workspace ID dboxed specs by ID */
+        delete: operations["delete-v1-workspaces-by-workspace-id-dboxed-specs-by-id"];
+        options?: never;
+        head?: never;
+        /** Patch v1 workspaces by workspace ID dboxed specs by ID */
+        patch: operations["patch-v1-workspaces-by-workspace-id-dboxed-specs-by-id"];
+        trace?: never;
+    };
     "/v1/workspaces/{workspaceId}/git-credentials": {
         parameters: {
             query?: never;
@@ -528,43 +565,6 @@ export interface paths {
         head?: never;
         /** Patch v1 workspaces by workspace ID git credentials by ID */
         patch: operations["patch-v1-workspaces-by-workspace-id-git-credentials-by-id"];
-        trace?: never;
-    };
-    "/v1/workspaces/{workspaceId}/git-specs": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get v1 workspaces by workspace ID git specs */
-        get: operations["get-v1-workspaces-by-workspace-id-git-specs"];
-        put?: never;
-        /** Post v1 workspaces by workspace ID git specs */
-        post: operations["post-v1-workspaces-by-workspace-id-git-specs"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/workspaces/{workspaceId}/git-specs/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get v1 workspaces by workspace ID git specs by ID */
-        get: operations["get-v1-workspaces-by-workspace-id-git-specs-by-id"];
-        put?: never;
-        post?: never;
-        /** Delete v1 workspaces by workspace ID git specs by ID */
-        delete: operations["delete-v1-workspaces-by-workspace-id-git-specs-by-id"];
-        options?: never;
-        head?: never;
-        /** Patch v1 workspaces by workspace ID git specs by ID */
-        patch: operations["patch-v1-workspaces-by-workspace-id-git-specs-by-id"];
         trace?: never;
     };
     "/v1/workspaces/{workspaceId}/load-balancers": {
@@ -1440,6 +1440,17 @@ export interface components {
             /** Format: int64 */
             sandboxPort: number;
         };
+        CreateDboxedSpec: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            gitRef?: components["schemas"]["GitRef"];
+            gitUrl: string;
+            specFile: string;
+            subdir: string;
+        };
         CreateGitCredentials: {
             /**
              * Format: uri
@@ -1452,17 +1463,6 @@ export interface components {
             pathGlob: string;
             sshKey?: string;
             username?: string;
-        };
-        CreateGitSpec: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            gitRef?: components["schemas"]["GitRef"];
-            gitUrl: string;
-            specFile: string;
-            subdir: string;
         };
         CreateLoadBalancer: {
             /**
@@ -1626,6 +1626,23 @@ export interface components {
             readonly $schema?: string;
             name: string;
         };
+        DboxedSpec: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            /** Format: date-time */
+            createdAt: string;
+            gitRef?: components["schemas"]["GitRef"];
+            gitUrl: string;
+            id: string;
+            specFile: string;
+            status: string;
+            statusDetails: string;
+            subdir: string;
+            workspace: string;
+        };
         DboxedVolume: {
             backupInterval: string;
             id: string;
@@ -1699,23 +1716,6 @@ export interface components {
             commit?: string;
             tag?: string;
         };
-        GitSpec: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            /** Format: date-time */
-            createdAt: string;
-            gitRef?: components["schemas"]["GitRef"];
-            gitUrl: string;
-            id: string;
-            specFile: string;
-            status: string;
-            statusDetails: string;
-            subdir: string;
-            workspace: string;
-        };
         Healthz: {
             /**
              * Format: uri
@@ -1777,6 +1777,16 @@ export interface components {
             /** Format: int64 */
             total_count: number;
         };
+        ListBodyDboxedSpec: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            items: components["schemas"]["DboxedSpec"][] | null;
+            /** Format: int64 */
+            total_count: number;
+        };
         ListBodyGitCredentials: {
             /**
              * Format: uri
@@ -1784,16 +1794,6 @@ export interface components {
              */
             readonly $schema?: string;
             items: components["schemas"]["GitCredentials"][] | null;
-            /** Format: int64 */
-            total_count: number;
-        };
-        ListBodyGitSpec: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            items: components["schemas"]["GitSpec"][] | null;
             /** Format: int64 */
             total_count: number;
         };
@@ -2375,17 +2375,7 @@ export interface components {
             /** Format: date-time */
             stopTime?: string;
         };
-        UpdateGitCredentials: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             */
-            readonly $schema?: string;
-            password?: string;
-            sshKey?: string;
-            username?: string;
-        };
-        UpdateGitSpec: {
+        UpdateDboxedSpec: {
             /**
              * Format: uri
              * @description A URL to the JSON Schema for this object.
@@ -2395,6 +2385,16 @@ export interface components {
             gitUrl?: string;
             specFile?: string;
             subdir?: string;
+        };
+        UpdateGitCredentials: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             */
+            readonly $schema?: string;
+            password?: string;
+            sshKey?: string;
+            username?: string;
         };
         UpdateLoadBalancer: {
             /**
@@ -4092,6 +4092,179 @@ export interface operations {
             };
         };
     };
+    "get-v1-workspaces-by-workspace-id-dboxed-specs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListBodyDboxedSpec"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "post-v1-workspaces-by-workspace-id-dboxed-specs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateDboxedSpec"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DboxedSpec"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "get-v1-workspaces-by-workspace-id-dboxed-specs-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DboxedSpec"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "delete-v1-workspaces-by-workspace-id-dboxed-specs-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "patch-v1-workspaces-by-workspace-id-dboxed-specs-by-id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description The workspace id */
+                workspaceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateDboxedSpec"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DboxedSpec"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-v1-workspaces-by-workspace-id-git-credentials": {
         parameters: {
             query?: never;
@@ -4252,179 +4425,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["GitCredentials"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "get-v1-workspaces-by-workspace-id-git-specs": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The workspace id */
-                workspaceId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ListBodyGitSpec"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "post-v1-workspaces-by-workspace-id-git-specs": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The workspace id */
-                workspaceId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateGitSpec"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GitSpec"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "get-v1-workspaces-by-workspace-id-git-specs-by-id": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-                /** @description The workspace id */
-                workspaceId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GitSpec"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "delete-v1-workspaces-by-workspace-id-git-specs-by-id": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-                /** @description The workspace id */
-                workspaceId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    "patch-v1-workspaces-by-workspace-id-git-specs-by-id": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-                /** @description The workspace id */
-                workspaceId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateGitSpec"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GitSpec"];
                 };
             };
             /** @description Error */

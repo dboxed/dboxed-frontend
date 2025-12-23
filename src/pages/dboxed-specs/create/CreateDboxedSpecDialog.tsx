@@ -4,20 +4,20 @@ import { Input } from "@/components/ui/input.tsx"
 import { useSelectedWorkspaceId } from "@/components/workspace-switcher.tsx"
 import type { components } from "@/api/models/dboxed-schema"
 
-interface CreateGitSpecDialogProps {
+interface CreateDboxedSpecDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function CreateGitSpecDialog({ open, onOpenChange }: CreateGitSpecDialogProps) {
+export function CreateDboxedSpecDialog({ open, onOpenChange }: CreateDboxedSpecDialogProps) {
   const { workspaceId } = useSelectedWorkspaceId()
 
   return (
-    <BaseCreateDialog<components["schemas"]["CreateGitSpec"]>
+    <BaseCreateDialog<components["schemas"]["CreateDboxedSpec"]>
       open={open}
       onOpenChange={onOpenChange}
-      title="Create Git Spec"
-      apiRoute="/v1/workspaces/{workspaceId}/git-specs"
+      title="Create Dboxed Spec"
+      apiRoute="/v1/workspaces/{workspaceId}/dboxed-specs"
       apiParams={{
         path: {
           workspaceId: workspaceId,
@@ -25,7 +25,7 @@ export function CreateGitSpecDialog({ open, onOpenChange }: CreateGitSpecDialogP
       }}
       defaultValues={{
         gitUrl: "",
-        specFile: "dboxed-specs.yaml",
+        specFile: "dboxed-spec.yaml",
         subdir: "",
       }}
     >

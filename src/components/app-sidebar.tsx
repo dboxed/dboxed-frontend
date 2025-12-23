@@ -30,11 +30,6 @@ const navMain = [
     icon: <HardDrive/>,
   },
   {
-    title: "Git",
-    navigate: "/workspaces/{workspaceId}/git-specs",
-    icon: <GitBranch/>,
-  },
-  {
     title: "Boxes",
     navigate: "/workspaces/{workspaceId}/boxes",
     icon: <Box/>,
@@ -43,6 +38,11 @@ const navMain = [
     title: "Machines",
     navigate: "/workspaces/{workspaceId}/machines",
     icon: <Monitor/>,
+  },
+  {
+    title: "Specs",
+    navigate: "/workspaces/{workspaceId}/dboxed-specs",
+    icon: <GitBranch/>,
   },
 ]
 

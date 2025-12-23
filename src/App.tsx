@@ -33,6 +33,7 @@ import { BillingPage } from "@/pages/billing/BillingPage.tsx";
 import {loadStripe} from '@stripe/stripe-js/pure';
 import {type Stripe} from '@stripe/stripe-js';
 import { StripeCheckoutReturn } from "@/pages/billing/stripe/StripeCheckoutReturn.tsx";
+import { FullScreenLoading } from "@/components/FullScreenLoading.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -72,10 +73,10 @@ function AuthenticatedApp() {
   const client = useDboxedQueryClient()
   const workspaces = client.useQuery('get', '/v1/workspaces')
 
-  if (isAdminQuery.isLoading) return <div>Loading user info...</div>;
+  if (isAdminQuery.isLoading) return <FullScreenLoading title="Loading" description="Loading user info..." />;
   if (isAdminQuery.error) return <div className="text-red-600 p-4">Failed to load user info</div>;
 
-  if (workspaces.isLoading) return <div>Loading workspaces...</div>;
+  if (workspaces.isLoading) return <FullScreenLoading title="Loading" description="Loading workspaces..." />;
 
   const cookieConsent = envVars.VITE_MATOMO_TAG_MANAGER ? <CookieConsentComponent/> : null
 

@@ -16,6 +16,7 @@ export function NoWorkspaceScreen() {
   return (
     <div className="flex flex-col items-center min-h-screen p-8 pt-16">
       <div className="text-center space-y-6 max-w-md">
+        <img src="/dboxed-icon.svg" alt="DBoxed" className="h-24 w-24 mx-auto" />
         <div className="space-y-2">
           <h1 className="text-3xl font-bold">Welcome to DBoxed</h1>
           <p className="text-muted-foreground">

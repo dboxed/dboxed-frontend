@@ -7,19 +7,19 @@ import { FullScreenLoading } from "@/components/FullScreenLoading.tsx";
  */
 export const LoginGate = ({ children }: { children: React.ReactNode }) => {
   const auth = useAuth();
-  const [redirectTimer, setRedirectTimer] = useState<number | undefined>()
+  const [redirectTimerStarted, setRedirectTimerStarted] = useState(false)
 
   useEffect(() => {
     if (auth.error) {
-      if (!redirectTimer) {
-        const timer = setTimeout(() => {
+      if (!redirectTimerStarted) {
+        setTimeout(() => {
           auth.signinRedirect();
         }, 3000)
-        setRedirectTimer(timer)
+        setRedirectTimerStarted(true)
       }
       return
     }
-  }, [auth, auth.error, auth.isAuthenticated, redirectTimer]);
+  }, [auth, auth.error, auth.isAuthenticated, redirectTimerStarted]);
 
   if (auth.activeNavigator === "signinSilent") {
     return <FullScreenLoading title="Signing In" description="Signing you in..." />;
